@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KBZ LIFE Agent — Concept B · Trust & Clarity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f8fc;
+    --ink: #0a2540;
+    --muted: #5b6b7c;
+    --line: #d9e2ec;
+    --card: #ffffff;
+    --brand: #0a4d8c;
+    --brand-deep: #062a4a;
+    --gold: #b8923a;
+    --gold-soft: #f7f0e1;
+    --ok: #1f7a54;
+    --warn: #9a6700;
+    --danger: #b42318;
+    --shadow: 0 20px 60px rgba(10, 37, 64, 0.10);
+    --phone-w: 390px;
+    --phone-h: 844px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Manrope, system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      linear-gradient(180deg, #e8eef6 0%, #f5f8fc 35%, #eef3f8 100%);
+    min-height: 100vh;
+  }
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+  .hero { display:flex; justify-content:space-between; gap:24px; align-items:end; flex-wrap:wrap; margin-bottom:28px; }
+  .eyebrow { font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); font-weight:800; }
+  h1 { font-family: "Libre Baskerville", serif; font-size: clamp(28px, 4vw, 40px); line-height:1.15; margin-top:8px; }
+  .lede { max-width:540px; color:var(--muted); line-height:1.6; margin-top:10px; }
+  .chip-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid var(--line); padding:8px 12px; border-radius:999px; font-size:12px; font-weight:700; }
+  .layout { display:grid; grid-template-columns: auto 1fr; gap:28px; }
+  @media (max-width:980px){ .layout{ grid-template-columns:1fr; } }
+  .phone-shell {
+    width:var(--phone-w); height:var(--phone-h); border-radius:42px; background:var(--brand-deep);
+    padding:12px; box-shadow:var(--shadow); position:sticky; top:20px;
+  }
+  .phone { width:100%; height:100%; border-radius:32px; overflow:hidden; background:var(--bg); position:relative; display:flex; flex-direction:column; }
+  .notch { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:118px; height:28px; background:var(--brand-deep); border-radius:20px; z-index:5; }
+  .status { display:flex; justify-content:space-between; padding:16px 20px 4px; font-size:12px; font-weight:700; }
+  .screen { display:none; flex:1; overflow:auto; padding-bottom:88px; }
+  .screen.active { display:block; }
+  .screen.no-tab { padding-bottom:24px; }
+  .tabbar {
+    position:absolute; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:repeat(5,1fr); padding:8px 6px 14px; z-index:4;
+  }
+  .tab { border:0; background:transparent; font:inherit; font-size:10px; font-weight:700; color:var(--muted); cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .tab.active { color:var(--brand); }
+  .pad { padding:10px 20px 20px; }
+  .title { font-family:"Libre Baskerville", serif; font-size:26px; line-height:1.2; margin-bottom:8px; }
+  .sub { color:var(--muted); font-size:13.5px; line-height:1.55; margin-bottom:18px; }
+  .field { margin-bottom:12px; }
+  .field label { display:block; font-size:12px; font-weight:700; color:var(--muted); margin-bottom:6px; }
+  .field input, .field select, .field textarea {
+    width:100%; border:1px solid var(--line); border-radius:12px; padding:13px 14px; font:inherit; background:#fff;
+  }
+  .btn { width:100%; border:0; border-radius:12px; padding:14px 16px; font:inherit; font-weight:800; cursor:pointer; }
+  .btn-primary { background:var(--brand); color:#fff; }
+  .btn-secondary { background:#fff; border:1px solid var(--line); color:var(--ink); }
+  .btn-gold { background:var(--gold); color:#1a1408; }
+  .btn-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .otp { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin:16px 0 20px; }
+  .otp input { text-align:center; font-weight:800; font-size:18px; padding:12px 0; border:1px solid var(--line); border-radius:10px; }
+  .trust-banner {
+    background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+    color:#fff; border-radius:20px; padding:18px; margin-bottom:14px;
+  }
+  .trust-banner .kicker { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; opacity:.75; font-weight:700; }
+  .trust-banner h2 { font-family:"Libre Baskerville", serif; font-size:22px; margin-top:6px; }
+  .metric-rail { display:flex; gap:8px; overflow:auto; padding-bottom:4px; margin-bottom:14px; }
+  .metric {
+    min-width:132px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:12px;
+  }
+  .metric .l { font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); font-weight:800; }
+  .metric .v { font-family:"Libre Baskerville", serif; font-size:20px; margin-top:6px; }
+  .metric .d { font-size:11px; margin-top:4px; color:var(--ok); font-weight:700; }
+  .card {
+    background:#fff; border:1px solid var(--line); border-radius:18px; padding:14px; margin-bottom:10px;
+  }
+  .card h3 { font-size:14px; margin-bottom:6px; }
+  .card p { color:var(--muted); font-size:12.5px; line-height:1.45; }
+  .progress { height:8px; background:#e7eef6; border-radius:99px; overflow:hidden; margin-top:10px; }
+  .progress > i { display:block; height:100%; width:68%; background:linear-gradient(90deg, var(--gold), #e6c77a); }
+  .list { display:flex; flex-direction:column; gap:8px; }
+  .row {
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; display:flex; gap:12px; align-items:center; cursor:pointer;
+  }
+  .avatar {
+    width:40px; height:40px; border-radius:50%; background:var(--gold-soft); color:var(--brand-deep);
+    display:grid; place-items:center; font-weight:800; flex-shrink:0;
+  }
+  .meta { flex:1; min-width:0; }
+  .meta b { display:block; font-size:14px; }
+  .meta span { color:var(--muted); font-size:12px; }
+  .tag { font-size:10px; font-weight:800; padding:4px 8px; border-radius:999px; background:#eaf2fb; color:var(--brand); text-transform:uppercase; letter-spacing:0.04em; }
+  .tag.warn { background:var(--gold-soft); color:var(--warn); }
+  .tag.danger { background:#fdecea; color:var(--danger); }
+  .seg { display:grid; grid-template-columns:1fr 1fr; gap:4px; background:#e7eef6; padding:4px; border-radius:12px; margin-bottom:12px; }
+  .seg button { border:0; background:transparent; padding:10px; border-radius:9px; font:inherit; font-weight:800; font-size:12px; color:var(--muted); cursor:pointer; }
+  .seg button.on { background:#fff; color:var(--ink); box-shadow:0 2px 8px rgba(10,37,64,.06); }
+  .steps { display:flex; gap:8px; align-items:center; margin-bottom:16px; font-size:11px; font-weight:700; color:var(--muted); }
+  .steps .dot { width:22px; height:22px; border-radius:50%; display:grid; place-items:center; background:#e7eef6; }
+  .steps .dot.on { background:var(--brand); color:#fff; }
+  .steps .line { flex:1; height:2px; background:var(--line); }
+  .search { display:flex; gap:8px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:12px; padding:11px 12px; margin-bottom:12px; }
+  .search input { border:0; outline:0; flex:1; font:inherit; }
+  .link { border:0; background:none; color:var(--brand); font:inherit; font-weight:800; font-size:13px; cursor:pointer; }
+  .section { display:flex; justify-content:space-between; align-items:center; margin:14px 0 8px; }
+  .section h3 { font-size:15px; }
+  .calm-hero {
+    text-align:center; padding:48px 12px 24px;
+  }
+  .seal {
+    width:78px; height:78px; margin:0 auto 16px; border-radius:50%;
+    border:2px solid var(--gold); display:grid; place-items:center;
+    font-family:"Libre Baskerville", serif; font-size:18px; color:var(--brand-deep); background:#fff;
+  }
+  .web {
+    background:rgba(255,255,255,.85); border:1px solid var(--line); border-radius:28px; padding:24px; box-shadow:var(--shadow); min-height:760px;
+  }
+  .web-head { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:end; margin-bottom:18px; }
+  .web-nav { display:flex; gap:6px; flex-wrap:wrap; }
+  .web-nav button { border:1px solid var(--line); background:#fff; border-radius:999px; padding:8px 14px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .web-nav button.on { background:var(--brand-deep); color:#fff; border-color:var(--brand-deep); }
+  .web-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:16px; }
+  @media (max-width:1100px){ .web-grid{ grid-template-columns:repeat(2,1fr);} }
+  .kpi { background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px; }
+  .kpi .l { font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); font-weight:800; }
+  .kpi .v { font-family:"Libre Baskerville", serif; font-size:24px; margin-top:6px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; background:#fff; }
+  th, td { padding:12px 10px; border-bottom:1px solid var(--line); text-align:left; }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); background:#f0f4f9; }
+  .pipeline { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px; }
+  .pipe { background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px; min-height:120px; }
+  .pipe h4 { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .mini { background:var(--bg); border-radius:10px; padding:8px; font-size:12px; margin-bottom:6px; font-weight:700; }
+  .note { margin-top:16px; color:var(--muted); font-size:13px; line-height:1.55; }
+  .screen-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .screen-nav button { border:1px solid var(--line); background:#fff; border-radius:999px; padding:8px 12px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .screen-nav button.on { background:var(--ink); color:#fff; }
+  .guide { border-left:3px solid var(--gold); padding-left:12px; margin:10px 0 16px; color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Concept B · Trust & Clarity</div>
+        <h1>Insurance-grade calm.<br/>Every step explained.</h1>
+        <p class="lede">Institutional navy and gold, editorial typography, guided flows — built for bilingual clarity, compliance confidence, and mixed FA + manager audiences.</p>
+      </div>
+      <div class="chip-row">
+        <span class="chip">Navy × Gold</span>
+        <span class="chip">Libre Baskerville + Manrope</span>
+        <span class="chip">Guided IA</span>
+        <a class="chip" href="../index.html">← All concepts</a>
+      </div>
+    </div>
+    <div class="screen-nav" id="jumpNav"></div>
+    <div class="layout">
+      <div class="phone-shell">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status"><span>9:41</span><span>Secure</span></div>
+
+          <section class="screen no-tab active" id="s-splash">
+            <div class="pad calm-hero">
+              <div class="seal">KBZ<br/>LIFE</div>
+              <div class="title">Agency Sales</div>
+              <p class="sub">A trusted workspace for Financial Advisors and Agency leaders — quote with confidence, submit with care.</p>
+              <button class="btn btn-primary" onclick="go('s-login')">Continue</button>
+              <div style="height:10px"></div>
+              <button class="btn btn-secondary" onclick="go('s-login')">Sign in</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-login">
+            <div class="pad" style="padding-top:28px;">
+              <div class="title">Sign in securely</div>
+              <p class="sub">Access requires an active mobile number registered in CORE. OTP verification protects every session.</p>
+              <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
+              <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
+              <button class="btn btn-primary" onclick="go('s-otp')">Send OTP</button>
+              <div style="height:10px"></div>
+              <button class="btn btn-secondary">Forgot password</button>
+              <p class="sub" style="margin-top:14px;font-size:12px;">If your number is not in CORE, registration is handled via Backend Application List — not self-serve.</p>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-otp">
+            <div class="pad" style="padding-top:28px;">
+              <button class="link" onclick="go('s-login')">← Back</button>
+              <div class="title" style="margin-top:12px;">Verify identity</div>
+              <p class="sub">Enter the SMS one-time password sent to your registered mobile.</p>
+              <div class="otp"><input value="5"/><input value="1"/><input value="9"/><input value="3"/><input value="0"/><input value="7"/></div>
+              <button class="btn btn-primary" onclick="go('s-home')">Confirm</button>
+              <div style="height:10px"></div>
+              <button class="btn btn-secondary" onclick="go('s-bio')">Set up biometric unlock</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-bio">
+            <div class="pad" style="padding-top:72px;text-align:center;">
+              <div class="seal" style="font-size:28px;">⌁</div>
+              <div class="title">Biometric unlock</div>
+              <p class="sub">Optional Face ID / fingerprint for faster return visits on registered devices.</p>
+              <button class="btn btn-primary" onclick="go('s-home')">Enable</button>
+              <div style="height:10px"></div>
+              <button class="btn btn-secondary" onclick="go('s-home')">Not now</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-home">
+            <div class="pad">
+              <div class="trust-banner">
+                <div class="kicker">Financial Advisor dashboard</div>
+                <h2>Good morning, Aye Chan</h2>
+                <p style="opacity:.8;font-size:13px;margin-top:6px;">Your performance and follow-ups, clearly organized.</p>
+              </div>
+              <div class="metric-rail">
+                <div class="metric"><div class="l">New policies</div><div class="v">12</div><div class="d">+18% MoM</div></div>
+                <div class="metric"><div class="l">FYP</div><div class="v">8.4M</div><div class="d">Above avg</div></div>
+                <div class="metric"><div class="l">APE</div><div class="v">6.1M</div><div class="d">+9%</div></div>
+                <div class="metric"><div class="l">Commission</div><div class="v">1.2M</div><div class="d">Product</div></div>
+              </div>
+              <div class="card">
+                <h3>Road to MDRT</h3>
+                <p>Premium 34,200,000.00 of 50,000,000.00 · Commission track also available</p>
+                <div class="progress"><i></i></div>
+              </div>
+              <div class="card" style="border-color:#e6d5a8;background:var(--gold-soft);cursor:pointer;" onclick="go('s-policy')">
+                <h3>Attention needed</h3>
+                <p>3 premiums due within 7 days · Due amount vs collected is ready on Home metrics.</p>
+              </div>
+              <div class="section"><h3>Guided next steps</h3><button class="link" onclick="go('s-manager')">Team view</button></div>
+              <div class="list">
+                <div class="row" onclick="go('s-quote')"><div class="avatar">1</div><div class="meta"><b>Create a quotation</b><span>Accurate Core pricing · save to client</span></div></div>
+                <div class="row" onclick="go('s-eapp')"><div class="avatar">2</div><div class="meta"><b>Continue e-Application</b><span>1 marked for correction</span></div><span class="tag danger">Action</span></div>
+                <div class="row" onclick="go('s-tasks')"><div class="avatar">3</div><div class="meta"><b>Today’s tasks</b><span>Calendar · To-Do · assigned work</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-manager">
+            <div class="pad">
+              <div class="section"><h3>Team oversight</h3><button class="link" onclick="go('s-home')">My view</button></div>
+              <div class="seg">
+                <button class="on" id="tog1" onclick="toggleTeam(true)">Personal Team</button>
+                <button id="tog2" onclick="toggleTeam(false)">Total Group</button>
+              </div>
+              <div class="guide">Toggle between direct reports and full hierarchy (e.g. SAM → AMs).</div>
+              <div class="card">
+                <h3>Summary · Actual vs Target</h3>
+                <p>APE · FYP · Subsequent FYP · Weighted Freelance FYP</p>
+                <div class="progress"><i style="width:82%"></i></div>
+              </div>
+              <div class="section"><h3>MDRT by advisor</h3></div>
+              <div class="list">
+                <div class="row"><div class="avatar">TH</div><div class="meta"><b>Thura Htun</b><span>41.0M premium · 82%</span></div><span class="tag">On track</span></div>
+                <div class="row"><div class="avatar">NW</div><div class="meta"><b>Nwe Nwe</b><span>22.5M premium · 45%</span></div><span class="tag warn">Watch</span></div>
+                <div class="row"><div class="avatar">ZK</div><div class="meta"><b>Zaw Ko</b><span>Below monthly FYP %</span></div><span class="tag danger">Flag</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-leads">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">People</div>
+              <div class="seg"><button class="on">Leads</button><button onclick="go('s-clients')">Clients</button></div>
+              <div class="search">⌕ <input placeholder="Search by name or mobile" /></div>
+              <button class="btn btn-gold" style="margin-bottom:12px;" onclick="go('s-addlead')">Add lead</button>
+              <div class="list">
+                <div class="row" onclick="go('s-client')"><div class="avatar">MS</div><div class="meta"><b>Maung Soe</b><span>Prospect · Endowment interest</span></div><span class="tag">Lead</span></div>
+                <div class="row"><div class="avatar">YH</div><div class="meta"><b>Yu Hlaing</b><span>Callback 05-Aug-2026</span></div><span class="tag warn">Follow up</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-addlead">
+            <div class="pad">
+              <button class="link" onclick="go('s-leads')">← Back</button>
+              <div class="title" style="margin-top:10px;font-size:22px;">Add lead</div>
+              <div class="guide">Mobile format validated · email format checked · mandatory fields marked.</div>
+              <div class="field"><label>Full name *</label><input /></div>
+              <div class="field"><label>Mobile *</label><input placeholder="09 ..." /></div>
+              <div class="field"><label>Email</label><input /></div>
+              <div class="field"><label>Notes</label><textarea rows="3"></textarea></div>
+              <button class="btn btn-primary" onclick="go('s-leads')">Save</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-clients">
+            <div class="pad">
+              <div class="seg"><button onclick="go('s-leads')">Leads</button><button class="on">Clients</button></div>
+              <div class="search">⌕ <input placeholder="Search clients" /></div>
+              <div class="list">
+                <div class="row" onclick="go('s-client')"><div class="avatar">DH</div><div class="meta"><b>Daw Hla</b><span>2 active policies</span></div><span class="tag warn">Due soon</span></div>
+                <div class="row" onclick="go('s-client')"><div class="avatar">UM</div><div class="meta"><b>U Min</b><span>Next due 12-Sep-2026</span></div><span class="tag">Active</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-client">
+            <div class="pad">
+              <button class="link" onclick="go('s-clients')">← Back</button>
+              <div class="title" style="margin-top:10px;font-size:22px;">Daw Hla</div>
+              <p class="sub">09 250 111 222 · Family contacts & notes available</p>
+              <div class="btn-row" style="margin-bottom:12px;">
+                <button class="btn btn-secondary" onclick="go('s-quote')">Quotation</button>
+                <button class="btn btn-primary" onclick="go('s-eapp')">e-Application</button>
+              </div>
+              <div class="section"><h3>Policies</h3></div>
+              <div class="row" onclick="go('s-policy')"><div class="avatar">P</div><div class="meta"><b>POL-88421 · Endowment</b><span>SI 10,000,000.00 · Due 10-Aug-2026</span></div></div>
+              <div class="section"><h3>Activity log</h3></div>
+              <div class="row"><div class="avatar">N</div><div class="meta"><b>Visit note</b><span>Prefers weekend · 28-Jul-2026</span></div></div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-products">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Product library</div>
+              <p class="sub">Read-only benefit summaries, brochures & rates · Core product codes</p>
+              <div class="list">
+                <div class="row" onclick="go('s-quote')"><div class="avatar">EN</div><div class="meta"><b>Endowment Plan</b><span>Brochure available offline</span></div></div>
+                <div class="row" onclick="go('s-quote')"><div class="avatar">UL</div><div class="meta"><b>Universal Life</b><span>Flexible premium</span></div></div>
+                <div class="row" onclick="go('s-quote')"><div class="avatar">CI</div><div class="meta"><b>Critical Illness</b><span>Health protection</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-quote">
+            <div class="pad">
+              <button class="link" onclick="go('s-products')">← Library</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Premium calculator</div>
+              <div class="steps">
+                <div class="dot on">1</div><div class="line"></div>
+                <div class="dot on">2</div><div class="line"></div>
+                <div class="dot">3</div><div class="line"></div>
+                <div class="dot">4</div>
+              </div>
+              <div class="guide">Step-by-step inputs · Core pricing · amounts with 2 decimals & commas</div>
+              <div class="field"><label>Client / lead</label><select><option>Daw Hla</option><option>Maung Soe</option></select></div>
+              <div class="field"><label>Date of birth</label><input value="04-Jun-1990" /></div>
+              <div class="field"><label>Sum assured</label><input value="10,000,000.00" /></div>
+              <div class="field"><label>Payment mode</label><select><option>Annual</option><option>Monthly</option></select></div>
+              <div class="card"><h3>Estimated premium</h3><p style="font-family:'Libre Baskerville',serif;font-size:22px;color:var(--ink);">185,000.00 MMK</p></div>
+              <div class="btn-row">
+                <button class="btn btn-secondary">Save quote</button>
+                <button class="btn btn-primary" onclick="go('s-eapp')">Start e-App</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-eapp">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Electronic application</div>
+              <p class="sub">Pre-fill from quote · KYC for PH / insured / beneficiary · e-sign · documents</p>
+              <div class="list">
+                <div class="row"><div class="avatar">✓</div><div class="meta"><b>Applicant details</b><span>Pre-filled from quote</span></div><span class="tag">Done</span></div>
+                <div class="row"><div class="avatar">2</div><div class="meta"><b>KYC validation</b><span>NRC scan / upload · OCR optional</span></div><span class="tag warn">Current</span></div>
+                <div class="row"><div class="avatar">3</div><div class="meta"><b>Documents</b><span>Camera capture</span></div></div>
+                <div class="row"><div class="avatar">4</div><div class="meta"><b>Signatures</b><span>Client + agent on device</span></div></div>
+              </div>
+              <button class="btn btn-primary" style="margin-top:12px;" onclick="go('s-apps')">Review & submit</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-apps">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Application tracker</div>
+              <div class="search">⌕ <input placeholder="Search applications" /></div>
+              <div class="list">
+                <div class="row"><div class="avatar">D</div><div class="meta"><b>Draft</b><span>Maung Soe</span></div><span class="tag">Draft</span></div>
+                <div class="row"><div class="avatar">S</div><div class="meta"><b>Submitted</b><span>U Min</span></div><span class="tag">Live</span></div>
+                <div class="row"><div class="avatar">C</div><div class="meta"><b>Mark for Correction</b><span>Daw Hla</span></div><span class="tag danger">Fix</span></div>
+                <div class="row"><div class="avatar">A</div><div class="meta"><b>Approved / Rejected</b><span>Status from Core</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-policy">
+            <div class="pad">
+              <button class="link" onclick="go('s-client')">← Client</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Policy overview</div>
+              <p class="sub">Read-only servicing view · POL-88421</p>
+              <div class="card"><h3>Coverage (SI)</h3><p style="font-size:20px;color:var(--ink);font-family:'Libre Baskerville',serif;">10,000,000.00</p></div>
+              <div class="card"><h3>Premium · Next due</h3><p>185,000.00 · 10-Aug-2026</p></div>
+              <div class="card"><h3>Beneficiary</h3><p>Ma Hla · Spouse · 100%</p></div>
+              <button class="btn btn-gold" onclick="go('s-tasks')">Schedule follow-up</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-tasks">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Work calendar</div>
+              <div class="seg"><button class="on">Day</button><button>Week</button><button>Month</button></div>
+              <div class="list">
+                <div class="row"><div class="avatar">$</div><div class="meta"><b>Premium reminder</b><span>Daw Hla · Pending</span></div><span class="tag warn">Due</span></div>
+                <div class="row"><div class="avatar">R</div><div class="meta"><b>Recruitment interview</b><span>Assigned · In progress</span></div><span class="tag">Active</span></div>
+                <div class="row"><div class="avatar">↻</div><div class="meta"><b>Renewal review</b><span>60 days out</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-notifs">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Notifications</div>
+              <div class="list">
+                <div class="row"><div class="avatar">7</div><div class="meta"><b>Premium due in 7 days</b><span>Automated from Core triggers</span></div></div>
+                <div class="row"><div class="avatar">60</div><div class="meta"><b>Renewal in 60 days</b><span>Review opportunity</span></div></div>
+                <div class="row" onclick="go('s-announce')"><div class="avatar">A</div><div class="meta"><b>Company announcement</b><span>Image + URL supported</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-announce">
+            <div class="pad">
+              <button class="link" onclick="go('s-notifs')">← Back</button>
+              <div style="margin-top:12px;height:150px;border-radius:16px;background:linear-gradient(135deg,#062a4a,#b8923a);"></div>
+              <div class="title" style="margin-top:12px;font-size:22px;">Agency update</div>
+              <p class="sub">Configured from web backend · broadcast with image and deep link.</p>
+              <button class="btn btn-primary">Open linked URL</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-resources">
+            <div class="pad">
+              <div class="card" style="background:var(--brand-deep);color:#fff;border:0;">
+                <h3 style="color:#fff;">Offline library</h3>
+                <p style="color:rgba(255,255,255,.75);">Brochures, training docs, forms — sections configured from portal.</p>
+              </div>
+              <div class="list">
+                <div class="row"><div class="avatar">B</div><div class="meta"><b>Product brochures</b><span>Cached on device</span></div></div>
+                <div class="row"><div class="avatar">T</div><div class="meta"><b>Training materials</b><span>L&D</span></div></div>
+                <div class="row"><div class="avatar">F</div><div class="meta"><b>Company forms</b><span>Configurable</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-profile">
+            <div class="pad" style="text-align:center;padding-top:24px;">
+              <div class="avatar" style="width:84px;height:84px;margin:0 auto 10px;font-size:28px;">A</div>
+              <div class="title" style="font-size:22px;">Aye Chan</div>
+              <p class="sub">FA · AGT-10284 · ENG / မြန်မာ</p>
+              <div class="seg"><button class="on">ENG</button><button>မြန်မာ</button></div>
+              <div class="list" style="text-align:left;">
+                <div class="row"><div class="avatar">✎</div><div class="meta"><b>Profile & photo</b><span>Core synced</span></div></div>
+                <div class="row"><div class="avatar">⌘</div><div class="meta"><b>Password</b><span>OTP reset with remark</span></div></div>
+                <div class="row"><div class="avatar">?</div><div class="meta"><b>Help & feedback</b><span>Support</span></div></div>
+                <div class="row"><div class="avatar">§</div><div class="meta"><b>Terms & privacy</b><span>Legal</span></div></div>
+                <div class="row"><div class="avatar">🔒</div><div class="meta"><b>Security</b><span>Device registered · encrypted storage</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <nav class="tabbar" id="tabbar">
+            <button class="tab active" data-go="s-home">Home</button>
+            <button class="tab" data-go="s-leads">People</button>
+            <button class="tab" data-go="s-products">Sell</button>
+            <button class="tab" data-go="s-tasks">Work</button>
+            <button class="tab" data-go="s-profile">More</button>
+          </nav>
+        </div>
+      </div>
+
+      <div class="web">
+        <div class="web-head">
+          <div>
+            <div class="eyebrow">Web management portal</div>
+            <h2 style="font-family:'Libre Baskerville',serif;font-size:28px;margin-top:4px;">Clear oversight, careful control</h2>
+          </div>
+          <div class="web-nav">
+            <button class="on">Overview</button>
+            <button>Performance</button>
+            <button>Recruitment</button>
+            <button>Operations</button>
+            <button>Audit</button>
+          </div>
+        </div>
+        <div class="web-grid">
+          <div class="kpi"><div class="l">Proposals</div><div class="v">146</div></div>
+          <div class="kpi"><div class="l">FYP vs target</div><div class="v">91%</div></div>
+          <div class="kpi"><div class="l">K1 / K2</div><div class="v">86% / 81%</div></div>
+          <div class="kpi"><div class="l">Under target</div><div class="v" style="color:var(--danger);">7</div></div>
+        </div>
+        <div style="overflow:auto;border:1px solid var(--line);border-radius:16px;">
+          <table>
+            <thead><tr><th>Advisor</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Weighted FYP</th><th>MDRT</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41.0M</td><td>Healthy</td></tr>
+              <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8.2M</td><td style="color:var(--danger);font-weight:800;">Red flag</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pipeline">
+          <div class="pipe"><h4>Screening</h4><div class="mini">Su Su</div><div class="mini">Ko Ko</div></div>
+          <div class="pipe"><h4>LC / NIIM</h4><div class="mini">Mei Mei · Training</div></div>
+          <div class="pipe"><h4>Contract</h4><div class="mini">Final in progress</div></div>
+          <div class="pipe"><h4>Contracted</h4><div class="mini">3 this month</div></div>
+        </div>
+        <p class="note"><b>Concept B signature:</b> seal-like brand moments, gold accent for trust actions, guided numbered steps, explanatory microcopy for OTP/CORE rules, recruitment statuses as calm kanban, audit-ready web tone.</p>
+      </div>
+    </div>
+  </div>
+<script>
+  const auth = new Set(['s-splash','s-login','s-otp','s-bio']);
+  const labels = [['s-splash','Splash'],['s-login','Login'],['s-otp','OTP'],['s-home','Home'],['s-manager','Manager'],['s-leads','Leads'],['s-clients','Clients'],['s-client','Client'],['s-products','Products'],['s-quote','Quote'],['s-eapp','e-App'],['s-apps','Tracker'],['s-policy','Policy'],['s-tasks','Tasks'],['s-notifs','Notifs'],['s-announce','Announce'],['s-resources','Resources'],['s-profile','Profile']];
+  const nav = document.getElementById('jumpNav');
+  labels.forEach(([id,name],i)=>{ const b=document.createElement('button'); b.textContent=name; b.dataset.id=id; if(!i)b.classList.add('on'); b.onclick=()=>go(id); nav.appendChild(b); });
+  function go(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el=document.getElementById(id); el.classList.add('active');
+    el.classList.toggle('no-tab', auth.has(id));
+    document.getElementById('tabbar').style.display = auth.has(id)?'none':'grid';
+    document.querySelectorAll('#jumpNav button').forEach(b=>b.classList.toggle('on', b.dataset.id===id));
+    const map = {home:['s-home','s-manager'], people:['s-leads','s-clients','s-client','s-addlead'], sell:['s-products','s-quote','s-eapp','s-apps'], work:['s-tasks','s-notifs','s-announce','s-resources'], more:['s-profile','s-policy']};
+    document.querySelectorAll('.tab').forEach(t=>{
+      const g=t.dataset.go; let on=g===id;
+      if(map.home.includes(id)&&g==='s-home') on=true;
+      if(map.people.includes(id)&&g==='s-leads') on=true;
+      if(map.sell.includes(id)&&g==='s-products') on=true;
+      if(map.work.includes(id)&&g==='s-tasks') on=true;
+      if(map.more.includes(id)&&g==='s-profile') on=true;
+      if(['s-home','s-leads','s-products','s-tasks','s-profile'].includes(id)) on = g===id;
+      t.classList.toggle('active', on);
+    });
+  }
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.go)));
+  function toggleTeam(p){ document.getElementById('tog1').classList.toggle('on',p); document.getElementById('tog2').classList.toggle('on',!p); }
+  go('s-splash');
+</script>
+</body>
+</html>

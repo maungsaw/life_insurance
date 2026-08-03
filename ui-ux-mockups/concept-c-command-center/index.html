@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KBZ LIFE Agent — Concept C · Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #171b22;
+    --panel-2: #1e2430;
+    --ink: #eef2f7;
+    --muted: #8b95a7;
+    --line: #2a3342;
+    --accent: #7cffb2;
+    --accent-2: #5ad0ff;
+    --warn: #ffc857;
+    --danger: #ff6b6b;
+    --ok: #7cffb2;
+    --shadow: 0 24px 70px rgba(0,0,0,.45);
+    --phone-w: 390px;
+    --phone-h: 844px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(900px 500px at 0% 0%, rgba(124,255,178,.12), transparent 50%),
+      radial-gradient(800px 500px at 100% 0%, rgba(90,208,255,.10), transparent 45%),
+      #090b0f;
+    min-height:100vh;
+  }
+  .page { max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
+  .hero { display:flex; justify-content:space-between; gap:24px; align-items:end; flex-wrap:wrap; margin-bottom:28px; }
+  .eyebrow { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); font-weight:700; }
+  h1 { font-family:"Space Grotesk", sans-serif; font-size:clamp(28px,4vw,42px); line-height:1.08; margin-top:8px; }
+  .lede { max-width:560px; color:var(--muted); line-height:1.55; margin-top:10px; }
+  .chip-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .chip { background:var(--panel); border:1px solid var(--line); padding:8px 12px; border-radius:999px; font-size:12px; font-weight:600; color:var(--ink); text-decoration:none; }
+  .layout { display:grid; grid-template-columns:auto 1fr; gap:28px; }
+  @media (max-width:980px){ .layout{grid-template-columns:1fr;} }
+  .phone-shell {
+    width:var(--phone-w); height:var(--phone-h); border-radius:42px; background:#050607;
+    padding:12px; box-shadow:var(--shadow); position:sticky; top:20px; border:1px solid #222;
+  }
+  .phone { width:100%; height:100%; border-radius:32px; overflow:hidden; background:var(--bg); position:relative; display:flex; flex-direction:column; }
+  .notch { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:118px; height:28px; background:#050607; border-radius:20px; z-index:5; }
+  .status { display:flex; justify-content:space-between; padding:16px 18px 4px; font-size:11px; font-weight:600; color:var(--muted); }
+  .screen { display:none; flex:1; overflow:auto; padding-bottom:86px; }
+  .screen.active { display:block; }
+  .screen.no-tab { padding-bottom:24px; }
+  .tabbar {
+    position:absolute; left:10px; right:10px; bottom:10px; background:rgba(23,27,34,.92);
+    border:1px solid var(--line); border-radius:18px; display:grid; grid-template-columns:repeat(5,1fr);
+    padding:8px 4px; z-index:4; backdrop-filter:blur(10px);
+  }
+  .tab { border:0; background:transparent; color:var(--muted); font:inherit; font-size:9px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer; padding:8px 2px; }
+  .tab.active { color:var(--accent); }
+  .pad { padding:8px 16px 16px; }
+  .title { font-family:"Space Grotesk", sans-serif; font-size:26px; line-height:1.1; margin-bottom:8px; }
+  .sub { color:var(--muted); font-size:13px; line-height:1.5; margin-bottom:16px; }
+  .field { margin-bottom:10px; }
+  .field label { display:block; font-size:11px; font-weight:600; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.06em; }
+  .field input, .field select, .field textarea {
+    width:100%; border:1px solid var(--line); background:var(--panel); color:var(--ink);
+    border-radius:12px; padding:12px 13px; font:inherit;
+  }
+  .btn { width:100%; border:0; border-radius:12px; padding:13px 14px; font:inherit; font-weight:700; cursor:pointer; }
+  .btn-primary { background:var(--accent); color:#04140c; }
+  .btn-secondary { background:var(--panel-2); color:var(--ink); border:1px solid var(--line); }
+  .btn-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .otp { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin:14px 0 18px; }
+  .otp input { text-align:center; font-weight:700; font-size:16px; padding:11px 0; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); }
+  .hud {
+    background:linear-gradient(160deg, #1a2230, #12161d);
+    border:1px solid var(--line); border-radius:18px; padding:14px; margin-bottom:10px;
+  }
+  .hud .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .live { display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:700; color:var(--accent); letter-spacing:0.08em; text-transform:uppercase; }
+  .live::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .tile {
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px;
+  }
+  .tile .l { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; font-weight:700; }
+  .tile .v { font-family:"Space Grotesk", sans-serif; font-size:20px; margin-top:4px; }
+  .tile .d { font-size:11px; margin-top:3px; color:var(--accent); font-weight:600; }
+  .tile .d.down { color:var(--danger); }
+  .spark {
+    height:36px; margin-top:8px; border-radius:8px;
+    background: linear-gradient(180deg, rgba(124,255,178,.18), transparent),
+                repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(255,255,255,.04) 8px, rgba(255,255,255,.04) 9px);
+    position:relative; overflow:hidden;
+  }
+  .spark::after {
+    content:""; position:absolute; left:0; right:0; bottom:8px; height:2px;
+    background:linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+  }
+  .race {
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px; margin:10px 0;
+  }
+  .bar { height:8px; background:#0b0e13; border-radius:99px; overflow:hidden; margin-top:8px; }
+  .bar > i { display:block; height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  .list { display:flex; flex-direction:column; gap:7px; }
+  .row {
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:11px;
+    display:flex; gap:10px; align-items:center; cursor:pointer;
+  }
+  .mono {
+    width:36px; height:36px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line);
+    display:grid; place-items:center; font-size:11px; font-weight:700; color:var(--accent); flex-shrink:0;
+  }
+  .meta { flex:1; min-width:0; }
+  .meta b { display:block; font-size:13px; }
+  .meta span { color:var(--muted); font-size:11px; }
+  .badge { font-size:10px; font-weight:700; padding:3px 7px; border-radius:6px; background:rgba(124,255,178,.12); color:var(--accent); }
+  .badge.warn { background:rgba(255,200,87,.12); color:var(--warn); }
+  .badge.danger { background:rgba(255,107,107,.12); color:var(--danger); }
+  .seg { display:grid; grid-template-columns:1fr 1fr; gap:4px; background:#0b0e13; border:1px solid var(--line); padding:4px; border-radius:12px; margin-bottom:10px; }
+  .seg button { border:0; background:transparent; color:var(--muted); padding:9px; border-radius:8px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .seg button.on { background:var(--panel-2); color:var(--ink); }
+  .search { display:flex; gap:8px; align-items:center; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:10px; }
+  .search input { border:0; outline:0; flex:1; background:transparent; color:var(--ink); font:inherit; }
+  .link { border:0; background:none; color:var(--accent-2); font:inherit; font-weight:700; font-size:12px; cursor:pointer; }
+  .section { display:flex; justify-content:space-between; align-items:center; margin:12px 0 8px; }
+  .section h3 { font-family:"Space Grotesk", sans-serif; font-size:14px; }
+  .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-bottom:12px; }
+  .steps i { height:4px; border-radius:99px; background:var(--line); }
+  .steps i.on { background:var(--accent); }
+  .offline {
+    border:1px dashed var(--warn); color:var(--warn); border-radius:10px; padding:8px 10px; font-size:11px; font-weight:700;
+    margin-bottom:10px; display:flex; justify-content:space-between;
+  }
+  .web {
+    background:rgba(23,27,34,.9); border:1px solid var(--line); border-radius:24px; padding:22px; box-shadow:var(--shadow); min-height:760px;
+  }
+  .web-head { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:end; margin-bottom:16px; }
+  .web-nav { display:flex; gap:6px; flex-wrap:wrap; }
+  .web-nav button { border:1px solid var(--line); background:var(--panel); color:var(--muted); border-radius:8px; padding:8px 12px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .web-nav button.on { color:#04140c; background:var(--accent); border-color:var(--accent); }
+  .web-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+  @media (max-width:1100px){ .web-grid{grid-template-columns:repeat(2,1fr);} }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th, td { padding:11px 9px; border-bottom:1px solid var(--line); text-align:left; }
+  th { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; }
+  .heat { color:var(--danger); font-weight:700; }
+  .note { margin-top:14px; color:var(--muted); font-size:13px; line-height:1.55; }
+  .screen-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .screen-nav button { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:999px; padding:8px 12px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; }
+  .screen-nav button.on { background:var(--accent); color:#04140c; }
+  .chart-row { display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:12px; }
+  .mini-bars { display:flex; align-items:end; gap:4px; height:80px; padding-top:10px; }
+  .mini-bars span { flex:1; background:linear-gradient(180deg, var(--accent-2), transparent); border-radius:4px 4px 0 0; opacity:.85; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Concept C · Command Center</div>
+        <h1>Performance cockpit.<br/>Every KPI in reach.</h1>
+        <p class="lede">Dark operational UI for power users — dense dashboards, MDRT race energy, hierarchy drills, and web analytics that feel like a trading desk for agency production.</p>
+      </div>
+      <div class="chip-row">
+        <span class="chip">Charcoal × Signal green</span>
+        <span class="chip">Space Grotesk + IBM Plex</span>
+        <span class="chip">KPI-dense IA</span>
+        <a class="chip" href="../index.html">← All concepts</a>
+      </div>
+    </div>
+    <div class="screen-nav" id="jumpNav"></div>
+    <div class="layout">
+      <div class="phone-shell">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status"><span>09:41</span><span>SYNCED · SECURE</span></div>
+
+          <section class="screen no-tab active" id="s-splash">
+            <div class="pad" style="padding-top:70px;">
+              <div class="live">KBZ LIFE AGENT</div>
+              <div class="title" style="margin-top:12px;">Command<br/>your book</div>
+              <p class="sub">Real-time production, persistency, MDRT, tasks, and e-Apps — one operational surface.</p>
+              <button class="btn btn-primary" onclick="go('s-login')">Initialize session</button>
+              <div style="height:8px"></div>
+              <button class="btn btn-secondary" onclick="go('s-login')">Existing agent login</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-login">
+            <div class="pad" style="padding-top:28px;">
+              <div class="live">AUTH GATE</div>
+              <div class="title" style="margin-top:8px;font-size:24px;">Access control</div>
+              <p class="sub">CORE-validated mobile · SMS OTP · device registration enforced.</p>
+              <div class="field"><label>Mobile</label><input value="09 771 234 567" /></div>
+              <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
+              <button class="btn btn-primary" onclick="go('s-otp')">Request OTP</button>
+              <div style="height:8px"></div>
+              <button class="btn btn-secondary">Password reset + remark</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-otp">
+            <div class="pad" style="padding-top:28px;">
+              <button class="link" onclick="go('s-login')">← Back</button>
+              <div class="title" style="margin-top:10px;font-size:24px;">OTP challenge</div>
+              <div class="otp"><input value="9"/><input value="4"/><input value="1"/><input value="7"/><input value="2"/><input value="6"/></div>
+              <button class="btn btn-primary" onclick="go('s-home')">Authenticate</button>
+              <div style="height:8px"></div>
+              <button class="btn btn-secondary" onclick="go('s-bio')">Biometric bind</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-bio">
+            <div class="pad" style="padding-top:80px;text-align:center;">
+              <div class="mono" style="width:72px;height:72px;margin:0 auto 14px;font-size:24px;border-radius:20px;">⌁</div>
+              <div class="title" style="font-size:24px;">Biometric latch</div>
+              <p class="sub">Optional Face ID / fingerprint on registered devices only.</p>
+              <button class="btn btn-primary" onclick="go('s-home')">Enable</button>
+              <div style="height:8px"></div>
+              <button class="btn btn-secondary" onclick="go('s-home')">Skip</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-home">
+            <div class="pad">
+              <div class="hud">
+                <div class="top">
+                  <div>
+                    <div class="live">FA LIVE</div>
+                    <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;margin-top:4px;">Aye Chan</div>
+                  </div>
+                  <button class="link" onclick="go('s-manager')">TEAM HUD →</button>
+                </div>
+                <div class="grid2">
+                  <div class="tile"><div class="l">New policies</div><div class="v">12</div><div class="d">+18%</div><div class="spark"></div></div>
+                  <div class="tile"><div class="l">FYP</div><div class="v">8.4M</div><div class="d">↑ avg</div><div class="spark"></div></div>
+                  <div class="tile"><div class="l">APE / AFYP</div><div class="v">6.1M</div><div class="d">+9%</div></div>
+                  <div class="tile"><div class="l">Due vs collected</div><div class="v">78%</div><div class="d down">3 open</div></div>
+                </div>
+              </div>
+              <div class="grid2" style="margin-bottom:8px;">
+                <div class="tile"><div class="l">Commission</div><div class="v">1.2M</div></div>
+                <div class="tile"><div class="l">K1 persistency</div><div class="v">86%</div></div>
+              </div>
+              <div class="race">
+                <div style="display:flex;justify-content:space-between;font-size:12px;"><b>MDRT RACE</b><span style="color:var(--accent);">68%</span></div>
+                <div style="color:var(--muted);font-size:11px;margin-top:2px;">Premium 34.2M / 50.0M · Commission lane available</div>
+                <div class="bar"><i style="width:68%"></i></div>
+              </div>
+              <div class="section"><h3>Signal queue</h3><button class="link" onclick="go('s-notifs')">ALL</button></div>
+              <div class="list">
+                <div class="row" onclick="go('s-policy')"><div class="mono">DUE</div><div class="meta"><b>Premium window · 7d</b><span>1,250,000.00 across 3 policies</span></div><span class="badge warn">ACT</span></div>
+                <div class="row" onclick="go('s-apps')"><div class="mono">APP</div><div class="meta"><b>Correction required</b><span>Daw Hla · NRC</span></div><span class="badge danger">FIX</span></div>
+                <div class="row" onclick="go('s-quote')"><div class="mono">+</div><div class="meta"><b>Launch quote</b><span>Core pricing · save · e-App</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-manager">
+            <div class="pad">
+              <div class="section"><h3>Team HUD</h3><button class="link" onclick="go('s-home')">MY BOOK</button></div>
+              <div class="seg">
+                <button class="on" id="tog1" onclick="toggleTeam(true)">Personal</button>
+                <button id="tog2" onclick="toggleTeam(false)">Total Group</button>
+              </div>
+              <div class="hud">
+                <div class="l" style="font-size:10px;color:var(--muted);letter-spacing:.08em;">ACTUAL VS TARGET</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;margin:4px 0;">82%</div>
+                <div style="color:var(--muted);font-size:11px;">APE · FYP · SFYP · Weighted Freelance FYP</div>
+                <div class="bar" style="margin-top:10px;"><i style="width:82%"></i></div>
+              </div>
+              <div class="section"><h3>MDRT board</h3></div>
+              <div class="list">
+                <div class="row"><div class="mono">01</div><div class="meta"><b>Thura Htun</b><span>41.0M · 82%</span></div><span class="badge">HOT</span></div>
+                <div class="row"><div class="mono">02</div><div class="meta"><b>Nwe Nwe</b><span>22.5M · 45%</span></div><span class="badge warn">MID</span></div>
+                <div class="row"><div class="mono">!!</div><div class="meta"><b>Zaw Ko</b><span>Below FYP threshold</span></div><span class="badge danger">FLAG</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-leads">
+            <div class="pad">
+              <div class="seg"><button class="on">Leads</button><button onclick="go('s-clients')">Clients</button></div>
+              <div class="search">⌘ <input placeholder="Filter CRM" /></div>
+              <button class="btn btn-primary" style="margin-bottom:10px;" onclick="go('s-addlead')">+ New lead</button>
+              <div class="list">
+                <div class="row" onclick="go('s-client')"><div class="mono">MS</div><div class="meta"><b>Maung Soe</b><span>Hot · quote ready</span></div><span class="badge">LEAD</span></div>
+                <div class="row"><div class="mono">YH</div><div class="meta"><b>Yu Hlaing</b><span>05-Aug-2026 callback</span></div><span class="badge warn">QUEUE</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-addlead">
+            <div class="pad">
+              <button class="link" onclick="go('s-leads')">← CRM</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Capture lead</div>
+              <div class="field"><label>Name</label><input /></div>
+              <div class="field"><label>Mobile</label><input placeholder="09 ..." /></div>
+              <div class="field"><label>Email</label><input /></div>
+              <div class="field"><label>Notes</label><textarea rows="3"></textarea></div>
+              <button class="btn btn-primary" onclick="go('s-leads')">Commit</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-clients">
+            <div class="pad">
+              <div class="seg"><button onclick="go('s-leads')">Leads</button><button class="on">Clients</button></div>
+              <div class="search">⌘ <input placeholder="Search book" /></div>
+              <div class="list">
+                <div class="row" onclick="go('s-client')"><div class="mono">DH</div><div class="meta"><b>Daw Hla</b><span>Due 10-Aug-2026</span></div><span class="badge warn">DUE</span></div>
+                <div class="row" onclick="go('s-client')"><div class="mono">UM</div><div class="meta"><b>U Min</b><span>Active</span></div><span class="badge">OK</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-client">
+            <div class="pad">
+              <button class="link" onclick="go('s-clients')">← Book</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Daw Hla</div>
+              <p class="sub">Policyholder dossier · contacts · notes · convert path</p>
+              <div class="btn-row" style="margin-bottom:10px;">
+                <button class="btn btn-secondary" onclick="go('s-quote')">Quote</button>
+                <button class="btn btn-primary" onclick="go('s-eapp')">e-App</button>
+              </div>
+              <div class="row" onclick="go('s-policy')"><div class="mono">POL</div><div class="meta"><b>88421 Endowment</b><span>SI 10,000,000.00</span></div></div>
+              <div class="row"><div class="mono">LOG</div><div class="meta"><b>Weekend preference</b><span>28-Jul-2026</span></div></div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-products">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Product rack</div>
+              <p class="sub">Enabled SKUs only · Core codes</p>
+              <div class="list">
+                <div class="row" onclick="go('s-quote')"><div class="mono">EN</div><div class="meta"><b>Endowment</b><span>Calc ready</span></div></div>
+                <div class="row" onclick="go('s-quote')"><div class="mono">UL</div><div class="meta"><b>Universal Life</b><span>Calc ready</span></div></div>
+                <div class="row" onclick="go('s-quote')"><div class="mono">CI</div><div class="meta"><b>Critical Illness</b><span>Calc ready</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-quote">
+            <div class="pad">
+              <button class="link" onclick="go('s-products')">← Rack</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Pricing engine</div>
+              <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+              <div class="field"><label>Link</label><select><option>Daw Hla</option><option>Maung Soe</option></select></div>
+              <div class="field"><label>DOB</label><input value="04-Jun-1990" /></div>
+              <div class="field"><label>Sum assured</label><input value="10,000,000.00" /></div>
+              <div class="field"><label>Mode</label><select><option>Annual</option><option>Monthly</option></select></div>
+              <div class="tile" style="margin:10px 0;"><div class="l">Premium output</div><div class="v">185,000.00</div><div class="d">Core API</div></div>
+              <div class="btn-row">
+                <button class="btn btn-secondary">Save</button>
+                <button class="btn btn-primary" onclick="go('s-eapp')">e-App</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-eapp">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">e-App pipeline</div>
+              <div class="list">
+                <div class="row"><div class="mono">01</div><div class="meta"><b>Identity block</b><span>Pre-filled</span></div><span class="badge">OK</span></div>
+                <div class="row"><div class="mono">02</div><div class="meta"><b>KYC / NRC</b><span>PH · Insured · Beneficiary</span></div><span class="badge warn">NOW</span></div>
+                <div class="row"><div class="mono">03</div><div class="meta"><b>Docs capture</b><span>Camera / upload</span></div></div>
+                <div class="row"><div class="mono">04</div><div class="meta"><b>Dual e-sign</b><span>Client + agent</span></div></div>
+              </div>
+              <button class="btn btn-primary" style="margin-top:10px;" onclick="go('s-apps')">Transmit</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-apps">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">App status grid</div>
+              <div class="search">⌘ <input placeholder="Filter status" /></div>
+              <div class="list">
+                <div class="row"><div class="mono">DR</div><div class="meta"><b>Draft</b><span>Maung Soe</span></div></div>
+                <div class="row"><div class="mono">SB</div><div class="meta"><b>Submitted</b><span>U Min</span></div><span class="badge">LIVE</span></div>
+                <div class="row"><div class="mono">MC</div><div class="meta"><b>Mark for Correction</b><span>Daw Hla</span></div><span class="badge danger">FIX</span></div>
+                <div class="row"><div class="mono">AP</div><div class="meta"><b>Approved / Rejected</b><span>Terminal states</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-policy">
+            <div class="pad">
+              <button class="link" onclick="go('s-client')">← Dossier</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Policy read-out</div>
+              <div class="grid2">
+                <div class="tile"><div class="l">SI</div><div class="v" style="font-size:16px;">10.0M</div></div>
+                <div class="tile"><div class="l">Premium</div><div class="v" style="font-size:16px;">185K</div></div>
+                <div class="tile"><div class="l">Next due</div><div class="v" style="font-size:16px;">10-Aug</div></div>
+                <div class="tile"><div class="l">Status</div><div class="v" style="font-size:16px;">Active</div></div>
+              </div>
+              <div class="row" style="margin-top:8px;"><div class="mono">BEN</div><div class="meta"><b>Ma Hla</b><span>Spouse · 100%</span></div></div>
+              <button class="btn btn-primary" style="margin-top:10px;" onclick="go('s-tasks')">Spawn task</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-tasks">
+            <div class="pad">
+              <div class="seg"><button class="on">Day</button><button>Week</button><button>Month</button></div>
+              <div class="list">
+                <div class="row"><div class="mono">$</div><div class="meta"><b>Premium chase</b><span>Pending</span></div><span class="badge warn">DUE</span></div>
+                <div class="row"><div class="mono">R</div><div class="meta"><b>Recruit interview</b><span>In progress</span></div><span class="badge">RUN</span></div>
+                <div class="row"><div class="mono">60</div><div class="meta"><b>Renewal review</b><span>60-day lead</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-notifs">
+            <div class="pad">
+              <div class="title" style="font-size:22px;">Signal center</div>
+              <div class="list">
+                <div class="row"><div class="mono">7D</div><div class="meta"><b>Premium due</b><span>Core trigger</span></div></div>
+                <div class="row"><div class="mono">60D</div><div class="meta"><b>Renewal</b><span>Review window</span></div></div>
+                <div class="row" onclick="go('s-announce')"><div class="mono">ANC</div><div class="meta"><b>Announcement</b><span>Image + URL</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-announce">
+            <div class="pad">
+              <button class="link" onclick="go('s-notifs')">← Signals</button>
+              <div style="margin-top:10px;height:130px;border-radius:14px;background:linear-gradient(135deg,#123,#7cffb2 140%); border:1px solid var(--line);"></div>
+              <div class="title" style="margin-top:10px;font-size:20px;">Incentive broadcast</div>
+              <p class="sub">Backend-configured payload with creative + deep link.</p>
+              <button class="btn btn-primary">Open URL</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-resources">
+            <div class="pad">
+              <div class="offline"><span>OFFLINE CACHE ONLINE</span><span>●</span></div>
+              <div class="title" style="font-size:22px;">Resource bay</div>
+              <div class="list">
+                <div class="row"><div class="mono">PDF</div><div class="meta"><b>Brochures</b><span>Encrypted local</span></div></div>
+                <div class="row"><div class="mono">TRN</div><div class="meta"><b>Training</b><span>L&D packs</span></div></div>
+                <div class="row"><div class="mono">FRM</div><div class="meta"><b>Forms</b><span>Portal sections</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-profile">
+            <div class="pad">
+              <div class="hud" style="text-align:center;">
+                <div class="mono" style="width:64px;height:64px;margin:0 auto 8px;border-radius:18px;font-size:22px;">AC</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:20px;">Aye Chan</div>
+                <div style="color:var(--muted);font-size:12px;">AGT-10284 · DEVICE TRUSTED</div>
+                <div class="seg" style="margin-top:12px;"><button class="on">ENG</button><button>MM</button></div>
+              </div>
+              <div class="list">
+                <div class="row"><div class="mono">PRF</div><div class="meta"><b>Profile / photo</b><span>Core sync</span></div></div>
+                <div class="row"><div class="mono">PWD</div><div class="meta"><b>Password</b><span>OTP + remark</span></div></div>
+                <div class="row"><div class="mono">SEC</div><div class="meta"><b>Security posture</b><span>SQLite enc · remote wipe ready</span></div></div>
+                <div class="row"><div class="mono">HLP</div><div class="meta"><b>Help / legal</b><span>Feedback · T&Cs</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <nav class="tabbar" id="tabbar">
+            <button class="tab active" data-go="s-home">Home</button>
+            <button class="tab" data-go="s-leads">CRM</button>
+            <button class="tab" data-go="s-products">Sell</button>
+            <button class="tab" data-go="s-tasks">Ops</button>
+            <button class="tab" data-go="s-profile">Sys</button>
+          </nav>
+        </div>
+      </div>
+
+      <div class="web">
+        <div class="web-head">
+          <div>
+            <div class="eyebrow">Web · Executive command</div>
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:28px;margin-top:4px;">Portfolio control room</h2>
+          </div>
+          <div class="web-nav">
+            <button class="on">Overview</button>
+            <button>Hierarchy</button>
+            <button>Persistency</button>
+            <button>Recruit</button>
+            <button>Export</button>
+          </div>
+        </div>
+        <div class="web-grid">
+          <div class="tile"><div class="l">Proposals</div><div class="v">146</div><div class="d">Live feed</div></div>
+          <div class="tile"><div class="l">FYP vs target</div><div class="v">91%</div><div class="d">Portfolio</div></div>
+          <div class="tile"><div class="l">K1 / K2</div><div class="v">86/81</div><div class="d">Grace on</div></div>
+          <div class="tile"><div class="l">Red flags</div><div class="v" style="color:var(--danger);">7</div><div class="d down">Below %</div></div>
+        </div>
+        <div class="chart-row">
+          <div class="hud">
+            <div class="live">PRODUCTION TREND</div>
+            <div class="mini-bars">
+              <span style="height:40%"></span><span style="height:55%"></span><span style="height:48%"></span>
+              <span style="height:70%"></span><span style="height:62%"></span><span style="height:80%"></span>
+              <span style="height:74%"></span><span style="height:90%"></span><span style="height:85%"></span>
+              <span style="height:95%"></span><span style="height:88%"></span><span style="height:100%"></span>
+            </div>
+          </div>
+          <div class="hud">
+            <div class="live">FUNNEL</div>
+            <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8;">
+              Screening 18<br/>Training / NIIM 11<br/>Contracting 6<br/>Contracted 3
+            </div>
+          </div>
+        </div>
+        <div style="overflow:auto;border:1px solid var(--line);border-radius:14px;">
+          <table>
+            <thead><tr><th>FA</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Wtd FYP</th><th>MDRT</th><th>Variance</th></tr></thead>
+            <tbody>
+              <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41.0M</td><td style="color:var(--accent);">OK</td></tr>
+              <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8.2M</td><td class="heat">FLAG</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note"><b>Concept C signature:</b> live HUD language, spark/race metaphors for MDRT, dense KPI tiles, signal queue instead of soft alerts, Sys tab for security posture — ideal for DM/ADM power users and advanced FAs.</p>
+      </div>
+    </div>
+  </div>
+<script>
+  const auth = new Set(['s-splash','s-login','s-otp','s-bio']);
+  const labels = [['s-splash','Splash'],['s-login','Login'],['s-otp','OTP'],['s-home','Home'],['s-manager','Team'],['s-leads','Leads'],['s-clients','Clients'],['s-client','Client'],['s-products','Products'],['s-quote','Quote'],['s-eapp','e-App'],['s-apps','Tracker'],['s-policy','Policy'],['s-tasks','Tasks'],['s-notifs','Signals'],['s-announce','Announce'],['s-resources','Resources'],['s-profile','Profile']];
+  const nav = document.getElementById('jumpNav');
+  labels.forEach(([id,name],i)=>{ const b=document.createElement('button'); b.textContent=name; b.dataset.id=id; if(!i)b.classList.add('on'); b.onclick=()=>go(id); nav.appendChild(b); });
+  function go(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el=document.getElementById(id); el.classList.add('active');
+    el.classList.toggle('no-tab', auth.has(id));
+    document.getElementById('tabbar').style.display = auth.has(id)?'none':'grid';
+    document.querySelectorAll('#jumpNav button').forEach(b=>b.classList.toggle('on', b.dataset.id===id));
+    document.querySelectorAll('.tab').forEach(t=>{
+      const g=t.dataset.go;
+      let on = g===id;
+      if(['s-home','s-manager'].includes(id) && g==='s-home') on=true;
+      if(['s-leads','s-clients','s-client','s-addlead'].includes(id) && g==='s-leads') on=true;
+      if(['s-products','s-quote','s-eapp','s-apps'].includes(id) && g==='s-products') on=true;
+      if(['s-tasks','s-notifs','s-announce','s-resources'].includes(id) && g==='s-tasks') on=true;
+      if(['s-profile','s-policy'].includes(id) && g==='s-profile') on=true;
+      if(['s-home','s-leads','s-products','s-tasks','s-profile'].includes(id)) on = g===id;
+      t.classList.toggle('active', on);
+    });
+  }
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>go(t.dataset.go)));
+  function toggleTeam(p){ document.getElementById('tog1').classList.toggle('on',p); document.getElementById('tog2').classList.toggle('on',!p); }
+  go('s-splash');
+</script>
+</body>
+</html>
