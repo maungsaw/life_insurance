@@ -1,0 +1,56 @@
+{
+  "@@locale": "my",
+
+  "appTitle": "လုံခြုံစိတ်ချရသော အက်ပ်",
+
+  "welcomeMessage": "{username}၊ ပြန်လည်ကြိုဆိုပါသည်!",
+
+  "login": "အကောင့်ဝင်ရန်",
+  "logout": "ထွက်ရန်",
+  "settings": "ဆက်တင်များ",
+
+  "language": "ဘာသာစကား",
+  "languageName": "မြန်မာ",
+  "languageCode": "my",
+
+  "offlineDataNotice": "သိမ်းဆည်းထားသော အော့ဖ်လိုင်းဒေတာကို ပြသနေသည်။",
+
+  "errorUnknown": "မမျှော်လင့်ထားသော အမှားတစ်ခု ဖြစ်ပွားခဲ့သည်။",
+  "errorNetwork": "အင်တာနက်ချိတ်ဆက်မှု မရှိပါ။",
+  "errorConnectionTimeout": "ချိတ်ဆက်ချိန် ကျော်လွန်သွားပါသည်။",
+  "errorReceiveTimeout": "ဆာဗာမှ ပြန်လည်တုံ့ပြန်ရန် အချိန်ကျော်လွန်သွားပါသည်။",
+  "errorSendTimeout": "တောင်းဆိုမှု ပေးပို့ချိန် ကျော်လွန်သွားပါသည်။",
+  "errorRequestCancelled": "တောင်းဆိုမှုကို ပယ်ဖျက်လိုက်ပါသည်။",
+  "errorCertificate": "ဆာဗာ လုံခြုံရေး လက်မှတ်ကို စစ်ဆေး၍ မရပါ။",
+  "errorSocket": "ဆာဗာသို့ ချိတ်ဆက်၍ မရပါ။",
+  "errorHostLookup": "ဆာဗာလိပ်စာကို ရှာမတွေ့ပါ။",
+
+  "errorBadRequest": "မမှန်ကန်သော တောင်းဆိုမှုဖြစ်ပါသည်။",
+  "errorUnauthorized": "Session သက်တမ်းကုန်သွားပါပြီ။ ကျေးဇူးပြု၍ ပြန်လည်ဝင်ရောက်ပါ။",
+  "errorForbidden": "ဤလုပ်ဆောင်ချက်ကို လုပ်ဆောင်ရန် ခွင့်ပြုချက်မရှိပါ။",
+  "errorNotFound": "တောင်းဆိုထားသော ဒေတာကို မတွေ့ပါ။",
+  "errorMethodNotAllowed": "ဤလုပ်ဆောင်မှုကို ခွင့်မပြုပါ။",
+  "errorRequestTimeout": "တောင်းဆိုမှု အချိန်ကျော်လွန်သွားပါသည်။",
+  "errorConflict": "ဒေတာ ပဋိပက္ခ ဖြစ်ပွားနေပါသည်။",
+  "errorGone": "တောင်းဆိုထားသော အချက်အလက် မရှိတော့ပါ။",
+  "errorValidation": "အချက်အလက် စစ်ဆေးမှု မအောင်မြင်ပါ။",
+  "errorTooManyRequests": "တောင်းဆိုမှုများလွန်းနေပါသည်။ ခဏအကြာတွင် ထပ်မံကြိုးစားပါ။",
+
+  "errorInternalServer": "ဆာဗာတွင် အမှားဖြစ်ပွားနေပါသည်။",
+  "errorBadGateway": "Gateway အမှားဖြစ်ပွားနေပါသည်။",
+  "errorServiceUnavailable": "ဝန်ဆောင်မှုကို ယာယီအသုံးမပြုနိုင်ပါ။",
+  "errorGatewayTimeout": "Gateway အချိန်ကျော်လွန်သွားပါသည်။",
+  "errorNotImplemented": "ဤလုပ်ဆောင်ချက်ကို မထည့်သွင်းရသေးပါ။",
+
+  "errorDataParsing": "ဆာဗာမှ ဒေတာကို ဖတ်ရှု၍ မရပါ။",
+  "errorInvalidResponse": "ဆာဗာမှ ပြန်လာသော ဒေတာ မမှန်ကန်ပါ။",
+  "errorEmptyResponse": "ဒေတာ မရှိပါ။",
+
+  "errorCache": "သိမ်းဆည်းထားသော ဒေတာကို ဖတ်ရှု၍ မရပါ။",
+  "errorSecureStorage": "လုံခြုံသော သိမ်းဆည်းမှု အမှားဖြစ်ပွားပါသည်။",
+  "errorDatabase": "ဒေတာဘေ့စ် လုပ်ဆောင်မှု မအောင်မြင်ပါ။",
+
+  "errorPermission": "ခွင့်ပြုချက် မရှိပါ။",
+  "errorTokenExpired": "သင့် Session သက်တမ်းကုန်သွားပါပြီ။",
+  "errorMaintenance": "စနစ်ကို ပြုပြင်ထိန်းသိမ်းနေပါသည်။"
+}

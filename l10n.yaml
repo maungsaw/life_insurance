@@ -1,0 +1,12 @@
+# Folder where your app_en.arb and app_my.arb are stored
+arb-dir: l10n
+
+template-arb-file: app_en.arb
+
+# Target directory inside lib/
+output-dir: lib/core/localization
+
+output-localization-file: app_localizations.dart
+
+# Required to write directly to lib/ instead of .dart_tool
+synthetic-package: false

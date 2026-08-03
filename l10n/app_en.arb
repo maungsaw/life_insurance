@@ -1,0 +1,64 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Secured Flutter App",
+
+  "welcomeMessage": "Welcome back, {username}!",
+  "@welcomeMessage": {
+    "description": "Welcome message",
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+
+  "login": "Login",
+  "logout": "Logout",
+  "settings": "Settings",
+
+  "language": "Language",
+  "english": "English",
+  "languageCode": "en",
+
+  "offlineDataNotice": "Showing cached offline data.",
+
+  "errorUnknown": "Something went wrong. Please try again.",
+  "errorNetwork": "No internet connection.",
+  "errorConnectionTimeout": "Connection timeout. Please try again.",
+  "errorReceiveTimeout": "Server response timeout.",
+  "errorSendTimeout": "Request timeout.",
+  "errorRequestCancelled": "Request cancelled.",
+  "errorCertificate": "Unable to verify server certificate.",
+  "errorSocket": "Unable to connect to the server.",
+  "errorHostLookup": "Cannot find the server address.",
+
+  "errorBadRequest": "Invalid request.",
+  "errorUnauthorized": "Session expired. Please login again.",
+  "errorForbidden": "You don't have permission to perform this action.",
+  "errorNotFound": "Requested resource not found.",
+  "errorMethodNotAllowed": "Method not allowed.",
+  "errorRequestTimeout": "The request timed out.",
+  "errorConflict": "Conflict detected.",
+  "errorGone": "Requested resource is no longer available.",
+  "errorValidation": "Validation failed.",
+  "errorTooManyRequests": "Too many requests. Please try again later.",
+
+  "errorInternalServer": "Internal server error.",
+  "errorBadGateway": "Bad gateway.",
+  "errorServiceUnavailable": "Service temporarily unavailable.",
+  "errorGatewayTimeout": "Gateway timeout.",
+  "errorNotImplemented": "Feature not implemented.",
+
+  "errorDataParsing": "Unable to process server data.",
+  "errorInvalidResponse": "Invalid server response.",
+  "errorEmptyResponse": "No data available.",
+
+  "errorCache": "Unable to access cached data.",
+  "errorSecureStorage": "Secure storage error.",
+  "errorDatabase": "Database operation failed.",
+
+  "errorPermission": "Permission denied.",
+  "errorTokenExpired": "Your session has expired.",
+  "errorMaintenance": "The system is under maintenance."
+}
