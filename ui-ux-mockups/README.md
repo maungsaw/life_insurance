@@ -25,7 +25,8 @@ ui-ux-mockups/
 │   ├── 05-fr03-e2e-sales-ux.md
 │   ├── 06-web-portal-ux-3-concepts.md
 │   ├── 07-unified-login-ux.md
-│   └── 08-fr07-task-management-ux.md
+│   ├── 08-fr07-task-management-ux.md
+│   └── 09-web-app-shell-dashboard-crm.md
 ├── concept-a-field-momentum/
 ├── concept-b-trust-clarity/
 └── concept-c-command-center/
@@ -41,5 +42,5 @@ ui-ux-mockups/
 
 ## Covered BRD surfaces
 
+- Web app shell: left menu + header (logo / profile), Dashboard with 5.2.1 metrics + weighting + bar/line charts, CRM, Policies/Sales (FR-03), Tasks (Add/Move/Delete), Announcements, Recruitment, Ops, Audit
 - Mobile: Unified auth, dashboards, FR-03 CRM, quoting, e-App stepper, FR-07 tasks, notifications, resources, profile (ENG/MM)
-- Web: Unified login gate, hierarchy performance, FR-07 task admin, recruitment, ops, audit, export

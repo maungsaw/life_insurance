@@ -35,7 +35,7 @@
     color: var(--ink);
     min-height: 100vh;
   }
-  .page { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page { max-width: 1440px; margin: 0 auto; padding: 32px 24px 80px; }
   .hero { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 28px; flex-wrap: wrap; }
   .eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brand); font-weight: 700; }
   h1 { font-family: Fraunces, serif; font-size: clamp(28px, 4vw, 42px); line-height: 1.1; margin-top: 8px; }
@@ -346,6 +346,7 @@
   .audit-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
   .audit-row.head { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.04em; }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="page">
@@ -1118,168 +1119,373 @@
         </div>
       </div>
 
-      <div class="web-panel">
-        <!-- Unified web auth gate -->
-        <div id="webAuth" class="web-view on">
-          <div style="max-width:420px;margin:40px auto 20px;">
-            <div class="eyebrow">Unified login · Web</div>
-            <h2 style="font-family:Fraunces,serif;font-size:28px;margin:8px 0 10px;">Same Agent identity</h2>
-            <p class="note" style="margin-top:0;">Mobile number + password + SMS OTP — identical to the Agent App. Session policies apply on both channels.</p>
-            <div class="alert" style="cursor:default;"><div>⇄</div><div><b>One account</b><span>Field FA and desk manager use the same CORE-backed login.</span></div></div>
-            <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
-            <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
-            <button class="btn btn-primary" onclick="webSendOtp()">Continue to OTP</button>
-            <div style="height:10px"></div>
-            <button class="btn btn-secondary" onclick="showWebAuth('forgot')">Forgot password (OTP + reason)</button>
+      
+      <div class="web-panel web-app" id="webRoot" data-theme="a">
+        <style>
+          .web-app {
+            --wa-side:#0b6e4f; --wa-side-ink:#e8fff4; --wa-active:#e8922a; --wa-accent:#14916a;
+            --wa-card:#fff; --wa-bg:#f3f7f4; --wa-ink:#10231c; --wa-muted:#5c7268; --wa-line:#d5e3db;
+            --wa-font-h:Fraunces, serif; --wa-font-b:Outfit, system-ui, sans-serif; --wa-inp:#fff; --wa-th:#eef6f1;
+            background:var(--wa-bg); color:var(--wa-ink); font-family:var(--wa-font-b);
+            border-radius:28px; overflow:hidden; min-height:820px; border:1px solid var(--wa-line);
+            box-shadow:0 18px 50px rgba(0,0,0,.08); position:relative;
+          }
+          .wa-auth { padding:48px 24px; max-width:440px; margin:0 auto; }
+          .wa-auth h2 { font-family:var(--wa-font-h); font-size:28px; margin:8px 0 10px; }
+          .wa-shell { display:none; grid-template-columns:220px 1fr; min-height:820px; }
+          .wa-shell.on { display:grid; }
+          .wa-side { background:var(--wa-side); color:var(--wa-side-ink); padding:18px 12px; display:flex; flex-direction:column; gap:4px; }
+          .wa-side .brand { padding:8px 10px 18px; font-family:var(--wa-font-h); font-size:18px; }
+          .wa-side .brand small { display:block; opacity:.7; font-family:var(--wa-font-b); font-size:11px; margin-top:4px; }
+          .wa-navbtn { border:0; background:transparent; color:inherit; text-align:left; padding:11px 12px; border-radius:12px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; opacity:.85; }
+          .wa-navbtn:hover { background:rgba(255,255,255,.08); }
+          .wa-navbtn.on { background:var(--wa-active); color:#111; opacity:1; }
+          .wa-main { display:flex; flex-direction:column; min-width:0; background:var(--wa-bg); }
+          .wa-header { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--wa-line); background:var(--wa-card); }
+          .wa-header .logo { display:flex; align-items:center; gap:10px; font-weight:800; }
+          .wa-header .logo .mark { width:34px; height:34px; border-radius:10px; background:var(--wa-side); color:#fff; display:grid; place-items:center; font-size:11px; }
+          .wa-profile { display:flex; align-items:center; gap:10px; font-size:13px; }
+          .wa-profile .av { width:36px; height:36px; border-radius:50%; background:var(--wa-active); color:#111; display:grid; place-items:center; font-weight:800; }
+          .wa-body { padding:18px; overflow:auto; flex:1; }
+          .wa-page { display:none; }
+          .wa-page.on { display:block; }
+          .wa-h { font-family:var(--wa-font-h); font-size:24px; margin-bottom:4px; }
+          .wa-sub { color:var(--wa-muted); font-size:13px; margin-bottom:16px; line-height:1.45; }
+          .wa-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+          @media (max-width:1100px){ .wa-kpis{grid-template-columns:repeat(2,1fr);} .wa-shell{grid-template-columns:72px 1fr;} .wa-navbtn{font-size:10px; padding:10px 6px; text-align:center;} .wa-side .brand small{display:none;} }
+          .wa-kpi { background:var(--wa-card); border:1px solid var(--wa-line); border-radius:14px; padding:12px; }
+          .wa-kpi .l { font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--wa-muted); font-weight:800; }
+          .wa-kpi .v { font-family:var(--wa-font-h); font-size:22px; margin-top:4px; }
+          .wa-kpi .d { font-size:11px; margin-top:3px; color:var(--wa-accent); font-weight:700; }
+          .wa-seg { display:inline-flex; background:rgba(0,0,0,.04); border:1px solid var(--wa-line); border-radius:999px; padding:3px; gap:2px; margin-bottom:12px; }
+          .wa-seg button { border:0; background:transparent; padding:8px 12px; border-radius:999px; font:inherit; font-size:12px; font-weight:700; cursor:pointer; color:var(--wa-muted); }
+          .wa-seg button.on { background:var(--wa-card); color:var(--wa-ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+          .wa-charts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+          @media (max-width:900px){ .wa-charts{grid-template-columns:1fr;} }
+          .wa-card { background:var(--wa-card); border:1px solid var(--wa-line); border-radius:16px; padding:14px; }
+          .wa-card h3 { font-size:14px; margin-bottom:10px; }
+          .wa-card canvas { width:100% !important; max-height:220px; }
+          .wa-note { font-size:12px; color:var(--wa-muted); margin-top:8px; line-height:1.45; }
+          .wa-field { margin-bottom:10px; }
+          .wa-field label { display:block; font-size:11px; font-weight:700; color:var(--wa-muted); margin-bottom:4px; }
+          .wa-field input,.wa-field select,.wa-field textarea { width:100%; border:1px solid var(--wa-line); background:var(--wa-inp); color:var(--wa-ink); border-radius:10px; padding:10px 12px; font:inherit; }
+          .wa-btn { border:0; border-radius:12px; padding:11px 14px; font:inherit; font-weight:800; cursor:pointer; }
+          .wa-btn-p { background:var(--wa-accent); color:#111; }
+          .wa-btn-s { background:var(--wa-card); border:1px solid var(--wa-line); color:var(--wa-ink); }
+          .wa-rowbtns { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+          .wa-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+          .wa-table th,.wa-table td { padding:10px 8px; border-bottom:1px solid var(--wa-line); text-align:left; }
+          .wa-table th { background:var(--wa-th); font-size:10px; text-transform:uppercase; letter-spacing:.04em; color:var(--wa-muted); }
+          .wa-pill { font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:rgba(0,0,0,.06); }
+          .wa-pill.warn { background:#fff1e0; color:#9a5b00; }
+          .wa-pill.ok { background:#e7f6ef; color:#0b6e4f; }
+          .wa-pill.danger { background:#fde8e6; color:#c0392b; }
+          .wa-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+          @media (max-width:900px){ .wa-grid2{grid-template-columns:1fr;} }
+          .wa-pipe { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:12px 0; }
+          @media (max-width:1100px){ .wa-pipe{grid-template-columns:repeat(2,1fr);} }
+          .wa-pipe .col { background:var(--wa-card); border:1px solid var(--wa-line); border-radius:12px; padding:10px; min-height:110px; }
+          .wa-pipe h4 { font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--wa-muted); margin-bottom:8px; }
+          .wa-pipe .mini { background:rgba(0,0,0,.04); border-radius:8px; padding:8px; font-size:12px; font-weight:700; margin-bottom:6px; }
+          .wa-filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; align-items:end; }
+          .wa-filters label { display:flex; flex-direction:column; gap:4px; font-size:10px; font-weight:800; color:var(--wa-muted); text-transform:uppercase; }
+          .wa-filters select { border:1px solid var(--wa-line); background:var(--wa-inp); color:var(--wa-ink); border-radius:8px; padding:8px 10px; font:inherit; min-width:110px; }
+          .wa-preview { height:120px; border-radius:12px; background:linear-gradient(135deg,var(--wa-side),var(--wa-active)); margin-bottom:10px; }
+          .wa-link { border:0; background:none; color:var(--wa-accent); font:inherit; font-weight:800; font-size:12px; cursor:pointer; }
+        </style>
+
+        <!-- AUTH -->
+        <div id="webAuth" class="wa-auth">
+          <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--wa-accent);">Unified login · Web · Field Momentum</div>
+          <h2>Same Agent identity</h2>
+          <p class="wa-sub">Mobile + password + SMS OTP — identical to the mobile app. CORE-active numbers only.</p>
+          <div class="wa-field"><label>Mobile number</label><input value="09 771 234 567" /></div>
+          <div class="wa-field"><label>Password</label><input type="password" value="••••••••" /></div>
+          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="webSendOtp()">Continue to OTP</button>
+          <div style="height:8px"></div>
+          <button class="wa-btn wa-btn-s" style="width:100%;" onclick="showWebAuth('forgot')">Forgot password (OTP + reason)</button>
+        </div>
+        <div id="webAuthOtp" class="wa-auth" style="display:none;">
+          <button class="wa-link" onclick="showWebAuth('login')">← Back</button>
+          <h2>Web OTP</h2>
+          <p class="wa-sub">Same SMS OTP path as mobile.</p>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0 16px;">
+            <input value="4" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
+            <input value="8" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
+            <input value="2" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
+            <input value="1" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
+            <input value="9" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
+            <input value="0" style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
           </div>
+          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="webEnterPortal()">Verify & open portal</button>
+        </div>
+        <div id="webAuthForgot" class="wa-auth" style="display:none;">
+          <button class="wa-link" onclick="showWebAuth('login')">← Back</button>
+          <h2>Reset password</h2>
+          <div class="wa-field"><label>Reason / remark *</label><textarea rows="2">Forgot after device change</textarea></div>
+          <div class="wa-field"><label>New password</label><input type="password" value="••••••••" /></div>
+          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="showWebAuth('login')">Update & return</button>
         </div>
 
-        <div id="webAuthOtp" class="web-view">
-          <div style="max-width:420px;margin:40px auto 20px;">
-            <button class="link" onclick="showWebAuth('login')">← Back</button>
-            <h2 style="font-family:Fraunces,serif;font-size:26px;margin:12px 0 8px;">Web OTP</h2>
-            <p class="note" style="margin-top:0;">Same SMS code path as mobile.</p>
-            <div class="otp" style="max-width:320px;">
-              <input value="4" /><input value="8" /><input value="2" /><input value="1" /><input value="9" /><input value="0" />
+        <!-- APP SHELL -->
+        <div class="wa-shell" id="webAppShell">
+          <aside class="wa-side">
+            <div class="brand">KBZ LIFE<small>Agent Portal</small></div>
+            <button class="wa-navbtn on" data-page="dashboard">Dashboard</button>
+            <button class="wa-navbtn" data-page="performance">Performance</button>
+            <button class="wa-navbtn" data-page="crm">CRM</button>
+            <button class="wa-navbtn" data-page="policies">Policies / Sales</button>
+            <button class="wa-navbtn" data-page="tasks">Tasks</button>
+            <button class="wa-navbtn" data-page="recruit">Recruitment</button>
+            <button class="wa-navbtn" data-page="announce">Announcements</button>
+            <button class="wa-navbtn" data-page="ops">Operations</button>
+            <button class="wa-navbtn" data-page="agents">Agents / Audit</button>
+          </aside>
+          <div class="wa-main">
+            <header class="wa-header">
+              <div class="logo"><div class="mark">KL</div><div>KBZ LIFE <span style="color:var(--wa-muted);font-weight:600;">· Agency</span></div></div>
+              <div class="wa-profile">
+                <div style="text-align:right;"><b>Aye Chan</b><div style="color:var(--wa-muted);font-size:11px;">DM · Yangon</div></div>
+                <div class="av">A</div>
+                <button class="wa-btn wa-btn-s" style="padding:8px 10px;font-size:12px;" onclick="webSignOut()">Sign out</button>
+              </div>
+            </header>
+            <div class="wa-body">
+
+              <!-- DASHBOARD -->
+              <section class="wa-page on" id="page-dashboard">
+                <div class="wa-h">Dashboard</div>
+                <p class="wa-sub">BRD 5.2.1 metrics · 5.2.2 weighting (Freelance FYP / Internal FYP). Values from Core APIs.</p>
+                <div class="wa-seg" id="weightSeg">
+                  <button class="on" type="button" onclick="setWeight(this,'freelance')">Freelance FYP (weighted)</button>
+                  <button type="button" onclick="setWeight(this,'internal')">Internal FYP (weighted)</button>
+                </div>
+                <p class="wa-note" id="weightNote">Weighting factors applied by Core for Freelance FYP. Portal displays API results only.</p>
+                <div class="wa-kpis">
+                  <div class="wa-kpi"><div class="l">New policies</div><div class="v">146</div><div class="d">Existing active 4,812</div></div>
+                  <div class="wa-kpi"><div class="l">FYP (Initial + Sub)</div><div class="v">82.4M</div><div class="d">+12% vs last month</div></div>
+                  <div class="wa-kpi"><div class="l">APE / AFYP</div><div class="v">61.2M</div><div class="d">Above avg productivity</div></div>
+                  <div class="wa-kpi"><div class="l">Due vs Collected</div><div class="v">78%</div><div class="d">Due 12.0M · Collected 9.4M</div></div>
+                  <div class="wa-kpi"><div class="l">Commission</div><div class="v">9.8M</div><div class="d">Product (+ UL note)</div></div>
+                  <div class="wa-kpi"><div class="l">K1 / K2</div><div class="v">86% / 81%</div><div class="d">Grace period on</div></div>
+                  <div class="wa-kpi"><div class="l">Persistency (count)</div><div class="v">60%</div><div class="d">600 / 1,000 @ 13th mo</div></div>
+                  <div class="wa-kpi"><div class="l">Road to MDRT</div><div class="v">68%</div><div class="d">Prem 34.2M / 50M</div></div>
+                </div>
+                <div class="wa-charts">
+                  <div class="wa-card"><h3>Bar · Monthly FYP vs APE</h3><canvas id="barChart-a" height="200"></canvas></div>
+                  <div class="wa-card"><h3>Line · FYP & persistency trend</h3><canvas id="lineChart-a" height="200"></canvas></div>
+                </div>
+                <div class="wa-card">
+                  <h3>Core Data · Weighting legend</h3>
+                  <p class="wa-note" style="margin:0;">Freelance and Internal FYP use Core-defined weighting factors so every hierarchy level stays consistent. Frontend does not recalculate — it renders API payloads.</p>
+                </div>
+              </section>
+
+              <!-- PERFORMANCE -->
+              <section class="wa-page" id="page-performance">
+                <div class="wa-h">Performance</div>
+                <p class="wa-sub">Hierarchical filters · FA line production · persistency · Export Excel</p>
+                <div class="wa-filters">
+                  <label>Region<select><option>Yangon</option><option>Mandalay</option></select></label>
+                  <label>District<select><option>District A</option></select></label>
+                  <label>SAM<select><option>All</option></select></label>
+                  <label>AM<select><option>All</option></select></label>
+                  <button class="wa-btn wa-btn-p" onclick="alert('Export Excel (mock)')">Export Excel</button>
+                </div>
+                <div class="wa-card" style="overflow:auto;">
+                  <table class="wa-table">
+                    <thead><tr><th>FA</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Wtd Freelance FYP</th><th>MDRT</th><th>K1/K2</th><th>Flag</th></tr></thead>
+                    <tbody>
+                      <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41.0M</td><td>90/86</td><td><span class="wa-pill ok">OK</span></td></tr>
+                      <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8.2M</td><td>70/65</td><td><span class="wa-pill danger">Below target</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <!-- CRM FR-03 -->
+              <section class="wa-page" id="page-crm">
+                <div class="wa-h">CRM</div>
+                <p class="wa-sub">FR-03 on web · portfolio Leads vs Clients · owner FA · convert after policy issuance</p>
+                <div class="wa-seg">
+                  <button class="on" type="button" onclick="crmTab(this,'leads')">Leads</button>
+                  <button type="button" onclick="crmTab(this,'clients')">Clients</button>
+                </div>
+                <div id="crm-leads" class="wa-card" style="overflow:auto;">
+                  <div class="wa-rowbtns"><button class="wa-btn wa-btn-p">+ Add lead</button></div>
+                  <table class="wa-table">
+                    <thead><tr><th>Lead</th><th>Mobile</th><th>Stage</th><th>Owner FA</th><th>Quotes/Apps</th><th></th></tr></thead>
+                    <tbody>
+                      <tr><td>Maung Soe</td><td>09 771 888 999</td><td><span class="wa-pill warn">Quoted</span></td><td>Aye Chan</td><td>1 quote · draft app</td><td><button class="wa-link">Open</button></td></tr>
+                      <tr><td>Yu Hlaing</td><td>09 250 444 555</td><td><span class="wa-pill">Contacted</span></td><td>Nwe Nwe</td><td>—</td><td><button class="wa-link">Open</button></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div id="crm-clients" class="wa-card" style="overflow:auto;display:none;">
+                  <table class="wa-table">
+                    <thead><tr><th>Client</th><th>Policies</th><th>Next due</th><th>Owner FA</th><th>Family</th><th></th></tr></thead>
+                    <tbody>
+                      <tr><td>Daw Hla</td><td>2 active · 1 lapsed</td><td>10-Aug-2026</td><td>Aye Chan</td><td>2 contacts</td><td><button class="wa-link">Open</button></td></tr>
+                      <tr><td>Maung Soe</td><td>1 active (new)</td><td>03-Sep-2026</td><td>Aye Chan</td><td>—</td><td><button class="wa-link">Converted</button></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <!-- POLICIES / SALES FR-03 -->
+              <section class="wa-page" id="page-policies">
+                <div class="wa-h">Policies / Sales process</div>
+                <p class="wa-sub">FR-03 spine on web: Lead → Quote → e-App → Approved → Client → Active/Lapsed policy</p>
+                <div class="wa-pipe">
+                  <div class="col"><h4>Leads</h4><div class="mini">18 open</div></div>
+                  <div class="col"><h4>Quoted</h4><div class="mini">6</div></div>
+                  <div class="col"><h4>e-Apps</h4><div class="mini">11 in flight</div></div>
+                  <div class="col"><h4>Approved</h4><div class="mini">4 this week</div></div>
+                  <div class="col"><h4>Policies</h4><div class="mini">Active 4,812</div></div>
+                </div>
+                <div class="wa-card" style="overflow:auto;">
+                  <table class="wa-table">
+                    <thead><tr><th>Policy</th><th>Client</th><th>Product</th><th>SI</th><th>Premium</th><th>Next due</th><th>Status</th><th>FA</th></tr></thead>
+                    <tbody>
+                      <tr><td>POL-88421</td><td>Daw Hla</td><td>Endowment</td><td>10,000,000.00</td><td>185,000.00</td><td>10-Aug-2026</td><td><span class="wa-pill ok">Active</span></td><td>Aye Chan</td></tr>
+                      <tr><td>POL-70011</td><td>Daw Hla</td><td>Term</td><td>5,000,000.00</td><td>—</td><td>—</td><td><span class="wa-pill danger">Lapsed</span></td><td>Aye Chan</td></tr>
+                      <tr><td>POL-88499</td><td>Maung Soe</td><td>Endowment</td><td>10,000,000.00</td><td>185,000.00</td><td>03-Sep-2026</td><td><span class="wa-pill ok">Active</span></td><td>Aye Chan</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="wa-note">Policy detail is read-only from Core (SI, beneficiary, premium, next due). CRM convert history remains on client record.</p>
+              </section>
+
+              <!-- TASKS FR-07 -->
+              <section class="wa-page" id="page-tasks">
+                <div class="wa-h">Task management</div>
+                <p class="wa-sub">FR-07 · Managers Add / Move / Delete · Agents update Pending · In Progress · Completed</p>
+                <div class="wa-rowbtns">
+                  <button class="wa-btn wa-btn-p" onclick="document.getElementById('taskDrawer-a').style.display='block'">+ Add task</button>
+                  <button class="wa-btn wa-btn-s">Move / reassign</button>
+                  <button class="wa-btn wa-btn-s">Delete</button>
+                </div>
+                <div class="wa-grid2">
+                  <div class="wa-card" style="overflow:auto;">
+                    <h3>Task list</h3>
+                    <table class="wa-table">
+                      <thead><tr><th>Task</th><th>Assignee</th><th>Type</th><th>Due</th><th>Status</th></tr></thead>
+                      <tbody>
+                        <tr><td>Interview · Su Su</td><td>Aye Chan</td><td>Recruitment</td><td>06-Aug-2026</td><td><span class="wa-pill">In Progress</span></td></tr>
+                        <tr><td>Premium chase · Daw Hla</td><td>Aye Chan</td><td>Servicing</td><td>10-Aug-2026</td><td><span class="wa-pill warn">Pending</span></td></tr>
+                        <tr><td>LC Training follow-up</td><td>Nwe Nwe</td><td>Recruitment</td><td>08-Aug-2026</td><td><span class="wa-pill warn">Pending</span></td></tr>
+                        <tr><td>NRC correction</td><td>Aye Chan</td><td>e-App</td><td>02-Aug-2026</td><td><span class="wa-pill ok">Completed</span></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="wa-card" id="taskDrawer-a">
+                    <h3>Add / manage task</h3>
+                    <div class="wa-field"><label>Title *</label><input value="Interview · Su Su" /></div>
+                    <div class="wa-field"><label>Assignee FA</label><select><option>Aye Chan</option><option>Nwe Nwe</option></select></div>
+                    <div class="wa-field"><label>Type</label><select><option>Recruitment</option><option>Servicing</option><option>Other</option></select></div>
+                    <div class="wa-field"><label>Onboarding status link</label><select><option>Screening / Interview</option><option>LC Training</option><option>NIIM Exam</option><option>Final Contract</option></select></div>
+                    <div class="wa-field"><label>Due</label><input value="06-Aug-2026" /></div>
+                    <div class="wa-field"><label>Status</label><select><option>Pending</option><option selected>In Progress</option><option>Completed</option></select></div>
+                    <div class="wa-rowbtns">
+                      <button class="wa-btn wa-btn-p">Save</button>
+                      <button class="wa-btn wa-btn-s">Move</button>
+                      <button class="wa-btn wa-btn-s">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- RECRUIT -->
+              <section class="wa-page" id="page-recruit">
+                <div class="wa-h">Recruitment</div>
+                <p class="wa-sub">Dynamic agent statuses · tied to FR-07 recruitment tasks</p>
+                <div class="wa-pipe">
+                  <div class="col"><h4>Screening</h4><div class="mini">Su Su</div><div class="mini">Ko Ko</div></div>
+                  <div class="col"><h4>LC / NIIM</h4><div class="mini">Mei Mei</div><div class="mini">Hnin · Exam</div></div>
+                  <div class="col"><h4>Contract</h4><div class="mini">Aung · WIP</div></div>
+                  <div class="col"><h4>Contracted</h4><div class="mini">3 this month</div></div>
+                  <div class="col"><h4>Closed</h4><div class="mini">Failed / Rejected</div></div>
+                </div>
+              </section>
+
+              <!-- ANNOUNCE -->
+              <section class="wa-page" id="page-announce">
+                <div class="wa-h">Announcements</div>
+                <p class="wa-sub">FR-09 · Image + URL · publish to mobile feed</p>
+                <div class="wa-grid2">
+                  <div class="wa-card">
+                    <h3>Builder</h3>
+                    <div class="wa-preview"></div>
+                    <div class="wa-field"><label>Title *</label><input value="Q3 Incentive Push" /></div>
+                    <div class="wa-field"><label>Image</label><input value="incentive-banner.jpg" /></div>
+                    <div class="wa-field"><label>URL</label><input value="https://kbzlife.com/incentive" /></div>
+                    <div class="wa-field"><label>Audience</label><select><option>All agents</option><option>Yangon district</option><option>Managers only</option></select></div>
+                    <div class="wa-rowbtns">
+                      <button class="wa-btn wa-btn-s">Save draft</button>
+                      <button class="wa-btn wa-btn-p">Publish</button>
+                    </div>
+                  </div>
+                  <div class="wa-card" style="overflow:auto;">
+                    <h3>History</h3>
+                    <table class="wa-table">
+                      <thead><tr><th>Title</th><th>Status</th><th>Published</th></tr></thead>
+                      <tbody>
+                        <tr><td>Q3 Incentive Push</td><td><span class="wa-pill ok">Live</span></td><td>01-Aug-2026</td></tr>
+                        <tr><td>NIIM exam reminder</td><td><span class="wa-pill">Draft</span></td><td>—</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              <!-- OPS -->
+              <section class="wa-page" id="page-ops">
+                <div class="wa-h">Operations</div>
+                <p class="wa-sub">Notification rules · resource library sections</p>
+                <div class="wa-grid2">
+                  <div class="wa-card">
+                    <h3>Notification setup</h3>
+                    <div class="wa-field"><label>Premium due window</label><select><option>7 days</option><option>14 days</option></select></div>
+                    <div class="wa-field"><label>Renewal advance</label><select><option>60 days</option><option>90 days</option></select></div>
+                    <button class="wa-btn wa-btn-p">Save rules</button>
+                  </div>
+                  <div class="wa-card">
+                    <h3>Resource sections</h3>
+                    <div class="wa-field"><label>Sections</label><input value="Brochures · Training · Forms" /></div>
+                    <button class="wa-btn wa-btn-s">Configure</button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- AGENTS -->
+              <section class="wa-page" id="page-agents">
+                <div class="wa-h">Agents / Audit</div>
+                <p class="wa-sub">FR-12 · Approved vs Pending · audit trail</p>
+                <div class="wa-card" style="margin-bottom:12px;">
+                  <table class="wa-table">
+                    <thead><tr><th>Agent</th><th>State</th><th>Detail</th></tr></thead>
+                    <tbody>
+                      <tr><td>Aye Chan · AGT-10284</td><td><span class="wa-pill ok">Approved</span></td><td>Core profile live</td></tr>
+                      <tr><td>Mobile change</td><td><span class="wa-pill warn">Pending</span></td><td>09 771… → 09 988…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="wa-card" style="overflow:auto;">
+                  <table class="wa-table">
+                    <thead><tr><th>Action</th><th>Previous</th><th>New</th><th>User</th><th>When</th></tr></thead>
+                    <tbody>
+                      <tr><td>Update mobile</td><td>09 771 234 567</td><td>09 988 111 222</td><td>Ops May</td><td>03-Aug-2026 09:12</td></tr>
+                      <tr><td>Status change</td><td>Pre-Contracted</td><td>LC Training</td><td>Alliance</td><td>02-Aug-2026 16:40</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
             </div>
-            <button class="btn btn-primary" onclick="webEnterPortal()">Verify & open portal</button>
           </div>
         </div>
-
-        <div id="webAuthForgot" class="web-view">
-          <div style="max-width:420px;margin:40px auto 20px;">
-            <button class="link" onclick="showWebAuth('login')">← Back</button>
-            <h2 style="font-family:Fraunces,serif;font-size:26px;margin:12px 0 8px;">Reset password</h2>
-            <div class="field"><label>Mobile</label><input value="09 771 234 567" /></div>
-            <div class="field"><label>OTP</label><input value="482190" /></div>
-            <div class="field"><label>Reason / remark *</label><textarea rows="2">Forgot after laptop wipe</textarea></div>
-            <div class="field"><label>New password</label><input type="password" value="••••••••" /></div>
-            <button class="btn btn-primary" onclick="showWebAuth('login')">Update & return to login</button>
-          </div>
-        </div>
-
-        <div id="webAppShell" style="display:none;">
-        <div class="web-top">
-          <div>
-            <div class="eyebrow">Web portal · signed in · unified session</div>
-            <h2 style="font-family:Fraunces,serif;font-size:28px;margin-top:4px;" id="webTitle">District war-room</h2>
-          </div>
-          <div class="web-nav" id="webNav">
-            <button class="on" data-web="overview">Overview</button>
-            <button data-web="performance">Performance</button>
-            <button data-web="recruitment">Recruitment</button>
-            <button data-web="tasks">Tasks</button>
-            <button data-web="operations">Operations</button>
-            <button data-web="audit">Agents / Audit</button>
-            <button onclick="webSignOut()" style="margin-left:4px;">Sign out</button>
-          </div>
-        </div>
-
-        <div class="web-view" id="web-overview">
-          <div class="web-grid">
-            <div class="kpi"><div class="label">New proposals</div><div class="value">146</div><div class="delta up">Real-time district</div></div>
-            <div class="kpi"><div class="label">FYP vs target</div><div class="value">91%</div><div class="delta up">Healthy</div></div>
-            <div class="kpi"><div class="label">K1 persistency</div><div class="value">86%</div><div class="delta">Grace visible</div></div>
-            <div class="kpi" style="cursor:pointer;" onclick="showWeb('performance')"><div class="label">Red flags</div><div class="value">7</div><div class="delta down">Tap → Performance</div></div>
-          </div>
-          <div class="alert" style="cursor:default;"><div>🚩</div><div><b>7 advisors below monthly FYP %</b><span>Amber chips jump managers straight into coaching mode.</span></div></div>
-          <p class="note" style="margin-top:8px;"><b>FR-02.4 Overview:</b> proposal pulse + target variance at a glance for DM portfolio.</p>
-        </div>
-
-        <div class="web-view" id="web-performance">
-          <div class="filters">
-            <label>Region<select><option>Yangon</option><option>Mandalay</option></select></label>
-            <label>District<select><option>District A</option><option>District B</option></select></label>
-            <label>SAM<select><option>All</option><option>SAM Thida</option></select></label>
-            <label>AM<select><option>All</option><option>AM Ko Ko</option></select></label>
-            <button class="btn btn-primary" style="width:auto;padding:10px 16px;" onclick="alert('Export to Excel (mock)')">Export Excel</button>
-          </div>
-          <div style="overflow:auto;border-radius:16px;border:1px solid var(--line);">
-            <table>
-              <thead>
-                <tr><th>FA</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Wtd Freelance FYP</th><th>MDRT Prem</th><th>K1/K2</th><th>Flag</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41,000,000.00</td><td>90/86</td><td>—</td></tr>
-                <tr><td>Nwe Nwe</td><td>2,100,000.00</td><td>2,400,000.00</td><td>410,000.00</td><td>1,800,000.00</td><td>22,500,000.00</td><td>88/82</td><td>—</td></tr>
-                <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8,200,000.00</td><td>70/65</td><td class="flag">Below target</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="note">Hierarchical filters + line-by-line FA production + persistency for FTE + one-click Excel.</p>
-        </div>
-
-        <div class="web-view" id="web-recruitment">
-          <p class="note" style="margin-top:0;">Dynamic agent statuses (Alliance / L&D). Managers Add/Move/Delete tasks from portal.</p>
-          <div class="kanban">
-            <div class="col"><h4>Screening / Interview</h4><div class="card"><b>Su Su</b>Alliance</div><div class="card"><b>Ko Ko</b>Interview passed</div></div>
-            <div class="col"><h4>LC / NIIM</h4><div class="card"><b>Mei Mei</b>LC Training</div><div class="card"><b>Hnin</b>NIIM Exam</div></div>
-            <div class="col"><h4>Contracting</h4><div class="card"><b>Aung</b>Final in progress</div></div>
-            <div class="col"><h4>Contracted / Closed</h4><div class="card"><b>3 this month</b>Final Contracted</div><div class="card"><b>Rejected / Failed</b>Track reasons</div></div>
-          </div>
-          <div style="margin-top:12px;" class="btn-row">
-            <button class="btn btn-secondary" style="width:auto;">+ Add recruitment task</button>
-            <button class="btn btn-accent" style="width:auto;">Move status</button>
-          </div>
-        </div>
-
-        <div class="web-view" id="web-tasks">
-          <p class="note" style="margin-top:0;"><b>FR-07 Web:</b> Managers Add / Move / Delete tasks. Agents update status on mobile & web.</p>
-          <div class="btn-row" style="max-width:520px;margin-bottom:12px;">
-            <button class="btn btn-primary" style="width:auto;padding:10px 14px;">+ Add task</button>
-            <button class="btn btn-secondary" style="width:auto;padding:10px 14px;">Move / reassign</button>
-            <button class="btn btn-accent" style="width:auto;padding:10px 14px;">Delete</button>
-          </div>
-          <div style="overflow:auto;border-radius:16px;border:1px solid var(--line);">
-            <table>
-              <thead><tr><th>Task</th><th>Assignee</th><th>Type</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead>
-              <tbody>
-                <tr><td>Interview · Su Su</td><td>Aye Chan</td><td>Recruitment</td><td>06-Aug-2026</td><td>In Progress</td><td>Move · Delete</td></tr>
-                <tr><td>Premium chase · Daw Hla</td><td>Aye Chan</td><td>Servicing</td><td>10-Aug-2026</td><td>Pending</td><td>Move · Delete</td></tr>
-                <tr><td>LC Training follow-up</td><td>Nwe Nwe</td><td>Recruitment</td><td>08-Aug-2026</td><td>Pending</td><td>Move · Delete</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="web-view" id="web-operations">
-          <div class="op-grid">
-            <div class="panel-card">
-              <h3>Announcement setup</h3>
-              <div class="field"><label>Title</label><input value="Q3 Incentive Push" /></div>
-              <div class="field"><label>Image</label><input value="incentive-banner.jpg" /></div>
-              <div class="field"><label>URL</label><input value="https://kbzlife.com/incentive" /></div>
-              <button class="btn btn-primary">Publish to mobile</button>
-            </div>
-            <div class="panel-card">
-              <h3>Notification rules</h3>
-              <div class="field"><label>Premium due window</label><select><option>7 days</option><option>14 days</option></select></div>
-              <div class="field"><label>Renewal advance</label><select><option>60 days</option><option>90 days</option></select></div>
-              <div class="field"><label>Resource sections</label><input value="Brochures · Training · Forms" /></div>
-              <button class="btn btn-secondary">Save rules</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="web-view" id="web-audit">
-          <div class="panel-card" style="margin-bottom:12px;">
-            <h3>Agent data · Approved vs Pending</h3>
-            <div class="list">
-              <div class="row" style="cursor:default;"><div class="dot">OK</div><div class="meta"><b>Aye Chan · AGT-10284</b><span>Approved profile from Core</span></div><span class="pill">Live</span></div>
-              <div class="row" style="cursor:default;"><div class="dot">⏳</div><div class="meta"><b>Pending mobile change</b><span>09 771… → 09 988… awaiting sync</span></div><span class="pill warn">Pending</span></div>
-            </div>
-          </div>
-          <div class="panel-card">
-            <h3>Audit trail</h3>
-            <div class="audit-row head"><span>Action</span><span>Previous</span><span>New</span><span>User</span><span>When</span></div>
-            <div class="audit-row"><span>Update mobile</span><span>09 771 234 567</span><span>09 988 111 222</span><span>Ops May</span><span>03-Aug-2026 09:12</span></div>
-            <div class="audit-row"><span>Status change</span><span>Pre-Contracted</span><span>LC Training</span><span>Alliance</span><span>02-Aug-2026 16:40</span></div>
-          </div>
-        </div>
-
-        <p class="note"><b>Concept A web:</b> war-room energy + <b>unified login gate</b> + FR-07 task admin (Add/Move/Delete). FR-03 CRM deepened on mobile.</p>
-        </div><!-- /webAppShell -->
       </div>
+
     </div>
   </div>
 
@@ -1312,41 +1518,6 @@
   const wizFoot = document.getElementById('wizFoot');
   const wizBack = document.getElementById('wizBack');
   const wizNext = document.getElementById('wizNext');
-  const webTitles = {
-    overview: 'District war-room',
-    performance: 'Hierarchy performance',
-    recruitment: 'Recruitment pipeline',
-    tasks: 'Task admin (FR-07)',
-    operations: 'Ops & broadcasts',
-    audit: 'Agent data & audit'
-  };
-
-  function showWebAuth(which) {
-    document.getElementById('webAppShell').style.display = 'none';
-    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => {
-      document.getElementById(id).classList.toggle('on',
-        (which==='login' && id==='webAuth') ||
-        (which==='otp' && id==='webAuthOtp') ||
-        (which==='forgot' && id==='webAuthForgot')
-      );
-    });
-  }
-  function webSendOtp() { showWebAuth('otp'); }
-  function webEnterPortal() {
-    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => document.getElementById(id).classList.remove('on'));
-    document.getElementById('webAppShell').style.display = 'block';
-    showWeb('overview');
-  }
-  function webSignOut() { showWebAuth('login'); }
-
-  function showWeb(id) {
-    document.querySelectorAll('#webAppShell .web-view').forEach(v => v.classList.toggle('on', v.id === 'web-' + id));
-    document.querySelectorAll('#webNav button[data-web]').forEach(b => b.classList.toggle('on', b.dataset.web === id));
-    const t = document.getElementById('webTitle');
-    if (t) t.textContent = webTitles[id] || 'Portal';
-  }
-  document.querySelectorAll('#webNav button[data-web]').forEach(b => b.addEventListener('click', () => showWeb(b.dataset.web)));
-
   function showLeadTab(tab, btn) {
     ['quotes','apps','notes'].forEach(k => {
       const el = document.getElementById('lead-' + k);
@@ -1417,6 +1588,75 @@
     document.getElementById('tog1').classList.toggle('on', personal);
     document.getElementById('tog2').classList.toggle('on', !personal);
   }
+  
+  // --- Web app shell (shared helpers; safe to redefine) ---
+  function showWebAuth(which) {
+    const shell = document.getElementById('webAppShell');
+    if (shell) shell.classList.remove('on');
+    const map = {login:'webAuth', otp:'webAuthOtp', forgot:'webAuthForgot'};
+    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (map[which] === id) ? 'block' : 'none';
+    });
+  }
+  function webSendOtp() { showWebAuth('otp'); }
+  function webEnterPortal() {
+    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+    const shell = document.getElementById('webAppShell');
+    if (shell) shell.classList.add('on');
+    initWebCharts();
+    showPage('dashboard');
+  }
+  function webSignOut() { showWebAuth('login'); }
+  function showPage(id) {
+    document.querySelectorAll('.wa-page').forEach(p => p.classList.toggle('on', p.id === 'page-' + id));
+    document.querySelectorAll('.wa-navbtn').forEach(b => b.classList.toggle('on', b.dataset.page === id));
+  }
+  function setWeight(btn, mode) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+    const note = document.getElementById('weightNote');
+    if (note) note.textContent = mode === 'freelance'
+      ? 'Weighting factors applied by Core for Freelance FYP. Portal displays API results only.'
+      : 'Weighting factors applied by Core for Internal FYP. Portal displays API results only.';
+  }
+  function crmTab(btn, which) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+    const L = document.getElementById('crm-leads');
+    const C = document.getElementById('crm-clients');
+    if (L) L.style.display = which === 'leads' ? 'block' : 'none';
+    if (C) C.style.display = which === 'clients' ? 'block' : 'none';
+  }
+  let __chartsReady = false;
+  function initWebCharts() {
+    if (__chartsReady || typeof Chart === 'undefined') return;
+    const root = document.getElementById('webRoot');
+    const theme = root ? root.dataset.theme : 'a';
+    const colors = theme === 'b' ? ['#0a4d8c','#b8923a'] : theme === 'c' ? ['#7cffb2','#5ad0ff'] : ['#0b6e4f','#e8922a'];
+    const grid = theme === 'c' ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.06)';
+    const tick = theme === 'c' ? '#8b95a7' : '#5c7268';
+    const bar = document.getElementById('barChart-' + theme);
+    const line = document.getElementById('lineChart-' + theme);
+    if (bar) new Chart(bar, {
+      type: 'bar',
+      data: { labels:['Mar','Apr','May','Jun','Jul','Aug'],
+        datasets:[
+          { label:'FYP', data:[52,58,61,70,74,82], backgroundColor:colors[0] },
+          { label:'APE', data:[40,44,48,55,58,61], backgroundColor:colors[1] }
+        ]},
+      options:{ responsive:true, plugins:{legend:{labels:{color:tick}}}, scales:{x:{ticks:{color:tick},grid:{color:grid}}, y:{ticks:{color:tick},grid:{color:grid}}} }
+    });
+    if (line) new Chart(line, {
+      type: 'line',
+      data: { labels:['Mar','Apr','May','Jun','Jul','Aug'],
+        datasets:[
+          { label:'FYP (M)', data:[52,58,61,70,74,82], borderColor:colors[0], tension:.35, fill:false },
+          { label:'K1 %', data:[82,83,84,85,86,86], borderColor:colors[1], tension:.35, fill:false }
+        ]},
+      options:{ responsive:true, plugins:{legend:{labels:{color:tick}}}, scales:{x:{ticks:{color:tick},grid:{color:grid}}, y:{ticks:{color:tick},grid:{color:grid}}} }
+    });
+    __chartsReady = true;
+  }
+  document.querySelectorAll('.wa-navbtn').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
   go('s-splash');
   showWebAuth('login');
 </script>
