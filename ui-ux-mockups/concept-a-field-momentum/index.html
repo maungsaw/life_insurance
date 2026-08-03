@@ -211,6 +211,106 @@
   .toggle-lang { display: inline-flex; background: #e7efe9; border-radius: 999px; padding: 4px; }
   .toggle-lang button { border:0; background:transparent; padding:8px 14px; border-radius:999px; font:inherit; font-weight:700; font-size:12px; cursor:pointer; }
   .toggle-lang button.on { background:#fff; }
+
+  /* e-App stepper */
+  .screen.wizard { padding-bottom: 96px; }
+  .wiz-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 10px;
+  }
+  .wiz-top .icon-btn {
+    width: 36px; height: 36px; border-radius: 12px; border: 1px solid var(--line);
+    background: #fff; font: inherit; font-weight: 700; cursor: pointer; color: var(--ink);
+  }
+  .wiz-top .save {
+    border: 0; background: var(--accent-soft); color: #9a5b00;
+    font: inherit; font-size: 12px; font-weight: 700; padding: 8px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .wiz-progress { margin-bottom: 12px; }
+  .wiz-progress .meta-row {
+    display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;
+  }
+  .wiz-progress .meta-row b { font-size: 13px; }
+  .wiz-progress .meta-row span { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .wiz-dots { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+  .wiz-dots .d {
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 10px; font-weight: 800; background: #e7efe9; color: var(--muted); border: 0; cursor: pointer; font-family: inherit;
+  }
+  .wiz-dots .d.on { background: var(--brand); color: #fff; }
+  .wiz-dots .d.done { background: #c8ebda; color: var(--brand); }
+  .wiz-dots .line { flex: 1; height: 3px; background: #d8e6de; border-radius: 99px; }
+  .wiz-dots .line.on { background: var(--brand); }
+  .ctx-chip {
+    display: flex; gap: 10px; align-items: center; background: #fff;
+    border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; margin-bottom: 14px;
+  }
+  .ctx-chip .dot { width: 36px; height: 36px; border-radius: 12px; background: #e7f6ef; color: var(--brand); display: grid; place-items: center; font-weight: 800; font-size: 12px; }
+  .ctx-chip b { display: block; font-size: 13px; }
+  .ctx-chip span { font-size: 11px; color: var(--muted); }
+  .wiz-foot {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+    padding: 12px 16px 18px; background: linear-gradient(180deg, transparent, rgba(243,247,244,.95) 28%, #f3f7f4);
+    display: none; gap: 10px;
+  }
+  .wiz-foot.show { display: grid; grid-template-columns: 1fr 1.4fr; }
+  .scan-card {
+    background: #fff; border: 1px dashed var(--line); border-radius: 16px; padding: 14px; margin-bottom: 10px;
+  }
+  .scan-card.ok { border-style: solid; border-color: #b6dfc8; background: #f3fbf7; }
+  .scan-card .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .scan-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .scan-actions button, .doc-cta {
+    border: 1px solid var(--line); background: #fff; border-radius: 12px; padding: 12px;
+    font: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+  .doc-cta {
+    width: 100%; margin-bottom: 8px; background: linear-gradient(135deg, #fff7ea, #fff);
+    border-color: #f0d7ad; text-align: left; display: flex; gap: 10px; align-items: center;
+  }
+  .doc-cta .ico {
+    width: 40px; height: 40px; border-radius: 12px; background: var(--accent); color: #1a1205;
+    display: grid; place-items: center; font-weight: 800;
+  }
+  .sig-pad {
+    height: 140px; border-radius: 16px; border: 1px dashed var(--line); background:
+      repeating-linear-gradient(0deg, transparent, transparent 23px, #eef4f0 24px), #fff;
+    margin: 8px 0 10px; position: relative; overflow: hidden;
+  }
+  .sig-pad::after {
+    content: "Sign here"; position: absolute; left: 16px; bottom: 12px;
+    color: #b7c7bf; font-size: 12px; font-weight: 600;
+  }
+  .sig-pad.filled {
+    background: #fff;
+    border-style: solid; border-color: #b6dfc8;
+  }
+  .sig-pad.filled::after { content: none; }
+  .sig-stroke {
+    position: absolute; left: 24px; top: 36px; width: 70%; height: 48px;
+    border-bottom: 2px solid var(--ink); border-radius: 40% 60% 0 0 / 100% 100% 0 0;
+    opacity: .55; transform: rotate(-6deg);
+  }
+  .review-block {
+    background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px; margin-bottom: 8px;
+  }
+  .review-block .rb-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .review-block p { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .check-row {
+    display: flex; gap: 10px; align-items: flex-start; background: #fff;
+    border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin: 10px 0 14px; font-size: 13px;
+  }
+  .check-row input { margin-top: 2px; width: 16px; height: 16px; }
+  .success-wrap { text-align: center; padding: 28px 8px 8px; }
+  .success-wrap .badge-ok {
+    width: 72px; height: 72px; border-radius: 24px; margin: 0 auto 14px;
+    background: linear-gradient(145deg, var(--brand), var(--brand-2)); color: #fff;
+    display: grid; place-items: center; font-size: 28px; font-weight: 800;
+  }
+  .fix-banner {
+    background: #fff1e0; border: 1px solid #f0d7ad; border-radius: 14px;
+    padding: 10px 12px; font-size: 12px; margin-bottom: 12px; color: #9a5b00; font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -444,30 +544,258 @@
             </div>
           </section>
 
-          <section class="screen" id="s-eapp">
+          <!-- e-APP STEPPER -->
+          <section class="screen wizard" id="s-eapp">
             <div class="pad">
-              <div class="title" style="font-size:24px;">e-Application</div>
-              <p class="sub">Pre-filled from quote · KYC · e-sign · docs</p>
-              <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
-              <div class="list" style="margin-bottom:12px;">
-                <div class="row"><div class="dot">1</div><div class="meta"><b>Policyholder details</b><span>Pre-filled · editable</span></div><span class="pill">Done</span></div>
-                <div class="row"><div class="dot">2</div><div class="meta"><b>KYC / NRC scan</b><span>PH · Insured · Beneficiary</span></div><span class="pill warn">Next</span></div>
-                <div class="row"><div class="dot">3</div><div class="meta"><b>Documents</b><span>Camera scan / upload</span></div></div>
-                <div class="row"><div class="dot">4</div><div class="meta"><b>e-Signatures</b><span>Client + Agent</span></div></div>
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')" title="Close">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
               </div>
-              <button class="btn btn-primary" onclick="go('s-apps')">Submit application</button>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 1 of 6 · Details</b><span>Pre-filled</span></div>
+                <div class="wiz-dots">
+                  <button class="d on">1</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-2')">2</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-3')">3</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-4')">4</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-5')">5</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-6')">6</button>
+                </div>
+              </div>
+              <div class="ctx-chip">
+                <div class="dot">DH</div>
+                <div><b>Daw Hla · Endowment</b><span>Premium 185,000.00 · Annual · from quote</span></div>
+              </div>
+              <div class="title" style="font-size:22px;">Policyholder details</div>
+              <p class="sub" style="margin-bottom:12px;">Confirm pre-filled data. Product terms stay locked — edit via quote if needed.</p>
+              <div class="field"><label>Full name</label><input value="Daw Hla" /></div>
+              <div class="field"><label>Mobile</label><input value="09 250 111 222" /></div>
+              <div class="field"><label>Date of birth</label><input value="04-Jun-1990" /></div>
+              <div class="field"><label>Email</label><input value="daw.hla@email.com" /></div>
+              <div class="field"><label>NRC / ID number</label><input value="12/BaHaNa(N)123456" /></div>
+              <div class="kpi" style="margin-top:4px;">
+                <div class="label">Locked from quote</div>
+                <div class="value" style="font-size:16px;">SI 10,000,000.00</div>
+                <div class="delta">Change product in Premium calculator</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-2">
+            <div class="pad">
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
+              </div>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 2 of 6 · Parties</b><span>Insured + beneficiary</span></div>
+                <div class="wiz-dots">
+                  <button class="d done" onclick="go('s-eapp')">✓</button><div class="line on"></div>
+                  <button class="d on">2</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-3')">3</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-4')">4</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-5')">5</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-6')">6</button>
+                </div>
+              </div>
+              <div class="ctx-chip">
+                <div class="dot">DH</div>
+                <div><b>Daw Hla · Endowment</b><span>Single product · no entity</span></div>
+              </div>
+              <div class="title" style="font-size:22px;">Insured & beneficiary</div>
+              <div class="seg" style="margin-top:4px;">
+                <button class="on">Same as PH</button>
+                <button>Different person</button>
+              </div>
+              <div class="field"><label>Insured person</label><input value="Daw Hla" /></div>
+              <div class="section-h"><h3>Beneficiary</h3></div>
+              <div class="field"><label>Full name</label><input value="Ma Hla" /></div>
+              <div class="field"><label>Relationship</label><select><option>Spouse</option><option>Child</option><option>Parent</option><option>Other</option></select></div>
+              <div class="field"><label>Share %</label><input value="100" /></div>
+              <p class="sub" style="margin:0;font-size:12px;">Shares must total 100%. Add another beneficiary later if business rules allow.</p>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-3">
+            <div class="pad">
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
+              </div>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 3 of 6 · KYC</b><span>NRC validation</span></div>
+                <div class="wiz-dots">
+                  <button class="d done" onclick="go('s-eapp')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-2')">✓</button><div class="line on"></div>
+                  <button class="d on">3</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-4')">4</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-5')">5</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-6')">6</button>
+                </div>
+              </div>
+              <div id="fixBanner" class="fix-banner" style="display:none;">Fix requested · NRC page unclear for Daw Hla. Recapture policyholder ID.</div>
+              <div class="title" style="font-size:22px;">KYC capture</div>
+              <p class="sub" style="margin-bottom:10px;">Scan or upload NRC for policyholder, insured, and beneficiary. OCR is optional.</p>
+              <div class="scan-card ok">
+                <div class="head"><b>Policyholder · Daw Hla</b><span class="pill">Captured</span></div>
+                <div class="scan-actions">
+                  <button>Retake scan</button>
+                  <button>Upload</button>
+                </div>
+              </div>
+              <div class="scan-card ok">
+                <div class="head"><b>Insured · Daw Hla</b><span class="pill">Same as PH</span></div>
+                <div class="scan-actions">
+                  <button>View</button>
+                  <button>Replace</button>
+                </div>
+              </div>
+              <div class="scan-card">
+                <div class="head"><b>Beneficiary · Ma Hla</b><span class="pill warn">Missing</span></div>
+                <div class="scan-actions">
+                  <button>Scan NRC</button>
+                  <button>Upload</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-4">
+            <div class="pad">
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
+              </div>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 4 of 6 · Documents</b><span>Camera / upload</span></div>
+                <div class="wiz-dots">
+                  <button class="d done" onclick="go('s-eapp')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-2')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-3')">✓</button><div class="line on"></div>
+                  <button class="d on">4</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-5')">5</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-6')">6</button>
+                </div>
+              </div>
+              <div class="title" style="font-size:22px;">Attach documents</div>
+              <p class="sub" style="margin-bottom:10px;">Use the phone camera in the field. Files encrypt on device.</p>
+              <button class="doc-cta"><div class="ico">📷</div><div><b style="display:block;">Scan with camera</b><span style="font-size:11px;color:var(--muted);font-weight:600;">Best for National ID & forms</span></div></button>
+              <div class="list">
+                <div class="row"><div class="dot">ID</div><div class="meta"><b>National ID (front/back)</b><span>Required</span></div><span class="pill">Done</span></div>
+                <div class="row"><div class="dot">MD</div><div class="meta"><b>Medical documents</b><span>If applicable</span></div><span class="pill warn">Optional</span></div>
+                <div class="row"><div class="dot">+</div><div class="meta"><b>Other supporting file</b><span>Upload from gallery</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-5">
+            <div class="pad">
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
+              </div>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 5 of 6 · Signatures</b><span>On-device capture</span></div>
+                <div class="wiz-dots">
+                  <button class="d done" onclick="go('s-eapp')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-2')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-3')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-4')">✓</button><div class="line on"></div>
+                  <button class="d on">5</button><div class="line"></div>
+                  <button class="d" onclick="go('s-eapp-6')">6</button>
+                </div>
+              </div>
+              <div class="title" style="font-size:22px;">e-Signatures</div>
+              <p class="sub" style="margin-bottom:8px;">Client signs first. Agent cannot skip ahead.</p>
+              <div class="section-h"><h3>Client signature</h3><button class="link">Clear</button></div>
+              <div class="sig-pad filled"><div class="sig-stroke"></div></div>
+              <div class="section-h"><h3>Agent signature</h3><button class="link">Clear</button></div>
+              <div class="sig-pad"></div>
+              <p class="sub" style="margin:0;font-size:12px;">Tap pad to capture · redraw anytime before review.</p>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-6">
+            <div class="pad">
+              <div class="wiz-top">
+                <button class="icon-btn" onclick="go('s-quote')">✕</button>
+                <b style="font-size:14px;">e-Application</b>
+                <button class="save" onclick="toastSave()">Save draft</button>
+              </div>
+              <div class="wiz-progress">
+                <div class="meta-row"><b>Step 6 of 6 · Review</b><span>Ready to send</span></div>
+                <div class="wiz-dots">
+                  <button class="d done" onclick="go('s-eapp')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-2')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-3')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-4')">✓</button><div class="line on"></div>
+                  <button class="d done" onclick="go('s-eapp-5')">✓</button><div class="line on"></div>
+                  <button class="d on">6</button>
+                </div>
+              </div>
+              <div class="title" style="font-size:22px;">Review & submit</div>
+              <p class="sub" style="margin-bottom:10px;">Almost there — check each block, then send.</p>
+              <div class="review-block">
+                <div class="rb-top"><b>1 · Details</b><button class="link" onclick="go('s-eapp')">Edit</button></div>
+                <p>Daw Hla · 09 250 111 222 · 04-Jun-1990</p>
+              </div>
+              <div class="review-block">
+                <div class="rb-top"><b>2 · Parties</b><button class="link" onclick="go('s-eapp-2')">Edit</button></div>
+                <p>Insured = PH · Beneficiary Ma Hla (Spouse) 100%</p>
+              </div>
+              <div class="review-block">
+                <div class="rb-top"><b>3 · KYC</b><button class="link" onclick="go('s-eapp-3')">Edit</button></div>
+                <p>PH ✓ · Insured ✓ · Beneficiary ✓</p>
+              </div>
+              <div class="review-block">
+                <div class="rb-top"><b>4 · Documents</b><button class="link" onclick="go('s-eapp-4')">Edit</button></div>
+                <p>National ID attached · Medical optional skipped</p>
+              </div>
+              <div class="review-block">
+                <div class="rb-top"><b>5 · Signatures</b><button class="link" onclick="go('s-eapp-5')">Edit</button></div>
+                <p>Client ✓ · Agent ✓</p>
+              </div>
+              <label class="check-row">
+                <input type="checkbox" checked />
+                <span>I confirm information is accurate and the client consented to electronic submission.</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="screen wizard" id="s-eapp-ok">
+            <div class="pad">
+              <div class="success-wrap">
+                <div class="badge-ok">✓</div>
+                <div class="title" style="font-size:26px;">You’re in</div>
+                <p class="sub">Underwriting received the application. Track status anytime.</p>
+                <div class="kpi" style="text-align:left;margin-bottom:14px;">
+                  <div class="label">Application ref</div>
+                  <div class="value" style="font-size:20px;">APP-2026-08421</div>
+                  <div class="delta up">Status · Submitted</div>
+                </div>
+                <button class="btn btn-primary" onclick="go('s-apps')">View in App Tracker</button>
+                <div style="height:10px"></div>
+                <button class="btn btn-secondary" onclick="go('s-home')">Back to Home</button>
+              </div>
             </div>
           </section>
 
           <section class="screen" id="s-apps">
             <div class="pad">
               <div class="title" style="font-size:24px;">Applications</div>
-              <div class="search">🔍 <input placeholder="Search by name / status" /></div>
+              <p class="sub" style="margin-bottom:10px;">Real-time status from Core · tap a row to resume or fix</p>
+              <div class="search">🔍 <input placeholder="Search by name / status / ref" /></div>
               <div class="list">
-                <div class="row"><div class="dot">D</div><div class="meta"><b>Draft</b><span>Maung Soe · Endowment</span></div><span class="pill">Draft</span></div>
-                <div class="row"><div class="dot">S</div><div class="meta"><b>Submitted</b><span>U Min · UL</span></div><span class="pill">Live</span></div>
-                <div class="row"><div class="dot">C</div><div class="meta"><b>Mark for Correction</b><span>Daw Hla · NRC unclear</span></div><span class="pill danger">Action</span></div>
+                <div class="row" onclick="go('s-eapp')"><div class="dot">D</div><div class="meta"><b>Draft</b><span>Maung Soe · Endowment · resume step 2</span></div><span class="pill">Draft</span></div>
+                <div class="row"><div class="dot">S</div><div class="meta"><b>Submitted</b><span>APP-2026-08421 · Daw Hla</span></div><span class="pill">Live</span></div>
+                <div class="row" onclick="openCorrection()"><div class="dot">C</div><div class="meta"><b>Mark for Correction</b><span>Daw Hla · NRC unclear</span></div><span class="pill danger">Fix</span></div>
                 <div class="row"><div class="dot">A</div><div class="meta"><b>Approved</b><span>Yu Hlaing</span></div><span class="pill">OK</span></div>
+                <div class="row"><div class="dot">R</div><div class="meta"><b>Rejected</b><span>With reason from Core</span></div><span class="pill danger">Closed</span></div>
               </div>
             </div>
           </section>
@@ -569,6 +897,11 @@
             <button class="tab" data-go="s-tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Work</button>
             <button class="tab" data-go="s-profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M5 19c0-3.5 3-6 7-6s7 2.5 7 6"/></svg>More</button>
           </nav>
+
+          <div class="wiz-foot" id="wizFoot">
+            <button class="btn btn-secondary" id="wizBack">Back</button>
+            <button class="btn btn-primary" id="wizNext">Continue</button>
+          </div>
         </div>
       </div>
 
@@ -604,18 +937,22 @@
             </tbody>
           </table>
         </div>
-        <p class="note"><b>Concept A signature:</b> oversized quick actions, amber urgency chips, MDRT progress as emotional fuel, People / Sell / Work tabs mapped to field mental model. Web mirrors the same energetic KPI language with export-ready tables.</p>
+        <p class="note"><b>Concept A signature:</b> oversized quick actions, amber urgency chips, MDRT progress as emotional fuel, People / Sell / Work tabs mapped to field mental model. <b>e-App stepper:</b> 6 focused steps with sticky Continue/Back, Save draft, and correction resume from App Tracker. Web mirrors the same energetic KPI language with export-ready tables.</p>
       </div>
     </div>
   </div>
 
 <script>
   const authScreens = new Set(['s-splash','s-login','s-otp','s-bio']);
+  const wizardFlow = ['s-eapp','s-eapp-2','s-eapp-3','s-eapp-4','s-eapp-5','s-eapp-6'];
+  const wizardScreens = new Set([...wizardFlow, 's-eapp-ok']);
   const labels = [
     ['s-splash','Splash'],['s-login','Login'],['s-otp','OTP'],['s-home','FA Home'],['s-manager','Manager'],
     ['s-leads','Leads'],['s-clients','Clients'],['s-client','Client'],['s-products','Products'],['s-quote','Quote'],
-    ['s-eapp','e-App'],['s-apps','App tracker'],['s-policy','Policy'],['s-tasks','Tasks'],['s-notifs','Notifs'],
-    ['s-announce','Announce'],['s-resources','Resources'],['s-profile','Profile']
+    ['s-eapp','eApp 1 Details'],['s-eapp-2','eApp 2 Parties'],['s-eapp-3','eApp 3 KYC'],
+    ['s-eapp-4','eApp 4 Docs'],['s-eapp-5','eApp 5 Sign'],['s-eapp-6','eApp 6 Review'],
+    ['s-eapp-ok','eApp Success'],['s-apps','App tracker'],['s-policy','Policy'],['s-tasks','Tasks'],
+    ['s-notifs','Notifs'],['s-announce','Announce'],['s-resources','Resources'],['s-profile','Profile']
   ];
   const nav = document.getElementById('jumpNav');
   labels.forEach(([id, name], i) => {
@@ -626,21 +963,67 @@
     b.dataset.id = id;
     nav.appendChild(b);
   });
+
+  const wizFoot = document.getElementById('wizFoot');
+  const wizBack = document.getElementById('wizBack');
+  const wizNext = document.getElementById('wizNext');
+
+  function syncWizardChrome(id) {
+    const inWizard = wizardFlow.includes(id);
+    const isSuccess = id === 's-eapp-ok';
+    wizFoot.classList.toggle('show', inWizard);
+    document.getElementById('tabbar').style.display =
+      (authScreens.has(id) || wizardScreens.has(id)) ? 'none' : 'grid';
+
+    if (!inWizard) return;
+    const idx = wizardFlow.indexOf(id);
+    wizBack.textContent = idx === 0 ? 'Cancel' : 'Back';
+    wizNext.textContent = idx === wizardFlow.length - 1 ? 'Send application' : 'Continue';
+    wizBack.onclick = () => go(idx === 0 ? 's-quote' : wizardFlow[idx - 1]);
+    wizNext.onclick = () => go(idx === wizardFlow.length - 1 ? 's-eapp-ok' : wizardFlow[idx + 1]);
+  }
+
   function go(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     const el = document.getElementById(id);
+    if (!el) return;
     el.classList.add('active');
-    el.classList.toggle('no-tab', authScreens.has(id));
-    document.getElementById('tabbar').style.display = authScreens.has(id) ? 'none' : 'grid';
+    el.classList.toggle('no-tab', authScreens.has(id) || wizardScreens.has(id));
+    syncWizardChrome(id);
     document.querySelectorAll('#jumpNav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+    const sellIds = ['s-products','s-quote',...wizardFlow,'s-eapp-ok','s-apps'];
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.go === id ||
       (id.startsWith('s-lead')||id==='s-client'||id==='s-clients'||id==='s-addlead') && t.dataset.go==='s-leads' ||
-      (['s-products','s-quote','s-eapp','s-apps'].includes(id)) && t.dataset.go==='s-products' ||
+      sellIds.includes(id) && t.dataset.go==='s-products' ||
       (['s-tasks','s-notifs','s-announce','s-resources'].includes(id)) && t.dataset.go==='s-tasks' ||
       (id==='s-profile'||id==='s-policy') && t.dataset.go==='s-profile' ||
       (id==='s-home'||id==='s-manager') && t.dataset.go==='s-home'
     ));
+    if (id !== 's-eapp-3') {
+      const banner = document.getElementById('fixBanner');
+      if (banner) {
+        banner.style.display = 'none';
+        delete banner.dataset.force;
+      }
+    } else if (document.getElementById('fixBanner')?.dataset.force) {
+      document.getElementById('fixBanner').style.display = 'block';
+    }
   }
+
+  function openCorrection() {
+    const banner = document.getElementById('fixBanner');
+    if (banner) {
+      banner.style.display = 'block';
+      banner.dataset.force = '1';
+    }
+    go('s-eapp-3');
+  }
+
+  function toastSave() {
+    wizNext.textContent = 'Saved ✓';
+    setTimeout(() => syncWizardChrome(document.querySelector('.screen.active').id), 900);
+  }
+
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.go)));
   function toggleTeam(personal) {
     document.getElementById('tog1').classList.toggle('on', personal);

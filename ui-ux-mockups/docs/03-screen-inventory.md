@@ -8,7 +8,8 @@ Use this to verify each concept covers BRD end-to-end.
 - [x] Manager Home (Personal / Total Group, MDRT, drill-down)
 - [x] Leads & Clients CRM
 - [x] Product library + Premium calculator + Save quote
-- [x] e-Application + Status tracker
+- [x] e-Application **6-step wizard** (Details → Parties → KYC → Docs → Sign → Review) + Success
+- [x] Application Status Tracker (incl. Mark for Correction → resume KYC)
 - [x] Policy search & detail
 - [x] Tasks calendar + To-Do
 - [x] Notifications & Announcements
