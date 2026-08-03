@@ -311,6 +311,40 @@
     background: #fff1e0; border: 1px solid #f0d7ad; border-radius: 14px;
     padding: 10px 12px; font-size: 12px; margin-bottom: 12px; color: #9a5b00; font-weight: 600;
   }
+  .convert-banner {
+    background: linear-gradient(120deg, #e7f6ef, #fff);
+    border: 1px solid #b6dfc8; border-radius: 16px; padding: 12px 14px; margin-bottom: 12px;
+  }
+  .convert-banner b { display: block; font-size: 14px; margin-bottom: 4px; }
+  .convert-banner span { font-size: 12px; color: var(--muted); }
+  .mini-tabs { display: flex; gap: 6px; overflow: auto; margin: 10px 0 12px; }
+  .mini-tabs button {
+    border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 8px 12px;
+    font: inherit; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap;
+  }
+  .mini-tabs button.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .web-view { display: none; }
+  .web-view.on { display: block; }
+  .filters {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; align-items: end;
+  }
+  .filters label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
+  .filters select, .filters input {
+    border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font: inherit; background: #fff; min-width: 120px;
+  }
+  .kanban { display: grid; grid-template-columns: repeat(4, minmax(140px, 1fr)); gap: 10px; overflow: auto; }
+  .kanban .col { background: #eef6f1; border-radius: 14px; padding: 10px; min-height: 180px; }
+  .kanban .col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 8px; }
+  .kanban .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px; margin-bottom: 8px; font-size: 12px;
+  }
+  .kanban .card b { display: block; margin-bottom: 2px; }
+  .op-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 900px) { .op-grid { grid-template-columns: 1fr; } .kanban { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+  .panel-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+  .panel-card h3 { font-size: 15px; margin-bottom: 8px; }
+  .audit-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+  .audit-row.head { font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
@@ -351,14 +385,29 @@
 
           <section class="screen no-tab" id="s-login">
             <div class="pad" style="padding-top:28px;">
-              <div class="brand-mark"><div class="logo">KL</div><div><strong>Welcome back</strong><span>Secure agent login</span></div></div>
+              <div class="brand-mark"><div class="logo">KL</div><div><strong>Welcome back</strong><span>Unified Agent identity</span></div></div>
               <div class="title">Sign in</div>
-              <p class="sub">Mobile must exist & be active in CORE. OTP via SMS.</p>
+              <p class="sub">Same account on <b>mobile & web</b>. Mobile must be active in CORE · SMS OTP.</p>
+              <div class="alert" style="cursor:default;"><div>⇄</div><div><b>Unified login</b><span>Field app and management portal share one secure identity.</span></div></div>
               <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
               <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
               <button class="btn btn-primary" onclick="go('s-otp')">Continue</button>
               <div style="height:10px"></div>
-              <button class="btn btn-secondary">Forgot password (OTP + reason)</button>
+              <button class="btn btn-secondary" onclick="go('s-forgot')">Forgot password (OTP + reason)</button>
+            </div>
+          </section>
+
+          <section class="screen no-tab" id="s-forgot">
+            <div class="pad" style="padding-top:28px;">
+              <button class="link" onclick="go('s-login')">← Back to login</button>
+              <div class="title" style="margin-top:12px;font-size:24px;">Reset password</div>
+              <p class="sub">Same recovery on mobile & web. OTP via SMS · remark is mandatory.</p>
+              <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
+              <div class="field"><label>OTP</label><input value="482190" /></div>
+              <div class="field"><label>Reason / remark *</label><textarea rows="2" placeholder="Why are you resetting?">Forgot password after device change</textarea></div>
+              <div class="field"><label>New password</label><input type="password" value="••••••••" /></div>
+              <div class="field"><label>Confirm password</label><input type="password" value="••••••••" /></div>
+              <button class="btn btn-primary" onclick="go('s-login')">Update & sign in</button>
             </div>
           </section>
 
@@ -366,7 +415,7 @@
             <div class="pad" style="padding-top:28px;">
               <button class="link" onclick="go('s-login')">← Back</button>
               <div class="title" style="margin-top:12px;">Enter OTP</div>
-              <p class="sub">We sent a 6-digit code to 09 771 234 567</p>
+              <p class="sub">Same SMS OTP used on the web portal. Sent to 09 771 234 567</p>
               <div class="otp">
                 <input value="4" /><input value="8" /><input value="2" /><input value="1" /><input value="9" /><input value="0" />
               </div>
@@ -421,7 +470,7 @@
               </div>
               <div class="section-h"><h3>Today</h3><button class="link" onclick="go('s-tasks')">Open</button></div>
               <div class="list">
-                <div class="row" onclick="go('s-client')"><div class="dot">MS</div><div class="meta"><b>Maung Soe follow-up</b><span>Lead · Quote saved yesterday</span></div><span class="pill warn">Due</span></div>
+                <div class="row" onclick="go('s-lead')"><div class="dot">MS</div><div class="meta"><b>Maung Soe follow-up</b><span>Lead · Quote saved yesterday</span></div><span class="pill warn">Due</span></div>
                 <div class="row" onclick="go('s-apps')"><div class="dot">eA</div><div class="meta"><b>e-App Mark for Correction</b><span>Daw Hla · ID page unclear</span></div><span class="pill danger">Fix</span></div>
               </div>
             </div>
@@ -449,31 +498,99 @@
             </div>
           </section>
 
-          <!-- PEOPLE -->
+          <!-- PEOPLE · FR-03 -->
           <section class="screen" id="s-leads">
             <div class="pad">
               <div class="seg">
                 <button class="on">Leads</button>
                 <button onclick="go('s-clients')">Clients</button>
               </div>
-              <div class="search">🔍 <input placeholder="Search leads" /></div>
+              <div class="search">🔍 <input placeholder="Search leads by name / mobile" /></div>
               <button class="btn btn-accent" style="margin-bottom:12px;" onclick="go('s-addlead')">+ Add lead</button>
               <div class="list">
-                <div class="row" onclick="go('s-client')"><div class="dot">MS</div><div class="meta"><b>Maung Soe</b><span>Yangon · Interested in Endowment</span></div><span class="pill">Hot</span></div>
-                <div class="row"><div class="dot">YH</div><div class="meta"><b>Yu Hlaing</b><span>Call back 05-Aug-2026</span></div><span class="pill warn">Warm</span></div>
+                <div class="row" onclick="go('s-lead')"><div class="dot">MS</div><div class="meta"><b>Maung Soe</b><span>Quoted · Endowment · Yangon</span></div><span class="pill">Hot</span></div>
+                <div class="row" onclick="go('s-lead')"><div class="dot">YH</div><div class="meta"><b>Yu Hlaing</b><span>Contacted · Callback 05-Aug-2026</span></div><span class="pill warn">Warm</span></div>
+                <div class="row" onclick="go('s-addlead')"><div class="dot">+</div><div class="meta"><b>New prospect</b><span>Capture while offline — sync later</span></div></div>
               </div>
             </div>
           </section>
 
           <section class="screen" id="s-addlead">
             <div class="pad">
-              <button class="link" onclick="go('s-leads')">← Back</button>
-              <div class="title" style="margin-top:10px;font-size:24px;">New lead</div>
-              <div class="field"><label>Full name</label><input placeholder="Name" /></div>
-              <div class="field"><label>Mobile</label><input placeholder="09 ..." /></div>
-              <div class="field"><label>Email (optional)</label><input placeholder="name@email.com" /></div>
-              <div class="field"><label>Notes</label><textarea rows="3"></textarea></div>
-              <button class="btn btn-primary" onclick="go('s-leads')">Save lead</button>
+              <button class="link" onclick="go('s-leads')">← Leads</button>
+              <div class="title" style="margin-top:10px;font-size:24px;">Add lead</div>
+              <p class="sub" style="margin-bottom:10px;">Prospect who has not purchased yet. Mobile format validated.</p>
+              <div class="field"><label>Full name *</label><input placeholder="Name" /></div>
+              <div class="field"><label>Mobile *</label><input placeholder="09 ..." /></div>
+              <div class="field"><label>Email</label><input placeholder="name@email.com" /></div>
+              <div class="field"><label>Stage</label><select><option>New</option><option>Contacted</option><option>Quoted</option><option>Applied</option></select></div>
+              <div class="field"><label>Notes</label><textarea rows="3" placeholder="Interest, best time to call…"></textarea></div>
+              <button class="btn btn-primary" onclick="go('s-lead')">Save lead</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-editlead">
+            <div class="pad">
+              <button class="link" onclick="go('s-lead')">← Lead profile</button>
+              <div class="title" style="margin-top:10px;font-size:24px;">Edit lead</div>
+              <div class="field"><label>Full name *</label><input value="Maung Soe" /></div>
+              <div class="field"><label>Mobile *</label><input value="09 771 888 999" /></div>
+              <div class="field"><label>Email</label><input value="maung.soe@email.com" /></div>
+              <div class="field"><label>Stage</label><select><option>Quoted</option><option>Contacted</option><option>Applied</option></select></div>
+              <div class="field"><label>Notes</label><textarea rows="3">Interested in Endowment · prefers evening calls</textarea></div>
+              <button class="btn btn-primary" onclick="go('s-lead')">Save changes</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-lead">
+            <div class="pad">
+              <button class="link" onclick="go('s-leads')">← Leads</button>
+              <div class="greeting" style="margin-top:10px;">
+                <div><h2>Maung Soe</h2><div style="color:var(--muted);font-size:13px;">09 771 888 999 · Yangon</div></div>
+                <span class="pill">Lead</span>
+              </div>
+              <div class="convert-banner" id="convertHint" style="display:none;">
+                <b>Ready to convert</b>
+                <span>Policy approved — tap Convert to Client to move this prospect into your client book.</span>
+                <button class="btn btn-primary" style="margin-top:10px;" onclick="go('s-convert')">Convert to Client</button>
+              </div>
+              <div class="btn-row" style="margin-bottom:8px;">
+                <button class="btn btn-secondary" onclick="go('s-editlead')">Edit</button>
+                <button class="btn btn-secondary" onclick="go('s-quote')">Quote</button>
+              </div>
+              <button class="btn btn-primary" style="margin-bottom:12px;" onclick="go('s-eapp')">Start e-App</button>
+              <div class="mini-tabs">
+                <button class="on" onclick="showLeadTab('quotes', this)">Quotes</button>
+                <button onclick="showLeadTab('apps', this)">Applications</button>
+                <button onclick="showLeadTab('notes', this)">Activity</button>
+              </div>
+              <div id="lead-quotes" class="list">
+                <div class="row" onclick="go('s-quote')"><div class="dot">Q</div><div class="meta"><b>Endowment quote</b><span>185,000.00 · Saved 02-Aug-2026</span></div><span class="pill">Open</span></div>
+              </div>
+              <div id="lead-apps" class="list" style="display:none;">
+                <div class="row" onclick="go('s-apps')"><div class="dot">D</div><div class="meta"><b>Draft e-App</b><span>Resume from Parties</span></div><span class="pill warn">Draft</span></div>
+              </div>
+              <div id="lead-notes" class="list" style="display:none;">
+                <div class="row"><div class="dot">N</div><div class="meta"><b>Visit note</b><span>Wants spouse as beneficiary · 01-Aug-2026</span></div></div>
+                <div class="row"><div class="dot">☎</div><div class="meta"><b>Call logged</b><span>Follow-up scheduled · 28-Jul-2026</span></div></div>
+                <div class="row"><div class="dot">+</div><div class="meta"><b>Add note</b><span>Keep the activity trail warm</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-convert">
+            <div class="pad" style="padding-top:36px;text-align:center;">
+              <div class="logo" style="margin:0 auto 14px;width:64px;height:64px;border-radius:20px;">✓</div>
+              <div class="title" style="font-size:26px;">Lead → Client</div>
+              <p class="sub">Maung Soe converted after successful policy issuance. History (quotes, apps, notes) stays on the profile.</p>
+              <div class="kpi" style="text-align:left;margin-bottom:14px;">
+                <div class="label">New active policy</div>
+                <div class="value" style="font-size:18px;">POL-88499</div>
+                <div class="delta up">Endowment · from approved e-App</div>
+              </div>
+              <button class="btn btn-primary" onclick="go('s-client-new')">Open client profile</button>
+              <div style="height:10px"></div>
+              <button class="btn btn-secondary" onclick="go('s-clients')">Go to Clients list</button>
             </div>
           </section>
 
@@ -483,10 +600,11 @@
                 <button onclick="go('s-leads')">Leads</button>
                 <button class="on">Clients</button>
               </div>
-              <div class="search">🔍 <input placeholder="Search clients / policies" /></div>
+              <div class="search">🔍 <input placeholder="Search clients / mobile / policy" /></div>
               <div class="list">
-                <div class="row" onclick="go('s-client')"><div class="dot">DH</div><div class="meta"><b>Daw Hla</b><span>2 active · 1 due soon</span></div><span class="pill warn">Due</span></div>
-                <div class="row" onclick="go('s-client')"><div class="dot">UM</div><div class="meta"><b>U Min</b><span>Active · Next due 12-Sep-2026</span></div><span class="pill">OK</span></div>
+                <div class="row" onclick="go('s-client')"><div class="dot">DH</div><div class="meta"><b>Daw Hla</b><span>2 active · 1 lapsed · due soon</span></div><span class="pill warn">Due</span></div>
+                <div class="row" onclick="go('s-client-new')"><div class="dot">MS</div><div class="meta"><b>Maung Soe</b><span>Just converted · 1 active</span></div><span class="pill">New</span></div>
+                <div class="row" onclick="go('s-client')"><div class="dot">UM</div><div class="meta"><b>U Min</b><span>1 active · Next due 12-Sep-2026</span></div><span class="pill">OK</span></div>
               </div>
             </div>
           </section>
@@ -502,14 +620,54 @@
                 <button class="btn btn-secondary" onclick="go('s-quote')">New quote</button>
                 <button class="btn btn-primary" onclick="go('s-eapp')">Start e-App</button>
               </div>
-              <div class="section-h"><h3>Policies</h3></div>
-              <div class="list">
-                <div class="row" onclick="go('s-policy')"><div class="dot">P</div><div class="meta"><b>Endowment · POL-88421</b><span>SI 10,000,000.00 · Due 10-Aug-2026</span></div></div>
+              <div class="mini-tabs">
+                <button class="on" onclick="showClientTab('pol', this)">Policies</button>
+                <button onclick="showClientTab('fam', this)">Family</button>
+                <button onclick="showClientTab('act', this)">Activity</button>
+                <button onclick="showClientTab('quo', this)">Quotes</button>
               </div>
-              <div class="section-h"><h3>Activity</h3></div>
-              <div class="list">
+              <div id="cli-pol" class="list">
+                <div class="row" onclick="go('s-policy')"><div class="dot">A</div><div class="meta"><b>Active · Endowment POL-88421</b><span>SI 10,000,000.00 · Due 10-Aug-2026</span></div><span class="pill">Active</span></div>
+                <div class="row" onclick="go('s-policy')"><div class="dot">A</div><div class="meta"><b>Active · CI POL-90112</b><span>SI 5,000,000.00 · Due 22-Sep-2026</span></div><span class="pill">Active</span></div>
+                <div class="row"><div class="dot">L</div><div class="meta"><b>Lapsed · Term POL-70011</b><span>Lapsed 15-Jan-2025 · win-back?</span></div><span class="pill danger">Lapsed</span></div>
+              </div>
+              <div id="cli-fam" class="list" style="display:none;">
+                <div class="row"><div class="dot">MH</div><div class="meta"><b>Ma Hla</b><span>Spouse · Beneficiary · 09 250 222 333</span></div></div>
+                <div class="row"><div class="dot">KH</div><div class="meta"><b>Ko Hla</b><span>Son · Associated contact</span></div></div>
+                <div class="row"><div class="dot">+</div><div class="meta"><b>Add family / contact</b><span>Referral & servicing context</span></div></div>
+              </div>
+              <div id="cli-act" class="list" style="display:none;">
                 <div class="row"><div class="dot">N</div><div class="meta"><b>Note</b><span>Prefers weekend visits · 28-Jul-2026</span></div></div>
+                <div class="row"><div class="dot">$</div><div class="meta"><b>Premium reminder sent</b><span>System · 01-Aug-2026</span></div></div>
+                <div class="row"><div class="dot">+</div><div class="meta"><b>Add activity note</b><span>Keep the log complete</span></div></div>
               </div>
+              <div id="cli-quo" class="list" style="display:none;">
+                <div class="row" onclick="go('s-quote')"><div class="dot">Q</div><div class="meta"><b>UL quote (not taken)</b><span>Saved 12-Jun-2026</span></div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-client-new">
+            <div class="pad">
+              <button class="link" onclick="go('s-clients')">← Clients</button>
+              <div class="convert-banner">
+                <b>Converted from lead</b>
+                <span>Maung Soe · history preserved · new policy attached</span>
+              </div>
+              <div class="greeting">
+                <div><h2>Maung Soe</h2><div style="color:var(--muted);font-size:13px;">09 771 888 999 · Yangon</div></div>
+                <span class="pill">Client</span>
+              </div>
+              <div class="btn-row" style="margin-bottom:12px;">
+                <button class="btn btn-secondary" onclick="go('s-quote')">New quote</button>
+                <button class="btn btn-primary" onclick="go('s-policy')">View policy</button>
+              </div>
+              <div class="section-h"><h3>Active policies</h3></div>
+              <div class="row" onclick="go('s-policy')"><div class="dot">A</div><div class="meta"><b>Endowment · POL-88499</b><span>SI 10,000,000.00 · Issued today</span></div><span class="pill">New</span></div>
+              <div class="section-h"><h3>Family / contacts</h3></div>
+              <div class="row"><div class="dot">+</div><div class="meta"><b>Add spouse / family</b><span>Build associated contacts early</span></div></div>
+              <div class="section-h"><h3>Prior lead activity</h3></div>
+              <div class="row"><div class="dot">N</div><div class="meta"><b>Carried from lead</b><span>Spouse as beneficiary preference</span></div></div>
             </div>
           </section>
 
@@ -818,20 +976,74 @@
             </div>
           </section>
 
-          <!-- WORK -->
+          <!-- WORK · FR-07 -->
           <section class="screen" id="s-tasks">
             <div class="pad">
               <div class="seg">
                 <button class="on">Calendar</button>
-                <button>To-Do</button>
+                <button onclick="go('s-todo')">To-Do</button>
+              </div>
+              <div class="mini-tabs">
+                <button class="on">Day</button>
+                <button>Week</button>
+                <button>Month</button>
               </div>
               <div class="cal" style="margin-bottom:12px;">
                 <div class="d">S</div><div class="d">M</div><div class="d">T</div><div class="d">W</div><div class="d">T</div><div class="d">F</div><div class="d">S</div>
                 <div class="d">2</div><div class="d today">3</div><div class="d has">4</div><div class="d">5</div><div class="d has">6</div><div class="d">7</div><div class="d">8</div>
               </div>
+              <div class="alert" onclick="go('s-task')"><div>🔔</div><div><b>New task assigned</b><span>AM assigned recruitment interview · tap to open</span></div></div>
               <div class="list">
-                <div class="row"><div class="dot">P</div><div class="meta"><b>Premium reminder · Daw Hla</b><span>Pending · Due 10-Aug-2026</span></div><span class="pill warn">Due</span></div>
-                <div class="row"><div class="dot">R</div><div class="meta"><b>Recruitment interview</b><span>Assigned by AM · In progress</span></div><span class="pill">Active</span></div>
+                <div class="row" onclick="go('s-task')"><div class="dot">P</div><div class="meta"><b>Premium reminder · Daw Hla</b><span>Pending · Due 10-Aug-2026</span></div><span class="pill warn">Pending</span></div>
+                <div class="row" onclick="go('s-task')"><div class="dot">R</div><div class="meta"><b>Recruitment interview</b><span>Assigned by AM · In Progress</span></div><span class="pill">Active</span></div>
+                <div class="row" onclick="go('s-task')"><div class="dot">↻</div><div class="meta"><b>Renewal review · U Min</b><span>60 days out · Pending</span></div><span class="pill warn">Pending</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-todo">
+            <div class="pad">
+              <div class="seg">
+                <button onclick="go('s-tasks')">Calendar</button>
+                <button class="on">To-Do</button>
+              </div>
+              <button class="btn btn-accent" style="margin-bottom:12px;" onclick="go('s-task-new')">+ Create task</button>
+              <div class="list">
+                <div class="row" onclick="go('s-task')"><div class="dot">✓</div><div class="meta"><b>Call Maung Soe</b><span>Linked lead · Pending</span></div><span class="pill warn">Pending</span></div>
+                <div class="row" onclick="go('s-task')"><div class="dot">→</div><div class="meta"><b>Collect premium · Daw Hla</b><span>In Progress</span></div><span class="pill">Active</span></div>
+                <div class="row"><div class="dot">✓</div><div class="meta"><b>Submit corrected NRC</b><span>Completed · 02-Aug-2026</span></div><span class="pill">Done</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-task-new">
+            <div class="pad">
+              <button class="link" onclick="go('s-todo')">← To-Do</button>
+              <div class="title" style="margin-top:10px;font-size:24px;">Create task</div>
+              <div class="field"><label>Title *</label><input placeholder="e.g. Follow up visit" /></div>
+              <div class="field"><label>Due date</label><input value="06-Aug-2026" /></div>
+              <div class="field"><label>Link to</label><select><option>None</option><option>Lead · Maung Soe</option><option>Client · Daw Hla</option><option>Recruitment candidate</option></select></div>
+              <div class="field"><label>Notes</label><textarea rows="3"></textarea></div>
+              <button class="btn btn-primary" onclick="go('s-todo')">Save to To-Do</button>
+            </div>
+          </section>
+
+          <section class="screen" id="s-task">
+            <div class="pad">
+              <button class="link" onclick="go('s-tasks')">← Work</button>
+              <div class="title" style="margin-top:10px;font-size:24px;">Task detail</div>
+              <div class="kpi" style="margin-bottom:12px;">
+                <div class="label">Assigned by AM · Recruitment</div>
+                <div class="value" style="font-size:18px;">Interview · Su Su</div>
+                <div class="delta">Due 06-Aug-2026</div>
+              </div>
+              <div class="field"><label>Status (Mobile + Web)</label>
+                <select><option>Pending</option><option selected>In Progress</option><option>Completed</option></select>
+              </div>
+              <div class="field"><label>Notes</label><textarea rows="3">Candidate passed screening. Schedule LC intro.</textarea></div>
+              <div class="btn-row">
+                <button class="btn btn-secondary" onclick="go('s-todo')">Save</button>
+                <button class="btn btn-primary" onclick="go('s-todo')">Mark completed</button>
               </div>
             </div>
           </section>
@@ -840,6 +1052,7 @@
             <div class="pad">
               <div class="title" style="font-size:24px;">Notifications</div>
               <div class="list">
+                <div class="row" onclick="go('s-task')"><div class="dot">✓</div><div class="meta"><b>Task assigned / updated</b><span>FR-07 · Recruitment interview</span></div><span class="pill warn">New</span></div>
                 <div class="row"><div class="dot">$</div><div class="meta"><b>Recurring premium due soon</b><span>7-day window · 3 clients</span></div></div>
                 <div class="row"><div class="dot">↻</div><div class="meta"><b>Annual renewal in 60 days</b><span>Review opportunity</span></div></div>
                 <div class="row" onclick="go('s-announce')"><div class="dot">📢</div><div class="meta"><b>New product incentive</b><span>Announcement with image + URL</span></div></div>
@@ -906,55 +1119,187 @@
       </div>
 
       <div class="web-panel">
+        <!-- Unified web auth gate -->
+        <div id="webAuth" class="web-view on">
+          <div style="max-width:420px;margin:40px auto 20px;">
+            <div class="eyebrow">Unified login · Web</div>
+            <h2 style="font-family:Fraunces,serif;font-size:28px;margin:8px 0 10px;">Same Agent identity</h2>
+            <p class="note" style="margin-top:0;">Mobile number + password + SMS OTP — identical to the Agent App. Session policies apply on both channels.</p>
+            <div class="alert" style="cursor:default;"><div>⇄</div><div><b>One account</b><span>Field FA and desk manager use the same CORE-backed login.</span></div></div>
+            <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
+            <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
+            <button class="btn btn-primary" onclick="webSendOtp()">Continue to OTP</button>
+            <div style="height:10px"></div>
+            <button class="btn btn-secondary" onclick="showWebAuth('forgot')">Forgot password (OTP + reason)</button>
+          </div>
+        </div>
+
+        <div id="webAuthOtp" class="web-view">
+          <div style="max-width:420px;margin:40px auto 20px;">
+            <button class="link" onclick="showWebAuth('login')">← Back</button>
+            <h2 style="font-family:Fraunces,serif;font-size:26px;margin:12px 0 8px;">Web OTP</h2>
+            <p class="note" style="margin-top:0;">Same SMS code path as mobile.</p>
+            <div class="otp" style="max-width:320px;">
+              <input value="4" /><input value="8" /><input value="2" /><input value="1" /><input value="9" /><input value="0" />
+            </div>
+            <button class="btn btn-primary" onclick="webEnterPortal()">Verify & open portal</button>
+          </div>
+        </div>
+
+        <div id="webAuthForgot" class="web-view">
+          <div style="max-width:420px;margin:40px auto 20px;">
+            <button class="link" onclick="showWebAuth('login')">← Back</button>
+            <h2 style="font-family:Fraunces,serif;font-size:26px;margin:12px 0 8px;">Reset password</h2>
+            <div class="field"><label>Mobile</label><input value="09 771 234 567" /></div>
+            <div class="field"><label>OTP</label><input value="482190" /></div>
+            <div class="field"><label>Reason / remark *</label><textarea rows="2">Forgot after laptop wipe</textarea></div>
+            <div class="field"><label>New password</label><input type="password" value="••••••••" /></div>
+            <button class="btn btn-primary" onclick="showWebAuth('login')">Update & return to login</button>
+          </div>
+        </div>
+
+        <div id="webAppShell" style="display:none;">
         <div class="web-top">
           <div>
-            <div class="eyebrow">Web portal · Manager / FTE</div>
-            <h2 style="font-family:Fraunces,serif;font-size:28px;margin-top:4px;">District performance</h2>
+            <div class="eyebrow">Web portal · signed in · unified session</div>
+            <h2 style="font-family:Fraunces,serif;font-size:28px;margin-top:4px;" id="webTitle">District war-room</h2>
           </div>
-          <div class="web-nav">
-            <button class="on">Overview</button>
-            <button>Performance</button>
-            <button>Recruitment</button>
-            <button>Operations</button>
-            <button>Export ✦</button>
+          <div class="web-nav" id="webNav">
+            <button class="on" data-web="overview">Overview</button>
+            <button data-web="performance">Performance</button>
+            <button data-web="recruitment">Recruitment</button>
+            <button data-web="tasks">Tasks</button>
+            <button data-web="operations">Operations</button>
+            <button data-web="audit">Agents / Audit</button>
+            <button onclick="webSignOut()" style="margin-left:4px;">Sign out</button>
           </div>
         </div>
-        <div class="web-grid">
-          <div class="kpi"><div class="label">New proposals</div><div class="value">146</div><div class="delta up">Real-time district</div></div>
-          <div class="kpi"><div class="label">FYP vs target</div><div class="value">91%</div><div class="delta up">Healthy</div></div>
-          <div class="kpi"><div class="label">K1 persistency</div><div class="value">86%</div><div class="delta">Grace visible</div></div>
-          <div class="kpi"><div class="label">Red flags</div><div class="value">7</div><div class="delta down">Below FYP %</div></div>
+
+        <div class="web-view" id="web-overview">
+          <div class="web-grid">
+            <div class="kpi"><div class="label">New proposals</div><div class="value">146</div><div class="delta up">Real-time district</div></div>
+            <div class="kpi"><div class="label">FYP vs target</div><div class="value">91%</div><div class="delta up">Healthy</div></div>
+            <div class="kpi"><div class="label">K1 persistency</div><div class="value">86%</div><div class="delta">Grace visible</div></div>
+            <div class="kpi" style="cursor:pointer;" onclick="showWeb('performance')"><div class="label">Red flags</div><div class="value">7</div><div class="delta down">Tap → Performance</div></div>
+          </div>
+          <div class="alert" style="cursor:default;"><div>🚩</div><div><b>7 advisors below monthly FYP %</b><span>Amber chips jump managers straight into coaching mode.</span></div></div>
+          <p class="note" style="margin-top:8px;"><b>FR-02.4 Overview:</b> proposal pulse + target variance at a glance for DM portfolio.</p>
         </div>
-        <div style="overflow:auto;border-radius:16px;border:1px solid var(--line);">
-          <table>
-            <thead>
-              <tr><th>FA</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Wtd Freelance FYP</th><th>MDRT Prem</th><th>Flag</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41,000,000.00</td><td>—</td></tr>
-              <tr><td>Nwe Nwe</td><td>2,100,000.00</td><td>2,400,000.00</td><td>410,000.00</td><td>1,800,000.00</td><td>22,500,000.00</td><td>—</td></tr>
-              <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8,200,000.00</td><td class="flag">Below target</td></tr>
-            </tbody>
-          </table>
+
+        <div class="web-view" id="web-performance">
+          <div class="filters">
+            <label>Region<select><option>Yangon</option><option>Mandalay</option></select></label>
+            <label>District<select><option>District A</option><option>District B</option></select></label>
+            <label>SAM<select><option>All</option><option>SAM Thida</option></select></label>
+            <label>AM<select><option>All</option><option>AM Ko Ko</option></select></label>
+            <button class="btn btn-primary" style="width:auto;padding:10px 16px;" onclick="alert('Export to Excel (mock)')">Export Excel</button>
+          </div>
+          <div style="overflow:auto;border-radius:16px;border:1px solid var(--line);">
+            <table>
+              <thead>
+                <tr><th>FA</th><th>APE</th><th>FYP</th><th>SFYP</th><th>Wtd Freelance FYP</th><th>MDRT Prem</th><th>K1/K2</th><th>Flag</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Thura Htun</td><td>4,200,000.00</td><td>5,100,000.00</td><td>980,000.00</td><td>3,400,000.00</td><td>41,000,000.00</td><td>90/86</td><td>—</td></tr>
+                <tr><td>Nwe Nwe</td><td>2,100,000.00</td><td>2,400,000.00</td><td>410,000.00</td><td>1,800,000.00</td><td>22,500,000.00</td><td>88/82</td><td>—</td></tr>
+                <tr><td>Zaw Ko</td><td>780,000.00</td><td>820,000.00</td><td>90,000.00</td><td>600,000.00</td><td>8,200,000.00</td><td>70/65</td><td class="flag">Below target</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note">Hierarchical filters + line-by-line FA production + persistency for FTE + one-click Excel.</p>
         </div>
-        <p class="note"><b>Concept A signature:</b> oversized quick actions, amber urgency chips, MDRT progress as emotional fuel, People / Sell / Work tabs mapped to field mental model. <b>e-App stepper:</b> 6 focused steps with sticky Continue/Back, Save draft, and correction resume from App Tracker. Web mirrors the same energetic KPI language with export-ready tables.</p>
+
+        <div class="web-view" id="web-recruitment">
+          <p class="note" style="margin-top:0;">Dynamic agent statuses (Alliance / L&D). Managers Add/Move/Delete tasks from portal.</p>
+          <div class="kanban">
+            <div class="col"><h4>Screening / Interview</h4><div class="card"><b>Su Su</b>Alliance</div><div class="card"><b>Ko Ko</b>Interview passed</div></div>
+            <div class="col"><h4>LC / NIIM</h4><div class="card"><b>Mei Mei</b>LC Training</div><div class="card"><b>Hnin</b>NIIM Exam</div></div>
+            <div class="col"><h4>Contracting</h4><div class="card"><b>Aung</b>Final in progress</div></div>
+            <div class="col"><h4>Contracted / Closed</h4><div class="card"><b>3 this month</b>Final Contracted</div><div class="card"><b>Rejected / Failed</b>Track reasons</div></div>
+          </div>
+          <div style="margin-top:12px;" class="btn-row">
+            <button class="btn btn-secondary" style="width:auto;">+ Add recruitment task</button>
+            <button class="btn btn-accent" style="width:auto;">Move status</button>
+          </div>
+        </div>
+
+        <div class="web-view" id="web-tasks">
+          <p class="note" style="margin-top:0;"><b>FR-07 Web:</b> Managers Add / Move / Delete tasks. Agents update status on mobile & web.</p>
+          <div class="btn-row" style="max-width:520px;margin-bottom:12px;">
+            <button class="btn btn-primary" style="width:auto;padding:10px 14px;">+ Add task</button>
+            <button class="btn btn-secondary" style="width:auto;padding:10px 14px;">Move / reassign</button>
+            <button class="btn btn-accent" style="width:auto;padding:10px 14px;">Delete</button>
+          </div>
+          <div style="overflow:auto;border-radius:16px;border:1px solid var(--line);">
+            <table>
+              <thead><tr><th>Task</th><th>Assignee</th><th>Type</th><th>Due</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td>Interview · Su Su</td><td>Aye Chan</td><td>Recruitment</td><td>06-Aug-2026</td><td>In Progress</td><td>Move · Delete</td></tr>
+                <tr><td>Premium chase · Daw Hla</td><td>Aye Chan</td><td>Servicing</td><td>10-Aug-2026</td><td>Pending</td><td>Move · Delete</td></tr>
+                <tr><td>LC Training follow-up</td><td>Nwe Nwe</td><td>Recruitment</td><td>08-Aug-2026</td><td>Pending</td><td>Move · Delete</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="web-view" id="web-operations">
+          <div class="op-grid">
+            <div class="panel-card">
+              <h3>Announcement setup</h3>
+              <div class="field"><label>Title</label><input value="Q3 Incentive Push" /></div>
+              <div class="field"><label>Image</label><input value="incentive-banner.jpg" /></div>
+              <div class="field"><label>URL</label><input value="https://kbzlife.com/incentive" /></div>
+              <button class="btn btn-primary">Publish to mobile</button>
+            </div>
+            <div class="panel-card">
+              <h3>Notification rules</h3>
+              <div class="field"><label>Premium due window</label><select><option>7 days</option><option>14 days</option></select></div>
+              <div class="field"><label>Renewal advance</label><select><option>60 days</option><option>90 days</option></select></div>
+              <div class="field"><label>Resource sections</label><input value="Brochures · Training · Forms" /></div>
+              <button class="btn btn-secondary">Save rules</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="web-view" id="web-audit">
+          <div class="panel-card" style="margin-bottom:12px;">
+            <h3>Agent data · Approved vs Pending</h3>
+            <div class="list">
+              <div class="row" style="cursor:default;"><div class="dot">OK</div><div class="meta"><b>Aye Chan · AGT-10284</b><span>Approved profile from Core</span></div><span class="pill">Live</span></div>
+              <div class="row" style="cursor:default;"><div class="dot">⏳</div><div class="meta"><b>Pending mobile change</b><span>09 771… → 09 988… awaiting sync</span></div><span class="pill warn">Pending</span></div>
+            </div>
+          </div>
+          <div class="panel-card">
+            <h3>Audit trail</h3>
+            <div class="audit-row head"><span>Action</span><span>Previous</span><span>New</span><span>User</span><span>When</span></div>
+            <div class="audit-row"><span>Update mobile</span><span>09 771 234 567</span><span>09 988 111 222</span><span>Ops May</span><span>03-Aug-2026 09:12</span></div>
+            <div class="audit-row"><span>Status change</span><span>Pre-Contracted</span><span>LC Training</span><span>Alliance</span><span>02-Aug-2026 16:40</span></div>
+          </div>
+        </div>
+
+        <p class="note"><b>Concept A web:</b> war-room energy + <b>unified login gate</b> + FR-07 task admin (Add/Move/Delete). FR-03 CRM deepened on mobile.</p>
+        </div><!-- /webAppShell -->
       </div>
     </div>
   </div>
 
 <script>
-  const authScreens = new Set(['s-splash','s-login','s-otp','s-bio']);
+  const authScreens = new Set(['s-splash','s-login','s-otp','s-bio','s-forgot']);
   const wizardFlow = ['s-eapp','s-eapp-2','s-eapp-3','s-eapp-4','s-eapp-5','s-eapp-6'];
   const wizardScreens = new Set([...wizardFlow, 's-eapp-ok']);
   const labels = [
-    ['s-splash','Splash'],['s-login','Login'],['s-otp','OTP'],['s-home','FA Home'],['s-manager','Manager'],
-    ['s-leads','Leads'],['s-clients','Clients'],['s-client','Client'],['s-products','Products'],['s-quote','Quote'],
+    ['s-splash','Splash'],['s-login','Login'],['s-forgot','Forgot'],['s-otp','OTP'],['s-home','FA Home'],['s-manager','Manager'],
+    ['s-leads','Leads'],['s-lead','Lead profile'],['s-addlead','Add lead'],['s-editlead','Edit lead'],
+    ['s-convert','Convert'],['s-clients','Clients'],['s-client','Client'],['s-client-new','New client'],
+    ['s-products','Products'],['s-quote','Quote'],
     ['s-eapp','eApp 1 Details'],['s-eapp-2','eApp 2 Parties'],['s-eapp-3','eApp 3 KYC'],
     ['s-eapp-4','eApp 4 Docs'],['s-eapp-5','eApp 5 Sign'],['s-eapp-6','eApp 6 Review'],
-    ['s-eapp-ok','eApp Success'],['s-apps','App tracker'],['s-policy','Policy'],['s-tasks','Tasks'],
+    ['s-eapp-ok','eApp Success'],['s-apps','App tracker'],['s-policy','Policy'],
+    ['s-tasks','Calendar'],['s-todo','To-Do'],['s-task-new','New task'],['s-task','Task detail'],
     ['s-notifs','Notifs'],['s-announce','Announce'],['s-resources','Resources'],['s-profile','Profile']
   ];
   const nav = document.getElementById('jumpNav');
+  nav.innerHTML = '';
   labels.forEach(([id, name], i) => {
     const b = document.createElement('button');
     b.textContent = name;
@@ -967,14 +1312,61 @@
   const wizFoot = document.getElementById('wizFoot');
   const wizBack = document.getElementById('wizBack');
   const wizNext = document.getElementById('wizNext');
+  const webTitles = {
+    overview: 'District war-room',
+    performance: 'Hierarchy performance',
+    recruitment: 'Recruitment pipeline',
+    tasks: 'Task admin (FR-07)',
+    operations: 'Ops & broadcasts',
+    audit: 'Agent data & audit'
+  };
+
+  function showWebAuth(which) {
+    document.getElementById('webAppShell').style.display = 'none';
+    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => {
+      document.getElementById(id).classList.toggle('on',
+        (which==='login' && id==='webAuth') ||
+        (which==='otp' && id==='webAuthOtp') ||
+        (which==='forgot' && id==='webAuthForgot')
+      );
+    });
+  }
+  function webSendOtp() { showWebAuth('otp'); }
+  function webEnterPortal() {
+    ['webAuth','webAuthOtp','webAuthForgot'].forEach(id => document.getElementById(id).classList.remove('on'));
+    document.getElementById('webAppShell').style.display = 'block';
+    showWeb('overview');
+  }
+  function webSignOut() { showWebAuth('login'); }
+
+  function showWeb(id) {
+    document.querySelectorAll('#webAppShell .web-view').forEach(v => v.classList.toggle('on', v.id === 'web-' + id));
+    document.querySelectorAll('#webNav button[data-web]').forEach(b => b.classList.toggle('on', b.dataset.web === id));
+    const t = document.getElementById('webTitle');
+    if (t) t.textContent = webTitles[id] || 'Portal';
+  }
+  document.querySelectorAll('#webNav button[data-web]').forEach(b => b.addEventListener('click', () => showWeb(b.dataset.web)));
+
+  function showLeadTab(tab, btn) {
+    ['quotes','apps','notes'].forEach(k => {
+      const el = document.getElementById('lead-' + k);
+      if (el) el.style.display = k === tab ? 'flex' : 'none';
+    });
+    btn.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
+  }
+  function showClientTab(tab, btn) {
+    ['pol','fam','act','quo'].forEach(k => {
+      const el = document.getElementById('cli-' + k);
+      if (el) el.style.display = k === tab ? 'flex' : 'none';
+    });
+    btn.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
+  }
 
   function syncWizardChrome(id) {
     const inWizard = wizardFlow.includes(id);
-    const isSuccess = id === 's-eapp-ok';
     wizFoot.classList.toggle('show', inWizard);
     document.getElementById('tabbar').style.display =
       (authScreens.has(id) || wizardScreens.has(id)) ? 'none' : 'grid';
-
     if (!inWizard) return;
     const idx = wizardFlow.indexOf(id);
     wizBack.textContent = idx === 0 ? 'Cancel' : 'Back';
@@ -988,23 +1380,23 @@
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.add('active');
-    el.classList.toggle('no-tab', authScreens.has(id) || wizardScreens.has(id));
-    syncWizardChrome(id);
+    el.classList.toggle('no-tab', authScreens.has(id) || wizardScreens.has(id) || id === 's-convert');
+    if (id === 's-convert') document.getElementById('tabbar').style.display = 'none';
+    else syncWizardChrome(id);
     document.querySelectorAll('#jumpNav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
+    const peopleIds = ['s-leads','s-lead','s-addlead','s-editlead','s-clients','s-client','s-client-new','s-convert'];
     const sellIds = ['s-products','s-quote',...wizardFlow,'s-eapp-ok','s-apps'];
+    const workIds = ['s-tasks','s-todo','s-task','s-task-new','s-notifs','s-announce','s-resources'];
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.go === id ||
-      (id.startsWith('s-lead')||id==='s-client'||id==='s-clients'||id==='s-addlead') && t.dataset.go==='s-leads' ||
+      peopleIds.includes(id) && t.dataset.go==='s-leads' ||
       sellIds.includes(id) && t.dataset.go==='s-products' ||
-      (['s-tasks','s-notifs','s-announce','s-resources'].includes(id)) && t.dataset.go==='s-tasks' ||
+      workIds.includes(id) && t.dataset.go==='s-tasks' ||
       (id==='s-profile'||id==='s-policy') && t.dataset.go==='s-profile' ||
       (id==='s-home'||id==='s-manager') && t.dataset.go==='s-home'
     ));
     if (id !== 's-eapp-3') {
       const banner = document.getElementById('fixBanner');
-      if (banner) {
-        banner.style.display = 'none';
-        delete banner.dataset.force;
-      }
+      if (banner) { banner.style.display = 'none'; delete banner.dataset.force; }
     } else if (document.getElementById('fixBanner')?.dataset.force) {
       document.getElementById('fixBanner').style.display = 'block';
     }
@@ -1012,13 +1404,9 @@
 
   function openCorrection() {
     const banner = document.getElementById('fixBanner');
-    if (banner) {
-      banner.style.display = 'block';
-      banner.dataset.force = '1';
-    }
+    if (banner) { banner.style.display = 'block'; banner.dataset.force = '1'; }
     go('s-eapp-3');
   }
-
   function toastSave() {
     wizNext.textContent = 'Saved ✓';
     setTimeout(() => syncWizardChrome(document.querySelector('.screen.active').id), 900);
@@ -1030,6 +1418,7 @@
     document.getElementById('tog2').classList.toggle('on', !personal);
   }
   go('s-splash');
+  showWebAuth('login');
 </script>
 </body>
 </html>

@@ -18,12 +18,17 @@ Each concept is a clickable prototype: use **top jump chips** or **in-phone navi
 ui-ux-mockups/
 ├── index.html                          ← concept gallery
 ├── docs/
-│   ├── 01-brainstorm-and-ia.md         ← IA, personas, principles
+│   ├── 01-brainstorm-and-ia.md
 │   ├── 02-user-flows.md
-│   └── 03-screen-inventory.md
-├── concept-a-field-momentum/           ← sell-first field UX
-├── concept-b-trust-clarity/            ← institutional trust UX
-└── concept-c-command-center/           ← performance cockpit UX
+│   ├── 03-screen-inventory.md
+│   ├── 04-eapp-stepper-ux.md
+│   ├── 05-fr03-e2e-sales-ux.md
+│   ├── 06-web-portal-ux-3-concepts.md
+│   ├── 07-unified-login-ux.md
+│   └── 08-fr07-task-management-ux.md
+├── concept-a-field-momentum/
+├── concept-b-trust-clarity/
+└── concept-c-command-center/
 ```
 
 ## Concepts at a glance
@@ -36,5 +41,5 @@ ui-ux-mockups/
 
 ## Covered BRD surfaces
 
-- Mobile: Auth, dashboards (FA + manager), CRM, products/quoting, e-App, policy, tasks, notifications, announcements, resources, profile (ENG/MM)
-- Web: hierarchy performance, red flags, recruitment pipeline, export-minded tables
+- Mobile: Unified auth, dashboards, FR-03 CRM, quoting, e-App stepper, FR-07 tasks, notifications, resources, profile (ENG/MM)
+- Web: Unified login gate, hierarchy performance, FR-07 task admin, recruitment, ops, audit, export
