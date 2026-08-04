@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KBZ LIFE Agent — Concept A · Field Momentum</title>
+  <title>KBZ LIFE Agent — Mobile mockup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -12,18 +12,20 @@
     rel="stylesheet" />
   <style>
     :root {
-      --bg: #f3f7f4;
-      --ink: #10231c;
-      --muted: #5c7268;
-      --line: #d5e3db;
+      /* Coolors: 00A6FB · 0582CA · 006494 · 003554 */
+      --bg: #F4F8FB;
+      --ink: #003554;
+      --muted: #5A7390;
+      --line: #D5E4F0;
       --card: #ffffff;
-      --brand: #0b6e4f;
-      --brand-2: #14916a;
-      --accent: #e8922a;
-      --accent-soft: #fff4e5;
+      --brand: #0582CA;
+      --brand-2: #00A6FB;
+      --brand-deep: #006494;
+      --accent: #00A6FB;
+      --accent-soft: #E6F6FF;
       --danger: #c0392b;
       --ok: #1a9b6c;
-      --shadow: 0 18px 50px rgba(16, 35, 28, 0.12);
+      --shadow: 0 18px 50px rgba(0, 53, 84, 0.14);
       --radius: 22px;
       --phone-w: 390px;
       --phone-h: 844px;
@@ -38,15 +40,15 @@
     body {
       font-family: Outfit, system-ui, sans-serif;
       background:
-        radial-gradient(1200px 600px at 10% -10%, #d9f2e6 0%, transparent 55%),
-        radial-gradient(900px 500px at 100% 0%, #ffe8c7 0%, transparent 45%),
-        linear-gradient(180deg, #eef6f1 0%, #f7faf8 40%, #eef3f0 100%);
+        radial-gradient(1200px 600px at 10% -10%, #cceeff 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #b8e4ff 0%, transparent 45%),
+        linear-gradient(180deg, #eef6fb 0%, #f7fafc 40%, #e8f1f8 100%);
       color: var(--ink);
       min-height: 100vh;
     }
 
     .page {
-      max-width: 1440px;
+      max-width: 960px;
       margin: 0 auto;
       padding: 32px 24px 80px;
     }
@@ -98,23 +100,16 @@
     }
 
     .layout {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 28px;
+      display: flex;
+      justify-content: center;
       align-items: start;
-    }
-
-    @media (max-width: 980px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
     }
 
     .phone-shell {
       width: var(--phone-w);
       height: var(--phone-h);
       border-radius: 42px;
-      background: #0d1a14;
+      background: #003554;
       padding: 12px;
       box-shadow: var(--shadow);
       position: sticky;
@@ -139,7 +134,7 @@
       transform: translateX(-50%);
       width: 118px;
       height: 28px;
-      background: #0d1a14;
+      background: #003554;
       border-radius: 20px;
       z-index: 5;
     }
@@ -222,7 +217,7 @@
       width: 42px;
       height: 42px;
       border-radius: 14px;
-      background: linear-gradient(145deg, var(--brand), #063d2d);
+      background: linear-gradient(145deg, var(--brand), #003554);
       color: #fff;
       display: grid;
       place-items: center;
@@ -314,44 +309,123 @@
       gap: 10px;
     }
 
+    /* OTP cells: minmax(0,1fr) + min-width:0 kills Firefox default input min-width overflow */
     .otp {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: clamp(4px, 2%, 8px);
+      width: 100%;
+      max-width: 100%;
       margin: 16px 0 20px;
     }
 
     .otp input {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
       text-align: center;
       font-weight: 700;
-      font-size: 18px;
-      padding: 12px 0;
+      font-size: clamp(14px, 4.6vw, 18px);
+      padding: 12px 2px;
       border-radius: 12px;
       border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      aspect-ratio: 1 / 1.15;
+      appearance: none;
+      -moz-appearance: textfield;
+    }
+
+    .otp input:focus {
+      outline: 2px solid color-mix(in srgb, var(--sky, var(--brand-2)) 45%, transparent);
+      border-color: var(--brand-2);
     }
 
     .greeting {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
       margin-bottom: 14px;
+    }
+
+    .greeting-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .greeting-left .copy {
+      min-width: 0;
     }
 
     .greeting h2 {
       font-family: Fraunces, serif;
-      font-size: 24px;
+      font-size: 22px;
+      line-height: 1.15;
     }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 14px;
+      flex-shrink: 0;
       object-fit: cover;
-      background: linear-gradient(135deg, #ffe0b0, #0b6e4f);
+      background: linear-gradient(135deg, #B8E4FF, #0582CA);
       color: #fff;
       display: grid;
       place-items: center;
       font-weight: 700;
+      cursor: pointer;
+    }
+
+    .notif-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .notif-btn .badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      border: 2px solid #fff;
+    }
+
+    .notif-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .notif-head .title {
+      margin: 0;
+      font-size: 24px;
     }
 
     .alert {
@@ -419,7 +493,7 @@
     }
 
     .mdrt {
-      background: linear-gradient(145deg, #0b6e4f, #063d2d);
+      background: linear-gradient(145deg, #0582CA, #003554);
       color: #fff;
       border-radius: 22px;
       padding: 16px;
@@ -621,7 +695,7 @@
     }
 
     .banner-off {
-      background: #10231c;
+      background: #003554;
       color: #fff;
       border-radius: 14px;
       padding: 10px 12px;
@@ -646,14 +720,387 @@
     }
 
     .cal .d.has {
-      background: #e7f6ef;
+      background: var(--accent-soft);
       font-weight: 700;
       color: var(--brand);
+      box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--sky, var(--brand-2)) 55%, transparent);
     }
 
     .cal .d.today {
       background: var(--brand);
       color: #fff;
+      box-shadow: none;
+    }
+
+    /* My work · agenda hub */
+    .work-head {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .work-head h3 {
+      font-family: Fraunces, serif;
+      font-size: 26px;
+      line-height: 1.1;
+      margin: 0;
+    }
+
+    .work-head .count {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .work-head .count i {
+      font-style: normal;
+      background: var(--accent-soft);
+      color: var(--brand-deep, var(--brand));
+      border-radius: 999px;
+      padding: 2px 8px;
+      margin-right: 6px;
+    }
+
+    .work-fab {
+      position: sticky;
+      bottom: 10px;
+      z-index: 3;
+      width: 56px;
+      height: 56px;
+      margin: 18px 4px 8px auto;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--brand-2), var(--brand));
+      color: #fff;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(5, 130, 202, 0.35);
+    }
+
+    .work-fab:active {
+      transform: scale(0.96);
+    }
+
+    .work-fab span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    .agenda-day {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 16px 0 8px;
+    }
+
+    .agenda-day:first-child {
+      margin-top: 0;
+    }
+
+    .agenda-day b {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .agenda-day span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .agenda-day .today-tag {
+      color: var(--brand);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+
+    .work-date {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .work-date .nav {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .work-date .label {
+      flex: 1;
+      text-align: center;
+      min-width: 0;
+    }
+
+    .work-date .label b {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .work-date .label span {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .work-scope {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #e8f3fb;
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+    }
+
+    .work-scope button {
+      border: 0;
+      background: transparent;
+      border-radius: 11px;
+      padding: 9px 6px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .work-scope button.on {
+      background: #fff;
+      color: var(--deep, var(--ink));
+      box-shadow: 0 4px 12px rgba(0, 53, 84, 0.1);
+    }
+
+    .work-panel {
+      display: none;
+    }
+
+    .work-panel.on {
+      display: block;
+    }
+
+    .week-strip {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .week-strip button {
+      border: 0;
+      background: transparent;
+      padding: 8px 2px;
+      border-radius: 14px;
+      font: inherit;
+      cursor: pointer;
+      color: var(--ink);
+      min-width: 0;
+    }
+
+    .week-strip .wd {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .week-strip .dn {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 40px;
+      margin: 0 auto;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .week-strip button.has .dn {
+      box-shadow: inset 0 0 0 1.5px var(--brand-2);
+      background: var(--accent-soft);
+    }
+
+    .week-strip button.on .dn {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .agenda {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .agenda-item {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 10px;
+      align-items: stretch;
+      cursor: pointer;
+    }
+
+    .agenda-item .when {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      padding-top: 14px;
+      text-align: right;
+      line-height: 1.3;
+    }
+
+    .agenda-item .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 12px 12px 14px;
+      border-left: 4px solid var(--brand-2);
+      min-width: 0;
+    }
+
+    .agenda-item .card.recruit {
+      border-left-color: var(--brand-deep, var(--brand));
+    }
+
+    .agenda-item .card.renew {
+      border-left-color: var(--warn, #d97706);
+    }
+
+    .agenda-item .card b {
+      display: block;
+      font-size: 14px;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .agenda-item .card span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .agenda-item .card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .soft-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent-soft);
+      border: 1px solid color-mix(in srgb, var(--brand-2) 30%, var(--line));
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .soft-banner .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .soft-banner b {
+      display: block;
+      font-size: 13px;
+    }
+
+    .soft-banner span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .month-grid .hd {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--muted);
+      padding: 4px 0;
+    }
+
+    .month-grid button {
+      border: 0;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 0;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      min-width: 0;
+      position: relative;
+    }
+
+    .month-grid button.mute {
+      opacity: 0.35;
+    }
+
+    .month-grid button.on {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    .month-grid button.has::after {
+      content: "";
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--brand-2);
+    }
+
+    .month-grid button.on.has::after {
+      background: #fff;
+    }
+
+    .week-summary .row {
+      margin-bottom: 0;
     }
 
     .web-panel {
@@ -779,7 +1226,7 @@
       height: 84px;
       border-radius: 28px;
       margin: 0 auto 10px;
-      background: linear-gradient(145deg, #ffe0b0, #0b6e4f);
+      background: linear-gradient(145deg, #B8E4FF, #0582CA);
       color: #fff;
       display: grid;
       place-items: center;
@@ -882,32 +1329,125 @@
       place-items: center;
       font-size: 10px;
       font-weight: 800;
-      background: #e7efe9;
+      background: #e8f3fb;
       color: var(--muted);
       border: 0;
       cursor: pointer;
       font-family: inherit;
+      position: relative;
     }
 
     .wiz-dots .d.on {
       background: var(--brand);
       color: #fff;
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-2) 35%, transparent);
     }
 
     .wiz-dots .d.done {
-      background: #c8ebda;
+      background: color-mix(in srgb, var(--brand) 18%, #fff);
       color: var(--brand);
+    }
+
+    .wiz-dots .d.wait {
+      background: #fff4e5;
+      color: #b45309;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25);
+      animation: waitPulse 1.6s ease-in-out infinite;
+    }
+
+    .wiz-dots .d.wait::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d97706;
+    }
+
+    @keyframes waitPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
     }
 
     .wiz-dots .line {
       flex: 1;
       height: 3px;
-      background: #d8e6de;
+      background: #d5e4f0;
       border-radius: 99px;
     }
 
     .wiz-dots .line.on {
       background: var(--brand);
+    }
+
+    .progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px !important;
+      font-weight: 800 !important;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--brand-deep, var(--brand));
+    }
+
+    .progress-pill.wait {
+      background: #fff4e5;
+      color: #b45309;
+    }
+
+    .wait-banner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #fff8ef;
+      border: 1px solid #f0d7ad;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .wait-banner .ico {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #f0d7ad;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    .wait-banner b {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .wait-banner span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .sig-pad.waiting {
+      border-style: dashed;
+      background: repeating-linear-gradient(
+        -45deg,
+        #fff,
+        #fff 8px,
+        #fff8ef 8px,
+        #fff8ef 16px
+      );
+      display: grid;
+      place-items: center;
+      color: #b45309;
+      font-size: 12px;
+      font-weight: 700;
+      min-height: 88px;
     }
 
     .ctx-chip {
@@ -1177,6 +1717,78 @@
       border-color: var(--brand);
     }
 
+    /* App tracker · horizontal status banner */
+    .cat-banner {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin: 0 0 12px;
+      padding: 2px 2px 8px;
+    }
+
+    .cat-banner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-banner button {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .cat-banner button .n {
+      font-size: 10px;
+      font-weight: 800;
+      background: #e8f3fb;
+      color: var(--brand-deep, var(--brand));
+      border-radius: 999px;
+      padding: 2px 6px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .cat-banner button.on {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+    }
+
+    .cat-banner button.on .n {
+      background: rgba(255, 255, 255, 0.22);
+      color: #fff;
+    }
+
+    .cat-banner button.fix.on {
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .apps-empty {
+      display: none;
+      text-align: center;
+      padding: 28px 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .apps-empty.show {
+      display: block;
+    }
+
     .web-view {
       display: none;
     }
@@ -1293,23 +1905,22 @@
       letter-spacing: 0.04em;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 
 <body>
   <div class="page">
     <div class="hero">
       <div>
-        <div class="eyebrow">Concept A · Field Momentum</div>
-        <h1>Sell faster in the field.<br />Coach the team in the same breath.</h1>
-        <p class="lede">Energetic, thumb-first mobile UX optimized for FA daily closing loops — with manager overlays
-          and a matching web performance surface.</p>
+        <div class="eyebrow">KBZ LIFE · Mobile mockup</div>
+        <h1>Sell faster in the field.<br />Mobile FA experience.</h1>
+        <p class="lede">Thumb-first mobile UX for FA daily closing loops. Web portal lives in the separate React app.</p>
       </div>
       <div class="chip-row">
-        <span class="chip">Emerald × Amber</span>
+        <span class="chip">Coolors blues</span>
         <span class="chip">Fraunces + Outfit</span>
         <span class="chip">Sell-first IA</span>
-        <a class="chip" href="../index.html">← All concepts</a>
+        <a class="chip" href="../index.html">← Gallery</a>
+        <a class="chip" href="../../agent-web-portal/" target="_blank" rel="noopener">Web portal (React) →</a>
       </div>
     </div>
 
@@ -1339,19 +1950,15 @@
             <div class="pad" style="padding-top:28px;">
               <div class="brand-mark">
                 <div class="logo">KL</div>
-                <div><strong>Welcome back</strong><span>Unified Agent identity</span></div>
+                <div><strong>Welcome back</strong><span>KBZ LIFE Agent</span></div>
               </div>
               <div class="title">Sign in</div>
-              <p class="sub">Same account on <b>mobile & web</b>. Mobile must be active in CORE · SMS OTP.</p>
-              <div class="alert" style="cursor:default;">
-                <div>⇄</div>
-                <div><b>Unified login</b><span>Field app and management portal share one secure identity.</span></div>
-              </div>
+              <p class="sub">Enter your registered mobile number and password. We’ll send an SMS code next.</p>
               <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
               <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
               <button class="btn btn-primary" onclick="go('s-otp')">Continue</button>
               <div style="height:10px"></div>
-              <button class="btn btn-secondary" onclick="go('s-forgot')">Forgot password (OTP + reason)</button>
+              <button class="btn btn-secondary" onclick="go('s-forgot')">Forgot password?</button>
             </div>
           </section>
 
@@ -1359,11 +1966,11 @@
             <div class="pad" style="padding-top:28px;">
               <button class="link" onclick="go('s-login')">← Back to login</button>
               <div class="title" style="margin-top:12px;font-size:24px;">Reset password</div>
-              <p class="sub">Same recovery on mobile & web. OTP via SMS · remark is mandatory.</p>
+              <p class="sub">We’ll verify with an SMS code. Please add a short note for security.</p>
               <div class="field"><label>Mobile number</label><input value="09 771 234 567" /></div>
-              <div class="field"><label>OTP</label><input value="482190" /></div>
-              <div class="field"><label>Reason / remark *</label><textarea rows="2"
-                  placeholder="Why are you resetting?">Forgot password after device change</textarea></div>
+              <div class="field"><label>SMS code</label><input value="482190" /></div>
+              <div class="field"><label>Why are you resetting? *</label><textarea rows="2"
+                  placeholder="Short note for support">Forgot password after device change</textarea></div>
               <div class="field"><label>New password</label><input type="password" value="••••••••" /></div>
               <div class="field"><label>Confirm password</label><input type="password" value="••••••••" /></div>
               <button class="btn btn-primary" onclick="go('s-login')">Update & sign in</button>
@@ -1374,10 +1981,14 @@
             <div class="pad" style="padding-top:28px;">
               <button class="link" onclick="go('s-login')">← Back</button>
               <div class="title" style="margin-top:12px;">Enter OTP</div>
-              <p class="sub">Same SMS OTP used on the web portal. Sent to 09 771 234 567</p>
-              <div class="otp">
-                <input value="4" /><input value="8" /><input value="2" /><input value="1" /><input value="9" /><input
-                  value="0" />
+              <p class="sub">We sent a 6-digit code to 09 771 234 567</p>
+              <div class="otp" role="group" aria-label="One-time password">
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" autocomplete="one-time-code" value="4" />
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" value="8" />
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" value="2" />
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" value="1" />
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" value="9" />
+                <input inputmode="numeric" pattern="[0-9]*" maxlength="1" value="0" />
               </div>
               <button class="btn btn-primary" onclick="go('s-home')">Verify & enter app</button>
               <div style="height:10px"></div>
@@ -1400,11 +2011,17 @@
           <section class="screen" id="s-home">
             <div class="pad">
               <div class="greeting">
-                <div>
-                  <div style="font-size:12px;color:var(--muted);font-weight:600;">Good morning, Aye</div>
-                  <h2>Close the day strong</h2>
+                <div class="greeting-left">
+                  <div class="avatar" onclick="go('s-profile')" title="Profile" aria-label="Open profile">A</div>
+                  <div class="copy">
+                    <div style="font-size:12px;color:var(--muted);font-weight:600;">Good morning, Aye</div>
+                    <h2>Close the day strong</h2>
+                  </div>
                 </div>
-                <div class="avatar" onclick="go('s-profile')">A</div>
+                <button class="notif-btn" type="button" onclick="go('s-notifs')" aria-label="Notifications">
+                  🔔
+                  <span class="badge">3</span>
+                </button>
               </div>
               <div class="alert" onclick="go('s-policy')">
                 <div>⏰</div>
@@ -1448,8 +2065,8 @@
                 <button onclick="go('s-eapp')">
                   <div class="ico">✎</div>e-App
                 </button>
-                <button onclick="go('s-leads')">
-                  <div class="ico">◎</div>Lead
+                <button onclick="go('s-apps')">
+                  <div class="ico">☰</div>App tracker
                 </button>
                 <button onclick="go('s-tasks')">
                   <div class="ico">✓</div>Task
@@ -1857,7 +2474,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 1 of 6 · Details</b><span>Pre-filled</span></div>
+                <div class="meta-row"><b>Step 1 of 6 · Details</b><span class="progress-pill">You are here</span></div>
                 <div class="wiz-dots">
                   <button class="d on">1</button>
                   <div class="line"></div>
@@ -1900,7 +2517,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 2 of 6 · Parties</b><span>Insured + beneficiary</span></div>
+                <div class="meta-row"><b>Step 2 of 6 · Parties</b><span class="progress-pill">You are here</span></div>
                 <div class="wiz-dots">
                   <button class="d done" onclick="go('s-eapp')">✓</button>
                   <div class="line on"></div>
@@ -1949,7 +2566,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 3 of 6 · KYC</b><span>NRC validation</span></div>
+                <div class="meta-row"><b>Step 3 of 6 · KYC</b><span class="progress-pill">You are here</span></div>
                 <div class="wiz-dots">
                   <button class="d done" onclick="go('s-eapp')">✓</button>
                   <div class="line on"></div>
@@ -2001,7 +2618,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 4 of 6 · Documents</b><span>Camera / upload</span></div>
+                <div class="meta-row"><b>Step 4 of 6 · Documents</b><span class="progress-pill">You are here</span></div>
                 <div class="wiz-dots">
                   <button class="d done" onclick="go('s-eapp')">✓</button>
                   <div class="line on"></div>
@@ -2050,7 +2667,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 5 of 6 · Signatures</b><span>On-device capture</span></div>
+                <div class="meta-row"><b>Step 5 of 6 · Signatures</b><span class="progress-pill wait">Waiting · Client</span></div>
                 <div class="wiz-dots">
                   <button class="d done" onclick="go('s-eapp')">✓</button>
                   <div class="line on"></div>
@@ -2060,24 +2677,31 @@
                   <div class="line on"></div>
                   <button class="d done" onclick="go('s-eapp-4')">✓</button>
                   <div class="line on"></div>
-                  <button class="d on">5</button>
+                  <button class="d wait" title="Waiting for client confirm">5</button>
                   <div class="line"></div>
                   <button class="d" onclick="go('s-eapp-6')">6</button>
                 </div>
               </div>
+
+              <div class="wait-banner">
+                <div class="ico">⏳</div>
+                <div>
+                  <b>Waiting on this step</b>
+                  <span>Client hasn’t confirmed signature yet. You’re still on <b>Step 5 · Signatures</b>. Continue stays locked until they confirm.</span>
+                </div>
+              </div>
+
               <div class="title" style="font-size:22px;">e-Signatures</div>
               <p class="sub" style="margin-bottom:8px;">Client signs first. Agent cannot skip ahead.</p>
               <div class="section-h">
-                <h3>Client signature</h3><button class="link">Clear</button>
+                <h3>Client signature</h3><button class="link">Remind</button>
               </div>
-              <div class="sig-pad filled">
-                <div class="sig-stroke"></div>
-              </div>
+              <div class="sig-pad waiting">Waiting for client confirm…</div>
               <div class="section-h">
-                <h3>Agent signature</h3><button class="link">Clear</button>
+                <h3>Agent signature</h3><span class="pill" style="font-size:11px;">Locked until client</span>
               </div>
-              <div class="sig-pad"></div>
-              <p class="sub" style="margin:0;font-size:12px;">Tap pad to capture · redraw anytime before review.</p>
+              <div class="sig-pad" style="opacity:.45;"></div>
+              <p class="sub" style="margin:0;font-size:12px;">When client confirms, this step clears Waiting and you can continue to Review.</p>
             </div>
           </section>
 
@@ -2089,7 +2713,7 @@
                 <button class="save" onclick="toastSave()">Save draft</button>
               </div>
               <div class="wiz-progress">
-                <div class="meta-row"><b>Step 6 of 6 · Review</b><span>Ready to send</span></div>
+                <div class="meta-row"><b>Step 6 of 6 · Review</b><span class="progress-pill">You are here</span></div>
                 <div class="wiz-dots">
                   <button class="d done" onclick="go('s-eapp')">✓</button>
                   <div class="line on"></div>
@@ -2155,35 +2779,65 @@
 
           <section class="screen" id="s-apps">
             <div class="pad">
-              <div class="title" style="font-size:24px;">Applications</div>
-              <p class="sub" style="margin-bottom:10px;">Real-time status from Core · tap a row to resume or fix</p>
-              <div class="search">🔍 <input placeholder="Search by name / status / ref" /></div>
-              <div class="list">
-                <div class="row" onclick="go('s-eapp')">
+              <div class="title" style="font-size:24px;">App tracker</div>
+              <p class="sub" style="margin-bottom:12px;">Track every e-App · tap to resume or fix</p>
+
+              <div class="cat-banner" role="tablist" aria-label="Application status">
+                <button type="button" class="on" data-filter="all" onclick="filterApps('all', this)">
+                  All <span class="n">6</span>
+                </button>
+                <button type="button" data-filter="draft" onclick="filterApps('draft', this)">
+                  Draft <span class="n">2</span>
+                </button>
+                <button type="button" data-filter="submitted" onclick="filterApps('submitted', this)">
+                  Submitted <span class="n">1</span>
+                </button>
+                <button type="button" class="fix" data-filter="correction" onclick="filterApps('correction', this)">
+                  Correction <span class="n">1</span>
+                </button>
+                <button type="button" data-filter="approved" onclick="filterApps('approved', this)">
+                  Approved <span class="n">1</span>
+                </button>
+                <button type="button" data-filter="rejected" onclick="filterApps('rejected', this)">
+                  Rejected <span class="n">1</span>
+                </button>
+              </div>
+
+              <div class="search">🔍 <input placeholder="Search by name / ref" /></div>
+
+              <div class="list" id="appsList">
+                <div class="row" data-status="draft" onclick="go('s-eapp-2')">
                   <div class="dot">D</div>
-                  <div class="meta"><b>Draft</b><span>Maung Soe · Endowment · resume step 2</span></div><span
-                    class="pill">Draft</span>
+                  <div class="meta"><b>Maung Soe</b><span>Draft · At step 2 · Parties</span></div>
+                  <span class="pill">Draft</span>
                 </div>
-                <div class="row">
+                <div class="row" data-status="draft" onclick="go('s-eapp-5')">
+                  <div class="dot">5</div>
+                  <div class="meta"><b>Daw Hla</b><span>Draft · Step 5 · Waiting client confirm</span></div>
+                  <span class="pill warn">Waiting</span>
+                </div>
+                <div class="row" data-status="submitted">
                   <div class="dot">S</div>
-                  <div class="meta"><b>Submitted</b><span>APP-2026-08421 · Daw Hla</span></div><span
-                    class="pill">Live</span>
+                  <div class="meta"><b>Daw Hla</b><span>APP-2026-08421 · Submitted to Core</span></div>
+                  <span class="pill">Live</span>
                 </div>
-                <div class="row" onclick="openCorrection()">
+                <div class="row" data-status="correction" onclick="openCorrection()">
                   <div class="dot">C</div>
-                  <div class="meta"><b>Mark for Correction</b><span>Daw Hla · NRC unclear</span></div><span
-                    class="pill danger">Fix</span>
+                  <div class="meta"><b>Daw Hla</b><span>Mark for Correction · NRC unclear</span></div>
+                  <span class="pill danger">Fix</span>
                 </div>
-                <div class="row">
+                <div class="row" data-status="approved">
                   <div class="dot">A</div>
-                  <div class="meta"><b>Approved</b><span>Yu Hlaing</span></div><span class="pill">OK</span>
+                  <div class="meta"><b>Yu Hlaing</b><span>Approved · ready to convert</span></div>
+                  <span class="pill ok">OK</span>
                 </div>
-                <div class="row">
+                <div class="row" data-status="rejected">
                   <div class="dot">R</div>
-                  <div class="meta"><b>Rejected</b><span>With reason from Core</span></div><span
-                    class="pill danger">Closed</span>
+                  <div class="meta"><b>Rejected case</b><span>Reason from Core</span></div>
+                  <span class="pill danger">Closed</span>
                 </div>
               </div>
+              <div class="apps-empty" id="appsEmpty">No applications in this status.</div>
             </div>
           </section>
 
@@ -2223,89 +2877,213 @@
             </div>
           </section>
 
-          <!-- WORK · FR-07 -->
+          <!-- WORK · FR-07 — agenda hub (Day / Week / Month) -->
           <section class="screen" id="s-tasks">
-            <div class="pad">
-              <div class="seg">
-                <button class="on">Calendar</button>
-                <button onclick="go('s-todo')">To-Do</button>
+            <div class="pad" style="padding-bottom:8px;">
+              <div class="work-head">
+                <h3>My work</h3>
+                <div class="count"><i>3</i> due today</div>
               </div>
-              <div class="mini-tabs">
-                <button class="on">Day</button>
-                <button>Week</button>
-                <button>Month</button>
-              </div>
-              <div class="cal" style="margin-bottom:12px;">
-                <div class="d">S</div>
-                <div class="d">M</div>
-                <div class="d">T</div>
-                <div class="d">W</div>
-                <div class="d">T</div>
-                <div class="d">F</div>
-                <div class="d">S</div>
-                <div class="d">2</div>
-                <div class="d today">3</div>
-                <div class="d has">4</div>
-                <div class="d">5</div>
-                <div class="d has">6</div>
-                <div class="d">7</div>
-                <div class="d">8</div>
-              </div>
-              <div class="alert" onclick="go('s-task')">
-                <div>🔔</div>
-                <div><b>New task assigned</b><span>AM assigned recruitment interview · tap to open</span></div>
-              </div>
-              <div class="list">
-                <div class="row" onclick="go('s-task')">
-                  <div class="dot">P</div>
-                  <div class="meta"><b>Premium reminder · Daw Hla</b><span>Pending · Due 10-Aug-2026</span></div><span
-                    class="pill warn">Pending</span>
-                </div>
-                <div class="row" onclick="go('s-task')">
-                  <div class="dot">R</div>
-                  <div class="meta"><b>Recruitment interview</b><span>Assigned by AM · In Progress</span></div><span
-                    class="pill">Active</span>
-                </div>
-                <div class="row" onclick="go('s-task')">
-                  <div class="dot">↻</div>
-                  <div class="meta"><b>Renewal review · U Min</b><span>60 days out · Pending</span></div><span
-                    class="pill warn">Pending</span>
-                </div>
-              </div>
-            </div>
-          </section>
 
-          <section class="screen" id="s-todo">
-            <div class="pad">
-              <div class="seg">
-                <button onclick="go('s-tasks')">Calendar</button>
-                <button class="on">To-Do</button>
+              <div class="work-date">
+                <button class="nav" type="button" aria-label="Previous">‹</button>
+                <div class="label">
+                  <b id="workDateTitle">Monday, 3 Aug</b>
+                  <span id="workDateSub">Today · Yangon</span>
+                </div>
+                <button class="nav" type="button" aria-label="Next">›</button>
               </div>
-              <button class="btn btn-accent" style="margin-bottom:12px;" onclick="go('s-task-new')">+ Create
-                task</button>
-              <div class="list">
-                <div class="row" onclick="go('s-task')">
-                  <div class="dot">✓</div>
-                  <div class="meta"><b>Call Maung Soe</b><span>Linked lead · Pending</span></div><span
-                    class="pill warn">Pending</span>
+
+              <div class="work-scope" role="tablist" aria-label="Date scope">
+                <button type="button" class="on" data-scope="day" onclick="setWorkScope('day', this)">Day</button>
+                <button type="button" data-scope="week" onclick="setWorkScope('week', this)">Week</button>
+                <button type="button" data-scope="month" onclick="setWorkScope('month', this)">Month</button>
+              </div>
+
+              <!-- DAY -->
+              <div class="work-panel on" id="work-day">
+                <div class="week-strip" aria-label="This week">
+                  <button type="button"><span class="wd">S</span><span class="dn">2</span></button>
+                  <button type="button" class="on"><span class="wd">M</span><span class="dn">3</span></button>
+                  <button type="button" class="has"><span class="wd">T</span><span class="dn">4</span></button>
+                  <button type="button"><span class="wd">W</span><span class="dn">5</span></button>
+                  <button type="button" class="has"><span class="wd">T</span><span class="dn">6</span></button>
+                  <button type="button"><span class="wd">F</span><span class="dn">7</span></button>
+                  <button type="button"><span class="wd">S</span><span class="dn">8</span></button>
                 </div>
-                <div class="row" onclick="go('s-task')">
-                  <div class="dot">→</div>
-                  <div class="meta"><b>Collect premium · Daw Hla</b><span>In Progress</span></div><span
-                    class="pill">Active</span>
+
+                <div class="soft-banner" onclick="go('s-task')">
+                  <div class="dot">AM</div>
+                  <div>
+                    <b>New from your AM</b>
+                    <span>Recruitment interview · Su Su</span>
+                  </div>
                 </div>
-                <div class="row">
-                  <div class="dot">✓</div>
-                  <div class="meta"><b>Submit corrected NRC</b><span>Completed · 02-Aug-2026</span></div><span
-                    class="pill">Done</span>
+
+                <div class="agenda">
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">09:30<br />AM</div>
+                    <div class="card recruit">
+                      <b>Recruitment interview</b>
+                      <span>Su Su · Assigned by AM</span>
+                      <div class="tags"><span class="pill">In Progress</span></div>
+                    </div>
+                  </div>
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">02:00<br />PM</div>
+                    <div class="card">
+                      <b>Premium reminder</b>
+                      <span>Daw Hla · POL-88421</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">All day</div>
+                    <div class="card renew">
+                      <b>Renewal review</b>
+                      <span>U Min · 60 days out</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              <!-- WEEK · same agenda pattern as Day, grouped by date -->
+              <div class="work-panel" id="work-week">
+                <div class="soft-banner" onclick="go('s-task')">
+                  <div class="dot">AM</div>
+                  <div>
+                    <b>New from your AM</b>
+                    <span>Recruitment interview · Su Su</span>
+                  </div>
+                </div>
+
+                <div class="agenda-day">
+                  <b>Mon, 3 Aug</b>
+                  <span class="today-tag">Today · 3</span>
+                </div>
+                <div class="agenda">
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">09:30<br />AM</div>
+                    <div class="card recruit">
+                      <b>Recruitment interview</b>
+                      <span>Su Su · Assigned by AM</span>
+                      <div class="tags"><span class="pill">In Progress</span></div>
+                    </div>
+                  </div>
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">02:00<br />PM</div>
+                    <div class="card">
+                      <b>Premium reminder</b>
+                      <span>Daw Hla · POL-88421</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">All day</div>
+                    <div class="card renew">
+                      <b>Renewal review</b>
+                      <span>U Min · 60 days out</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="agenda-day">
+                  <b>Tue, 4 Aug</b>
+                  <span>1 task</span>
+                </div>
+                <div class="agenda">
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">11:00<br />AM</div>
+                    <div class="card">
+                      <b>NRC correction follow-up</b>
+                      <span>Daw Hla · e-App fix</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="agenda-day">
+                  <b>Thu, 6 Aug</b>
+                  <span>2 tasks</span>
+                </div>
+                <div class="agenda">
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">10:00<br />AM</div>
+                    <div class="card recruit">
+                      <b>LC training</b>
+                      <span>Su Su · Onboarding</span>
+                      <div class="tags"><span class="pill">In Progress</span></div>
+                    </div>
+                  </div>
+                  <div class="agenda-item" onclick="go('s-task')">
+                    <div class="when">03:30<br />PM</div>
+                    <div class="card">
+                      <b>Client visit</b>
+                      <span>Maung Soe · Lead follow-up</span>
+                      <div class="tags"><span class="pill warn">Pending</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MONTH -->
+              <div class="work-panel" id="work-month">
+                <div class="month-grid" aria-label="August 2026">
+                  <div class="hd">S</div><div class="hd">M</div><div class="hd">T</div><div class="hd">W</div><div class="hd">T</div><div class="hd">F</div><div class="hd">S</div>
+                  <button type="button" class="mute">26</button>
+                  <button type="button" class="mute">27</button>
+                  <button type="button" class="mute">28</button>
+                  <button type="button" class="mute">29</button>
+                  <button type="button" class="mute">30</button>
+                  <button type="button" class="mute">31</button>
+                  <button type="button">1</button>
+                  <button type="button">2</button>
+                  <button type="button" class="on has">3</button>
+                  <button type="button" class="has">4</button>
+                  <button type="button">5</button>
+                  <button type="button" class="has">6</button>
+                  <button type="button">7</button>
+                  <button type="button">8</button>
+                  <button type="button">9</button>
+                  <button type="button" class="has">10</button>
+                  <button type="button">11</button>
+                  <button type="button">12</button>
+                  <button type="button">13</button>
+                  <button type="button">14</button>
+                  <button type="button">15</button>
+                  <button type="button">16</button>
+                  <button type="button" class="has">17</button>
+                  <button type="button">18</button>
+                  <button type="button">19</button>
+                  <button type="button">20</button>
+                  <button type="button">21</button>
+                  <button type="button">22</button>
+                  <button type="button">23</button>
+                  <button type="button">24</button>
+                  <button type="button">25</button>
+                  <button type="button">26</button>
+                  <button type="button">27</button>
+                  <button type="button">28</button>
+                  <button type="button">29</button>
+                  <button type="button">30</button>
+                  <button type="button">31</button>
+                </div>
+                <p class="sub" style="margin:0 0 8px;">Tap a day with a dot to open its agenda.</p>
+                <button class="btn btn-secondary" type="button" onclick="setWorkScope('day')">Open 3 Aug agenda</button>
               </div>
             </div>
+
+            <button class="work-fab" type="button" onclick="go('s-task-new')" aria-label="Create task">
+              +
+              <span>Create task</span>
+            </button>
           </section>
 
           <section class="screen" id="s-task-new">
             <div class="pad">
-              <button class="link" onclick="go('s-todo')">← To-Do</button>
+              <button class="link" onclick="go('s-tasks')">← My work</button>
               <div class="title" style="margin-top:10px;font-size:24px;">Create task</div>
               <div class="field"><label>Title *</label><input placeholder="e.g. Follow up visit" /></div>
               <div class="field"><label>Due date</label><input value="06-Aug-2026" /></div>
@@ -2316,20 +3094,20 @@
                   <option>Recruitment candidate</option>
                 </select></div>
               <div class="field"><label>Notes</label><textarea rows="3"></textarea></div>
-              <button class="btn btn-primary" onclick="go('s-todo')">Save to To-Do</button>
+              <button class="btn btn-primary" onclick="go('s-tasks')">Save task</button>
             </div>
           </section>
 
           <section class="screen" id="s-task">
             <div class="pad">
-              <button class="link" onclick="go('s-tasks')">← Work</button>
+              <button class="link" onclick="go('s-tasks')">← My work</button>
               <div class="title" style="margin-top:10px;font-size:24px;">Task detail</div>
               <div class="kpi" style="margin-bottom:12px;">
                 <div class="label">Assigned by AM · Recruitment</div>
                 <div class="value" style="font-size:18px;">Interview · Su Su</div>
                 <div class="delta">Due 06-Aug-2026</div>
               </div>
-              <div class="field"><label>Status (Mobile + Web)</label>
+              <div class="field"><label>Status</label>
                 <select>
                   <option>Pending</option>
                   <option selected>In Progress</option>
@@ -2339,34 +3117,61 @@
               <div class="field"><label>Notes</label><textarea
                   rows="3">Candidate passed screening. Schedule LC intro.</textarea></div>
               <div class="btn-row">
-                <button class="btn btn-secondary" onclick="go('s-todo')">Save</button>
-                <button class="btn btn-primary" onclick="go('s-todo')">Mark completed</button>
+                <button class="btn btn-secondary" onclick="go('s-tasks')">Save</button>
+                <button class="btn btn-primary" onclick="go('s-tasks')">Mark completed</button>
               </div>
             </div>
           </section>
 
           <section class="screen" id="s-notifs">
             <div class="pad">
-              <div class="title" style="font-size:24px;">Notifications</div>
-              <div class="list">
-                <div class="row" onclick="go('s-task')">
+              <div class="notif-head">
+                <div>
+                  <div class="title">Notifications</div>
+                  <p class="sub" style="margin:4px 0 0;">Tasks · premiums · apps · announcements</p>
+                </div>
+                <button class="link" type="button">Mark all read</button>
+              </div>
+
+              <div class="cat-banner" role="tablist" aria-label="Notification type">
+                <button type="button" class="on" data-nfilter="all" onclick="filterNotifs('all', this)">All <span class="n">6</span></button>
+                <button type="button" data-nfilter="task" onclick="filterNotifs('task', this)">Tasks <span class="n">2</span></button>
+                <button type="button" data-nfilter="premium" onclick="filterNotifs('premium', this)">Premium <span class="n">1</span></button>
+                <button type="button" class="fix" data-nfilter="app" onclick="filterNotifs('app', this)">Apps <span class="n">1</span></button>
+                <button type="button" data-nfilter="announce" onclick="filterNotifs('announce', this)">News <span class="n">2</span></button>
+              </div>
+
+              <div class="list" id="notifList">
+                <div class="row" data-ntype="task" onclick="go('s-task')">
                   <div class="dot">✓</div>
-                  <div class="meta"><b>Task assigned / updated</b><span>FR-07 · Recruitment interview</span></div><span
-                    class="pill warn">New</span>
+                  <div class="meta"><b>New task assigned</b><span>Recruitment interview · Su Su · just now</span></div>
+                  <span class="pill warn">New</span>
                 </div>
-                <div class="row">
+                <div class="row" data-ntype="app" onclick="openCorrection()">
+                  <div class="dot">C</div>
+                  <div class="meta"><b>Mark for Correction</b><span>Daw Hla · NRC unclear · 1h ago</span></div>
+                  <span class="pill danger">Fix</span>
+                </div>
+                <div class="row" data-ntype="premium" onclick="go('s-policy')">
                   <div class="dot">$</div>
-                  <div class="meta"><b>Recurring premium due soon</b><span>7-day window · 3 clients</span></div>
+                  <div class="meta"><b>Premium due in 7 days</b><span>3 clients · 1,250,000.00 MMK</span></div>
+                  <span class="pill warn">Due</span>
                 </div>
-                <div class="row">
+                <div class="row" data-ntype="task" onclick="go('s-tasks')">
                   <div class="dot">↻</div>
-                  <div class="meta"><b>Annual renewal in 60 days</b><span>Review opportunity</span></div>
+                  <div class="meta"><b>Task updated</b><span>AM moved due date · LC training</span></div>
                 </div>
-                <div class="row" onclick="go('s-announce')">
+                <div class="row" data-ntype="announce" onclick="go('s-announce')">
                   <div class="dot">📢</div>
-                  <div class="meta"><b>New product incentive</b><span>Announcement with image + URL</span></div>
+                  <div class="meta"><b>Q3 Incentive Push</b><span>Announcement · image + URL</span></div>
+                  <span class="pill">New</span>
+                </div>
+                <div class="row" data-ntype="announce" onclick="go('s-announce')">
+                  <div class="dot">📢</div>
+                  <div class="meta"><b>NIIM exam reminder</b><span>Training · yesterday</span></div>
                 </div>
               </div>
+              <div class="apps-empty" id="notifEmpty">No notifications in this filter.</div>
             </div>
           </section>
 
@@ -2374,7 +3179,7 @@
             <div class="pad">
               <button class="link" onclick="go('s-notifs')">← Back</button>
               <div
-                style="margin-top:12px;height:140px;border-radius:18px;background:linear-gradient(135deg,#0b6e4f,#e8922a);">
+                style="margin-top:12px;height:140px;border-radius:18px;background:linear-gradient(135deg,#0582CA,#00A6FB);">
               </div>
               <div class="title" style="margin-top:12px;font-size:22px;">Q3 Incentive Push</div>
               <p class="sub">Hit team FYP target and unlock bonus. Tap below for full details.</p>
@@ -2475,1106 +3280,6 @@
       </div>
 
 
-      <div class="web-panel web-app" id="webRoot" data-theme="a">
-        <style>
-          .web-app {
-            --wa-side: #0b6e4f;
-            --wa-side-ink: #e8fff4;
-            --wa-active: #e8922a;
-            --wa-accent: #14916a;
-            --wa-card: #fff;
-            --wa-bg: #f3f7f4;
-            --wa-ink: #10231c;
-            --wa-muted: #5c7268;
-            --wa-line: #d5e3db;
-            --wa-font-h: Fraunces, serif;
-            --wa-font-b: Outfit, system-ui, sans-serif;
-            --wa-inp: #fff;
-            --wa-th: #eef6f1;
-            background: var(--wa-bg);
-            color: var(--wa-ink);
-            font-family: var(--wa-font-b);
-            border-radius: 28px;
-            overflow: hidden;
-            min-height: 820px;
-            border: 1px solid var(--wa-line);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, .08);
-            position: relative;
-          }
-
-          .wa-auth {
-            padding: 48px 24px;
-            max-width: 440px;
-            margin: 0 auto;
-          }
-
-          .wa-auth h2 {
-            font-family: var(--wa-font-h);
-            font-size: 28px;
-            margin: 8px 0 10px;
-          }
-
-          .wa-shell {
-            display: none;
-            grid-template-columns: 220px 1fr;
-            min-height: 820px;
-          }
-
-          .wa-shell.on {
-            display: grid;
-          }
-
-          .wa-side {
-            background: var(--wa-side);
-            color: var(--wa-side-ink);
-            padding: 18px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-          }
-
-          .wa-side .brand {
-            padding: 8px 10px 18px;
-            font-family: var(--wa-font-h);
-            font-size: 18px;
-          }
-
-          .wa-side .brand small {
-            display: block;
-            opacity: .7;
-            font-family: var(--wa-font-b);
-            font-size: 11px;
-            margin-top: 4px;
-          }
-
-          .wa-navbtn {
-            border: 0;
-            background: transparent;
-            color: inherit;
-            text-align: left;
-            padding: 11px 12px;
-            border-radius: 12px;
-            font: inherit;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            opacity: .85;
-          }
-
-          .wa-navbtn:hover {
-            background: rgba(255, 255, 255, .08);
-          }
-
-          .wa-navbtn.on {
-            background: var(--wa-active);
-            color: #111;
-            opacity: 1;
-          }
-
-          .wa-main {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            background: var(--wa-bg);
-          }
-
-          .wa-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--wa-line);
-            background: var(--wa-card);
-          }
-
-          .wa-header .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-          }
-
-          .wa-header .logo .mark {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: var(--wa-side);
-            color: #fff;
-            display: grid;
-            place-items: center;
-            font-size: 11px;
-          }
-
-          .wa-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-          }
-
-          .wa-profile .av {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--wa-active);
-            color: #111;
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-          }
-
-          .wa-body {
-            padding: 18px;
-            overflow: auto;
-            flex: 1;
-          }
-
-          .wa-page {
-            display: none;
-          }
-
-          .wa-page.on {
-            display: block;
-          }
-
-          .wa-h {
-            font-family: var(--wa-font-h);
-            font-size: 24px;
-            margin-bottom: 4px;
-          }
-
-          .wa-sub {
-            color: var(--wa-muted);
-            font-size: 13px;
-            margin-bottom: 16px;
-            line-height: 1.45;
-          }
-
-          .wa-kpis {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-          }
-
-          @media (max-width:1100px) {
-            .wa-kpis {
-              grid-template-columns: repeat(2, 1fr);
-            }
-
-            .wa-shell {
-              grid-template-columns: 72px 1fr;
-            }
-
-            .wa-navbtn {
-              font-size: 10px;
-              padding: 10px 6px;
-              text-align: center;
-            }
-
-            .wa-side .brand small {
-              display: none;
-            }
-          }
-
-          .wa-kpi {
-            background: var(--wa-card);
-            border: 1px solid var(--wa-line);
-            border-radius: 14px;
-            padding: 12px;
-          }
-
-          .wa-kpi .l {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: var(--wa-muted);
-            font-weight: 800;
-          }
-
-          .wa-kpi .v {
-            font-family: var(--wa-font-h);
-            font-size: 22px;
-            margin-top: 4px;
-          }
-
-          .wa-kpi .d {
-            font-size: 11px;
-            margin-top: 3px;
-            color: var(--wa-accent);
-            font-weight: 700;
-          }
-
-          .wa-seg {
-            display: inline-flex;
-            background: rgba(0, 0, 0, .04);
-            border: 1px solid var(--wa-line);
-            border-radius: 999px;
-            padding: 3px;
-            gap: 2px;
-            margin-bottom: 12px;
-          }
-
-          .wa-seg button {
-            border: 0;
-            background: transparent;
-            padding: 8px 12px;
-            border-radius: 999px;
-            font: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            color: var(--wa-muted);
-          }
-
-          .wa-seg button.on {
-            background: var(--wa-card);
-            color: var(--wa-ink);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
-          }
-
-          .wa-charts {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 14px;
-          }
-
-          @media (max-width:900px) {
-            .wa-charts {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          .wa-card {
-            background: var(--wa-card);
-            border: 1px solid var(--wa-line);
-            border-radius: 16px;
-            padding: 14px;
-          }
-
-          .wa-card h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
-          }
-
-          .wa-card canvas {
-            width: 100% !important;
-            max-height: 220px;
-          }
-
-          .wa-note {
-            font-size: 12px;
-            color: var(--wa-muted);
-            margin-top: 8px;
-            line-height: 1.45;
-          }
-
-          .wa-field {
-            margin-bottom: 10px;
-          }
-
-          .wa-field label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--wa-muted);
-            margin-bottom: 4px;
-          }
-
-          .wa-field input,
-          .wa-field select,
-          .wa-field textarea {
-            width: 100%;
-            border: 1px solid var(--wa-line);
-            background: var(--wa-inp);
-            color: var(--wa-ink);
-            border-radius: 10px;
-            padding: 10px 12px;
-            font: inherit;
-          }
-
-          .wa-btn {
-            border: 0;
-            border-radius: 12px;
-            padding: 11px 14px;
-            font: inherit;
-            font-weight: 800;
-            cursor: pointer;
-          }
-
-          .wa-btn-p {
-            background: var(--wa-accent);
-            color: #111;
-          }
-
-          .wa-btn-s {
-            background: var(--wa-card);
-            border: 1px solid var(--wa-line);
-            color: var(--wa-ink);
-          }
-
-          .wa-rowbtns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-          }
-
-          .wa-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12.5px;
-          }
-
-          .wa-table th,
-          .wa-table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid var(--wa-line);
-            text-align: left;
-          }
-
-          .wa-table th {
-            background: var(--wa-th);
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            color: var(--wa-muted);
-          }
-
-          .wa-pill {
-            font-size: 10px;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background: rgba(0, 0, 0, .06);
-          }
-
-          .wa-pill.warn {
-            background: #fff1e0;
-            color: #9a5b00;
-          }
-
-          .wa-pill.ok {
-            background: #e7f6ef;
-            color: #0b6e4f;
-          }
-
-          .wa-pill.danger {
-            background: #fde8e6;
-            color: #c0392b;
-          }
-
-          .wa-grid2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-          }
-
-          @media (max-width:900px) {
-            .wa-grid2 {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          .wa-pipe {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin: 12px 0;
-          }
-
-          @media (max-width:1100px) {
-            .wa-pipe {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-
-          .wa-pipe .col {
-            background: var(--wa-card);
-            border: 1px solid var(--wa-line);
-            border-radius: 12px;
-            padding: 10px;
-            min-height: 110px;
-          }
-
-          .wa-pipe h4 {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-            color: var(--wa-muted);
-            margin-bottom: 8px;
-          }
-
-          .wa-pipe .mini {
-            background: rgba(0, 0, 0, .04);
-            border-radius: 8px;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 6px;
-          }
-
-          .wa-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-            align-items: end;
-          }
-
-          .wa-filters label {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--wa-muted);
-            text-transform: uppercase;
-          }
-
-          .wa-filters select {
-            border: 1px solid var(--wa-line);
-            background: var(--wa-inp);
-            color: var(--wa-ink);
-            border-radius: 8px;
-            padding: 8px 10px;
-            font: inherit;
-            min-width: 110px;
-          }
-
-          .wa-preview {
-            height: 120px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--wa-side), var(--wa-active));
-            margin-bottom: 10px;
-          }
-
-          .wa-link {
-            border: 0;
-            background: none;
-            color: var(--wa-accent);
-            font: inherit;
-            font-weight: 800;
-            font-size: 12px;
-            cursor: pointer;
-          }
-        </style>
-
-        <!-- AUTH -->
-        <div id="webAuth" class="wa-auth">
-          <div
-            style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--wa-accent);">
-            Unified login · Web · Field Momentum</div>
-          <h2>Same Agent identity</h2>
-          <p class="wa-sub">Mobile + password + SMS OTP — identical to the mobile app. CORE-active numbers only.</p>
-          <div class="wa-field"><label>Mobile number</label><input value="09 771 234 567" /></div>
-          <div class="wa-field"><label>Password</label><input type="password" value="••••••••" /></div>
-          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="webSendOtp()">Continue to OTP</button>
-          <div style="height:8px"></div>
-          <button class="wa-btn wa-btn-s" style="width:100%;" onclick="showWebAuth('forgot')">Forgot password (OTP +
-            reason)</button>
-        </div>
-        <div id="webAuthOtp" class="wa-auth" style="display:none;">
-          <button class="wa-link" onclick="showWebAuth('login')">← Back</button>
-          <h2>Web OTP</h2>
-          <p class="wa-sub">Same SMS OTP path as mobile.</p>
-          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0 16px;">
-            <input value="4"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-            <input value="8"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-            <input value="2"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-            <input value="1"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-            <input value="9"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-            <input value="0"
-              style="text-align:center;padding:10px 0;border-radius:8px;border:1px solid var(--wa-line);background:var(--wa-inp);color:var(--wa-ink);font-weight:800;" />
-          </div>
-          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="webEnterPortal()">Verify & open portal</button>
-        </div>
-        <div id="webAuthForgot" class="wa-auth" style="display:none;">
-          <button class="wa-link" onclick="showWebAuth('login')">← Back</button>
-          <h2>Reset password</h2>
-          <div class="wa-field"><label>Reason / remark *</label><textarea rows="2">Forgot after device change</textarea>
-          </div>
-          <div class="wa-field"><label>New password</label><input type="password" value="••••••••" /></div>
-          <button class="wa-btn wa-btn-p" style="width:100%;" onclick="showWebAuth('login')">Update & return</button>
-        </div>
-
-        <!-- APP SHELL -->
-        <div class="wa-shell" id="webAppShell">
-          <aside class="wa-side">
-            <div class="brand">KBZ LIFE<small>Agent Portal</small></div>
-            <button class="wa-navbtn on" data-page="dashboard">Dashboard</button>
-            <button class="wa-navbtn" data-page="performance">Performance</button>
-            <button class="wa-navbtn" data-page="crm">CRM</button>
-            <button class="wa-navbtn" data-page="policies">Policies / Sales</button>
-            <button class="wa-navbtn" data-page="tasks">Tasks</button>
-            <button class="wa-navbtn" data-page="recruit">Recruitment</button>
-            <button class="wa-navbtn" data-page="announce">Announcements</button>
-            <button class="wa-navbtn" data-page="ops">Operations</button>
-            <button class="wa-navbtn" data-page="agents">Agents / Audit</button>
-          </aside>
-          <div class="wa-main">
-            <header class="wa-header">
-              <div class="logo">
-                <div class="mark">KL</div>
-                <div>KBZ LIFE <span style="color:var(--wa-muted);font-weight:600;">· Agency</span></div>
-              </div>
-              <div class="wa-profile">
-                <div style="text-align:right;"><b>Aye Chan</b>
-                  <div style="color:var(--wa-muted);font-size:11px;">DM · Yangon</div>
-                </div>
-                <div class="av">A</div>
-                <button class="wa-btn wa-btn-s" style="padding:8px 10px;font-size:12px;" onclick="webSignOut()">Sign
-                  out</button>
-              </div>
-            </header>
-            <div class="wa-body">
-
-              <!-- DASHBOARD -->
-              <section class="wa-page on" id="page-dashboard">
-                <div class="wa-h">Dashboard</div>
-                <p class="wa-sub">BRD 5.2.1 metrics · 5.2.2 weighting (Freelance FYP / Internal FYP). Values from Core
-                  APIs.</p>
-                <div class="wa-seg" id="weightSeg">
-                  <button class="on" type="button" onclick="setWeight(this,'freelance')">Freelance FYP
-                    (weighted)</button>
-                  <button type="button" onclick="setWeight(this,'internal')">Internal FYP (weighted)</button>
-                </div>
-                <p class="wa-note" id="weightNote">Weighting factors applied by Core for Freelance FYP. Portal displays
-                  API results only.</p>
-                <div class="wa-kpis">
-                  <div class="wa-kpi">
-                    <div class="l">New policies</div>
-                    <div class="v">146</div>
-                    <div class="d">Existing active 4,812</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">FYP (Initial + Sub)</div>
-                    <div class="v">82.4M</div>
-                    <div class="d">+12% vs last month</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">APE / AFYP</div>
-                    <div class="v">61.2M</div>
-                    <div class="d">Above avg productivity</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">Due vs Collected</div>
-                    <div class="v">78%</div>
-                    <div class="d">Due 12.0M · Collected 9.4M</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">Commission</div>
-                    <div class="v">9.8M</div>
-                    <div class="d">Product (+ UL note)</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">K1 / K2</div>
-                    <div class="v">86% / 81%</div>
-                    <div class="d">Grace period on</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">Persistency (count)</div>
-                    <div class="v">60%</div>
-                    <div class="d">600 / 1,000 @ 13th mo</div>
-                  </div>
-                  <div class="wa-kpi">
-                    <div class="l">Road to MDRT</div>
-                    <div class="v">68%</div>
-                    <div class="d">Prem 34.2M / 50M</div>
-                  </div>
-                </div>
-                <div class="wa-charts">
-                  <div class="wa-card">
-                    <h3>Bar · Monthly FYP vs APE</h3><canvas id="barChart-a" height="200"></canvas>
-                  </div>
-                  <div class="wa-card">
-                    <h3>Line · FYP & persistency trend</h3><canvas id="lineChart-a" height="200"></canvas>
-                  </div>
-                </div>
-                <div class="wa-card">
-                  <h3>Core Data · Weighting legend</h3>
-                  <p class="wa-note" style="margin:0;">Freelance and Internal FYP use Core-defined weighting factors so
-                    every hierarchy level stays consistent. Frontend does not recalculate — it renders API payloads.</p>
-                </div>
-              </section>
-
-              <!-- PERFORMANCE -->
-              <section class="wa-page" id="page-performance">
-                <div class="wa-h">Performance</div>
-                <p class="wa-sub">Hierarchical filters · FA line production · persistency · Export Excel</p>
-                <div class="wa-filters">
-                  <label>Region<select>
-                      <option>Yangon</option>
-                      <option>Mandalay</option>
-                    </select></label>
-                  <label>District<select>
-                      <option>District A</option>
-                    </select></label>
-                  <label>SAM<select>
-                      <option>All</option>
-                    </select></label>
-                  <label>AM<select>
-                      <option>All</option>
-                    </select></label>
-                  <button class="wa-btn wa-btn-p" onclick="alert('Export Excel (mock)')">Export Excel</button>
-                </div>
-                <div class="wa-card" style="overflow:auto;">
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>FA</th>
-                        <th>APE</th>
-                        <th>FYP</th>
-                        <th>SFYP</th>
-                        <th>Wtd Freelance FYP</th>
-                        <th>MDRT</th>
-                        <th>K1/K2</th>
-                        <th>Flag</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Thura Htun</td>
-                        <td>4,200,000.00</td>
-                        <td>5,100,000.00</td>
-                        <td>980,000.00</td>
-                        <td>3,400,000.00</td>
-                        <td>41.0M</td>
-                        <td>90/86</td>
-                        <td><span class="wa-pill ok">OK</span></td>
-                      </tr>
-                      <tr>
-                        <td>Zaw Ko</td>
-                        <td>780,000.00</td>
-                        <td>820,000.00</td>
-                        <td>90,000.00</td>
-                        <td>600,000.00</td>
-                        <td>8.2M</td>
-                        <td>70/65</td>
-                        <td><span class="wa-pill danger">Below target</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-              <!-- CRM FR-03 -->
-              <section class="wa-page" id="page-crm">
-                <div class="wa-h">CRM</div>
-                <p class="wa-sub">FR-03 on web · portfolio Leads vs Clients · owner FA · convert after policy issuance
-                </p>
-                <div class="wa-seg">
-                  <button class="on" type="button" onclick="crmTab(this,'leads')">Leads</button>
-                  <button type="button" onclick="crmTab(this,'clients')">Clients</button>
-                </div>
-                <div id="crm-leads" class="wa-card" style="overflow:auto;">
-                  <div class="wa-rowbtns"><button class="wa-btn wa-btn-p">+ Add lead</button></div>
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>Lead</th>
-                        <th>Mobile</th>
-                        <th>Stage</th>
-                        <th>Owner FA</th>
-                        <th>Quotes/Apps</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Maung Soe</td>
-                        <td>09 771 888 999</td>
-                        <td><span class="wa-pill warn">Quoted</span></td>
-                        <td>Aye Chan</td>
-                        <td>1 quote · draft app</td>
-                        <td><button class="wa-link">Open</button></td>
-                      </tr>
-                      <tr>
-                        <td>Yu Hlaing</td>
-                        <td>09 250 444 555</td>
-                        <td><span class="wa-pill">Contacted</span></td>
-                        <td>Nwe Nwe</td>
-                        <td>—</td>
-                        <td><button class="wa-link">Open</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div id="crm-clients" class="wa-card" style="overflow:auto;display:none;">
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>Client</th>
-                        <th>Policies</th>
-                        <th>Next due</th>
-                        <th>Owner FA</th>
-                        <th>Family</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Daw Hla</td>
-                        <td>2 active · 1 lapsed</td>
-                        <td>10-Aug-2026</td>
-                        <td>Aye Chan</td>
-                        <td>2 contacts</td>
-                        <td><button class="wa-link">Open</button></td>
-                      </tr>
-                      <tr>
-                        <td>Maung Soe</td>
-                        <td>1 active (new)</td>
-                        <td>03-Sep-2026</td>
-                        <td>Aye Chan</td>
-                        <td>—</td>
-                        <td><button class="wa-link">Converted</button></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-              <!-- POLICIES / SALES FR-03 -->
-              <section class="wa-page" id="page-policies">
-                <div class="wa-h">Policies / Sales process</div>
-                <p class="wa-sub">FR-03 spine on web: Lead → Quote → e-App → Approved → Client → Active/Lapsed policy
-                </p>
-                <div class="wa-pipe">
-                  <div class="col">
-                    <h4>Leads</h4>
-                    <div class="mini">18 open</div>
-                  </div>
-                  <div class="col">
-                    <h4>Quoted</h4>
-                    <div class="mini">6</div>
-                  </div>
-                  <div class="col">
-                    <h4>e-Apps</h4>
-                    <div class="mini">11 in flight</div>
-                  </div>
-                  <div class="col">
-                    <h4>Approved</h4>
-                    <div class="mini">4 this week</div>
-                  </div>
-                  <div class="col">
-                    <h4>Policies</h4>
-                    <div class="mini">Active 4,812</div>
-                  </div>
-                </div>
-                <div class="wa-card" style="overflow:auto;">
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>Policy</th>
-                        <th>Client</th>
-                        <th>Product</th>
-                        <th>SI</th>
-                        <th>Premium</th>
-                        <th>Next due</th>
-                        <th>Status</th>
-                        <th>FA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>POL-88421</td>
-                        <td>Daw Hla</td>
-                        <td>Endowment</td>
-                        <td>10,000,000.00</td>
-                        <td>185,000.00</td>
-                        <td>10-Aug-2026</td>
-                        <td><span class="wa-pill ok">Active</span></td>
-                        <td>Aye Chan</td>
-                      </tr>
-                      <tr>
-                        <td>POL-70011</td>
-                        <td>Daw Hla</td>
-                        <td>Term</td>
-                        <td>5,000,000.00</td>
-                        <td>—</td>
-                        <td>—</td>
-                        <td><span class="wa-pill danger">Lapsed</span></td>
-                        <td>Aye Chan</td>
-                      </tr>
-                      <tr>
-                        <td>POL-88499</td>
-                        <td>Maung Soe</td>
-                        <td>Endowment</td>
-                        <td>10,000,000.00</td>
-                        <td>185,000.00</td>
-                        <td>03-Sep-2026</td>
-                        <td><span class="wa-pill ok">Active</span></td>
-                        <td>Aye Chan</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p class="wa-note">Policy detail is read-only from Core (SI, beneficiary, premium, next due). CRM
-                  convert history remains on client record.</p>
-              </section>
-
-              <!-- TASKS FR-07 -->
-              <section class="wa-page" id="page-tasks">
-                <div class="wa-h">Task management</div>
-                <p class="wa-sub">FR-07 · Managers Add / Move / Delete · Agents update Pending · In Progress · Completed
-                </p>
-                <div class="wa-rowbtns">
-                  <button class="wa-btn wa-btn-p"
-                    onclick="document.getElementById('taskDrawer-a').style.display='block'">+ Add task</button>
-                  <button class="wa-btn wa-btn-s">Move / reassign</button>
-                  <button class="wa-btn wa-btn-s">Delete</button>
-                </div>
-                <div class="wa-grid2">
-                  <div class="wa-card" style="overflow:auto;">
-                    <h3>Task list</h3>
-                    <table class="wa-table">
-                      <thead>
-                        <tr>
-                          <th>Task</th>
-                          <th>Assignee</th>
-                          <th>Type</th>
-                          <th>Due</th>
-                          <th>Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Interview · Su Su</td>
-                          <td>Aye Chan</td>
-                          <td>Recruitment</td>
-                          <td>06-Aug-2026</td>
-                          <td><span class="wa-pill">In Progress</span></td>
-                        </tr>
-                        <tr>
-                          <td>Premium chase · Daw Hla</td>
-                          <td>Aye Chan</td>
-                          <td>Servicing</td>
-                          <td>10-Aug-2026</td>
-                          <td><span class="wa-pill warn">Pending</span></td>
-                        </tr>
-                        <tr>
-                          <td>LC Training follow-up</td>
-                          <td>Nwe Nwe</td>
-                          <td>Recruitment</td>
-                          <td>08-Aug-2026</td>
-                          <td><span class="wa-pill warn">Pending</span></td>
-                        </tr>
-                        <tr>
-                          <td>NRC correction</td>
-                          <td>Aye Chan</td>
-                          <td>e-App</td>
-                          <td>02-Aug-2026</td>
-                          <td><span class="wa-pill ok">Completed</span></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="wa-card" id="taskDrawer-a">
-                    <h3>Add / manage task</h3>
-                    <div class="wa-field"><label>Title *</label><input value="Interview · Su Su" /></div>
-                    <div class="wa-field"><label>Assignee FA</label><select>
-                        <option>Aye Chan</option>
-                        <option>Nwe Nwe</option>
-                      </select></div>
-                    <div class="wa-field"><label>Type</label><select>
-                        <option>Recruitment</option>
-                        <option>Servicing</option>
-                        <option>Other</option>
-                      </select></div>
-                    <div class="wa-field"><label>Onboarding status link</label><select>
-                        <option>Screening / Interview</option>
-                        <option>LC Training</option>
-                        <option>NIIM Exam</option>
-                        <option>Final Contract</option>
-                      </select></div>
-                    <div class="wa-field"><label>Due</label><input value="06-Aug-2026" /></div>
-                    <div class="wa-field"><label>Status</label><select>
-                        <option>Pending</option>
-                        <option selected>In Progress</option>
-                        <option>Completed</option>
-                      </select></div>
-                    <div class="wa-rowbtns">
-                      <button class="wa-btn wa-btn-p">Save</button>
-                      <button class="wa-btn wa-btn-s">Move</button>
-                      <button class="wa-btn wa-btn-s">Delete</button>
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              <!-- RECRUIT -->
-              <section class="wa-page" id="page-recruit">
-                <div class="wa-h">Recruitment</div>
-                <p class="wa-sub">Dynamic agent statuses · tied to FR-07 recruitment tasks</p>
-                <div class="wa-pipe">
-                  <div class="col">
-                    <h4>Screening</h4>
-                    <div class="mini">Su Su</div>
-                    <div class="mini">Ko Ko</div>
-                  </div>
-                  <div class="col">
-                    <h4>LC / NIIM</h4>
-                    <div class="mini">Mei Mei</div>
-                    <div class="mini">Hnin · Exam</div>
-                  </div>
-                  <div class="col">
-                    <h4>Contract</h4>
-                    <div class="mini">Aung · WIP</div>
-                  </div>
-                  <div class="col">
-                    <h4>Contracted</h4>
-                    <div class="mini">3 this month</div>
-                  </div>
-                  <div class="col">
-                    <h4>Closed</h4>
-                    <div class="mini">Failed / Rejected</div>
-                  </div>
-                </div>
-              </section>
-
-              <!-- ANNOUNCE -->
-              <section class="wa-page" id="page-announce">
-                <div class="wa-h">Announcements</div>
-                <p class="wa-sub">FR-09 · Image + URL · publish to mobile feed</p>
-                <div class="wa-grid2">
-                  <div class="wa-card">
-                    <h3>Builder</h3>
-                    <div class="wa-preview"></div>
-                    <div class="wa-field"><label>Title *</label><input value="Q3 Incentive Push" /></div>
-                    <div class="wa-field"><label>Image</label><input value="incentive-banner.jpg" /></div>
-                    <div class="wa-field"><label>URL</label><input value="https://kbzlife.com/incentive" /></div>
-                    <div class="wa-field"><label>Audience</label><select>
-                        <option>All agents</option>
-                        <option>Yangon district</option>
-                        <option>Managers only</option>
-                      </select></div>
-                    <div class="wa-rowbtns">
-                      <button class="wa-btn wa-btn-s">Save draft</button>
-                      <button class="wa-btn wa-btn-p">Publish</button>
-                    </div>
-                  </div>
-                  <div class="wa-card" style="overflow:auto;">
-                    <h3>History</h3>
-                    <table class="wa-table">
-                      <thead>
-                        <tr>
-                          <th>Title</th>
-                          <th>Status</th>
-                          <th>Published</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Q3 Incentive Push</td>
-                          <td><span class="wa-pill ok">Live</span></td>
-                          <td>01-Aug-2026</td>
-                        </tr>
-                        <tr>
-                          <td>NIIM exam reminder</td>
-                          <td><span class="wa-pill">Draft</span></td>
-                          <td>—</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </section>
-
-              <!-- OPS -->
-              <section class="wa-page" id="page-ops">
-                <div class="wa-h">Operations</div>
-                <p class="wa-sub">Notification rules · resource library sections</p>
-                <div class="wa-grid2">
-                  <div class="wa-card">
-                    <h3>Notification setup</h3>
-                    <div class="wa-field"><label>Premium due window</label><select>
-                        <option>7 days</option>
-                        <option>14 days</option>
-                      </select></div>
-                    <div class="wa-field"><label>Renewal advance</label><select>
-                        <option>60 days</option>
-                        <option>90 days</option>
-                      </select></div>
-                    <button class="wa-btn wa-btn-p">Save rules</button>
-                  </div>
-                  <div class="wa-card">
-                    <h3>Resource sections</h3>
-                    <div class="wa-field"><label>Sections</label><input value="Brochures · Training · Forms" /></div>
-                    <button class="wa-btn wa-btn-s">Configure</button>
-                  </div>
-                </div>
-              </section>
-
-              <!-- AGENTS -->
-              <section class="wa-page" id="page-agents">
-                <div class="wa-h">Agents / Audit</div>
-                <p class="wa-sub">FR-12 · Approved vs Pending · audit trail</p>
-                <div class="wa-card" style="margin-bottom:12px;">
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>Agent</th>
-                        <th>State</th>
-                        <th>Detail</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Aye Chan · AGT-10284</td>
-                        <td><span class="wa-pill ok">Approved</span></td>
-                        <td>Core profile live</td>
-                      </tr>
-                      <tr>
-                        <td>Mobile change</td>
-                        <td><span class="wa-pill warn">Pending</span></td>
-                        <td>09 771… → 09 988…</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="wa-card" style="overflow:auto;">
-                  <table class="wa-table">
-                    <thead>
-                      <tr>
-                        <th>Action</th>
-                        <th>Previous</th>
-                        <th>New</th>
-                        <th>User</th>
-                        <th>When</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Update mobile</td>
-                        <td>09 771 234 567</td>
-                        <td>09 988 111 222</td>
-                        <td>Ops May</td>
-                        <td>03-Aug-2026 09:12</td>
-                      </tr>
-                      <tr>
-                        <td>Status change</td>
-                        <td>Pre-Contracted</td>
-                        <td>LC Training</td>
-                        <td>Alliance</td>
-                        <td>02-Aug-2026 16:40</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -3590,7 +3295,7 @@
       ['s-eapp', 'eApp 1 Details'], ['s-eapp-2', 'eApp 2 Parties'], ['s-eapp-3', 'eApp 3 KYC'],
       ['s-eapp-4', 'eApp 4 Docs'], ['s-eapp-5', 'eApp 5 Sign'], ['s-eapp-6', 'eApp 6 Review'],
       ['s-eapp-ok', 'eApp Success'], ['s-apps', 'App tracker'], ['s-policy', 'Policy'],
-      ['s-tasks', 'Calendar'], ['s-todo', 'To-Do'], ['s-task-new', 'New task'], ['s-task', 'Task detail'],
+      ['s-tasks', 'My work'], ['s-task-new', 'New task'], ['s-task', 'Task detail'],
       ['s-notifs', 'Notifs'], ['s-announce', 'Announce'], ['s-resources', 'Resources'], ['s-profile', 'Profile']
     ];
     const nav = document.getElementById('jumpNav');
@@ -3622,6 +3327,54 @@
       btn.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === btn));
     }
 
+    function filterApps(status, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      }
+      const rows = document.querySelectorAll('#appsList .row');
+      let shown = 0;
+      rows.forEach(r => {
+        const match = status === 'all' || r.dataset.status === status;
+        r.style.display = match ? 'flex' : 'none';
+        if (match) shown++;
+      });
+      const empty = document.getElementById('appsEmpty');
+      if (empty) empty.classList.toggle('show', shown === 0);
+    }
+
+    function filterNotifs(type, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      }
+      const rows = document.querySelectorAll('#notifList .row');
+      let shown = 0;
+      rows.forEach(r => {
+        const match = type === 'all' || r.dataset.ntype === type;
+        r.style.display = match ? 'flex' : 'none';
+        if (match) shown++;
+      });
+      const empty = document.getElementById('notifEmpty');
+      if (empty) empty.classList.toggle('show', shown === 0);
+    }
+
+    function setWorkScope(scope, btn) {
+      const titles = {
+        day: ['Monday, 3 Aug', 'Today · Yangon'],
+        week: ['3–9 Aug 2026', 'This week · 6 tasks'],
+        month: ['August 2026', 'Tap a day · dots = tasks']
+      };
+      const t = titles[scope] || titles.day;
+      const title = document.getElementById('workDateTitle');
+      const sub = document.getElementById('workDateSub');
+      if (title) title.textContent = t[0];
+      if (sub) sub.textContent = t[1];
+      document.querySelectorAll('.work-panel').forEach(p => p.classList.toggle('on', p.id === 'work-' + scope));
+      document.querySelectorAll('.work-scope button').forEach(b => {
+        b.classList.toggle('on', b.dataset.scope === scope);
+      });
+      if (btn) btn.classList.add('on');
+    }
+
     function syncWizardChrome(id) {
       const inWizard = wizardFlow.includes(id);
       wizFoot.classList.toggle('show', inWizard);
@@ -3629,10 +3382,18 @@
         (authScreens.has(id) || wizardScreens.has(id)) ? 'none' : 'grid';
       if (!inWizard) return;
       const idx = wizardFlow.indexOf(id);
+      const waitingSign = id === 's-eapp-5';
       wizBack.textContent = idx === 0 ? 'Cancel' : 'Back';
-      wizNext.textContent = idx === wizardFlow.length - 1 ? 'Send application' : 'Continue';
+      wizNext.textContent = waitingSign
+        ? 'Waiting for client…'
+        : (idx === wizardFlow.length - 1 ? 'Send application' : 'Continue');
+      wizNext.disabled = waitingSign;
+      wizNext.style.opacity = waitingSign ? '0.55' : '1';
       wizBack.onclick = () => go(idx === 0 ? 's-quote' : wizardFlow[idx - 1]);
-      wizNext.onclick = () => go(idx === wizardFlow.length - 1 ? 's-eapp-ok' : wizardFlow[idx + 1]);
+      wizNext.onclick = () => {
+        if (waitingSign) return;
+        go(idx === wizardFlow.length - 1 ? 's-eapp-ok' : wizardFlow[idx + 1]);
+      };
     }
 
     function go(id) {
@@ -3646,7 +3407,7 @@
       document.querySelectorAll('#jumpNav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
       const peopleIds = ['s-leads', 's-lead', 's-addlead', 's-editlead', 's-clients', 's-client', 's-client-new', 's-convert'];
       const sellIds = ['s-products', 's-quote', ...wizardFlow, 's-eapp-ok', 's-apps'];
-      const workIds = ['s-tasks', 's-todo', 's-task', 's-task-new', 's-notifs', 's-announce', 's-resources'];
+      const workIds = ['s-tasks', 's-task', 's-task-new', 's-notifs', 's-announce', 's-resources'];
       document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.go === id ||
         peopleIds.includes(id) && t.dataset.go === 's-leads' ||
         sellIds.includes(id) && t.dataset.go === 's-products' ||
@@ -3678,80 +3439,7 @@
       document.getElementById('tog2').classList.toggle('on', !personal);
     }
 
-    // --- Web app shell (shared helpers; safe to redefine) ---
-    function showWebAuth(which) {
-      const shell = document.getElementById('webAppShell');
-      if (shell) shell.classList.remove('on');
-      const map = { login: 'webAuth', otp: 'webAuthOtp', forgot: 'webAuthForgot' };
-      ['webAuth', 'webAuthOtp', 'webAuthForgot'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = (map[which] === id) ? 'block' : 'none';
-      });
-    }
-    function webSendOtp() { showWebAuth('otp'); }
-    function webEnterPortal() {
-      ['webAuth', 'webAuthOtp', 'webAuthForgot'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-      const shell = document.getElementById('webAppShell');
-      if (shell) shell.classList.add('on');
-      initWebCharts();
-      showPage('dashboard');
-    }
-    function webSignOut() { showWebAuth('login'); }
-    function showPage(id) {
-      document.querySelectorAll('.wa-page').forEach(p => p.classList.toggle('on', p.id === 'page-' + id));
-      document.querySelectorAll('.wa-navbtn').forEach(b => b.classList.toggle('on', b.dataset.page === id));
-    }
-    function setWeight(btn, mode) {
-      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
-      const note = document.getElementById('weightNote');
-      if (note) note.textContent = mode === 'freelance'
-        ? 'Weighting factors applied by Core for Freelance FYP. Portal displays API results only.'
-        : 'Weighting factors applied by Core for Internal FYP. Portal displays API results only.';
-    }
-    function crmTab(btn, which) {
-      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
-      const L = document.getElementById('crm-leads');
-      const C = document.getElementById('crm-clients');
-      if (L) L.style.display = which === 'leads' ? 'block' : 'none';
-      if (C) C.style.display = which === 'clients' ? 'block' : 'none';
-    }
-    let __chartsReady = false;
-    function initWebCharts() {
-      if (__chartsReady || typeof Chart === 'undefined') return;
-      const root = document.getElementById('webRoot');
-      const theme = root ? root.dataset.theme : 'a';
-      const colors = theme === 'b' ? ['#0a4d8c', '#b8923a'] : theme === 'c' ? ['#7cffb2', '#5ad0ff'] : ['#0b6e4f', '#e8922a'];
-      const grid = theme === 'c' ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.06)';
-      const tick = theme === 'c' ? '#8b95a7' : '#5c7268';
-      const bar = document.getElementById('barChart-' + theme);
-      const line = document.getElementById('lineChart-' + theme);
-      if (bar) new Chart(bar, {
-        type: 'bar',
-        data: {
-          labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-          datasets: [
-            { label: 'FYP', data: [52, 58, 61, 70, 74, 82], backgroundColor: colors[0] },
-            { label: 'APE', data: [40, 44, 48, 55, 58, 61], backgroundColor: colors[1] }
-          ]
-        },
-        options: { responsive: true, plugins: { legend: { labels: { color: tick } } }, scales: { x: { ticks: { color: tick }, grid: { color: grid } }, y: { ticks: { color: tick }, grid: { color: grid } } } }
-      });
-      if (line) new Chart(line, {
-        type: 'line',
-        data: {
-          labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-          datasets: [
-            { label: 'FYP (M)', data: [52, 58, 61, 70, 74, 82], borderColor: colors[0], tension: .35, fill: false },
-            { label: 'K1 %', data: [82, 83, 84, 85, 86, 86], borderColor: colors[1], tension: .35, fill: false }
-          ]
-        },
-        options: { responsive: true, plugins: { legend: { labels: { color: tick } } }, scales: { x: { ticks: { color: tick }, grid: { color: grid } }, y: { ticks: { color: tick }, grid: { color: grid } } } }
-      });
-      __chartsReady = true;
-    }
-    document.querySelectorAll('.wa-navbtn').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
     go('s-splash');
-    showWebAuth('login');
   </script>
 </body>
 

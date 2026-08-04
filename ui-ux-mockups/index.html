@@ -3,47 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>KBZ LIFE Agent App — UI/UX Concept Gallery</title>
+<title>KBZ LIFE Agent App — UI/UX Gallery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --ink: #122018;
-    --muted: #5d6f66;
-    --line: #d7e2db;
-    --bg: #f4f7f5;
+    --ink: #003554;
+    --muted: #5A7390;
+    --line: #D5E4F0;
+    --bg: #F4F8FB;
     --card: #fff;
+    --sky: #00A6FB;
+    --steel: #0582CA;
+    --baltic: #006494;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: Manrope, system-ui, sans-serif;
     color: var(--ink);
     background:
-      radial-gradient(1000px 500px at 0% -10%, #d9efe4, transparent 55%),
-      radial-gradient(900px 500px at 100% 0%, #e8eef8, transparent 50%),
+      radial-gradient(1000px 500px at 0% -10%, #cceeff, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #b8e4ff, transparent 50%),
       var(--bg);
     min-height: 100vh;
   }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
-  .eyebrow { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; color: #0b6e4f; }
-  h1 { font-family: Fraunces, serif; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; margin: 10px 0 14px; max-width: 16ch; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+  .eyebrow { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; color: var(--steel); }
+  h1 { font-family: Fraunces, serif; font-size: clamp(34px, 5vw, 48px); line-height: 1.08; margin: 10px 0 14px; max-width: 18ch; }
   .lede { max-width: 640px; color: var(--muted); line-height: 1.6; font-size: 16px; }
   .meta { display: flex; gap: 10px; flex-wrap: wrap; margin: 22px 0 36px; }
   .meta span, .meta a {
     background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 12px;
     font-size: 12px; font-weight: 700; color: var(--ink); text-decoration: none;
   }
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
   .card {
     background: var(--card); border: 1px solid var(--line); border-radius: 24px; overflow: hidden;
-    display: flex; flex-direction: column; box-shadow: 0 18px 50px rgba(18, 32, 24, 0.06);
+    display: flex; flex-direction: column; box-shadow: 0 18px 50px rgba(0, 53, 84, 0.08);
   }
   .swatch { height: 140px; position: relative; }
-  .a .swatch { background: linear-gradient(135deg, #0b6e4f, #e8922a); }
-  .b .swatch { background: linear-gradient(135deg, #062a4a, #b8923a); }
-  .c .swatch { background: linear-gradient(135deg, #0e1116, #7cffb2); }
+  .mobile .swatch { background: linear-gradient(135deg, #00A6FB, #003554); }
+  .web .swatch { background: linear-gradient(135deg, #0582CA, #006494); }
   .swatch strong {
     position: absolute; left: 18px; bottom: 16px; color: #fff;
     font-family: Fraunces, serif; font-size: 22px;
@@ -52,116 +54,79 @@
   .body h2 { font-size: 18px; }
   .body p { color: var(--muted); font-size: 14px; line-height: 1.55; flex: 1; }
   .tags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tags span { background: #eef5f1; color: #0b6e4f; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 999px; }
-  .b .tags span { background: #eaf2fb; color: #0a4d8c; }
-  .c .tags span { background: #171b22; color: #7cffb2; }
+  .tags span { background: #E6F6FF; color: var(--baltic); font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 999px; }
   .cta {
     display: inline-flex; justify-content: center; align-items: center;
-    margin-top: 8px; padding: 12px 14px; border-radius: 14px; background: #122018; color: #fff;
+    margin-top: 8px; padding: 12px 14px; border-radius: 14px; background: var(--deep, #003554); color: #fff;
     text-decoration: none; font-weight: 800; font-size: 13px;
   }
   .section { margin-top: 48px; }
   .section h3 { font-family: Fraunces, serif; font-size: 28px; margin-bottom: 10px; }
   .section p { color: var(--muted); line-height: 1.6; max-width: 720px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 18px; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); font-size: 14px; }
-  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { background: #eef5f1; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
-  .docs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
-  @media (max-width: 800px) { .docs { grid-template-columns: 1fr; } }
+  .docs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
+  @media (max-width: 700px) { .docs { grid-template-columns: 1fr; } }
   .doc {
     background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; text-decoration: none; color: inherit;
   }
   .doc strong { display: block; margin-bottom: 6px; }
   .doc span { color: var(--muted); font-size: 13px; line-height: 1.45; }
-  .reco {
-    margin-top: 28px; background: #122018; color: #fff; border-radius: 22px; padding: 22px;
+  .palette {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px;
   }
-  .reco h3 { font-family: Fraunces, serif; font-size: 24px; margin-bottom: 8px; }
-  .reco p { color: rgba(255,255,255,.78); line-height: 1.55; }
+  .palette div {
+    height: 72px; border-radius: 14px; display: flex; align-items: end; padding: 10px;
+    color: #fff; font-size: 11px; font-weight: 800;
+  }
 </style>
 </head>
 <body>
   <div class="wrap">
     <div class="eyebrow">KBZ LIFE · Agency Sales Digital Platform</div>
-    <h1>UI/UX concept gallery</h1>
-    <p class="lede">BRD-aligned end-to-end mockups for the Agent mobile app and Management web portal. Three distinct directions — same information architecture and functional coverage, different visual systems and emotional tone.</p>
+    <h1>UI/UX gallery</h1>
+    <p class="lede">Concept A kept as the mobile mockup. Management web portal is a separate React app. Shared Coolors blue palette.</p>
     <div class="meta">
       <span>BRD v2.3</span>
-      <span>Mobile + Web</span>
-      <span>ENG / MM ready</span>
-      <span>FA → HOA roles</span>
-      <a href="docs/01-brainstorm-and-ia.md">Brainstorm docs</a>
+      <span>Mobile HTML + React web</span>
+      <span>Coolors blues</span>
+      <a href="docs/10-mobile-web-split-react.md">Split brainstorm</a>
     </div>
 
-    <div class="grid">
-      <article class="card a">
-        <div class="swatch"><strong>A · Field Momentum</strong></div>
-        <div class="body">
-          <h2>Sell-first field coach</h2>
-          <p>Emerald + amber energy, oversized quick actions, MDRT progress as motivation. Best for FA adoption and day-of-sale speed.</p>
-          <div class="tags"><span>Thumb-first</span><span>Quick actions</span><span>Warm urgency</span></div>
-          <a class="cta" href="concept-a-field-momentum/index.html">Open interactive mockup →</a>
-        </div>
-      </article>
-      <article class="card b">
-        <div class="swatch"><strong>B · Trust & Clarity</strong></div>
-        <div class="body">
-          <h2>Institutional calm</h2>
-          <p>Navy + gold, editorial type, guided steps and explanatory microcopy. Best brand-safe default for mixed roles and compliance comfort.</p>
-          <div class="tags"><span>Guided flows</span><span>Bilingual calm</span><span>Trust cues</span></div>
-          <a class="cta" href="concept-b-trust-clarity/index.html">Open interactive mockup →</a>
-        </div>
-      </article>
-      <article class="card c">
-        <div class="swatch"><strong>C · Command Center</strong></div>
-        <div class="body">
-          <h2>Performance cockpit</h2>
-          <p>Charcoal HUD, dense KPIs, signal queue, MDRT race. Best for managers and power users living in dashboards daily.</p>
-          <div class="tags"><span>KPI dense</span><span>Hierarchy drills</span><span>Ops tone</span></div>
-          <a class="cta" href="concept-c-command-center/index.html">Open interactive mockup →</a>
-        </div>
-      </article>
+    <div class="palette">
+      <div style="background:#00A6FB">#00A6FB</div>
+      <div style="background:#0582CA">#0582CA</div>
+      <div style="background:#006494">#006494</div>
+      <div style="background:#003554">#003554</div>
     </div>
 
-    <div class="section">
-      <h3>What each mockup covers end-to-end</h3>
-      <p>Use the jump chips inside each concept to walk Splash → Auth → Home → CRM → Quote → e-App → Policy → Tasks → Notifications → Resources → Profile, plus Manager HUD and Web oversight.</p>
-      <table>
-        <thead>
-          <tr><th>Journey</th><th>Concept A</th><th>Concept B</th><th>Concept C</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Auth / OTP / biometric</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>FA + Manager dashboards</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Leads / Clients CRM (FR-03)</td><td>✓ deep</td><td>✓ deep</td><td>✓ deep</td></tr>
-          <tr><td>Lead→Client convert</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Product · Quote · e-App · Tracker</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Policy servicing</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Tasks / Notifs / Announcements / Resources</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Profile · MM/ENG · security</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Web app shell (menu + header)</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Web 5.2.1 KPIs + 5.2.2 weighting + bar/line</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Web CRM · Policies · Tasks · Announce</td><td>✓</td><td>✓</td><td>✓</td></tr>
-          <tr><td>Web performance · recruit · ops · audit</td><td>✓</td><td>✓ calm</td><td>✓ HUD</td></tr>
-        </tbody>
-      </table>
+    <div class="grid" style="margin-top:28px;">
+      <article class="card mobile">
+        <div class="swatch"><strong>Mobile mockup</strong></div>
+        <div class="body">
+          <h2>FA field experience</h2>
+          <p>HTML phone prototype — auth, CRM, quote, e-App, tasks, announcements. Coolors palette applied.</p>
+          <div class="tags"><span>HTML</span><span>Thumb-first</span><span>FR-03 / FR-07</span></div>
+          <a class="cta" href="concept-a-field-momentum/index.html">Open mobile mockup →</a>
+        </div>
+      </article>
+      <article class="card web">
+        <div class="swatch"><strong>Web portal</strong></div>
+        <div class="body">
+          <h2>React management app</h2>
+          <p>Separate Vite + React TypeScript app — sidebar shell, dashboard charts, CRM, policies, tasks, announcements.</p>
+          <div class="tags"><span>React</span><span>Vite</span><span>5.2.1 / 5.2.2</span></div>
+          <a class="cta" href="../agent-web-portal/README.md">See agent-web-portal README →</a>
+        </div>
+      </article>
     </div>
 
     <div class="section">
       <h3>Documentation</h3>
       <div class="docs">
-        <a class="doc" href="docs/09-web-app-shell-dashboard-crm.md"><strong>09 · Web app shell</strong><span>Sidebar/header, 5.2.1/5.2.2 charts, CRM, Policies, Tasks, Announce.</span></a>
-        <a class="doc" href="docs/05-fr03-e2e-sales-ux.md"><strong>05 · FR-03 E2E sales</strong><span>Lead↔Client spine for mobile + web Policies/CRM.</span></a>
-        <a class="doc" href="docs/08-fr07-task-management-ux.md"><strong>08 · FR-07 Tasks</strong><span>Calendar / To-Do / status + web Add·Move·Delete.</span></a>
-        <a class="doc" href="docs/07-unified-login-ux.md"><strong>07 · Unified Login</strong><span>Same mobile↔web identity, OTP, forgot+remark.</span></a>
-        <a class="doc" href="docs/01-brainstorm-and-ia.md"><strong>01 · Brainstorm & IA</strong><span>Full product map and concept directions.</span></a>
-        <a class="doc" href="docs/03-screen-inventory.md"><strong>03 · Screen inventory</strong><span>Mobile + web checklist vs BRD.</span></a>
+        <a class="doc" href="docs/10-mobile-web-split-react.md"><strong>10 · Mobile × React split</strong><span>Decision, palette, IA continuity, acceptance.</span></a>
+        <a class="doc" href="docs/09-web-app-shell-dashboard-crm.md"><strong>09 · Web shell UX</strong><span>Dashboard metrics, CRM, tasks, announce requirements.</span></a>
+        <a class="doc" href="docs/05-fr03-e2e-sales-ux.md"><strong>05 · FR-03 E2E sales</strong><span>Lead↔Client spine.</span></a>
+        <a class="doc" href="docs/08-fr07-task-management-ux.md"><strong>08 · FR-07 Tasks</strong><span>Calendar / status / admin.</span></a>
       </div>
-    </div>
-
-    <div class="reco">
-      <h3>Stakeholder recommendation</h3>
-      <p>Validate A with field FAs, B with Agency Sales + Compliance, C with DM/ADM web users. Likely production hybrid: <b>B visual system + A mobile IA (People/Sell/Work) + C manager analytics patterns</b>.</p>
     </div>
   </div>
 </body>
