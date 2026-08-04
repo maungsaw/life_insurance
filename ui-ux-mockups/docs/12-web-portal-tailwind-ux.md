@@ -51,21 +51,17 @@ Page wash: soft sky/steel radial on surface
 
 ```
 Auth → Shell
-  Dashboard · Performance · CRM · Policies · Tasks
-  Recruitment · Announcements · Operations · Agents/Audit
+  Dashboard ▾ · Tasks · Management ▾ · Audit
 ```
 
 | Module | UX job |
 |--------|--------|
-| Dashboard | Scan 5.2.1 KPIs · toggle 5.2.2 weighting · bar + line |
-| Performance | Filter hierarchy · export · flag below-target |
-| CRM | Leads ↔ Clients tabs · owner FA |
-| Policies | Pipeline strip + policy table (FR-03 spine) |
-| Tasks | List + Add drawer · Move/Delete · status |
-| Recruit | Funnel counts + candidates |
-| Announce | Composer + history |
-| Ops | Rules + resources |
-| Agents | Directory + audit log |
+| Dashboard ▾ | **Overview** · **Team Performance** (shared weighting & hierarchy) — see `18` |
+| Tasks | Add/Move/Delete · status · recruitment & app-correction follow-ups |
+| Management ▾ | Resource (FR-10) · Notification (FR-09 push) · Announcement (FR-09/10 feed) |
+| Audit | Agent directory + audit log (FR-12) |
+
+*(CRM · Policies removed from web nav. Management UX: `17` · Dashboard UX: `18`.)*
 
 ---
 
@@ -78,7 +74,7 @@ Auth → Shell
 | `Card` | Surface container |
 | `Pill` | Status chips |
 | `PageHeader` | Title + subtitle + actions |
-| `SegmentedControl` | Weighting / CRM tabs |
+| `SegmentedControl` | Weighting / page tabs |
 | `DataTable` | Consistent th/td density |
 | `KpiCard` | Dashboard metrics |
 | `EmptyState` | Zero results |

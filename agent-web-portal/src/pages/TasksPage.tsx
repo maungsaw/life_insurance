@@ -7,7 +7,7 @@ export function TasksPage() {
     <div>
       <PageHeader
         title="Task management"
-        subtitle="FR-07 · Managers Add / Move / Delete · Agents update status"
+        subtitle="FR-07 · Add / Move / Delete · status updates · includes recruitment onboarding tasks"
         actions={
           <>
             <Button type="button" onClick={() => setShowForm(true)}>+ Add task</Button>

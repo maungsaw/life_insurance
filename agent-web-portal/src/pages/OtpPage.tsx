@@ -28,7 +28,7 @@ export function OtpPage() {
         type="button"
         onClick={() => {
           login()
-          nav('/dashboard')
+          nav('/dashboard/overview')
         }}
       >
         Verify & open portal

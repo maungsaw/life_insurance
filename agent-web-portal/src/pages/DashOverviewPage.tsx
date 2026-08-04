@@ -1,5 +1,4 @@
 import { colors } from '@/lib/colors'
-import { useState } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,7 +10,8 @@ import {
   Legend,
 } from 'chart.js'
 import { Bar, Line } from 'react-chartjs-2'
-import { Card, KpiCard, PageHeader, SegmentedControl } from '@/components/ui'
+import { Button, Card, KpiCard, PageHeader } from '@/components/ui'
+import { DashboardFilterBar } from '@/dashboard/DashboardFilters'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend)
 
@@ -25,28 +25,20 @@ const chartOpts = {
   },
 }
 
-export function DashboardPage() {
-  const [mode, setMode] = useState('freelance')
-
+export function DashOverviewPage() {
   return (
     <div>
       <PageHeader
-        title="Dashboard"
-        subtitle="BRD 5.2.1 metrics · 5.2.2 weighting. Values from Core APIs."
+        title="Overview"
+        subtitle="5.2.1 KPIs + charts · 5.2.2 weighting · portfolio pulse"
+        actions={
+          <Button type="button" onClick={() => alert('Export Excel (mock)')}>
+            Export Excel
+          </Button>
+        }
       />
 
-      <SegmentedControl
-        value={mode}
-        onChange={setMode}
-        options={[
-          { value: 'freelance', label: 'Freelance FYP (weighted)' },
-          { value: 'internal', label: 'Internal FYP (weighted)' },
-        ]}
-      />
-      <p className="mb-4 text-xs text-muted">
-        Weighting factors applied by Core for {mode === 'freelance' ? 'Freelance' : 'Internal'} FYP.
-        Portal displays API results only.
-      </p>
+      <DashboardFilterBar scopeNote="Hierarchy filters scope this Overview. Same slice carries to Team Performance." />
 
       <div className="mb-4 grid grid-cols-2 gap-3 xl:grid-cols-4">
         <KpiCard label="New policies" value="146" hint="Existing active 4,812" />
@@ -77,8 +69,20 @@ export function DashboardPage() {
             data={{
               labels,
               datasets: [
-                { label: 'FYP (M)', data: [52, 58, 61, 70, 74, 82], borderColor: colors.sky, tension: 0.35, fill: false },
-                { label: 'K1 %', data: [82, 83, 84, 85, 86, 86], borderColor: colors.baltic, tension: 0.35, fill: false },
+                {
+                  label: 'FYP (M)',
+                  data: [52, 58, 61, 70, 74, 82],
+                  borderColor: colors.sky,
+                  tension: 0.35,
+                  fill: false,
+                },
+                {
+                  label: 'K1 %',
+                  data: [82, 83, 84, 85, 86, 86],
+                  borderColor: colors.baltic,
+                  tension: 0.35,
+                  fill: false,
+                },
               ],
             }}
             options={chartOpts}
@@ -89,7 +93,7 @@ export function DashboardPage() {
       <Card title="Core Data · Weighting legend">
         <p className="text-xs text-muted">
           Freelance and Internal FYP use Core-defined weighting factors so every hierarchy level stays
-          consistent. Frontend does not recalculate — it renders API payloads.
+          consistent. Frontend displays API payloads only.
         </p>
       </Card>
     </div>
