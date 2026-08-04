@@ -49,10 +49,48 @@ Quote / Client profile
 ## 3. Persistent chrome (every wizard step)
 
 1. **Top bar:** Close (✕ → confirm leave) · “e-App” · Save draft  
-2. **Progress:** numbered step dots + thin bar · “Step 3 of 6 · KYC”  
+2. **Progress:** numbered step dots + thin bar · “Step N of 6 · Name” + **You are here** / **Waiting** pill  
 3. **Context chip:** Client name · Product · Premium (always visible, collapses anxiety)  
-4. **Footer (sticky):** Back · Continue (or Submit on Review)  
+4. **Footer (sticky):** Back · Continue (or Submit on Review) — **disabled** while step is Waiting  
 5. **Hide** main app tab bar while wizard is open (reduces accidental exit)
+
+---
+
+## 3b. Two status layers (don’t mix them)
+
+| Layer | When | What FA sees |
+|-------|------|----------------|
+| **A · Wizard step** (1–6) | While filling / draft in wizard | Which step you’re on · done vs current vs waiting |
+| **B · App Tracker status** | After leave / submit · list in App tracker | Draft · Submitted · Mark for Correction · Approved · Rejected |
+
+**Principle:** Tracker answers *where is this application in the company pipeline?*  
+Stepper answers *where am I inside this draft?*  
+When Draft is waiting on a person (client confirm), show **both**: Tracker = Draft + Waiting · Stepper = Step 5 wait state.
+
+### Stepper dot states
+| State | Look | Meaning |
+|-------|------|---------|
+| Upcoming | Mute circle | Not reached |
+| Current | Brand fill + ring · pill **You are here** | FA is working this step |
+| Done | Check | Completed |
+| **Waiting** | Amber pulse + pill **Waiting · Client** | Stuck on this step until another party acts |
+| (All done → Submit) | Success screen | No special stepper anxiety — move to Tracker as Submitted |
+
+### When a step “takes long”
+Examples: client hasn’t signed, beneficiary KYC missing, upload still syncing.
+
+1. Keep FA **on that step number** (don’t look finished)  
+2. Amber **wait banner**: who / what is blocking  
+3. Primary CTA becomes **Waiting for client…** (disabled) + secondary **Remind**  
+4. Save draft still available — reopen from Tracker shows same step + wait  
+
+### App Tracker list (Draft rows)
+Subtitle must show progress, not only “Draft”:
+
+- `Draft · At step 2 · Parties` → resume wizard at 2  
+- `Draft · Step 5 · Waiting client confirm` → open step 5 wait UI  
+- After submit: `Submitted` (no step number — pipeline owns it)  
+- Correction: reopen failing step (layer A) under Tracker status Correction (layer B)
 
 ---
 
@@ -83,7 +121,8 @@ Quote / Client profile
 ### Step 5 — Signatures
 - Full-width signature pads  
 - Clear / Redo  
-- Order: Client first, then Agent (agent cannot skip client)
+- Order: Client first, then Agent (agent cannot skip client)  
+- **Waiting state:** if client hasn’t confirmed → amber step dot + banner · Continue locked · Remind CTA · Agent pad locked  
 
 ### Step 6 — Review
 - Collapsed sections with Edit → jumps to that step  
@@ -104,6 +143,33 @@ Quote / Client profile
 2. Tap → wizard opens at **KYC** with amber banner: “Fix requested · NRC page unclear”  
 3. Other steps remain completed (green)  
 4. Re-submit returns to Tracker as Submitted again
+
+---
+
+## 5b. App tracker · status category banner (UX)
+
+**Home quick action:** `Lead` → **App tracker** (sell loop: Quote → e-App → Tracker → Task). Leads stay under People tab.
+
+**Problem:** Flat list of all statuses forces scanning; FA often wants only “Fix” or “Draft”.
+
+**Pattern:** Horizontal **category banner** (chip strip) above search + list.
+
+| Chip | Maps to BRD status |
+|------|--------------------|
+| All | Full book |
+| Draft | Draft / in progress on device |
+| Submitted | In underwriting |
+| Correction | Mark for Correction (urgent — danger tint when selected) |
+| Approved | Ready for policy / convert |
+| Rejected | Closed with Core reason |
+
+**Rules**
+- Chips scroll horizontally; counts on each chip (`n`)  
+- Default = All; selecting a chip filters list (one status at a time)  
+- Row primary = client name; status is chip + pill (don’t duplicate status as the title)  
+- Empty state: “No applications in this status.”  
+- Search stays under banner (filter then refine by name/ref)  
+- Don’t put status filters in a dropdown on mobile — thumb-scan chips are faster  
 
 ---
 
