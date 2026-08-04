@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/error/error.dart' show ExceptionHandler;
 import 'package:life_insurance/features/features.dart'
-    show LanguagePage, LoginPage, SplashPage, ThemePage;
+    show LanguagePage, LoginPage, SplashPage, ThemePage, LifeInsurancePage;
 import 'package:life_insurance/features/widgets.dart';
 
 import 'root.dart';
@@ -13,7 +13,7 @@ import 'transition.dart';
 class AppNavigator {
   static final GoRouter router = GoRouter(
     navigatorKey: AppRoot.rootKey,
-    initialLocation: AppRoute.splash,
+    initialLocation: AppRoute.home,
     debugLogDiagnostics: kDebugMode,
     //  refreshListenable: Injection.sl<AuthBloc>(),
     redirect: (context, state) async {
@@ -49,6 +49,16 @@ class AppNavigator {
         name: AppRoute.theme,
         pageBuilder: (BuildContext context, GoRouterState state) {
           return AppTransition.fade(key: state.pageKey, child: ThemePage());
+        },
+      ),
+      GoRoute(
+        path: AppRoute.home,
+        name: AppRoute.home,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const LifeInsurancePage(),
+          );
         },
       ),
       GoRoute(

@@ -1,3 +1,9 @@
 export 'auth/auth.dart';
 export 'appearance/appearance.dart';
 export 'splash/splash.dart';
+export 'home/home.dart';
+export 'profile/profile.dart';
+export 'dashboard/dashboard.dart';
+export 'task/task.dart';
+export 'lead/lead.dart';
+export 'customer/customer.dart';

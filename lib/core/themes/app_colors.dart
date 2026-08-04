@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract class AppColors {
   // ==================== LIGHT THEME PALETTE ====================
-  static const Color lightPrimary = Color(0xFFD30F1D);
+  static const Color lightPrimary = Color(0xFF00adee);
   static const Color lightPrimaryContainer = Color(0xFFFFF0F1);
   static const Color lightPrimarySoftTint = Color(0xFFFDE8EA);
 
@@ -16,7 +16,7 @@ abstract class AppColors {
 
   // ==================== DARK THEME PALETTE ====================
   // Slightly brighter/desaturated red for better contrast on dark surfaces
-  static const Color darkPrimary = Color(0xFFFF4D4D);
+  static const Color darkPrimary = Color(0xFF005E9A);
   static const Color darkPrimaryContainer = Color(0xFF3B1114);
   static const Color darkPrimarySoftTint = Color(0xFF2C0A0C);
 

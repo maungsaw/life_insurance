@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LeadsScreen extends StatefulWidget {
-  const LeadsScreen({super.key});
+class LeadsPage extends StatefulWidget {
+  const LeadsPage({super.key});
 
   @override
-  State<LeadsScreen> createState() => _LeadsScreenState();
+  State<LeadsPage> createState() => _LeadsPageState();
 }
 
-class _LeadsScreenState extends State<LeadsScreen> {
+class _LeadsPageState extends State<LeadsPage> {
   int _selectedTabIndex = 0;
   final List<String> _tabs = ['All', 'New', 'Contacted', 'Qualified'];
 
@@ -73,66 +73,54 @@ class _LeadsScreenState extends State<LeadsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFF4F6FB),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Leads',
-          style: TextStyle(
-            color: Color(0xFF1E293B),
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Color(0xFF1E293B), size: 24),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.filter_list,
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          backgroundColor: const Color(0xFFF4F6FB),
+          elevation: 0,
+          pinned: true, // Set to false if you want it to scroll away
+          title: const Text(
+            'Leads',
+            style: TextStyle(
               color: Color(0xFF1E293B),
-              size: 24,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
-            onPressed: () {},
           ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: Column(
-        children: [
-          // 1. Top Tabs Row
-          _TopTabBar(
+          actions: [
+            IconButton(icon: const Icon(Icons.add, size: 24), onPressed: () {}),
+            IconButton(
+              icon: const Icon(Icons.search, size: 24),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list, size: 24),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+
+        // 2. Top Tabs Row inside a SliverToBoxAdapter
+        SliverToBoxAdapter(
+          child: _TopTabBar(
             tabs: _tabs,
             selectedIndex: _selectedTabIndex,
             onTabSelected: (index) => setState(() => _selectedTabIndex = index),
           ),
+        ),
 
-          // 2. Leads List
-          Expanded(
-            child: ListView.separated(
-              itemCount: _leads.length,
-              separatorBuilder: (context, index) =>
-                  Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
-              itemBuilder: (context, index) {
-                final lead = _leads[index];
-                return _LeadListTile(lead: lead);
-              },
-            ),
-          ),
-        ],
-      ),
-
-      // 3. Floating Action Button
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: const Color(0xFF1E3A8A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
-      ),
+        // 3. Convert ListView.separated to SliverList.separated
+        SliverList.separated(
+          itemCount: _leads.length,
+          separatorBuilder: (context, index) =>
+              Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
+          itemBuilder: (context, index) {
+            final lead = _leads[index];
+            return _LeadListTile(lead: lead);
+          },
+        ),
+      ],
     );
   }
 }
@@ -203,70 +191,61 @@ class _LeadListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return ListTile(
       onTap: () {},
-      child: Container(
-        color: const Color(0xFFF4F6FB),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: Row(
-          children: [
-            // Avatar Circle
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: lead['avatarBg'] as Color,
-              child: Text(
-                lead['initials'] as String,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            const SizedBox(width: 14),
+      tileColor: const Color(0xFFF4F6FB),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 
-            // Lead Info (Name, Email, Status Pill)
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    lead['name'] as String,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    lead['email'] as String,
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-                  ),
-                  const SizedBox(height: 8),
-                  _StatusBadge(status: lead['status'] as String),
-                ],
-              ),
-            ),
-
-            // Time & Arrow Icon
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  lead['time'] as String,
-                  style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-                ),
-                const SizedBox(height: 12),
-                Icon(
-                  Icons.chevron_right,
-                  color: Colors.grey.shade400,
-                  size: 20,
-                ),
-              ],
-            ),
-          ],
+      // 1. Avatar Circle (Leading Widget)
+      leading: CircleAvatar(
+        radius: 24,
+        backgroundColor: lead['avatarBg'] as Color,
+        child: Text(
+          lead['initials'] as String,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
         ),
+      ),
+
+      // 2. Name (Title Widget)
+      title: Text(
+        lead['name'] as String,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF0F172A),
+        ),
+      ),
+
+      // 3. Email & Status Badge (Subtitle Widget)
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 2),
+          Text(
+            lead['email'] as String,
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 8),
+          _StatusBadge(status: lead['status'] as String),
+        ],
+      ),
+
+      // 4. Time & Chevron (Trailing Widget)
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            lead['time'] as String,
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+          ),
+          const SizedBox(height: 8),
+          Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 20),
+        ],
       ),
     );
   }
