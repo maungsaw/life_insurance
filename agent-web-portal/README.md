@@ -1,15 +1,10 @@
 # KBZ LIFE Agent Web Portal
 
-React mock of the management web portal (split from Concept A mobile HTML).
+React management portal mock — Vite · React · TypeScript · **Tailwind CSS** · shared UI components.
 
-## Palette (Coolors)
+## Palette
 
-| Token | Hex |
-|-------|-----|
-| Sky | `#00A6FB` |
-| Steel | `#0582CA` |
-| Baltic | `#006494` |
-| Deep | `#003554` |
+`#00A6FB` · `#0582CA` · `#006494` · `#003554`
 
 ## Run
 
@@ -19,20 +14,24 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`).
+## Stack
 
-## Modules
+| Piece | Choice |
+|-------|--------|
+| Styling | Tailwind v4 (`@tailwindcss/vite`) |
+| Icons | `lucide-react` |
+| Class merge | `clsx` + `tailwind-merge` (`cn`) |
+| Charts | Chart.js + react-chartjs-2 |
+| Routing | react-router-dom |
 
-Login → OTP → shell with:
+## Structure
 
-- Dashboard (5.2.1 KPIs + 5.2.2 weighting + bar/line charts)
-- Performance
-- CRM (Leads / Clients)
-- Policies / Sales (FR-03 spine)
-- Tasks (Add / Move / Delete)
-- Recruitment
-- Announcements
-- Operations
-- Agents / Audit
+```
+src/
+  components/ui/   ← Button, Card, Field, Pill, PageHeader, …
+  layout/          ← AppShell, AuthLayout
+  pages/           ← Dashboard, CRM, Tasks, …
+  lib/cn.ts
+```
 
-See `../ui-ux-mockups/docs/10-mobile-web-split-react.md` for the split brainstorm.
+UX brainstorm: `../ui-ux-mockups/docs/12-web-portal-tailwind-ux.md`

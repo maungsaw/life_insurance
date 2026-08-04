@@ -1,44 +1,41 @@
+import { Card, DataTable, PageHeader, Pill, Td } from '@/components/ui'
+
 export function RecruitPage() {
   return (
     <div>
-      <h1 className="page-title">Recruitment</h1>
-      <p className="page-sub">Candidate pipeline · onboarding status · tasks linked to FR-07</p>
-      <div className="pipe">
-        <div className="col"><h4>Screening</h4><div className="mini">7</div></div>
-        <div className="col"><h4>LC Training</h4><div className="mini">4</div></div>
-        <div className="col"><h4>Pre-Contracted</h4><div className="mini">3</div></div>
-        <div className="col"><h4>Contracted</h4><div className="mini">2</div></div>
-        <div className="col"><h4>Active FA</h4><div className="mini">1</div></div>
+      <PageHeader title="Recruitment" subtitle="Candidate pipeline · onboarding · FR-07 task links" />
+      <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-5">
+        {[
+          ['Screening', '7'],
+          ['LC Training', '4'],
+          ['Pre-Contracted', '3'],
+          ['Contracted', '2'],
+          ['Active FA', '1'],
+        ].map(([h, v]) => (
+          <div key={h} className="rounded-xl bg-soft p-3">
+            <div className="text-xs font-bold text-muted">{h}</div>
+            <div className="font-display mt-1 text-xl">{v}</div>
+          </div>
+        ))}
       </div>
-      <div className="card table-wrap">
-        <table className="data">
-          <thead>
-            <tr>
-              <th>Candidate</th>
-              <th>Mobile</th>
-              <th>Sponsor</th>
-              <th>Stage</th>
-              <th>Next task</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Su Su</td>
-              <td>09 250 111 222</td>
-              <td>Aye Chan</td>
-              <td><span className="pill">LC Training</span></td>
-              <td>Interview · 06-Aug</td>
-            </tr>
-            <tr>
-              <td>Ko Min</td>
-              <td>09 777 333 111</td>
-              <td>Nwe Nwe</td>
-              <td><span className="pill warn">Screening</span></td>
-              <td>Docs check</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <Card>
+        <DataTable headers={['Candidate', 'Mobile', 'Sponsor', 'Stage', 'Next task']}>
+          <tr>
+            <Td>Su Su</Td>
+            <Td>09 250 111 222</Td>
+            <Td>Aye Chan</Td>
+            <Td><Pill>LC Training</Pill></Td>
+            <Td>Interview · 06-Aug</Td>
+          </tr>
+          <tr>
+            <Td>Ko Min</Td>
+            <Td>09 777 333 111</Td>
+            <Td>Nwe Nwe</Td>
+            <Td><Pill tone="warn">Screening</Pill></Td>
+            <Td>Docs check</Td>
+          </tr>
+        </DataTable>
+      </Card>
     </div>
   )
 }

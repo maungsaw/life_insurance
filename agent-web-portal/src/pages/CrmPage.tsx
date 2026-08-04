@@ -1,91 +1,67 @@
 import { useState } from 'react'
+import { Button, Card, DataTable, PageHeader, Pill, SegmentedControl, Td } from '@/components/ui'
 
 export function CrmPage() {
-  const [tab, setTab] = useState<'leads' | 'clients'>('leads')
+  const [tab, setTab] = useState('leads')
   return (
     <div>
-      <h1 className="page-title">CRM</h1>
-      <p className="page-sub">FR-03 on web · portfolio Leads vs Clients · owner FA · convert after policy issuance</p>
-      <div className="seg">
-        <button type="button" className={tab === 'leads' ? 'on' : ''} onClick={() => setTab('leads')}>
-          Leads
-        </button>
-        <button type="button" className={tab === 'clients' ? 'on' : ''} onClick={() => setTab('clients')}>
-          Clients
-        </button>
-      </div>
-
+      <PageHeader
+        title="CRM"
+        subtitle="FR-03 · portfolio Leads vs Clients · owner FA · convert after policy issuance"
+      />
+      <SegmentedControl
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: 'leads', label: 'Leads' },
+          { value: 'clients', label: 'Clients' },
+        ]}
+      />
       {tab === 'leads' ? (
-        <div className="card table-wrap">
-          <div className="row-btns">
-            <button className="btn btn-primary" type="button">
-              + Add lead
-            </button>
+        <Card>
+          <div className="mb-3">
+            <Button type="button">+ Add lead</Button>
           </div>
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Lead</th>
-                <th>Mobile</th>
-                <th>Stage</th>
-                <th>Owner FA</th>
-                <th>Quotes/Apps</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Maung Soe</td>
-                <td>09 771 888 999</td>
-                <td><span className="pill warn">Quoted</span></td>
-                <td>Aye Chan</td>
-                <td>1 quote · draft app</td>
-                <td><button className="linkish" type="button">Open</button></td>
-              </tr>
-              <tr>
-                <td>Yu Hlaing</td>
-                <td>09 250 444 555</td>
-                <td><span className="pill">Contacted</span></td>
-                <td>Nwe Nwe</td>
-                <td>—</td>
-                <td><button className="linkish" type="button">Open</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <DataTable headers={['Lead', 'Mobile', 'Stage', 'Owner FA', 'Quotes/Apps', '']}>
+            <tr>
+              <Td>Maung Soe</Td>
+              <Td>09 771 888 999</Td>
+              <Td><Pill tone="warn">Quoted</Pill></Td>
+              <Td>Aye Chan</Td>
+              <Td>1 quote · draft app</Td>
+              <Td><button type="button" className="font-bold text-steel">Open</button></Td>
+            </tr>
+            <tr>
+              <Td>Yu Hlaing</Td>
+              <Td>09 250 444 555</Td>
+              <Td><Pill>Contacted</Pill></Td>
+              <Td>Nwe Nwe</Td>
+              <Td>—</Td>
+              <Td><button type="button" className="font-bold text-steel">Open</button></Td>
+            </tr>
+          </DataTable>
+        </Card>
       ) : (
-        <div className="card table-wrap">
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Client</th>
-                <th>Policies</th>
-                <th>Next due</th>
-                <th>Owner FA</th>
-                <th>Family</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Daw Hla</td>
-                <td>2 active · 1 lapsed</td>
-                <td>10-Aug-2026</td>
-                <td>Aye Chan</td>
-                <td>2 contacts</td>
-                <td><button className="linkish" type="button">Open</button></td>
-              </tr>
-              <tr>
-                <td>Maung Soe</td>
-                <td>1 active (new)</td>
-                <td>03-Sep-2026</td>
-                <td>Aye Chan</td>
-                <td>—</td>
-                <td><button className="linkish" type="button">Converted</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Card>
+          <DataTable headers={['Client', 'Policies', 'Next due', 'Owner FA', 'Family', '']}>
+            <tr>
+              <Td>Daw Hla</Td>
+              <Td>2 active · 1 lapsed</Td>
+              <Td>10-Aug-2026</Td>
+              <Td>Aye Chan</Td>
+              <Td>2 contacts</Td>
+              <Td><button type="button" className="font-bold text-steel">Open</button></Td>
+            </tr>
+            <tr>
+              <Td>Maung Soe</Td>
+              <Td>1 active (new)</Td>
+              <Td>03-Sep-2026</Td>
+              <Td>Aye Chan</Td>
+              <Td>—</Td>
+              <Td><button type="button" className="font-bold text-steel">Converted</button></Td>
+            </tr>
+          </DataTable>
+        </Card>
       )}
     </div>
   )
