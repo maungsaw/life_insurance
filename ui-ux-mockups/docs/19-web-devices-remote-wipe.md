@@ -78,16 +78,27 @@ One row ≈ **one registered device** (an agent may have >1 row if multi-device 
 
 Filters: Search (name/code/mobile) · Status · District · Platform (iOS/Android).
 
-### 5.2 Wipe flow (safety)
+### 5.2 Wipe flow (safety) — **dialog**
 
-1. Select one or many devices → **Wipe selected** (danger), or row **Wipe**.  
-2. Confirm panel (not a tiny browser `confirm`):
-   - Summary: agent · device · OS · last seen  
-   - **Reason** * (Loss · Theft · Compromise · Deactivation) — mirrors BRD  
+Inline confirm under the table was cluttered (list + form + history fighting for attention). Same pattern as Tasks Add/Edit:
+
+| Choice | Why |
+|--------|-----|
+| **Centered dialog** | Device list stays readable; confirm is a focused irreversible step |
+| Backdrop + Esc / Cancel | Clear dismiss without losing scroll position on the list |
+| Danger footer primary | Cancel (secondary) · Send wipe command (danger, gated on `WIPE`) |
+| Summary chips in dialog body | Agent · device · OS · last seen still visible before commit |
+
+Flow:
+
+1. Select one or many devices → **Wipe selected**, or row **Wipe**.  
+2. **Dialog** opens:
+   - Summary list of targets  
+   - **Reason** * (Loss · Theft · Compromise · Deactivation)  
    - Optional note  
-   - Type **WIPE** (or agent code) to enable Submit  
-3. Submit → status → **Wipe pending** → (mock) later **Wiped** + ack time.  
-4. Entry appears in **Wipe history** and should also feed Audit log later.
+   - Type **WIPE** to enable Submit  
+3. Submit → status → **Wipe pending** → history row · dialog closes.  
+4. Entry appears in **Wipe history** (page stays otherwise unchanged).
 
 ### 5.3 Honesty copy
 

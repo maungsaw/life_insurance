@@ -38,7 +38,7 @@ export function AuditPage() {
       {tab === 'directory' ? (
         <Card title="Agent directory">
           <p className="mb-3 text-xs text-muted">
-            Onboarding statuses (e.g. LC Training) live here — recruitment follow-ups are managed under Tasks.
+            Onboarding statuses (e.g. LC Training) live here — leave appointments and follow-ups are managed under Tasks.
           </p>
           <DataTable headers={['Code', 'Name', 'Role', 'Mobile', 'Status', 'District']}>
             <tr>

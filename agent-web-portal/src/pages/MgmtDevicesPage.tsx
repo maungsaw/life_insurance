@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   DataTable,
+  Dialog,
   Field,
   Input,
   PageHeader,
@@ -195,7 +196,7 @@ export function MgmtDevicesPage() {
   return (
     <div>
       <PageHeader
-        title="Devices"
+        title="Remote data wipe"
         subtitle="NFR §6 · registered devices · remote data wipe (loss · theft · compromise · deactivation)"
         actions={
           <Button
@@ -302,65 +303,71 @@ export function MgmtDevicesPage() {
         )}
       </Card>
 
-      {confirmIds ? (
-        <Card
-          title="Confirm remote data wipe"
-          action={<Pill tone="danger">Irreversible on device</Pill>}
-          className="mb-3.5 border-danger/30"
-        >
-          <p className="mb-3 text-sm text-muted">
-            You are about to wipe <b className="text-deep">{confirmRows.length}</b> device
-            {confirmRows.length === 1 ? '' : 's'}. Local leads, tasks, brochures cache, and session on those
-            devices will be removed.
-          </p>
-          <ul className="mb-4 space-y-2 rounded-xl bg-soft p-3 text-sm">
-            {confirmRows.map((r) => (
-              <li key={r.id} className="flex flex-wrap justify-between gap-2">
-                <span className="font-bold text-deep">
-                  {r.agentName} · {r.deviceName}
-                </span>
-                <span className="text-xs text-muted">
-                  {r.deviceId} · {r.os} · {r.lastSeen}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <div className="grid gap-3 md:grid-cols-2">
-            <Field label="Reason *">
-              <Select value={reason} onChange={(e) => setReason(e.target.value as WipeReason)}>
-                <option value="loss">Loss</option>
-                <option value="theft">Theft</option>
-                <option value="compromise">Compromise</option>
-                <option value="deactivation">Deactivation</option>
-              </Select>
-            </Field>
-            <Field label='Type WIPE to confirm *'>
-              <Input
-                value={confirmText}
-                onChange={(e) => setConfirmText(e.target.value)}
-                placeholder="WIPE"
-                autoComplete="off"
-              />
-            </Field>
-            <Field label="Note (optional)" className="md:col-span-2">
-              <Textarea
-                rows={2}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="e.g. Phone reported stolen at branch visit"
-              />
-            </Field>
-          </div>
-          <div className="mt-1 flex flex-wrap gap-2">
-            <Button variant="danger" type="button" disabled={!canSubmit} onClick={submitWipe}>
-              Send wipe command
-            </Button>
+      <Dialog
+        open={confirmIds !== null}
+        onClose={() => setConfirmIds(null)}
+        title="Confirm remote data wipe"
+        subtitle="Irreversible on device · local app data only (Core records stay)"
+        className="max-w-xl"
+        footer={
+          <>
             <Button variant="secondary" type="button" onClick={() => setConfirmIds(null)}>
               Cancel
             </Button>
-          </div>
-        </Card>
-      ) : null}
+            <Button variant="danger" type="button" disabled={!canSubmit} onClick={submitWipe}>
+              Send wipe command
+            </Button>
+          </>
+        }
+      >
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <Pill tone="danger">Irreversible on device</Pill>
+          <span className="text-sm text-muted">
+            Wiping <b className="text-deep">{confirmRows.length}</b> device
+            {confirmRows.length === 1 ? '' : 's'} — leads, tasks, brochure cache, and session on those
+            devices will be removed.
+          </span>
+        </div>
+        <ul className="mb-4 max-h-36 space-y-2 overflow-y-auto rounded-xl bg-soft p-3 text-sm">
+          {confirmRows.map((r) => (
+            <li key={r.id} className="flex flex-wrap justify-between gap-2">
+              <span className="font-bold text-deep">
+                {r.agentName} · {r.deviceName}
+              </span>
+              <span className="text-xs text-muted">
+                {r.deviceId} · {r.os} · {r.lastSeen}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="grid gap-0 sm:grid-cols-2 sm:gap-3">
+          <Field label="Reason *">
+            <Select value={reason} onChange={(e) => setReason(e.target.value as WipeReason)}>
+              <option value="loss">Loss</option>
+              <option value="theft">Theft</option>
+              <option value="compromise">Compromise</option>
+              <option value="deactivation">Deactivation</option>
+            </Select>
+          </Field>
+          <Field label="Type WIPE to confirm *">
+            <Input
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="WIPE"
+              autoComplete="off"
+              autoFocus
+            />
+          </Field>
+        </div>
+        <Field label="Note (optional)" className="mb-0">
+          <Textarea
+            rows={2}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="e.g. Phone reported stolen at branch visit"
+          />
+        </Field>
+      </Dialog>
 
       <Card title="Wipe history">
         <DataTable headers={['When', 'Agent', 'Device', 'Reason', 'By', 'Status']}>

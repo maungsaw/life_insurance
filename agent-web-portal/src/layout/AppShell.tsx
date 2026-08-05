@@ -26,7 +26,7 @@ const MGMT_CHILDREN = [
   { to: 'resources', label: 'Resource', icon: Library },
   { to: 'notifications', label: 'Notification', icon: BellRing },
   { to: 'announcements', label: 'Announcement', icon: Megaphone },
-  { to: 'devices', label: 'Devices', icon: Smartphone },
+  { to: 'devices', label: 'Remote data wipe', icon: Smartphone },
 ] as const
 
 function linkClass(active: boolean, compact?: boolean) {

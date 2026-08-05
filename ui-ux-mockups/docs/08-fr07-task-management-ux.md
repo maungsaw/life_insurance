@@ -7,9 +7,9 @@
 | Assigned tasks in **calendar** | Mobile (+ view on portal) | Day / Week / Month |
 | Notifications on assign/update | Mobile | Push + in-app Work badge |
 | Create / view / complete tasks | Mobile | On calendar hub · linked to client/lead/recruit |
-| Managers **Add / Move / Delete** | Web | Task admin + recruitment example |
+| Managers **Add / Move / Delete** | Web | Task admin + leave appointment example |
 | Status: Pending · In Progress · Completed | Mobile + Web | Explicit status control |
-| Recruitment onboarding tracking | Web (+ mobile view) | Task linked to candidate status |
+| Leave appointment tracking | Web (+ mobile view) | Task type = Leave appointment (see `21`) |
 
 ---
 
@@ -101,7 +101,7 @@ Month grid · dots on busy days · CTA into selected day agenda
 1. **Board** — columns Pending · In Progress · Completed (FR-07 statuses)  
 2. **List** — dense table of the same tasks  
 3. **Add / Move / Delete** — **dialog composer** · drag between columns · card/row delete  
-4. Cards show type (Recruitment / Servicing / e-App) · due · assignee · overdue accent  
+4. Cards show type (Leave appointment / Servicing / e-App) · due · assignee · overdue accent  
 
 Mobile stays calendar-first My work. Web stays status-board-first.
 
@@ -114,6 +114,6 @@ Mobile stays calendar-first My work. Web stays status-board-first.
 - [x] Create + complete from My work / task detail  
 - [x] Status Pending / In Progress / Completed on detail  
 - [x] Web Add / Move / Delete (Kanban board)  
-- [x] Recruitment task example present  
+- [x] Leave appointment task example present  
 - [x] Notification entry point from Work / Notifs  
 - [x] Web Board \| List views  
