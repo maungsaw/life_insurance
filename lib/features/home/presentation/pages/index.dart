@@ -15,7 +15,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
   final List<Widget> _pages = [
     const DashboardPage(),
     const LeadsPage(),
-    const CustomersPage(),
+    CustomersPage(),
     const TaskBoardPage(),
     const ProfilePage(),
   ];

@@ -1,0 +1,64 @@
+// --- Mock Leads List (Matches Screenshot) ---
+import 'dart:ui' show Color;
+
+import 'package:life_insurance/features/lead/domain/domain.dart'
+    show LeadEntity;
+
+final List<LeadEntity> leadsData = const [
+  LeadEntity(
+    id: '1',
+    name: 'Michael Clark',
+    email: 'michael@gmail.com',
+    status: 'New',
+    timeAgo: '2m ago',
+    avatarColor: Color(0xFF7C4DFF),
+  ),
+  LeadEntity(
+    id: '2',
+    name: 'Sarah Parker',
+    email: 'sarahparker@gmail.com',
+    status: 'Contacted',
+    timeAgo: '1h ago',
+    avatarColor: Color(0xFF29B6F6),
+  ),
+  LeadEntity(
+    id: '3',
+    name: 'David Wilson',
+    email: 'davidwilson@gmail.com',
+    status: 'New',
+    timeAgo: '3h ago',
+    avatarColor: Color(0xFFE67E22),
+  ),
+  LeadEntity(
+    id: '4',
+    name: 'Jessica Lee',
+    email: 'jessicalee@gmail.com',
+    status: 'Qualified',
+    timeAgo: '5h ago',
+    avatarColor: Color(0xFF2ECC71),
+  ),
+  LeadEntity(
+    id: '5',
+    name: 'Richard Price',
+    email: 'richardprice@gmail.com',
+    status: 'Contacted',
+    timeAgo: '1d ago',
+    avatarColor: Color(0xFFE74C3C),
+  ),
+  LeadEntity(
+    id: '6',
+    name: 'Amara Nwosu',
+    email: 'amara.nwosu@gmail.com',
+    status: 'New',
+    timeAgo: '1d ago',
+    avatarColor: Color(0xFF2C3E50),
+  ),
+  LeadEntity(
+    id: '7',
+    name: 'Kenji Patel',
+    email: 'kenji.patel@gmail.com',
+    status: 'Qualified',
+    timeAgo: '2d ago',
+    avatarColor: Color(0xFF16A085),
+  ),
+];

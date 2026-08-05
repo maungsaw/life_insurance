@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart' show WidgetsFlutterBinding, runApp;
 import 'package:life_insurance/app/app.dart'
     show AppInjection, MyApp, FirebaseInjection;
