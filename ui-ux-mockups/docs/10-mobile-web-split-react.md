@@ -60,16 +60,13 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 - Header: logo left · profile + sign out right
 - Auth gate: login → OTP → forgot (unified with mobile identity)
 
-### Modules (from BRD / prior mock)
-1. **Dashboard** — §5.2.1 KPIs + §5.2.2 Freelance/Internal FYP weighting + bar + line charts  
-2. **Performance** — hierarchy filters · FA table · export  
-3. **CRM** — Leads / Clients (FR-03 portfolio)  
-4. **Policies / Sales** — Lead → Quote → e-App → Policy spine  
-5. **Tasks** — Add / Move / Delete · status (FR-07)  
-6. **Recruitment** — pipeline + onboarding tasks  
-7. **Announcements** — title · image · URL · publish (FR-09)  
-8. **Operations** — notification rules · resources  
-9. **Agents / Audit** — FR-12  
+### Modules (web portal — lean manager IA)
+1. **Dashboard** ▾ — **Overview** (KPIs + charts) · **Team Performance** (FA table; was Team line)  
+2. **Tasks** — Add / Move / Delete · status (FR-07) · recruitment follow-ups  
+3. **Management** ▾ — Resource · Notification · Announcement · **Devices** (NFR §6 remote wipe)  
+4. **Audit** — directory + change log (FR-12)  
+
+*(See `16` / `17` / `18` / `19` for nav + Management + Dashboard + Devices UX.)*
 
 ### Tech (mock → product path)
 - Vite + React + TypeScript  
@@ -96,12 +93,15 @@ agent-web-portal/          ← NEW (repo root sibling to Flutter + ui-ux-mockups
 ```
 Mobile FA                    Web manager
 ─────────                    ───────────
-Home KPIs (light)     ↔      Dashboard (dense + charts)
-People CRM            ↔      CRM module
-Sell / e-App          ↔      Policies / Sales oversight
+Home KPIs (light)     ↔      Dashboard → Overview
+Team / FA production  ↔      Dashboard → Team Performance
+People CRM            ↔      (field only on mobile · web sees book via Overview)
+Sell / e-App          ↔      (field only on mobile · web sees volume via Dashboard)
 Work / Tasks          ↔      Task admin Add·Move·Delete
-Announce feed         ↔      Announcement builder
-Profile / security    ↔      Header profile + Agents/Audit
+Resources (offline)   ↔      Management → Resource
+Push (image + URL)    ↔      Management → Notification
+Announce feed         ↔      Management → Announcement (read-only on mobile)
+Profile / security    ↔      Header profile + Audit
 ```
 
 Same login credentials story (mobile number + password + OTP).
@@ -124,5 +124,5 @@ Same login credentials story (mobile number + password + OTP).
 - [x] `agent-web-portal` runs (`npm install && npm run dev`)  
 - [x] Web shell: sidebar + header logo/profile  
 - [x] Dashboard weighting + bar/line charts  
-- [x] CRM · Policies · Tasks · Announcements pages present  
+- [x] Lean nav: Dashboard ▾ · Tasks · Management ▾ · Audit  
 - [x] Brainstorm doc published (`10-mobile-web-split-react.md`)  

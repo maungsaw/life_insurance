@@ -1,122 +1,556 @@
-import { useState } from 'react'
+import { useMemo, useState, type DragEvent } from 'react'
+import {
+  Button,
+  Card,
+  DataTable,
+  Dialog,
+  Field,
+  Input,
+  PageHeader,
+  Pill,
+  Select,
+  Td,
+  Textarea,
+} from '@/components/ui'
+import { cn } from '@/lib/cn'
+
+type Status = 'pending' | 'progress' | 'completed'
+type TaskType = 'Recruitment' | 'Servicing' | 'e-App' | 'Other'
+
+type Task = {
+  id: string
+  title: string
+  assignee: string
+  type: TaskType
+  due: string
+  dueIso: string
+  status: Status
+  notes: string
+}
+
+const COLUMNS: { id: Status; label: string; hint: string }[] = [
+  { id: 'pending', label: 'Pending', hint: 'Not started' },
+  { id: 'progress', label: 'In Progress', hint: 'Active work' },
+  { id: 'completed', label: 'Completed', hint: 'Done' },
+]
+
+const SEED: Task[] = [
+  {
+    id: 't1',
+    title: 'Interview · Su Su',
+    assignee: 'Aye Chan',
+    type: 'Recruitment',
+    due: '06-Aug-2026',
+    dueIso: '2026-08-06',
+    status: 'progress',
+    notes: 'Candidate passed screening.',
+  },
+  {
+    id: 't2',
+    title: 'Premium chase · Daw Hla',
+    assignee: 'Aye Chan',
+    type: 'Servicing',
+    due: '10-Aug-2026',
+    dueIso: '2026-08-10',
+    status: 'pending',
+    notes: 'Due in 7 days reminder follow-up.',
+  },
+  {
+    id: 't3',
+    title: 'LC Training follow-up',
+    assignee: 'Nwe Nwe',
+    type: 'Recruitment',
+    due: '08-Aug-2026',
+    dueIso: '2026-08-08',
+    status: 'pending',
+    notes: 'Confirm attendance pack.',
+  },
+  {
+    id: 't4',
+    title: 'NRC correction',
+    assignee: 'Aye Chan',
+    type: 'e-App',
+    due: '02-Aug-2026',
+    dueIso: '2026-08-02',
+    status: 'completed',
+    notes: 'Client resubmitted clear scan.',
+  },
+  {
+    id: 't5',
+    title: 'Brand strategy sync · AM',
+    assignee: 'Thura Htun',
+    type: 'Other',
+    due: '04-Aug-2026',
+    dueIso: '2026-08-04',
+    status: 'progress',
+    notes: 'Prep for district huddle.',
+  },
+  {
+    id: 't6',
+    title: 'NIIM exam reminder',
+    assignee: 'Nwe Nwe',
+    type: 'Recruitment',
+    due: '01-Aug-2026',
+    dueIso: '2026-08-01',
+    status: 'pending',
+    notes: 'Overdue — escalate if no reply.',
+  },
+]
+
+const TODAY = '2026-08-05'
+
+function isOverdue(t: Task) {
+  return t.status !== 'completed' && t.dueIso < TODAY
+}
+
+function typeTone(type: TaskType): 'default' | 'sky' | 'warn' | 'ok' {
+  if (type === 'Recruitment') return 'sky'
+  if (type === 'Servicing') return 'warn'
+  if (type === 'e-App') return 'ok'
+  return 'default'
+}
+
+function statusPill(s: Status) {
+  if (s === 'completed') return <Pill tone="ok">Completed</Pill>
+  if (s === 'progress') return <Pill>In Progress</Pill>
+  return <Pill tone="warn">Pending</Pill>
+}
 
 export function TasksPage() {
-  const [showForm, setShowForm] = useState(true)
+  const [tasks, setTasks] = useState(SEED)
+  const [view, setView] = useState<'board' | 'list'>('board')
+  const [q, setQ] = useState('')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [assigneeFilter, setAssigneeFilter] = useState('all')
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [draft, setDraft] = useState({
+    title: '',
+    assignee: 'Aye Chan',
+    type: 'Recruitment' as TaskType,
+    dueIso: '2026-08-06',
+    notes: '',
+  })
+
+  const assignees = useMemo(
+    () => [...new Set(tasks.map((t) => t.assignee))].sort(),
+    [tasks],
+  )
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase()
+    return tasks.filter((t) => {
+      const matchQ =
+        !needle ||
+        t.title.toLowerCase().includes(needle) ||
+        t.assignee.toLowerCase().includes(needle)
+      const matchType = typeFilter === 'all' || t.type === typeFilter
+      const matchA = assigneeFilter === 'all' || t.assignee === assigneeFilter
+      return matchQ && matchType && matchA
+    })
+  }, [tasks, q, typeFilter, assigneeFilter])
+
+  const byStatus = (s: Status) => filtered.filter((t) => t.status === s)
+
+  const [createStatus, setCreateStatus] = useState<Status>('pending')
+
+  const startCreate = (status: Status = 'pending') => {
+    setEditingId(null)
+    setCreateStatus(status)
+    setDraft({
+      title: '',
+      assignee: 'Aye Chan',
+      type: 'Recruitment',
+      dueIso: '2026-08-06',
+      notes: '',
+    })
+    setShowForm(true)
+  }
+
+  const startEdit = (t: Task) => {
+    setEditingId(t.id)
+    setCreateStatus(t.status)
+    setDraft({
+      title: t.title,
+      assignee: t.assignee,
+      type: t.type,
+      dueIso: t.dueIso,
+      notes: t.notes,
+    })
+    setShowForm(true)
+  }
+
+  const formatDue = (iso: string) => {
+    const [y, m, d] = iso.split('-').map(Number)
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    return `${String(d).padStart(2, '0')}-${months[m - 1]}-${y}`
+  }
+
+  const saveTask = () => {
+    const title = draft.title.trim()
+    if (!title) return
+    if (editingId) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === editingId
+            ? {
+                ...t,
+                title,
+                assignee: draft.assignee,
+                type: draft.type,
+                dueIso: draft.dueIso,
+                due: formatDue(draft.dueIso),
+                notes: draft.notes,
+                status: createStatus,
+              }
+            : t,
+        ),
+      )
+    } else {
+      setTasks((prev) => [
+        {
+          id: `t-${Date.now()}`,
+          title,
+          assignee: draft.assignee,
+          type: draft.type,
+          dueIso: draft.dueIso,
+          due: formatDue(draft.dueIso),
+          status: createStatus,
+          notes: draft.notes,
+        },
+        ...prev,
+      ])
+    }
+    setShowForm(false)
+    setEditingId(null)
+  }
+
+  const deleteTask = (id: string) => {
+    if (!confirm('Delete this task permanently?')) return
+    setTasks((prev) => prev.filter((t) => t.id !== id))
+    if (editingId === id) {
+      setShowForm(false)
+      setEditingId(null)
+    }
+  }
+
+  const moveTask = (id: string, status: Status) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status } : t)))
+  }
+
+  const onDragStart = (e: DragEvent, id: string) => {
+    setDragId(id)
+    e.dataTransfer.setData('text/plain', id)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const onDropColumn = (e: DragEvent, status: Status) => {
+    e.preventDefault()
+    const id = e.dataTransfer.getData('text/plain') || dragId
+    if (id) moveTask(id, status)
+    setDragId(null)
+  }
+
   return (
     <div>
-      <h1 className="page-title">Task management</h1>
-      <p className="page-sub">FR-07 · Managers Add / Move / Delete · Agents update Pending · In Progress · Completed</p>
-      <div className="row-btns">
-        <button className="btn btn-primary" type="button" onClick={() => setShowForm(true)}>
-          + Add task
-        </button>
-        <button className="btn btn-secondary" type="button">
-          Move / reassign
-        </button>
-        <button className="btn btn-secondary" type="button">
-          Delete
-        </button>
-      </div>
-      <div className="grid-2">
-        <div className="card table-wrap">
-          <h3>Task list</h3>
-          <table className="data">
-            <thead>
-              <tr>
-                <th>Task</th>
-                <th>Assignee</th>
-                <th>Type</th>
-                <th>Due</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Interview · Su Su</td>
-                <td>Aye Chan</td>
-                <td>Recruitment</td>
-                <td>06-Aug-2026</td>
-                <td><span className="pill">In Progress</span></td>
-              </tr>
-              <tr>
-                <td>Premium chase · Daw Hla</td>
-                <td>Aye Chan</td>
-                <td>Servicing</td>
-                <td>10-Aug-2026</td>
-                <td><span className="pill warn">Pending</span></td>
-              </tr>
-              <tr>
-                <td>LC Training follow-up</td>
-                <td>Nwe Nwe</td>
-                <td>Recruitment</td>
-                <td>08-Aug-2026</td>
-                <td><span className="pill warn">Pending</span></td>
-              </tr>
-              <tr>
-                <td>NRC correction</td>
-                <td>Aye Chan</td>
-                <td>e-App</td>
-                <td>02-Aug-2026</td>
-                <td><span className="pill ok">Completed</span></td>
-              </tr>
-            </tbody>
-          </table>
+      <PageHeader
+        title="Tasks"
+        subtitle="FR-07 · Board for Add / Move / Delete · Pending · In Progress · Completed"
+        actions={
+          <Button type="button" onClick={() => startCreate('pending')}>
+            + Add task
+          </Button>
+        }
+      />
+
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="inline-flex rounded-full bg-soft p-1">
+          {(
+            [
+              ['board', 'Board'],
+              ['list', 'List'],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setView(id)}
+              className={cn(
+                'rounded-full px-3.5 py-1.5 text-xs font-extrabold transition',
+                view === id ? 'bg-steel text-white' : 'text-muted hover:text-deep',
+              )}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        {showForm && (
-          <div className="card">
-            <h3>Add / manage task</h3>
-            <div className="field">
-              <label>Title *</label>
-              <input defaultValue="Interview · Su Su" />
-            </div>
-            <div className="field">
-              <label>Assignee FA</label>
-              <select defaultValue="Aye Chan">
-                <option>Aye Chan</option>
-                <option>Nwe Nwe</option>
-              </select>
-            </div>
-            <div className="field">
-              <label>Type</label>
-              <select defaultValue="Recruitment">
-                <option>Recruitment</option>
-                <option>Servicing</option>
-                <option>e-App</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div className="field">
-              <label>Due date</label>
-              <input type="date" defaultValue="2026-08-06" />
-            </div>
-            <div className="field">
-              <label>Status</label>
-              <select defaultValue="In Progress">
-                <option>Pending</option>
-                <option>In Progress</option>
-                <option>Completed</option>
-              </select>
-            </div>
-            <div className="field">
-              <label>Onboarding link (recruitment)</label>
-              <select>
-                <option>Screening</option>
-                <option>LC Training</option>
-                <option>Pre-Contracted</option>
-                <option>Contracted</option>
-              </select>
-            </div>
-            <div className="row-btns">
-              <button className="btn btn-primary" type="button">
-                Save task
-              </button>
-              <button className="btn btn-ghost" type="button" onClick={() => setShowForm(false)}>
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+        <Input
+          className="max-w-xs"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search title or assignee…"
+        />
+        <Select
+          className="max-w-[160px]"
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+        >
+          <option value="all">All types</option>
+          <option>Recruitment</option>
+          <option>Servicing</option>
+          <option>e-App</option>
+          <option>Other</option>
+        </Select>
+        <Select
+          className="max-w-[160px]"
+          value={assigneeFilter}
+          onChange={(e) => setAssigneeFilter(e.target.value)}
+        >
+          <option value="all">All assignees</option>
+          {assignees.map((a) => (
+            <option key={a}>{a}</option>
+          ))}
+        </Select>
       </div>
+
+      <div>
+          {view === 'board' ? (
+            <div className="grid gap-3 md:grid-cols-3">
+              {COLUMNS.map((col) => {
+                const items = byStatus(col.id)
+                return (
+                  <section
+                    key={col.id}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => onDropColumn(e, col.id)}
+                    className={cn(
+                      'flex min-h-[420px] flex-col rounded-2xl border border-line bg-surface/80 p-3',
+                      dragId && 'ring-1 ring-sky/30',
+                    )}
+                  >
+                    <header className="mb-3 flex items-center justify-between gap-2 px-1">
+                      <div>
+                        <h3 className="text-sm font-extrabold text-deep">{col.label}</h3>
+                        <p className="text-[11px] text-muted">{col.hint}</p>
+                      </div>
+                      <span className="grid min-w-7 place-items-center rounded-full bg-white px-2 py-0.5 text-xs font-extrabold text-baltic shadow-sm">
+                        {items.length}
+                      </span>
+                    </header>
+
+                    <div className="flex flex-1 flex-col gap-2.5">
+                      {items.length === 0 ? (
+                        <p className="rounded-xl border border-dashed border-line bg-white/60 px-3 py-6 text-center text-xs font-semibold text-muted">
+                          No tasks
+                        </p>
+                      ) : (
+                        items.map((t) => (
+                          <article
+                            key={t.id}
+                            draggable
+                            onDragStart={(e) => onDragStart(e, t.id)}
+                            onDragEnd={() => setDragId(null)}
+                            className={cn(
+                              'cursor-grab rounded-2xl border border-line bg-card p-3 shadow-[0_10px_28px_rgba(0,53,84,0.06)] active:cursor-grabbing',
+                              dragId === t.id && 'opacity-60',
+                              isOverdue(t) && 'border-l-4 border-l-danger',
+                            )}
+                          >
+                            <div className="mb-2 flex items-start justify-between gap-2">
+                              <button
+                                type="button"
+                                className="text-left text-sm font-bold text-deep hover:text-steel"
+                                onClick={() => startEdit(t)}
+                              >
+                                {t.title}
+                              </button>
+                              <button
+                                type="button"
+                                className="text-xs font-bold text-muted hover:text-danger"
+                                title="Delete"
+                                onClick={() => deleteTask(t.id)}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                            <div className="mb-2.5 flex flex-wrap gap-1.5">
+                              <Pill tone={typeTone(t.type)}>{t.type}</Pill>
+                              {isOverdue(t) ? <Pill tone="danger">Overdue</Pill> : null}
+                            </div>
+                            <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-muted">
+                              <span>Due {t.due}</span>
+                              <span className="inline-flex items-center gap-1.5 text-deep">
+                                <span className="grid size-6 place-items-center rounded-full bg-gradient-to-br from-sky to-baltic text-[10px] font-extrabold text-white">
+                                  {t.assignee.charAt(0)}
+                                </span>
+                                {t.assignee}
+                              </span>
+                            </div>
+                            <div className="mt-2.5 flex flex-wrap gap-1">
+                              {COLUMNS.filter((c) => c.id !== t.status).map((c) => (
+                                <button
+                                  key={c.id}
+                                  type="button"
+                                  onClick={() => moveTask(t.id, c.id)}
+                                  className="rounded-lg bg-soft px-2 py-1 text-[10px] font-bold text-baltic hover:bg-sky/15"
+                                >
+                                  → {c.label}
+                                </button>
+                              ))}
+                            </div>
+                          </article>
+                        ))
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => startCreate(col.id)}
+                      className="mt-3 rounded-xl border border-dashed border-line bg-white/70 py-2.5 text-xs font-extrabold text-steel hover:border-steel/40 hover:bg-soft"
+                    >
+                      + Add task
+                    </button>
+                  </section>
+                )
+              })}
+            </div>
+          ) : (
+            <Card title="Task list">
+              <DataTable headers={['Task', 'Assignee', 'Type', 'Due', 'Status', '']}>
+                {filtered.map((t) => (
+                  <tr key={t.id}>
+                    <Td>
+                      <button
+                        type="button"
+                        className="font-bold text-deep hover:text-steel"
+                        onClick={() => startEdit(t)}
+                      >
+                        {t.title}
+                      </button>
+                      {isOverdue(t) ? (
+                        <div className="mt-0.5">
+                          <Pill tone="danger">Overdue</Pill>
+                        </div>
+                      ) : null}
+                    </Td>
+                    <Td>{t.assignee}</Td>
+                    <Td>
+                      <Pill tone={typeTone(t.type)}>{t.type}</Pill>
+                    </Td>
+                    <Td>{t.due}</Td>
+                    <Td>{statusPill(t.status)}</Td>
+                    <Td>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="sm" type="button" onClick={() => startEdit(t)}>
+                          Edit
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="text-danger"
+                          onClick={() => deleteTask(t.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </Td>
+                  </tr>
+                ))}
+              </DataTable>
+            </Card>
+          )}
+      </div>
+
+      <Dialog
+        open={showForm}
+        onClose={() => {
+          setShowForm(false)
+          setEditingId(null)
+        }}
+        title={editingId ? 'Edit task' : 'Add task'}
+        subtitle="FR-07 · assign FA · type · due · status"
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                setShowForm(false)
+                setEditingId(null)
+              }}
+            >
+              Cancel
+            </Button>
+            {editingId ? (
+              <Button variant="danger" type="button" onClick={() => deleteTask(editingId)}>
+                Delete
+              </Button>
+            ) : null}
+            <Button type="button" onClick={saveTask} disabled={!draft.title.trim()}>
+              {editingId ? 'Save changes' : 'Create task'}
+            </Button>
+          </>
+        }
+      >
+        <Field label="Title *">
+          <Input
+            autoFocus
+            value={draft.title}
+            onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
+            placeholder="e.g. Interview · Su Su"
+          />
+        </Field>
+        <div className="grid gap-0 sm:grid-cols-2 sm:gap-3">
+          <Field label="Assignee FA">
+            <Select
+              value={draft.assignee}
+              onChange={(e) => setDraft((d) => ({ ...d, assignee: e.target.value }))}
+            >
+              {['Aye Chan', 'Nwe Nwe', 'Thura Htun', 'Zaw Ko'].map((a) => (
+                <option key={a}>{a}</option>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Type">
+            <Select
+              value={draft.type}
+              onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as TaskType }))}
+            >
+              <option>Recruitment</option>
+              <option>Servicing</option>
+              <option>e-App</option>
+              <option>Other</option>
+            </Select>
+          </Field>
+          <Field label="Due date">
+            <Input
+              type="date"
+              value={draft.dueIso}
+              onChange={(e) => setDraft((d) => ({ ...d, dueIso: e.target.value }))}
+            />
+          </Field>
+          <Field label="Status">
+            <Select
+              value={createStatus}
+              onChange={(e) => setCreateStatus(e.target.value as Status)}
+            >
+              <option value="pending">Pending</option>
+              <option value="progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </Select>
+          </Field>
+        </div>
+        <Field label="Notes" className="mb-0">
+          <Textarea
+            rows={3}
+            value={draft.notes}
+            onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
+            placeholder="Optional context for the FA"
+          />
+        </Field>
+      </Dialog>
     </div>
   )
 }

@@ -3189,20 +3189,31 @@
 
           <section class="screen" id="s-resources">
             <div class="pad">
-              <div class="banner-off"><span>Offline ready · brochures cached</span><span>●</span></div>
+              <div class="banner-off"><span>Offline ready · 3 priority docs cached</span><span>●</span></div>
               <div class="title" style="font-size:24px;">Resources</div>
-              <div class="list">
-                <div class="row">
+              <p class="sub" style="margin:4px 0 12px;">Sections from web Management · tap to filter</p>
+              <div class="cat-banner" role="tablist" aria-label="Resource section">
+                <button type="button" class="on" data-rfilter="all" onclick="filterResources('all', this)">All</button>
+                <button type="button" data-rfilter="product" onclick="filterResources('product', this)">Product brochures</button>
+                <button type="button" data-rfilter="training" onclick="filterResources('training', this)">Training</button>
+                <button type="button" data-rfilter="forms" onclick="filterResources('forms', this)">Company forms</button>
+              </div>
+              <div class="list" id="resourceList" style="margin-top:12px;">
+                <div class="row" data-rsec="product">
                   <div class="dot">PDF</div>
-                  <div class="meta"><b>Endowment brochure</b><span>Product · Downloadable</span></div>
+                  <div class="meta"><b>Endowment brochure</b><span>Product · Cached · Priority</span></div>
                 </div>
-                <div class="row">
+                <div class="row" data-rsec="product">
+                  <div class="dot">PDF</div>
+                  <div class="meta"><b>Term life one-pager</b><span>Product · Download</span></div>
+                </div>
+                <div class="row" data-rsec="training">
                   <div class="dot">TR</div>
-                  <div class="meta"><b>LC Training pack</b><span>Learning</span></div>
+                  <div class="meta"><b>LC Training pack</b><span>Training · On demand</span></div>
                 </div>
-                <div class="row">
+                <div class="row" data-rsec="forms">
                   <div class="dot">FM</div>
-                  <div class="meta"><b>Company forms</b><span>Configurable sections</span></div>
+                  <div class="meta"><b>Claim form (blank)</b><span>Forms · Cached · Priority</span></div>
                 </div>
               </div>
             </div>
@@ -3355,6 +3366,16 @@
       });
       const empty = document.getElementById('notifEmpty');
       if (empty) empty.classList.toggle('show', shown === 0);
+    }
+
+    function filterResources(sec, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      }
+      document.querySelectorAll('#resourceList .row').forEach(r => {
+        const match = sec === 'all' || r.dataset.rsec === sec;
+        r.style.display = match ? 'flex' : 'none';
+      });
     }
 
     function setWorkScope(scope, btn) {

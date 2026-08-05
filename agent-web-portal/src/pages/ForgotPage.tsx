@@ -1,28 +1,24 @@
-import './auth.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { AuthLayout } from '@/layout/AuthLayout'
+import { Button, Field, Input, Textarea } from '@/components/ui'
 
 export function ForgotPage() {
   const nav = useNavigate()
   return (
-    <div className="auth-wrap">
-      <div className="auth-card">
-        <Link className="back" to="/login">
-          ← Back
-        </Link>
-        <h1>Reset password</h1>
-        <p>OTP + remark required (aligned with mobile)</p>
-        <div className="field">
-          <label>Reason / remark *</label>
-          <textarea rows={2} defaultValue="Forgot after device change" />
-        </div>
-        <div className="field">
-          <label>New password</label>
-          <input type="password" defaultValue="••••••••" />
-        </div>
-        <button className="btn btn-primary" style={{ width: '100%' }} type="button" onClick={() => nav('/login')}>
-          Update & return
-        </button>
-      </div>
-    </div>
+    <AuthLayout
+      backTo="/login"
+      title="Reset password"
+      subtitle="We’ll verify with an SMS code. Please add a short note for security."
+    >
+      <Field label="Why are you resetting? *">
+        <Textarea rows={2} defaultValue="Forgot password after device change" />
+      </Field>
+      <Field label="New password">
+        <Input type="password" defaultValue="••••••••" />
+      </Field>
+      <Button className="w-full" type="button" onClick={() => nav('/login')}>
+        Update & return
+      </Button>
+    </AuthLayout>
   )
 }
