@@ -8,7 +8,7 @@ Dashboard ▾
   Team Performance
 Tasks
 Management ▾
-  Resource · Notification · Announcement
+  Resource · Notification · Announcement · Devices
 Audit
 ```
 
@@ -16,7 +16,7 @@ Audit
 |------|------|
 | **Dashboard** ▾ | **Overview** (5.2.1) · **Team Performance** (FA table) — see `18` |
 | **Tasks** | Work queue · recruitment follow-ups · app correction follow-ups |
-| **Management** ▾ | **Resource** (FR-10) · **Notification** (FR-09 push) · **Announcement** (FR-09/10 feed) — see `17` |
+| **Management** ▾ | **Resource** · **Notification** · **Announcement** · **Devices** (NFR §6 remote wipe) — see `17` / `19` |
 | **Audit** | Agent directory + change log (FR-12) |
 
 ## Removed from nav

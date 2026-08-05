@@ -63,10 +63,10 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 ### Modules (web portal — lean manager IA)
 1. **Dashboard** ▾ — **Overview** (KPIs + charts) · **Team Performance** (FA table; was Team line)  
 2. **Tasks** — Add / Move / Delete · status (FR-07) · recruitment follow-ups  
-3. **Management** ▾ — Resource · Notification · Announcement (FR-09 / FR-10)  
+3. **Management** ▾ — Resource · Notification · Announcement · **Devices** (NFR §6 remote wipe)  
 4. **Audit** — directory + change log (FR-12)  
 
-*(See `16` / `17` / `18` for nav + Management + Dashboard UX.)*
+*(See `16` / `17` / `18` / `19` for nav + Management + Dashboard + Devices UX.)*
 
 ### Tech (mock → product path)
 - Vite + React + TypeScript  

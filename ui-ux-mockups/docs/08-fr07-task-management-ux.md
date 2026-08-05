@@ -96,12 +96,14 @@ Month grid · dots on busy days · CTA into selected day agenda
 
 ## 4. Web screens (Tasks module)
 
-1. Task table: title, assignee FA, type, status, due  
-2. **Add / Move / Delete** (manager)  
-3. Recruitment board linkage  
-4. Status visibility for managers  
+**Board-first** (see `20-web-tasks-kanban-ux.md`) — Filllo-style columns, KBZ Coolors palette.
 
-Web keeps list/admin density; mobile stays date-first. No need for a mobile To-Do clone of the web table.
+1. **Board** — columns Pending · In Progress · Completed (FR-07 statuses)  
+2. **List** — dense table of the same tasks  
+3. **Add / Move / Delete** — **dialog composer** · drag between columns · card/row delete  
+4. Cards show type (Recruitment / Servicing / e-App) · due · assignee · overdue accent  
+
+Mobile stays calendar-first My work. Web stays status-board-first.
 
 ---
 
@@ -110,7 +112,8 @@ Web keeps list/admin density; mobile stays date-first. No need for a mobile To-D
 - [x] Calendar supports Day / Week / Month (mock)  
 - [x] No Calendar \| To-Do toggle on mobile  
 - [x] Create + complete from My work / task detail  
-- [ ] Status Pending / In Progress / Completed on detail  
-- [ ] Web Add / Move / Delete  
-- [ ] Recruitment task example present  
-- [ ] Notification entry point from Work / Notifs  
+- [x] Status Pending / In Progress / Completed on detail  
+- [x] Web Add / Move / Delete (Kanban board)  
+- [x] Recruitment task example present  
+- [x] Notification entry point from Work / Notifs  
+- [x] Web Board \| List views  

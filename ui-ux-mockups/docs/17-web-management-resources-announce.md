@@ -36,15 +36,16 @@ Sidebar
 ├── Management  ▾ / ▴     ← group only (click label or chevron to expand)
 │   ├── Resource          ← FR-10 library config
 │   ├── Notification      ← FR-09 notification announcement setup
-│   └── Announcement      ← FR-09 announce setup + FR-10 company broadcast source
+│   ├── Announcement      ← FR-09 announce setup + FR-10 company broadcast source
+│   └── Devices           ← NFR §6 remote data wipe (see `19-web-devices-remote-wipe.md`)
 └── Audit
 ```
 
 | Choice | Why |
 |--------|-----|
-| **Dropdown group, not 3 top-level items** | Keeps lean primary nav; FR-09/10 stay one “content ops” family. |
+| **Dropdown group, not top-level sprawl** | Keeps lean primary nav; FR-09/10 + device security stay one Management family. |
 | **Chevron up/down** | Affordance for expand/collapse; open when any child route is active. |
-| **Three separate routes** | One job per screen — scan/configure without tab hunting. |
+| **Separate routes per child** | One job per screen — scan/configure without tab hunting. |
 | **Notification ≠ header bell inbox** | Header `/notifications` = FA/manager **inbox**. Management → Notification = **authorized setup** of push/notification announcements (image + URL). |
 | **Announcement = compose source** | Web creates company announcements; mobile feed is **read-only** (FR-10). |
 
