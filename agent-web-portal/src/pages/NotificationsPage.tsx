@@ -22,7 +22,7 @@ const ITEMS: Item[] = [
     id: '1',
     type: 'task',
     title: 'New task assigned',
-    meta: 'Recruitment interview · Su Su · assigned by you to Aye Chan',
+    meta: 'Leave appointment · Su Su · assigned by you to Aye Chan',
     time: 'Just now',
     unread: true,
     tone: 'warn',

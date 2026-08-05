@@ -8,7 +8,7 @@
 | Calendar Day/Week/Month | **Mobile** | Stay on mobile My work — don’t clone calendar on web |
 | Add / Move / Delete | **Web** | Primary web job |
 | Status: Pending · In Progress · Completed | Mobile + Web | Same three statuses everywhere |
-| Recruitment / onboarding track | Web | Task **type** = Recruitment (not a separate module) |
+| Leave appointment track | Web | Task **type** = Leave appointment (not a separate module) |
 
 Reference mood (Filllo-style board): column board · typed cards · clear status lanes · assign members · Board/List views.  
 **Not** copying their purple theme — keep KBZ Coolors blues.
@@ -22,7 +22,7 @@ Reference mood (Filllo-style board): column board · typed cards · clear status
 | **Board-first on web** | Move = drag (or column action) matches manager mental model better than table-only |
 | Columns = **Pending · In Progress · Completed** | Exact FR-07 statuses — no invented “Need Review” lane |
 | **Board \| List** toggle | Board for flow; List for dense filter/export-style scan |
-| Card shows type · due · assignee | Recruitment vs Servicing vs e-App readable at a glance |
+| Card shows type · due · assignee | Leave appointment vs Servicing vs e-App readable at a glance |
 | **Add / Edit = centered dialog** | Side panel squeezed the board and felt cluttered — modal keeps Board full-width |
 | Overdue = card accent, not new column | Status stays BRD-pure; urgency is visual |
 
@@ -44,8 +44,8 @@ Mobile stays calendar-first (`08-fr07-task-management-ux.md`). Web stays **statu
 
 ```
 ┌─────────────────────────┐
-│ Interview · Su Su       │
-│ [Recruitment]  [Overdue]│
+│ Leave appointment · Su Su│
+│ [Leave appointment] [Overdue]│
 │ Due 06-Aug · Aye Chan   │
 │ ⋮ Move · Delete         │
 └─────────────────────────┘
@@ -54,7 +54,7 @@ Mobile stays calendar-first (`08-fr07-task-management-ux.md`). Web stays **statu
 | Element | Rule |
 |---------|------|
 | Title | One line, bold |
-| Type chip | Recruitment · Servicing · e-App · Other |
+| Type chip | Leave appointment · Servicing · e-App · Other |
 | Overdue | Only if due &lt; today and status ≠ Completed |
 | Due | DD-MMM-YYYY |
 | Assignee | Name (initial avatar optional) |
@@ -88,7 +88,7 @@ Mobile stays calendar-first (`08-fr07-task-management-ux.md`). Web stays **statu
 Shared across Board + List:
 
 - Search title / assignee  
-- Type (All · Recruitment · Servicing · e-App · Other)  
+- Type (All · Leave appointment · Servicing · e-App · Other)  
 - Assignee (All · FA names)  
 
 Hierarchy note: DM sees team assignees; mock = all sample FAs.
@@ -111,7 +111,7 @@ Hierarchy note: DM sees team assignees; mock = all sample FAs.
 - [x] Web Tasks = Kanban Board (Pending / In Progress / Completed)  
 - [x] Board \| List toggle  
 - [x] Add / Move (drag) / Delete  
-- [x] Recruitment example cards  
+- [x] Leave appointment example cards  
 - [x] Coolors palette (not reference purple)  
 
 ---

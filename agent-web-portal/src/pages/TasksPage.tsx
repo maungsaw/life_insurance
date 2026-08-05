@@ -15,7 +15,7 @@ import {
 import { cn } from '@/lib/cn'
 
 type Status = 'pending' | 'progress' | 'completed'
-type TaskType = 'Recruitment' | 'Servicing' | 'e-App' | 'Other'
+type TaskType = 'Leave appointment' | 'Servicing' | 'e-App' | 'Other'
 
 type Task = {
   id: string
@@ -37,13 +37,13 @@ const COLUMNS: { id: Status; label: string; hint: string }[] = [
 const SEED: Task[] = [
   {
     id: 't1',
-    title: 'Interview · Su Su',
+    title: 'Leave appointment · Su Su',
     assignee: 'Aye Chan',
-    type: 'Recruitment',
+    type: 'Leave appointment',
     due: '06-Aug-2026',
     dueIso: '2026-08-06',
     status: 'progress',
-    notes: 'Candidate passed screening.',
+    notes: 'Home visit confirmed · bring brochure pack.',
   },
   {
     id: 't2',
@@ -57,13 +57,13 @@ const SEED: Task[] = [
   },
   {
     id: 't3',
-    title: 'LC Training follow-up',
+    title: 'Branch leave · Nwe Nwe',
     assignee: 'Nwe Nwe',
-    type: 'Recruitment',
+    type: 'Leave appointment',
     due: '08-Aug-2026',
     dueIso: '2026-08-08',
     status: 'pending',
-    notes: 'Confirm attendance pack.',
+    notes: 'Confirm afternoon slot at branch.',
   },
   {
     id: 't4',
@@ -77,7 +77,7 @@ const SEED: Task[] = [
   },
   {
     id: 't5',
-    title: 'Brand strategy sync · AM',
+    title: 'District huddle prep',
     assignee: 'Thura Htun',
     type: 'Other',
     due: '04-Aug-2026',
@@ -87,13 +87,13 @@ const SEED: Task[] = [
   },
   {
     id: 't6',
-    title: 'NIIM exam reminder',
+    title: 'Client leave · U Min',
     assignee: 'Nwe Nwe',
-    type: 'Recruitment',
+    type: 'Leave appointment',
     due: '01-Aug-2026',
     dueIso: '2026-08-01',
     status: 'pending',
-    notes: 'Overdue — escalate if no reply.',
+    notes: 'Overdue — reschedule if no reply.',
   },
 ]
 
@@ -104,7 +104,7 @@ function isOverdue(t: Task) {
 }
 
 function typeTone(type: TaskType): 'default' | 'sky' | 'warn' | 'ok' {
-  if (type === 'Recruitment') return 'sky'
+  if (type === 'Leave appointment') return 'sky'
   if (type === 'Servicing') return 'warn'
   if (type === 'e-App') return 'ok'
   return 'default'
@@ -128,7 +128,7 @@ export function TasksPage() {
   const [draft, setDraft] = useState({
     title: '',
     assignee: 'Aye Chan',
-    type: 'Recruitment' as TaskType,
+    type: 'Leave appointment' as TaskType,
     dueIso: '2026-08-06',
     notes: '',
   })
@@ -161,7 +161,7 @@ export function TasksPage() {
     setDraft({
       title: '',
       assignee: 'Aye Chan',
-      type: 'Recruitment',
+      type: 'Leave appointment',
       dueIso: '2026-08-06',
       notes: '',
     })
@@ -297,7 +297,7 @@ export function TasksPage() {
           onChange={(e) => setTypeFilter(e.target.value)}
         >
           <option value="all">All types</option>
-          <option>Recruitment</option>
+          <option>Leave appointment</option>
           <option>Servicing</option>
           <option>e-App</option>
           <option>Other</option>
@@ -499,7 +499,7 @@ export function TasksPage() {
             autoFocus
             value={draft.title}
             onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
-            placeholder="e.g. Interview · Su Su"
+            placeholder="e.g. Leave appointment · Su Su"
           />
         </Field>
         <div className="grid gap-0 sm:grid-cols-2 sm:gap-3">
@@ -518,7 +518,7 @@ export function TasksPage() {
               value={draft.type}
               onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as TaskType }))}
             >
-              <option>Recruitment</option>
+              <option>Leave appointment</option>
               <option>Servicing</option>
               <option>e-App</option>
               <option>Other</option>

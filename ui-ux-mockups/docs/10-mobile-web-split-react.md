@@ -62,7 +62,7 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 
 ### Modules (web portal — lean manager IA)
 1. **Dashboard** ▾ — **Overview** (KPIs + charts) · **Team Performance** (FA table; was Team line)  
-2. **Tasks** — Add / Move / Delete · status (FR-07) · recruitment follow-ups  
+2. **Tasks** — Add / Move / Delete · status (FR-07) · leave appointments   
 3. **Management** ▾ — Resource · Notification · Announcement · **Devices** (NFR §6 remote wipe)  
 4. **Audit** — directory + change log (FR-12)  
 

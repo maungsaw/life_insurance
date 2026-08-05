@@ -15,7 +15,7 @@ Audit
 | Keep | Owns |
 |------|------|
 | **Dashboard** ▾ | **Overview** (5.2.1) · **Team Performance** (FA table) — see `18` |
-| **Tasks** | Work queue · recruitment follow-ups · app correction follow-ups |
+| **Tasks** | Work queue · leave appointments · app correction follow-ups |
 | **Management** ▾ | **Resource** · **Notification** · **Announcement** · **Devices** (NFR §6 remote wipe) — see `17` / `19` |
 | **Audit** | Agent directory + change log (FR-12) |
 
@@ -23,7 +23,7 @@ Audit
 
 | Module | Redirect | Where the job goes now |
 |--------|----------|------------------------|
-| ~~Recruitment~~ | `/recruit` → `/tasks` | Tasks (type: Recruitment) · Audit status |
+| ~~Recruitment~~ | `/recruit` → `/tasks` | Tasks (type: Leave appointment) · Audit status |
 | ~~Announcements~~ (standalone) | `/announce` → `/management/announcements` | Nested under **Management** |
 | ~~Operations~~ | `/ops` → `/management/resources` | Management → Resource |
 | ~~CRM~~ | `/crm` → `/dashboard` | Field CRM stays on **mobile** |

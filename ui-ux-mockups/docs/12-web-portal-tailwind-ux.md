@@ -57,7 +57,7 @@ Auth → Shell
 | Module | UX job |
 |--------|--------|
 | Dashboard ▾ | **Overview** · **Team Performance** (shared weighting & hierarchy) — see `18` |
-| Tasks | Add/Move/Delete · status · recruitment & app-correction follow-ups |
+| Tasks | Add/Move/Delete · status · leave appointments & app-correction follow-ups |
 | Management ▾ | Resource · Notification · Announcement · Devices (remote wipe · see `19`) |
 | Audit | Agent directory + audit log (FR-12) |
 
