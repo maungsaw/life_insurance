@@ -58,7 +58,7 @@ Auth → Shell
 |--------|--------|
 | Dashboard ▾ | **Overview** · **Team Performance** (shared weighting & hierarchy) — see `18` |
 | Tasks | Add/Move/Delete · status · leave appointments & app-correction follow-ups |
-| Management ▾ | Resource · Notification · Announcement · Devices (remote wipe · see `19`) |
+| Management ▾ | Resource · Notification · Announcement · Products (On/Off · `23`) · Devices (remote wipe · see `19`) |
 | Audit | Agent directory + audit log (FR-12) |
 
 *(CRM · Policies removed from web nav. Management UX: `17` · Dashboard UX: `18`.)*

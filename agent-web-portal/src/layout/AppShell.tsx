@@ -13,6 +13,7 @@ import {
   Smartphone,
   PieChart,
   UsersRound,
+  Package,
 } from 'lucide-react'
 import { HeaderActions } from '@/layout/HeaderActions'
 import { cn } from '@/lib/cn'
@@ -26,6 +27,7 @@ const MGMT_CHILDREN = [
   { to: 'resources', label: 'Resource', icon: Library },
   { to: 'notifications', label: 'Notification', icon: BellRing },
   { to: 'announcements', label: 'Announcement', icon: Megaphone },
+  { to: 'products', label: 'Products', icon: Package },
   { to: 'devices', label: 'Remote data wipe', icon: Smartphone },
 ] as const
 

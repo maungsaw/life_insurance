@@ -40,7 +40,8 @@ Management ▾
   ├── Resource
   ├── Notification
   ├── Announcement
-  └── Devices          ← NEW (/management/devices)
+  ├── Products         ← catalog On/Off (see `23`)
+  └── Devices          ← NFR §6 remote wipe (/management/devices)
 ```
 
 Not under Audit: Audit = FR-12 agent data change trail. Devices = security ops on **hardware sessions**.

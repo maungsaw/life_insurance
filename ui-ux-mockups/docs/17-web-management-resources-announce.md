@@ -1,4 +1,4 @@
-# Management nav — Resource · Notification · Announcement · Devices
+# Management nav — Resource · Notification · Announcement · Products · Devices
 
 ## 1. BRD jobs (source of truth)
 
@@ -28,6 +28,7 @@ Sidebar
 │   ├── Resource          ← FR-10 library config
 │   ├── Notification      ← FR-08 Notification Setup (rules)
 │   ├── Announcement      ← FR-09 Announcement Setup (feed + optional push)
+│   ├── Products          ← catalog On/Off control panel (see `23`)
 │   └── Devices           ← NFR §6 remote wipe
 └── Audit
 ```
@@ -37,6 +38,7 @@ Sidebar
 | **Notification ≠ Announcement composers** | FR-08 = rules; FR-09 = messages |
 | **Notification ≠ header bell** | Bell = inbox; Management = setup |
 | **Optional push on Announcement** | Covers FR-09 “notification announcement with URL + Image” without stealing FR-08 |
+| **Products = availability gate** | Core owns product master; web toggles On/Off for mobile Sell |
 
 ---
 
@@ -55,13 +57,15 @@ Sidebar
 |------|--------|
 | `/management/notifications` | FR-08 Notification setup |
 | `/management/announcements` | FR-09 Announcement setup |
+| `/management/products` | Product catalog On/Off (see `23`) |
 | `/notifications` | Personal inbox (header bell) |
 
 ---
 
 ## 5. Acceptance
 
-- [x] Management children include Notification + Announcement  
+- [x] Management children include Notification + Announcement + Products  
 - [x] FR-08 page = rules (not duplicate announce form)  
 - [x] FR-09 page = feed setup + optional push  
+- [x] Products page = On/Off control panel (`23`)  
 - [x] Clarity doc `22` published  

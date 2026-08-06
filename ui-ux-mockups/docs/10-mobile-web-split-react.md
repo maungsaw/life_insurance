@@ -42,7 +42,7 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 - Splash → Login → OTP → biometric → forgot
 - FA + Manager home
 - FR-03 Leads/Clients deep CRM
-- Products · Quote · e-App stepper · Tracker · Policy
+- Products · Quote · e-App stepper · Tracker · Policy · **Product control** (On/Off · `23`)
 - FR-07 Calendar (Day/Week/Month) · create/status · no separate To-Do tab
 - Notifications · Announcements · Resources · Profile (ENG/MM)
 
@@ -63,10 +63,10 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 ### Modules (web portal — lean manager IA)
 1. **Dashboard** ▾ — **Overview** (KPIs + charts) · **Team Performance** (FA table; was Team line)  
 2. **Tasks** — Add / Move / Delete · status (FR-07) · leave appointments   
-3. **Management** ▾ — Resource · Notification · Announcement · **Devices** (NFR §6 remote wipe)  
+3. **Management** ▾ — Resource · Notification · Announcement · **Products** (catalog On/Off) · **Devices** (NFR §6 remote wipe)  
 4. **Audit** — directory + change log (FR-12)  
 
-*(See `16` / `17` / `18` / `19` for nav + Management + Dashboard + Devices UX.)*
+*(See `16` / `17` / `18` / `19` / `23` for nav + Management + Dashboard + Devices + Product On/Off UX.)*
 
 ### Tech (mock → product path)
 - Vite + React + TypeScript  

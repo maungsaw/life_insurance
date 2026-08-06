@@ -628,6 +628,94 @@
       color: var(--danger);
     }
 
+    .pill.off {
+      background: #eef2f6;
+      color: var(--muted);
+    }
+
+    .pill.on-live {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .sw {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+      border-radius: 999px;
+      border: 0;
+      background: #c5d4e0;
+      cursor: pointer;
+      padding: 0;
+      transition: background .15s;
+    }
+
+    .sw::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+      transition: transform .15s;
+    }
+
+    .sw.on {
+      background: var(--brand);
+    }
+
+    .sw.on::after {
+      transform: translateX(18px);
+    }
+
+    .row.ctrl {
+      cursor: default;
+    }
+
+    .row.ctrl.dim {
+      opacity: 0.72;
+    }
+
+    .sheet-mask {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 53, 84, .45);
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+      border-radius: inherit;
+    }
+
+    .sheet-mask.show {
+      display: flex;
+    }
+
+    .sheet {
+      width: 100%;
+      background: #fff;
+      border-radius: 18px 18px 14px 14px;
+      padding: 16px;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, .12);
+    }
+
+    .sheet h4 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .sheet .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+
     .seg {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -2124,6 +2212,15 @@
                     class="pill danger">Flag</span>
                 </div>
               </div>
+              <div class="section-h" style="margin-top:14px;">
+                <h3>Controls</h3>
+              </div>
+              <div class="list">
+                <div class="row" onclick="go('s-product-control')">
+                  <div class="dot">☰</div>
+                  <div class="meta"><b>Product control</b><span>On / Off · which FAs can sell</span></div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -2412,24 +2509,70 @@
             </div>
           </section>
 
-          <!-- SELL -->
+          <!-- SELL · On products only (Job A) · see docs/23 -->
           <section class="screen" id="s-products">
             <div class="pad">
               <div class="title" style="font-size:24px;">Products</div>
-              <p class="sub">Only enabled products · Core codes & names</p>
-              <div class="search">🔍 <input placeholder="Search products" /></div>
-              <div class="list">
-                <div class="row" onclick="go('s-quote')">
-                  <div class="dot">EN</div>
-                  <div class="meta"><b>Endowment Plan</b><span>Savings + protection</span></div>
+              <p class="sub">Sell from enabled catalog · tap to quote</p>
+              <div class="soft-banner" onclick="go('s-product-control')" title="Open Product control">
+                <div class="dot">⚙</div>
+                <div>
+                  <b id="sellOnCount">3 products On · ready to sell</b>
+                  <span>Off products stay on Product control · tap to manage On/Off</span>
                 </div>
-                <div class="row" onclick="go('s-quote')">
-                  <div class="dot">UL</div>
-                  <div class="meta"><b>Universal Life</b><span>Flexible premium</span></div>
+              </div>
+              <div class="search">🔍 <input id="productSearch" placeholder="Search enabled products"
+                  oninput="filterSellProducts(this.value)" /></div>
+              <div class="list" id="productList"></div>
+              <p class="sub" id="productEmpty" style="display:none;text-align:center;padding:28px 8px;">
+                No match. Missing products may be <b>Off</b> — open Product control.
+              </p>
+            </div>
+          </section>
+
+          <!-- PRODUCT CONTROL · Job B · which products On/Off -->
+          <section class="screen" id="s-product-control">
+            <div class="pad" style="position:relative;min-height:100%;">
+              <button class="link" onclick="go('s-products')">← Sell products</button>
+              <div class="title" style="margin-top:8px;font-size:24px;">Product control</div>
+              <p class="sub">Choose which products FAs can sell · Core codes</p>
+              <div class="soft-banner" style="cursor:default;">
+                <div class="dot">◎</div>
+                <div>
+                  <b id="ctrlSummary">3 On · 2 Off</b>
+                  <span>Same catalog as web Management · Products</span>
                 </div>
-                <div class="row" onclick="go('s-quote')">
-                  <div class="dot">CI</div>
-                  <div class="meta"><b>Critical Illness</b><span>Health protection</span></div>
+              </div>
+              <div class="cat-banner" role="tablist" aria-label="Product status filter">
+                <button type="button" class="on" data-pfilter="all" onclick="filterCtrlProducts('all', this)">All</button>
+                <button type="button" data-pfilter="on" onclick="filterCtrlProducts('on', this)">On</button>
+                <button type="button" data-pfilter="off" onclick="filterCtrlProducts('off', this)">Off</button>
+              </div>
+              <div class="search">🔍 <input id="ctrlSearch" placeholder="Search code or name"
+                  oninput="filterCtrlProducts(ctrlFilter, null, this.value)" /></div>
+              <div class="list" id="ctrlProductList"></div>
+              <p class="sub" id="ctrlEmpty" style="display:none;text-align:center;padding:20px 8px;">
+                No products in this filter.
+              </p>
+
+              <div class="sheet-mask" id="offSheet" role="dialog" aria-modal="true" aria-labelledby="offSheetTitle">
+                <div class="sheet">
+                  <h4 id="offSheetTitle">Turn off product?</h4>
+                  <p class="hint" id="offSheetHint">FAs will not see this in Sell → Products after sync. In-flight drafts
+                    can still submit.</p>
+                  <div class="field"><label>Reason *</label>
+                    <select id="offReason">
+                      <option>Campaign pause</option>
+                      <option>Regulatory</option>
+                      <option>Pricing update</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="btn-row">
+                    <button type="button" class="btn btn-secondary" onclick="closeOffSheet()">Cancel</button>
+                    <button type="button" class="btn btn-primary" style="background:var(--danger);"
+                      onclick="confirmTurnOff()">Turn off</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3230,6 +3373,10 @@
                 </div>
               </div>
               <div class="list">
+                <div class="row" onclick="go('s-product-control')">
+                  <div class="dot">☰</div>
+                  <div class="meta"><b>Product control</b><span>On / Off · authorized</span></div>
+                </div>
                 <div class="row">
                   <div class="dot">✎</div>
                   <div class="meta"><b>Edit profile / photo</b><span>Synced with Core</span></div>
@@ -3301,7 +3448,7 @@
       ['s-splash', 'Splash'], ['s-login', 'Login'], ['s-forgot', 'Forgot'], ['s-otp', 'OTP'], ['s-home', 'FA Home'], ['s-manager', 'Manager'],
       ['s-leads', 'Leads'], ['s-lead', 'Lead profile'], ['s-addlead', 'Add lead'], ['s-editlead', 'Edit lead'],
       ['s-convert', 'Convert'], ['s-clients', 'Clients'], ['s-client', 'Client'], ['s-client-new', 'New client'],
-      ['s-products', 'Products'], ['s-quote', 'Quote'],
+      ['s-products', 'Products'], ['s-product-control', 'Product control'], ['s-quote', 'Quote'],
       ['s-eapp', 'eApp 1 Details'], ['s-eapp-2', 'eApp 2 Parties'], ['s-eapp-3', 'eApp 3 KYC'],
       ['s-eapp-4', 'eApp 4 Docs'], ['s-eapp-5', 'eApp 5 Sign'], ['s-eapp-6', 'eApp 6 Review'],
       ['s-eapp-ok', 'eApp Success'], ['s-apps', 'App tracker'], ['s-policy', 'Policy'],
@@ -3377,6 +3524,129 @@
       });
     }
 
+    /** Product On/Off catalog — shared by Sell + Product control (docs/23) */
+    const catalogProducts = [
+      { id: 'en', code: 'EN', name: 'Endowment Plan', blurb: 'Savings + protection', on: true },
+      { id: 'ul', code: 'UL', name: 'Universal Life', blurb: 'Flexible premium', on: true },
+      { id: 'ci', code: 'CI', name: 'Critical Illness', blurb: 'Health protection', on: true },
+      { id: 'tl', code: 'TL', name: 'Term Life', blurb: 'Pure protection', on: false },
+      { id: 'wp', code: 'WP', name: 'Whole Life Plus', blurb: 'Lifelong cover', on: false },
+    ];
+    let ctrlFilter = 'all';
+    let pendingOffId = null;
+
+    function catalogCounts() {
+      const on = catalogProducts.filter(p => p.on).length;
+      return { on, off: catalogProducts.length - on };
+    }
+
+    function refreshCatalogChrome() {
+      const { on, off } = catalogCounts();
+      const sell = document.getElementById('sellOnCount');
+      if (sell) sell.textContent = on + ' product' + (on === 1 ? '' : 's') + ' On · ready to sell';
+      const sum = document.getElementById('ctrlSummary');
+      if (sum) sum.textContent = on + ' On · ' + off + ' Off';
+    }
+
+    function renderSellProducts() {
+      const list = document.getElementById('productList');
+      if (!list) return;
+      const q = (document.getElementById('productSearch')?.value || '').trim().toLowerCase();
+      const rows = catalogProducts.filter(p => p.on);
+      list.innerHTML = '';
+      let shown = 0;
+      rows.forEach(p => {
+        const hay = (p.code + ' ' + p.name + ' ' + p.blurb).toLowerCase();
+        if (q && !hay.includes(q)) return;
+        shown++;
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.onclick = () => go('s-quote');
+        row.innerHTML =
+          '<div class="dot">' + p.code + '</div>' +
+          '<div class="meta"><b>' + p.name + '</b><span>' + p.blurb + ' · Available</span></div>' +
+          '<span class="pill on-live">On</span>';
+        list.appendChild(row);
+      });
+      const empty = document.getElementById('productEmpty');
+      if (empty) empty.style.display = shown === 0 ? 'block' : 'none';
+      refreshCatalogChrome();
+    }
+
+    function filterSellProducts(q) {
+      renderSellProducts();
+    }
+
+    function renderCtrlProducts() {
+      const list = document.getElementById('ctrlProductList');
+      if (!list) return;
+      const q = (document.getElementById('ctrlSearch')?.value || '').trim().toLowerCase();
+      list.innerHTML = '';
+      let shown = 0;
+      catalogProducts.forEach(p => {
+        if (ctrlFilter === 'on' && !p.on) return;
+        if (ctrlFilter === 'off' && p.on) return;
+        const hay = (p.code + ' ' + p.name + ' ' + p.blurb).toLowerCase();
+        if (q && !hay.includes(q)) return;
+        shown++;
+        const row = document.createElement('div');
+        row.className = 'row ctrl' + (p.on ? '' : ' dim');
+        row.dataset.id = p.id;
+        row.innerHTML =
+          '<div class="dot">' + p.code + '</div>' +
+          '<div class="meta"><b>' + p.name + '</b><span>' + p.blurb + '</span></div>' +
+          '<span class="pill ' + (p.on ? 'on-live' : 'off') + '">' + (p.on ? 'On' : 'Off') + '</span>' +
+          '<button type="button" class="sw' + (p.on ? ' on' : '') + '" aria-label="Toggle ' + p.name +
+          '" onclick="event.stopPropagation(); requestProductToggle(\'' + p.id + '\')"></button>';
+        list.appendChild(row);
+      });
+      const empty = document.getElementById('ctrlEmpty');
+      if (empty) empty.style.display = shown === 0 ? 'block' : 'none';
+      refreshCatalogChrome();
+    }
+
+    function filterCtrlProducts(status, btn, qIgnored) {
+      if (status) ctrlFilter = status;
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      }
+      renderCtrlProducts();
+    }
+
+    function requestProductToggle(id) {
+      const p = catalogProducts.find(x => x.id === id);
+      if (!p) return;
+      if (p.on) {
+        pendingOffId = id;
+        const title = document.getElementById('offSheetTitle');
+        const hint = document.getElementById('offSheetHint');
+        if (title) title.textContent = 'Turn off · ' + p.name + '?';
+        if (hint) hint.textContent =
+          p.code + ' will leave Sell → Products after sync. In-flight drafts can still submit.';
+        document.getElementById('offSheet')?.classList.add('show');
+        return;
+      }
+      p.on = true;
+      renderCtrlProducts();
+      renderSellProducts();
+    }
+
+    function closeOffSheet() {
+      pendingOffId = null;
+      document.getElementById('offSheet')?.classList.remove('show');
+    }
+
+    function confirmTurnOff() {
+      const p = catalogProducts.find(x => x.id === pendingOffId);
+      if (p) p.on = false;
+      closeOffSheet();
+      renderCtrlProducts();
+      renderSellProducts();
+    }
+
+    renderSellProducts();
+    renderCtrlProducts();
+
     function setWorkScope(scope, btn) {
       const titles = {
         day: ['Monday, 3 Aug', 'Today · Yangon'],
@@ -3426,7 +3696,7 @@
       else syncWizardChrome(id);
       document.querySelectorAll('#jumpNav button').forEach(b => b.classList.toggle('on', b.dataset.id === id));
       const peopleIds = ['s-leads', 's-lead', 's-addlead', 's-editlead', 's-clients', 's-client', 's-client-new', 's-convert'];
-      const sellIds = ['s-products', 's-quote', ...wizardFlow, 's-eapp-ok', 's-apps'];
+      const sellIds = ['s-products', 's-product-control', 's-quote', ...wizardFlow, 's-eapp-ok', 's-apps'];
       const workIds = ['s-tasks', 's-task', 's-task-new', 's-notifs', 's-announce', 's-resources'];
       document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.go === id ||
         peopleIds.includes(id) && t.dataset.go === 's-leads' ||
