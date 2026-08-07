@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart' show Dio, BaseOptions, Headers;
 import 'package:flutter/foundation.dart';
 import 'package:life_insurance/core/core.dart'
-    show ApiClient, NetworkServiceType, ILocalCacheService, DioInterceptor;
+    show ApiClient, ILocalCacheService, DioInterceptor;
+import 'enum.dart' show NetworkServiceType;
 
 class NetworkClient {
   static final Map<NetworkServiceType, Dio> _instances = {};

@@ -227,7 +227,7 @@ class CustomerDetailPage extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 22,
-          backgroundColor: color.withOpacity(0.1),
+          backgroundColor: color.withValues(alpha: 0.1),
           child: Icon(icon, color: color, size: 20),
         ),
         const SizedBox(height: 6),
@@ -295,7 +295,7 @@ class CustomerDetailPage extends StatelessWidget {
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
+            color: Colors.green.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(

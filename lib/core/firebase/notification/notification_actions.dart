@@ -1,17 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:life_insurance/core/core.dart' show EncryptionService;
-import 'package:life_insurance/core/remote_wipe/remote_wipe.dart'
+import 'package:life_insurance/core/firebase/remote_wipe/remote_wipe.dart'
     show VerifyWideDataResponse, RemoteWipeHandler;
+
+import 'const.dart' show NotificationConstants;
 
 abstract class NotificationActions {
   static Future<void> _performRemoteWipeIfRequested(
     VerifyWideDataResponse data,
   ) async {
     final validation = EncryptionService.verifySignature(
-      data.action,
-      data.issuedAt.toString(),
-      data.nonce,
-      data.signature,
+      action: data.action,
+      issuedAt: data.issuedAt.toString(),
+      nonce: data.nonce,
+      receivedSignature: data.signature,
+      signatureKey: NotificationConstants.signatureKey,
     );
 
     debugPrint('Security alert: Verified remote wipe command received.');

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:life_insurance/core/core.dart'
-    show LocalizationContext, ThemeService;
+    show LocalizationContext, ThemeService, ThemesConsts;
 import '../bloc/bloc.dart' show AppearanceBloc, ChangeThemeEvent;
 
 class ThemePage extends StatelessWidget {
@@ -10,7 +10,7 @@ class ThemePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentTheme = context.watch<AppearanceBloc>().state.themeMode;
-    final themes = ThemeService.supportedThemes();
+    final themes = ThemesConsts.supportedThemes;
 
     return Scaffold(
       appBar: AppBar(title: Text(context.tr.language)),

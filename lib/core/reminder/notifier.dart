@@ -1,27 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'reminder_noti.dart';
-
-class Reminder {
-  final String id;
-  final String title;
-  final DateTime dateTime;
-  bool isCompleted;
-
-  Reminder({
-    required this.id,
-    required this.title,
-    required this.dateTime,
-    this.isCompleted = false,
-  });
-}
+import 'service.dart';
+import 'entity.dart' show ReminderEntity;
 
 class ReminderNotifier extends ChangeNotifier {
-  final List<Reminder> _reminders = [];
+  final List<ReminderEntity> _reminders = [];
 
-  List<Reminder> get reminders => List.unmodifiable(_reminders);
+  List<ReminderEntity> get reminders => List.unmodifiable(_reminders);
 
   void addReminder(String title, DateTime dateTime) {
-    final newReminder = Reminder(
+    final newReminder = ReminderEntity(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
       dateTime: dateTime,

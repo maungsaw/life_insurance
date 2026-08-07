@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show ThemeMode;
+
+import 'const.dart';
 
 abstract class ThemeService {
   static ThemeMode changeToTheme(String mode) {
-    final themeMode = mode == 'dark'
+    final themeMode = mode == ThemesConsts.darkTheme
         ? ThemeMode.dark
-        : mode == 'system'
+        : mode == ThemesConsts.systemTheme
         ? ThemeMode.system
         : ThemeMode.light;
     return themeMode;
@@ -12,14 +14,10 @@ abstract class ThemeService {
 
   static String changeToString(ThemeMode mode) {
     final themeMode = mode.isDark
-        ? 'dark'
+        ? ThemesConsts.darkTheme
         : mode.isSystem
-        ? 'system'
-        : 'light';
+        ? ThemesConsts.systemTheme
+        : ThemesConsts.lightTheme;
     return themeMode;
-  }
-
-  static List<String> supportedThemes() {
-    return ['System', 'Dark', 'Light'];
   }
 }

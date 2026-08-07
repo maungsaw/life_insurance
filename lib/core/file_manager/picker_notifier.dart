@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'service.dart'; // import your service class
+import 'file_picker.dart'; // import your service class
 
 class FilePickerNotifier extends ChangeNotifier {
   List<File> _selectedFiles = [];

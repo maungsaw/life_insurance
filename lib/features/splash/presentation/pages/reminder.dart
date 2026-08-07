@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/service/reminder.dart';
+import 'package:life_insurance/core/reminder/notifier.dart';
 
 class ReminderPage extends StatefulWidget {
   const ReminderPage({super.key});

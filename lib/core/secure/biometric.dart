@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:local_auth/local_auth.dart' show LocalAuthentication;
+import 'package:flutter/services.dart' show PlatformException;
 
 class BiometricService {
   final LocalAuthentication _auth = LocalAuthentication();
-
-  /// Check if device supports hardware biometrics
   Future<bool> isBiometricsAvailable() async {
     try {
       final canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;

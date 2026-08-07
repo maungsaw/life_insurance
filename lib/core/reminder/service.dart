@@ -1,4 +1,15 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    show
+        FlutterLocalNotificationsPlugin,
+        AndroidInitializationSettings,
+        DarwinInitializationSettings,
+        InitializationSettings,
+        AndroidNotificationDetails,
+        NotificationDetails,
+        Importance,
+        Priority,
+        DarwinNotificationDetails,
+        AndroidScheduleMode;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -7,10 +18,10 @@ class ReminderNotiService {
   factory ReminderNotiService() => _instance;
   ReminderNotiService._internal();
 
- static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
- static Future<void> init() async {
+  static Future<void> init() async {
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Asia/Yangon'));
 
@@ -33,7 +44,7 @@ class ReminderNotiService {
   }
 
   // Schedule notification for a custom future DateTime
-static  Future<void> scheduleNotification({
+  static Future<void> scheduleNotification({
     required int id,
     required String title,
     required String body,
@@ -64,7 +75,7 @@ static  Future<void> scheduleNotification({
   }
 
   // Cancel notification if reminder is deleted
- static Future<void> cancelNotification(int id) async {
+  static Future<void> cancelNotification(int id) async {
     await _notificationsPlugin.cancel(id: id);
   }
 }

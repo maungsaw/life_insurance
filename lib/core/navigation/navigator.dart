@@ -93,7 +93,7 @@ class AppNavigator {
       GoRoute(
         path: AppRoute.login,
         name: AppRoute.login,
-        builder: (BuildContext context, GoRouterState state) {
+        builder: (_, _) {
           return LoginPage();
         },
       ),

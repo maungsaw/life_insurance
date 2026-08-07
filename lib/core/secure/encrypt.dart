@@ -1,20 +1,20 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:crypto/crypto.dart';
-import 'package:life_insurance/core/core.dart' show KeyConstants;
+import 'dart:convert' show utf8, base64Encode, base64Decode;
+import 'dart:io' show File;
+import 'dart:typed_data' show Uint8List, Endian;
+import 'package:crypto/crypto.dart' show Hmac, sha256;
 
 abstract class EncryptionService {
   // Existing HMAC verification method
-  static bool verifySignature(
-    String action,
-    String issuedAt,
-    String nonce,
-    String receivedSignature,
-  ) {
+  static bool verifySignature({
+    required String action,
+    required String issuedAt,
+    required String nonce,
+    required String receivedSignature,
+    required String signatureKey,
+  }) {
     final payload = [action, issuedAt, nonce].join('|');
     final keyBytes = utf8.encode(
-      KeyConstants.signatureKey,
+      signatureKey,
     ); // Replace with Constants.signatureKey
     final messageBytes = utf8.encode(payload);
     final hmac = Hmac(sha256, keyBytes);
@@ -91,29 +91,27 @@ abstract class EncryptionService {
     return _processSha256Ctr(encryptedBytes, key);
   }
 
-  // ==========================================
-  // 3. FILE ENCRYPTION / DECRYPTION (DISK I/O)
-  // ==========================================
-
-  /// Reads a file from disk, encrypts it, and saves the output.
-  static Future<File> encryptFile({
+  static Future<String> encryptFile({
     required File inputFile,
-    required File outputFile,
+    required String outputPath,
     required String key,
   }) async {
     final bytes = await inputFile.readAsBytes();
     final encrypted = _processSha256Ctr(bytes, key);
-    return await outputFile.writeAsBytes(encrypted);
+
+    final outputFile = File(outputPath);
+    return outputFile.writeAsBytes(encrypted).then((_) => outputPath);
   }
 
   /// Reads an encrypted file from disk, decrypts it, and saves the output.
-  static Future<File> decryptFile({
+  static Future<String> decryptFile({
     required File inputFile,
-    required File outputFile,
+    required String outputPath,
     required String key,
   }) async {
     final bytes = await inputFile.readAsBytes();
     final decrypted = _processSha256Ctr(bytes, key);
-    return await outputFile.writeAsBytes(decrypted);
+    final outputFile = File(outputPath);
+    return await outputFile.writeAsBytes(decrypted).then((_) => outputPath);
   }
 }

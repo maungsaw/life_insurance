@@ -1,7 +1,8 @@
-import 'dart:io';
+import 'dart:io' show File;
 
-import 'package:file_selector/file_selector.dart';
-import 'package:flutter/foundation.dart';
+import 'package:file_selector/file_selector.dart'
+    show XFile, XTypeGroup, openFile, openFiles;
+import 'package:flutter/foundation.dart' show debugPrint;
 
 abstract class FilePickerService {
   /// Pick a single file using `file_selector`

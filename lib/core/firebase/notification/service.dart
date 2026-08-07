@@ -18,7 +18,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart'
         DarwinNotificationDetails,
         AndroidScheduleMode,
         DateTimeComponents;
-import 'package:life_insurance/core/remote_wipe/remote_wipe.dart'
+import 'package:life_insurance/core/firebase/remote_wipe/remote_wipe.dart'
     show VerifyWideDataResponse;
 import 'package:timezone/timezone.dart' as tz;
 import 'notification.dart';

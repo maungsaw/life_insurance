@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:life_insurance/core/core.dart'
-    show ClientEndPoint, NetworkServiceType;
+import 'package:life_insurance/core/core.dart' show ClientEndPoint;
 
 import 'client.dart';
+import 'enum.dart' show NetworkServiceType;
 
 abstract class BaseNetworkService<T> {
   final Dio _publicDio = NetworkClient.getClient(NetworkServiceType.public);
