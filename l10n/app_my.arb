@@ -4,6 +4,7 @@
   "appTitle": "လုံခြုံစိတ်ချရသော အက်ပ်",
 
   "welcomeMessage": "{username}၊ ပြန်လည်ကြိုဆိုပါသည်!",
+  "newtworkStatus" : "{status} အခြေအနေ ဖြစ်နေသည်။",
 
   "login": "အကောင့်ဝင်ရန်",
   "logout": "ထွက်ရန်",

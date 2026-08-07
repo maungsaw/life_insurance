@@ -35,6 +35,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageCode => 'en';
 
   @override
+  String networkStatus(Object status) {
+    return 'Your network connection is :$status.';
+  }
+
+  @override
   String get offlineDataNotice => 'Showing cached offline data.';
 
   @override

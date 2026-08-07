@@ -6,6 +6,7 @@ export 'secure/secure.dart';
 export 'themes/themes.dart';
 export 'file_manager/file_manager.dart';
 export 'firebase/firebase.dart';
-export 'batchjob/batchjob.dart';
+export 'jobs/jobs.dart';
 export 'cache/cache.dart';
 export 'reminder/reminder.dart';
+export 'connection/connection.dart';

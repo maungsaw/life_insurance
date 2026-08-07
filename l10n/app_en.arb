@@ -13,13 +13,25 @@
     }
   },
 
+
   "login": "Login",
   "logout": "Logout",
   "settings": "Settings",
 
   "language": "Language",
   "english": "English",
+
   "languageCode": "en",
+  "networkStatus" :"Your network connection is :{status}.",
+    "@networkStatus": {
+    "description": "Welcome message",
+    "status": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+
 
   "offlineDataNotice": "Showing cached offline data.",
 

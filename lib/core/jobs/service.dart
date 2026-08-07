@@ -1,6 +1,6 @@
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
-abstract class ForegroundScheculerService {
+abstract class ForegroundJobsService {
   static void initTask() {
     FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(

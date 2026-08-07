@@ -35,6 +35,11 @@ class AppLocalizationsMy extends AppLocalizations {
   String get languageCode => 'my';
 
   @override
+  String networkStatus(Object status) {
+    return 'Your network connection is :$status.';
+  }
+
+  @override
   String get offlineDataNotice =>
       'သိမ်းဆည်းထားသော အော့ဖ်လိုင်းဒေတာကို ပြသနေသည်။';
 

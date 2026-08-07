@@ -6,7 +6,8 @@ import 'package:life_insurance/core/core.dart'
         ILocalCacheService,
         LocalCacheService,
         NetworkClient,
-        NetworkServiceType;
+        NetworkServiceType,
+        NetworkConnectionService;
 import 'package:life_insurance/features/auth/auth.dart';
 import 'package:life_insurance/features/features.dart' show AppearanceBloc;
 
@@ -14,6 +15,7 @@ abstract class AppInjection {
   static final sl = GetIt.instance;
   static Future<void> initDependencies() async {
     // External
+    sl.registerSingleton<NetworkConnectionService>(NetworkConnectionService());
     sl.registerLazySingleton<LocalCacheService>(() => ILocalCacheService());
     sl.registerLazySingleton<Dio>(
       () => NetworkClient.getClient(NetworkServiceType.protected),

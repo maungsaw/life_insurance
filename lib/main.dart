@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' show WidgetsFlutterBinding, runApp;
 import 'package:life_insurance/app/app.dart'
     show AppInjection, MyApp, FirebaseInjection;
 import 'package:life_insurance/core/core.dart'
-    show MalwareService, ForegroundScheculerService, ReminderNotiService;
+    show MalwareService, ForegroundJobsService, ReminderNotiService;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +13,7 @@ void main() async {
     AppInjection.initDependencies(),
   ]);
   ReminderNotiService.init();
-  ForegroundScheculerService.initTask();
+  ForegroundJobsService.initTask();
 
   runApp(const MyApp());
 }
