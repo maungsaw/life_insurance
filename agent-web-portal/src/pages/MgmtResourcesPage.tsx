@@ -187,7 +187,8 @@ export function MgmtResourcesPage() {
               title="Configure sections"
               action={<span className="text-xs font-semibold text-muted">Web → mobile sync</span>}
             >
-              <DataTable headers={['Order', 'Name', 'Visible', 'Offline default', 'Actions']}>
+              {/* Offline default column hidden for now — restore header + Td below when needed */}
+              <DataTable headers={['Order', 'Name', 'Visible', /* 'Offline default', */ 'Actions']}>
                 {sections.map((s, idx) => (
                   <tr key={s.id}>
                     <Td>{idx + 1}</Td>
@@ -215,7 +216,7 @@ export function MgmtResourcesPage() {
                         {s.visible ? 'On' : 'Off'}
                       </button>
                     </Td>
-                    <Td>
+                    {/* <Td>
                       <Select
                         value={s.offlineDefault}
                         onChange={(e) =>
@@ -232,7 +233,7 @@ export function MgmtResourcesPage() {
                         <option value="ondemand">On demand</option>
                         <option value="online">Online only</option>
                       </Select>
-                    </Td>
+                    </Td> */}
                     <Td>
                       <div className="flex gap-1">
                         <Button variant="ghost" type="button" onClick={() => moveSection(s.id, -1)}>

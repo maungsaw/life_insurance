@@ -13,7 +13,7 @@ import { MgmtResourcesPage } from '@/pages/MgmtResourcesPage'
 import { MgmtNotificationPage } from '@/pages/MgmtNotificationPage'
 import { MgmtAnnouncementPage } from '@/pages/MgmtAnnouncementPage'
 import { MgmtDevicesPage } from '@/pages/MgmtDevicesPage'
-import { MgmtProductsPage } from '@/pages/MgmtProductsPage'
+// import { MgmtProductsPage } from '@/pages/MgmtProductsPage' // Products tab — restore with route below
 import { AuditPage } from '@/pages/AuditPage'
 import { NotificationsPage } from '@/pages/NotificationsPage'
 
@@ -53,7 +53,7 @@ export default function App() {
           <Route path="management/resources" element={<MgmtResourcesPage />} />
           <Route path="management/notifications" element={<MgmtNotificationPage />} />
           <Route path="management/announcements" element={<MgmtAnnouncementPage />} />
-          <Route path="management/products" element={<MgmtProductsPage />} />
+          {/* <Route path="management/products" element={<MgmtProductsPage />} /> */}
           <Route path="management/devices" element={<MgmtDevicesPage />} />
           <Route path="announce" element={<Navigate to="/management/announcements" replace />} />
           <Route path="ops" element={<Navigate to="/management/resources" replace />} />
