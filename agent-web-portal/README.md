@@ -1,6 +1,8 @@
-# KBZ LIFE Agent Web Portal
+# KBZ LIFE Agency Sales Digital Platform — Web Portal
 
 React management portal mock — Vite · React · TypeScript · **Tailwind CSS** · shared UI components.
+
+Branding: official logo + product name (see `../ui-ux-mockups/docs/29-web-portal-branding.md`).
 
 ## Palette
 

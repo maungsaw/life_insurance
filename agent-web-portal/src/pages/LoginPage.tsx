@@ -6,8 +6,8 @@ export function LoginPage() {
   const nav = useNavigate()
   return (
     <AuthLayout
-      title="KBZ LIFE Agent Portal"
-      subtitle="Enter your registered mobile number and password. We’ll send an SMS code next."
+      showBrand
+      title="Sign in"
     >
       <Field label="Mobile number">
         <Input defaultValue="09 771 234 567" />

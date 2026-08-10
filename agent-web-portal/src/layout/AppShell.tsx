@@ -16,6 +16,8 @@ import {
   // Package, // Products tab — restore with nav child below when needed
 } from 'lucide-react'
 import { HeaderActions } from '@/layout/HeaderActions'
+import { BrandLogo } from '@/components/BrandLogo'
+import { PLATFORM_NAME, PLATFORM_SHORT } from '@/lib/brand'
 import { cn } from '@/lib/cn'
 
 const DASH_CHILDREN = [
@@ -97,11 +99,17 @@ export function AppShell() {
   return (
     <div className="grid min-h-screen grid-cols-[72px_1fr] lg:grid-cols-[220px_1fr]">
       <aside className="flex flex-col gap-1 bg-gradient-to-b from-deep to-baltic p-3 text-white">
-        <div className="mb-3 px-2 pt-1 text-center font-display text-xl leading-tight lg:text-left">
-          KBZ LIFE
-          <small className="mt-1 block font-sans text-[11px] font-semibold opacity-70 max-lg:hidden">
-            Agent Portal
-          </small>
+        <div className="mb-3 px-1 pt-1 text-center lg:px-2 lg:text-left" title={PLATFORM_NAME}>
+          <BrandLogo
+            className="mb-2 justify-center rounded-xl bg-white/95 px-2 py-1.5 lg:justify-start"
+            imgClassName="h-8 max-lg:h-7"
+          />
+          <div className="hidden font-display text-[13px] font-semibold leading-snug lg:block">
+            {PLATFORM_SHORT}
+            <small className="mt-0.5 block font-sans text-[10px] font-semibold tracking-wide text-white/65 uppercase">
+              Digital Platform
+            </small>
+          </div>
         </div>
 
         <NavGroup
@@ -157,12 +165,11 @@ export function AppShell() {
 
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line bg-white/90 px-5 py-3.5 backdrop-blur-md">
-          <div className="flex items-center gap-2.5 font-extrabold text-deep">
-            <div className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-sky to-baltic text-xs font-extrabold text-white">
-              KL
-            </div>
-            <div>
-              KBZ LIFE <span className="font-semibold text-muted">· Agency</span>
+          <div className="flex min-w-0 items-center gap-2.5 font-extrabold text-deep" title={PLATFORM_NAME}>
+            <BrandLogo className="shrink-0" imgClassName="h-9" />
+            <div className="min-w-0 leading-tight">
+              <span className="block truncate text-sm sm:text-[15px]">{PLATFORM_SHORT}</span>
+              <span className="hidden text-xs font-semibold text-muted sm:block">Digital Platform · Web</span>
             </div>
           </div>
           <HeaderActions unread={3} />
