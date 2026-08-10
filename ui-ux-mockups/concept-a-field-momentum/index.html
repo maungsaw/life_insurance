@@ -753,6 +753,149 @@
       color: var(--danger);
     }
 
+    /* Team performance · Coolors blues (docs/32) */
+    .team-hero {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .team-ring {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      flex-shrink: 0;
+    }
+
+    .team-ring svg {
+      width: 88px;
+      height: 88px;
+      transform: rotate(-90deg);
+    }
+
+    .team-ring .pct {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--brand-deep);
+    }
+
+    .team-hero .meta b {
+      display: block;
+      font-size: 14px;
+    }
+
+    .team-hero .meta span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .metric-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .metric-card .lbl {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .metric-card .val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 4px 0;
+    }
+
+    .metric-card .hbar {
+      height: 6px;
+      border-radius: 999px;
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .metric-card .hbar i {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--brand-deep), var(--brand-2));
+    }
+
+    .rank-n {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--brand-deep);
+      font-size: 11px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .trend-fake {
+      height: 72px;
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--brand-2) 12%, transparent)),
+        repeating-linear-gradient(90deg, transparent, transparent 18px, var(--line) 18px, var(--line) 19px);
+      position: relative;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .trend-fake::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--brand);
+      transform: rotate(-8deg);
+      transform-origin: left center;
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 20%, transparent);
+    }
+
+    .hier-chip {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .hier-chip span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
     .sheet-mask {
       display: none;
       position: absolute;
@@ -2617,48 +2760,298 @@
             </div>
           </section>
 
-          <!-- MANAGER -->
+          <!-- TEAM PERFORMANCE · Coolors blues · docs/32 -->
           <section class="screen" id="s-manager">
             <div class="pad">
-              <div class="section-h">
-                <h3>Team performance</h3><button class="link" onclick="go('s-home')">My KPIs</button>
+              <div class="greeting" style="margin-bottom:10px;">
+                <div class="greeting-left">
+                  <div class="avatar">M</div>
+                  <div class="copy">
+                    <div style="font-size:12px;color:var(--muted);font-weight:600;">Sales Manager</div>
+                    <h2 style="font-size:18px;margin:0;">Mg Htet</h2>
+                  </div>
+                </div>
+                <button class="link" type="button" onclick="go('s-home')">My KPIs</button>
               </div>
+              <div class="title" style="font-size:22px;margin-bottom:8px;">Team performance</div>
               <div class="seg">
                 <button class="on" id="tog1" onclick="toggleTeam(true)">Personal Team</button>
                 <button id="tog2" onclick="toggleTeam(false)">Total Group</button>
               </div>
-              <div class="kpi" style="margin-bottom:10px;">
-                <div class="label">Actual vs Target · APE / FYP / SFYP / Weighted FYP</div>
-                <div class="value">82% of monthly target</div>
-                <div class="delta up">1st level direct reports</div>
+
+              <div id="teamPersonal">
+                <div class="team-hero">
+                  <div class="team-ring" aria-hidden="true">
+                    <svg viewBox="0 0 88 88">
+                      <circle cx="44" cy="44" r="36" fill="none" stroke="var(--line)" stroke-width="8" />
+                      <circle cx="44" cy="44" r="36" fill="none" stroke="var(--brand-deep)" stroke-width="8"
+                        stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="50" />
+                    </svg>
+                    <div class="pct">78%</div>
+                  </div>
+                  <div class="meta">
+                    <b>Overall vs target</b>
+                    <span>Actual 125.4M · Target 160M</span>
+                    <span style="display:block;margin-top:4px;">1st-level direct reports · Aug 2026</span>
+                  </div>
+                </div>
+                <div class="metric-grid">
+                  <div class="metric-card">
+                    <div class="lbl">APE</div>
+                    <div class="val">83%</div>
+                    <div class="hbar"><i style="width:83%"></i></div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="lbl">FYP</div>
+                    <div class="val">78%</div>
+                    <div class="hbar"><i style="width:78%"></i></div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="lbl">Subsequent FYP</div>
+                    <div class="val">75%</div>
+                    <div class="hbar"><i style="width:75%"></i></div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="lbl">Weighted FYP</div>
+                    <div class="val">60%</div>
+                    <div class="hbar"><i style="width:60%"></i></div>
+                  </div>
+                </div>
+                <div class="section-h">
+                  <h3>Top performers</h3>
+                  <button class="link" type="button" onclick="go('s-team-members')">All members</button>
+                </div>
+                <div class="list">
+                  <div class="row" onclick="go('s-fa-perf')">
+                    <div class="rank-n">1</div>
+                    <div class="dot">TH</div>
+                    <div class="meta"><b>Thura Htun</b><span>FA · AM01 · FYP 92%</span></div>
+                    <span class="pill on-live">92%</span>
+                  </div>
+                  <div class="row" onclick="go('s-fa-perf')">
+                    <div class="rank-n">2</div>
+                    <div class="dot">NW</div>
+                    <div class="meta"><b>Nwe Nwe</b><span>FA · AM01 · FYP 81%</span></div>
+                    <span class="pill">81%</span>
+                  </div>
+                  <div class="row" onclick="go('s-fa-perf')">
+                    <div class="rank-n">3</div>
+                    <div class="dot">AC</div>
+                    <div class="meta"><b>Aye Chan</b><span>FA · AM02 · FYP 74%</span></div>
+                    <span class="pill warn">74%</span>
+                  </div>
+                </div>
+                <div class="section-h" style="margin-top:12px;">
+                  <h3>MDRT</h3>
+                  <button class="link" type="button" onclick="go('s-mdrt')">Open tracker</button>
+                </div>
+                <div class="soft-banner" onclick="go('s-mdrt')">
+                  <div class="dot">◎</div>
+                  <div>
+                    <b>8 / 24 FAs qualified · 33%</b>
+                    <span>Tap for All · Qualified · In Progress</span>
+                  </div>
+                </div>
               </div>
-              <div class="section-h">
-                <h3>MDRT tracker</h3>
+
+              <div id="teamGroup" style="display:none;">
+                <p class="sub" style="margin-bottom:8px;">Full downline · open a line to see FAs</p>
+                <div class="hier-chip">
+                  <span>DM · Mg Htet</span>
+                  <span>3 SAM</span>
+                  <span>8 AM</span>
+                  <span>24 FA</span>
+                </div>
+                <div class="list">
+                  <div class="row" onclick="go('s-team-group')">
+                    <div class="dot">S1</div>
+                    <div class="meta"><b>SAM 01 · Yangon</b><span>8 FAs · 86% of target</span></div>
+                    <span class="pill on-live">86%</span>
+                  </div>
+                  <div class="row" onclick="go('s-team-group')">
+                    <div class="dot">S2</div>
+                    <div class="meta"><b>SAM 02 · Bago</b><span>7 FAs · 62% of target</span></div>
+                    <span class="pill danger">62%</span>
+                  </div>
+                  <div class="row" onclick="go('s-team-group')">
+                    <div class="dot">S3</div>
+                    <div class="meta"><b>SAM 03 · Mandalay</b><span>9 FAs · 78% of target</span></div>
+                    <span class="pill">78%</span>
+                  </div>
+                </div>
+                <div class="info-card" style="margin-top:12px;">
+                  <div class="lbl">Total team trend</div>
+                  <div class="trend-fake" aria-hidden="true"></div>
+                  <p class="sub" style="margin:8px 0 0;font-size:11px;">Mar → Aug · mock sparkline</p>
+                </div>
               </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-team-members">
+            <div class="pad">
+              <button class="link" type="button" onclick="go('s-manager')">← Team performance</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">Team members</div>
+              <p class="sub">Direct reports · tap for FA performance</p>
               <div class="list">
-                <div class="row">
+                <div class="row" onclick="go('s-fa-perf')">
                   <div class="dot">TH</div>
-                  <div class="meta"><b>Thura Htun</b><span>Premium 41.0M · Comm 4.2M</span></div><span
-                    class="pill">82%</span>
+                  <div class="meta"><b>Thura Htun</b><span>FA · AM01 · Target 5.5M · 92%</span></div>
+                  <span class="pill on-live">MDRT</span>
                 </div>
-                <div class="row">
+                <div class="row" onclick="go('s-fa-perf')">
                   <div class="dot">NW</div>
-                  <div class="meta"><b>Nwe Nwe</b><span>Premium 22.5M · Comm 2.1M</span></div><span
-                    class="pill warn">45%</span>
+                  <div class="meta"><b>Nwe Nwe</b><span>FA · AM01 · Target 3.0M · 81%</span></div>
+                  <span class="pill">81%</span>
                 </div>
-                <div class="row">
+                <div class="row" onclick="go('s-fa-perf')">
+                  <div class="dot">AC</div>
+                  <div class="meta"><b>Aye Chan</b><span>FA · AM02 · Target 2.8M · 74%</span></div>
+                  <span class="pill warn">74%</span>
+                </div>
+                <div class="row" onclick="go('s-fa-perf')">
                   <div class="dot">ZK</div>
-                  <div class="meta"><b>Zaw Ko</b><span>Below target FYP</span></div><span
-                    class="pill danger">Flag</span>
+                  <div class="meta"><b>Zaw Ko</b><span>FA · AM02 · Target 1.5M · 52%</span></div>
+                  <span class="pill danger">Flag</span>
                 </div>
               </div>
-              <div class="section-h" style="margin-top:14px;">
-                <h3>Controls</h3>
+            </div>
+          </section>
+
+          <section class="screen" id="s-team-group">
+            <div class="pad">
+              <button class="link" type="button" onclick="go('s-manager')">← Total Group</button>
+              <div class="pd-eyebrow" style="margin-top:6px;">Hierarchy</div>
+              <div class="title" style="font-size:22px;margin-top:4px;">SAM 01 · Yangon</div>
+              <p class="sub">8 FAs · 86% of line target</p>
+              <div class="section-h">
+                <h3>Direct reports</h3>
               </div>
               <div class="list">
-                <div class="row" onclick="go('s-product-control')">
-                  <div class="dot">☰</div>
-                  <div class="meta"><b>Product control</b><span>On / Off · which FAs can sell</span></div>
+                <div class="row" onclick="go('s-fa-perf')">
+                  <div class="dot">TH</div>
+                  <div class="meta"><b>Thura Htun</b><span>92% · MDRT Qualified</span></div>
+                  <span class="pill on-live">OK</span>
+                </div>
+                <div class="row" onclick="go('s-fa-perf')">
+                  <div class="dot">NW</div>
+                  <div class="meta"><b>Nwe Nwe</b><span>81% · On Track</span></div>
+                  <span class="pill">OK</span>
+                </div>
+                <div class="row" onclick="go('s-fa-perf')">
+                  <div class="dot">SS</div>
+                  <div class="meta"><b>Su Su</b><span>74% · In Progress</span></div>
+                  <span class="pill warn">Watch</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-fa-perf">
+            <div class="pad">
+              <button class="link" type="button" onclick="go('s-team-members')">← Team members</button>
+              <div style="display:flex;gap:12px;align-items:center;margin:10px 0 8px;">
+                <div class="dot" style="width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:800;background:var(--accent-soft);color:var(--brand);">TH</div>
+                <div>
+                  <div class="title" style="margin:0;font-size:22px;">Thura Htun</div>
+                  <p class="sub" style="margin:4px 0 0;">FA · AM01 · Yangon</p>
+                </div>
+              </div>
+              <span class="pill on-live" style="margin-bottom:12px;display:inline-flex;">MDRT Qualified</span>
+              <div class="team-hero">
+                <div class="team-ring">
+                  <svg viewBox="0 0 88 88">
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="var(--line)" stroke-width="8" />
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="var(--brand)" stroke-width="8"
+                      stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="18" />
+                  </svg>
+                  <div class="pct">92%</div>
+                </div>
+                <div class="meta">
+                  <b>Achievement</b>
+                  <span>Actual 5.1M · Target 5.5M</span>
+                  <span style="display:block;margin-top:4px;">MDRT 108% of APE gate</span>
+                </div>
+              </div>
+              <div class="metric-grid">
+                <div class="metric-card">
+                  <div class="lbl">APE</div>
+                  <div class="val">4.2M</div>
+                  <div class="hbar"><i style="width:95%"></i></div>
+                </div>
+                <div class="metric-card">
+                  <div class="lbl">FYP</div>
+                  <div class="val">5.1M</div>
+                  <div class="hbar"><i style="width:92%"></i></div>
+                </div>
+                <div class="metric-card">
+                  <div class="lbl">Subsequent</div>
+                  <div class="val">0.98M</div>
+                  <div class="hbar"><i style="width:88%"></i></div>
+                </div>
+                <div class="metric-card">
+                  <div class="lbl">Weighted</div>
+                  <div class="val">3.4M</div>
+                  <div class="hbar"><i style="width:85%"></i></div>
+                </div>
+              </div>
+              <div class="info-card">
+                <div class="lbl">Personal trend</div>
+                <div class="trend-fake" aria-hidden="true"></div>
+                <p class="sub" style="margin:8px 0 0;font-size:11px;">Jan → Jul · mock</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="screen" id="s-mdrt">
+            <div class="pad">
+              <button class="link" type="button" onclick="go('s-manager')">← Team performance</button>
+              <div class="title" style="margin-top:8px;font-size:22px;">MDRT tracker</div>
+              <p class="sub">Team qualification · Coolors status pills</p>
+              <div class="team-hero">
+                <div class="team-ring">
+                  <svg viewBox="0 0 88 88">
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="var(--line)" stroke-width="8" />
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="var(--brand-deep)" stroke-width="8"
+                      stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="151" />
+                  </svg>
+                  <div class="pct">33%</div>
+                </div>
+                <div class="meta">
+                  <b>8 / 24 FAs qualified</b>
+                  <span>Portfolio / personal team slice</span>
+                </div>
+              </div>
+              <div class="cat-banner" role="tablist" aria-label="MDRT filter">
+                <button type="button" class="on" data-mdrt="all" onclick="filterMdrt('all', this)">All</button>
+                <button type="button" data-mdrt="qualified" onclick="filterMdrt('qualified', this)">Qualified</button>
+                <button type="button" data-mdrt="progress" onclick="filterMdrt('progress', this)">In Progress</button>
+              </div>
+              <div class="list" id="mdrtList">
+                <div class="row" data-mdrt="qualified" onclick="go('s-fa-perf')">
+                  <div class="dot">TH</div>
+                  <div class="meta"><b>Thura Htun</b><span>APE 41.0M · Qualified</span></div>
+                  <span class="pill on-live">Done</span>
+                </div>
+                <div class="row" data-mdrt="qualified" onclick="go('s-fa-perf')">
+                  <div class="dot">AA</div>
+                  <div class="meta"><b>Aung Aung</b><span>APE 38.2M · Qualified</span></div>
+                  <span class="pill on-live">Done</span>
+                </div>
+                <div class="row" data-mdrt="progress" onclick="go('s-fa-perf')">
+                  <div class="dot">MM</div>
+                  <div class="meta"><b>Mg Mg</b><span>APE 28.4M · 57% to gate</span></div>
+                  <span class="pill warn">57%</span>
+                </div>
+                <div class="row" data-mdrt="progress" onclick="go('s-fa-perf')">
+                  <div class="dot">KK</div>
+                  <div class="meta"><b>Kyaw Kyaw</b><span>APE 22.1M · 44% to gate</span></div>
+                  <span class="pill warn">44%</span>
+                </div>
+                <div class="row" data-mdrt="progress" onclick="go('s-fa-perf')">
+                  <div class="dot">KH</div>
+                  <div class="meta"><b>Khin Khin</b><span>APE 18.6M · 37% to gate</span></div>
+                  <span class="pill">37%</span>
                 </div>
               </div>
             </div>
@@ -4085,7 +4478,8 @@
     const wizardFlow = ['s-eapp', 's-eapp-2', 's-eapp-3', 's-eapp-4', 's-eapp-5', 's-eapp-6'];
     const wizardScreens = new Set([...wizardFlow, 's-eapp-ok']);
     const labels = [
-      ['s-splash', 'Splash'], ['s-login', 'Login'], ['s-forgot', 'Forgot'], ['s-otp', 'OTP'], ['s-home', 'FA Home'], ['s-manager', 'Manager'],
+      ['s-splash', 'Splash'], ['s-login', 'Login'], ['s-forgot', 'Forgot'], ['s-otp', 'OTP'], ['s-home', 'FA Home'],
+      ['s-manager', 'Team hub'], ['s-team-members', 'Members'], ['s-team-group', 'Group'], ['s-fa-perf', 'FA perf'], ['s-mdrt', 'MDRT'],
       ['s-leads', 'Leads'], ['s-lead', 'Lead profile'], ['s-addlead', 'Add lead'], ['s-editlead', 'Edit lead'],
       ['s-convert', 'Convert'], ['s-clients', 'Clients'], ['s-client', 'Client'], ['s-client-new', 'New client'],
       ['s-products', 'Products'], ['s-product-detail', 'Product detail'], ['s-product-control', 'Product control'],
@@ -4577,7 +4971,7 @@
         sellIds.includes(id) && t.dataset.go === 's-products' ||
         workIds.includes(id) && t.dataset.go === 's-tasks' ||
         (id === 's-profile' || id === 's-policy') && t.dataset.go === 's-profile' ||
-        (id === 's-home' || id === 's-manager') && t.dataset.go === 's-home'
+        (id === 's-home' || id === 's-manager' || id === 's-team-members' || id === 's-team-group' || id === 's-fa-perf' || id === 's-mdrt') && t.dataset.go === 's-home'
       ));
       if (id !== 's-eapp-3') {
         const banner = document.getElementById('fixBanner');
@@ -4715,8 +5109,22 @@
 
     document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => go(t.dataset.go)));
     function toggleTeam(personal) {
-      document.getElementById('tog1').classList.toggle('on', personal);
-      document.getElementById('tog2').classList.toggle('on', !personal);
+      document.getElementById('tog1')?.classList.toggle('on', personal);
+      document.getElementById('tog2')?.classList.toggle('on', !personal);
+      const p = document.getElementById('teamPersonal');
+      const g = document.getElementById('teamGroup');
+      if (p) p.style.display = personal ? '' : 'none';
+      if (g) g.style.display = personal ? 'none' : '';
+    }
+
+    function filterMdrt(status, btn) {
+      if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+      }
+      document.querySelectorAll('#mdrtList .row').forEach(r => {
+        const match = status === 'all' || r.dataset.mdrt === status;
+        r.style.display = match ? 'flex' : 'none';
+      });
     }
 
     go('s-splash');
