@@ -42,7 +42,7 @@ Same BRD IA and auth identity model — different codebases so mobile mockups st
 - Splash → Login → OTP → biometric → forgot
 - FA + Manager home
 - FR-03 Leads/Clients deep CRM
-- Products · Quote · e-App stepper · Tracker · Policy · **Product control** (On/Off · `23`)
+- Products · **Product detail** (brochure · rates) · Calculator · Save quote · **Start e-App hub** · e-App stepper · Tracker · Policy (see `24`)
 - FR-07 Calendar (Day/Week/Month) · create/status · no separate To-Do tab
 - Notifications · Announcements · Resources · Profile (ENG/MM)
 

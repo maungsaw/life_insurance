@@ -188,4 +188,5 @@ Subtitle must show progress, not only “Draft”:
 - [x] Shared progress header + sticky footer  
 - [x] Tab bar hidden during wizard  
 - [x] Jump nav lists each step for stakeholder walkthrough  
-- [x] Tracker links into correction path (KYC)
+- [x] Tracker links into correction path (KYC)  
+- [x] Post-submit **workflow status detail** + timeline (`26`)

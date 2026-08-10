@@ -4,7 +4,7 @@
 - [x] Splash / Login / OTP / Biometric / Forgot
 - [x] FA + Manager home
 - [x] Leads & Clients CRM (FR-03)
-- [x] Product · Quote · e-App stepper · Tracker · Policy (Products = HQ On catalog · `23`)
+- [x] Product · Product detail · Calculator · Save quote · Start e-App hub · e-App stepper · Tracker · Policy (`24`)
 - [x] FR-07 Tasks · Notifs · Announcements · Resources · Profile
 - [x] Coolors blue palette
 - [x] Web panel removed (portal is React)
