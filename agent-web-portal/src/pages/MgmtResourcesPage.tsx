@@ -92,11 +92,13 @@ const SEED_DOCS: Doc[] = [
   },
 ]
 
+/* Offline column UI hidden (docs/33) — restore with table Offline Td
 function offlinePill(v: OfflinePri) {
   if (v === 'priority') return <Pill tone="ok">Priority</Pill>
   if (v === 'ondemand') return <Pill>On demand</Pill>
   return <Pill tone="warn">Online only</Pill>
 }
+*/
 
 function statusPill(v: DocStatus) {
   if (v === 'live') return <Pill tone="ok">Live</Pill>
@@ -143,7 +145,7 @@ export function MgmtResourcesPage() {
     <div>
       <PageHeader
         title="Resource"
-        subtitle="FR-10 · Configure library sections · brochures · training · forms · mobile offline"
+        subtitle="FR-10 · Configure library sections · brochures · training · forms"
         actions={
           <>
             <Button variant="secondary" type="button" onClick={() => setShowSectionEditor((v) => !v)}>
@@ -159,7 +161,8 @@ export function MgmtResourcesPage() {
       <div className="grid gap-3.5 lg:grid-cols-[240px_1fr]">
         <Card title="Sections" className="h-fit">
           <p className="mb-3 text-xs text-muted">
-            Mobile chips follow <b className="text-deep">visible</b> order. Offline default seeds new uploads.
+            Mobile chips follow <b className="text-deep">visible</b> order.
+            {/* Offline default seeds new uploads. — hidden with Offline column (docs/33) */}
           </p>
           <ul className="space-y-1">
             {sections.map((s) => (
@@ -264,24 +267,27 @@ export function MgmtResourcesPage() {
 
           <Card
             title={activeMeta ? activeMeta.name : 'Documents'}
+            /* action count + offline hint hidden (docs/33)
             action={
               <span className="text-xs font-semibold text-muted">
                 {filteredDocs.length} live/draft · FA offline uses Priority first
               </span>
             }
+            */
           >
             {filteredDocs.length === 0 ? (
               <p className="py-8 text-center text-sm font-semibold text-muted">
                 No documents in this section yet. Upload a brochure, training pack, or form.
               </p>
             ) : (
-              <DataTable headers={['Title', 'File', 'Version', 'Offline', 'Status', 'Updated']}>
+              /* Offline column hidden for now — restore header + Td when needed (docs/33) */
+              <DataTable headers={['Title', 'File', 'Version', /* 'Offline', */ 'Status', 'Updated']}>
                 {filteredDocs.map((d) => (
                   <tr key={d.id}>
                     <Td className="font-bold">{d.title}</Td>
                     <Td className="text-muted">{d.file}</Td>
                     <Td>{d.version}</Td>
-                    <Td>{offlinePill(d.offline)}</Td>
+                    {/* <Td>{offlinePill(d.offline)}</Td> */}
                     <Td>{statusPill(d.status)}</Td>
                     <Td>{d.updated}</Td>
                   </tr>
@@ -315,6 +321,7 @@ export function MgmtResourcesPage() {
                 <Field label="File *">
                   <Input type="file" accept=".pdf,image/*" />
                 </Field>
+                {/* Offline priority field hidden with Offline column (docs/33)
                 <Field label="Offline priority">
                   <Select defaultValue={activeMeta?.offlineDefault ?? 'ondemand'}>
                     <option value="priority">Priority (prefetch on Wi‑Fi)</option>
@@ -322,6 +329,7 @@ export function MgmtResourcesPage() {
                     <option value="online">Online only</option>
                   </Select>
                 </Field>
+                */}
                 <Field label="Status">
                   <Select defaultValue="draft">
                     <option value="draft">Draft</option>

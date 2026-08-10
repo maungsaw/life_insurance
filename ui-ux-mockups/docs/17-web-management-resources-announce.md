@@ -16,6 +16,8 @@ Compose / publish company announcements. Mobile supports **notification announce
 
 Library sections from web; announcements feed is read-only on mobile.
 
+**Resource list UX (`33`):** documents table shows Title · File · Version · Status · Updated. **Offline** column and “FA offline uses Priority first” hint are hidden until mobile cache policy is productized.
+
 ---
 
 ## 2. Decision
