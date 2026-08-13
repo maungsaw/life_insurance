@@ -29,40 +29,32 @@ class DashboardPage extends StatelessWidget {
       AppServiceItem(
         label: 'Leads',
         icon: Icons.person_add_alt_1_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabLeads),
+        onTap: () => MainTabScope.maybeOf(context)?.openLeads(),
       ),
       AppServiceItem(
         label: 'Quote',
         icon: Icons.calculate_outlined,
-        onTap: () => _stub(
-          context,
-          'Quote',
-          'Product → Calculator spine coming next (FR-04). Prototype stub — no API.',
-        ),
+        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
       ),
       AppServiceItem(
         label: 'e-App',
         icon: Icons.description_outlined,
-        onTap: () => _stub(
-          context,
-          'e-App',
-          'Start e-Application hub (FR-05). Prototype stub — no API.',
-        ),
+        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
       ),
       AppServiceItem(
         label: 'Customers',
         icon: Icons.policy_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabCustomers),
+        onTap: () => _goTab(context, PrototypeConfig.tabCustomer),
       ),
       AppServiceItem(
         label: 'Tasks',
         icon: Icons.task_alt_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabTasks),
+        onTap: () => MainTabScope.maybeOf(context)?.openTasks(),
       ),
       AppServiceItem(
-        label: 'More',
-        icon: Icons.menu,
-        onTap: () => _goTab(context, PrototypeConfig.tabMore),
+        label: 'Profile',
+        icon: Icons.person_outline,
+        onTap: () => _goTab(context, PrototypeConfig.tabProfile),
       ),
     ];
 
@@ -189,6 +181,8 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 28),
+                  // Clearance for floating pill nav + FAB (docs/44).
+                  const SizedBox(height: 72),
                 ]),
               ),
             ),

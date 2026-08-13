@@ -81,6 +81,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
       message: 'The password has been created successfully.',
       actionLabel: 'OK',
       onAction: () {
+        PrototypeConfig.markActive(widget.args.mobile);
         Navigator.of(context).pop(true);
         context.go(AppRoute.login);
       },

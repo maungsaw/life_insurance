@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _onLogin() async {
-    final mobile = _mobileCtrl.text.trim();
+    final mobile = PrototypeConfig.normalizeMobile(_mobileCtrl.text);
     final password = _passwordCtrl.text;
 
     setState(() {
@@ -39,6 +39,12 @@ class _LoginPageState extends State<LoginPage> {
     await Future<void>.delayed(PrototypeConfig.shortDelay);
     if (!mounted) return;
     setState(() => _submitting = false);
+
+    // Pending invite — never open FA Home (docs/45).
+    if (PrototypeConfig.isRegistrationPending(mobile)) {
+      context.go(AppRoute.registrationPending);
+      return;
+    }
 
     if (PrototypeConfig.isWrongPassword(password)) {
       setState(() => _passwordError = 'Incorrect password');

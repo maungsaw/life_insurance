@@ -3,33 +3,44 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/components/components.dart';
 
-/// Terminal pending state — wait for KBZ invitation (docs/43). HOME → Login.
+/// Terminal pending state — wait for KBZ invitation (docs/43 · 45). HOME → Login.
 class RegistrationPendingPage extends StatelessWidget {
   const RegistrationPendingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Column(
             children: [
-              const Spacer(),
+              const Spacer(flex: 2),
               Container(
-                width: 88,
-                height: 88,
+                width: 96,
+                height: 96,
                 decoration: BoxDecoration(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.lightPrimary,
+                    width: 3,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  size: 44,
-                  color: AppColors.lightPrimary,
+                child: const Center(
+                  child: Text(
+                    '···',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.lightPrimary,
+                      letterSpacing: 2,
+                      height: 1,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               const Text(
                 'Registration Inprogress',
                 textAlign: TextAlign.center,
@@ -39,7 +50,7 @@ class RegistrationPendingPage extends StatelessWidget {
                   color: AppColors.lightTextPrimary,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               const Text(
                 'Your registration is in pending stage and please kindly wait invitation from KBZLIFE Insurance.',
                 textAlign: TextAlign.center,
@@ -49,12 +60,12 @@ class RegistrationPendingPage extends StatelessWidget {
                   color: AppColors.lightTextSecondary,
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 36),
               AppButton(
                 label: 'HOME',
                 onPressed: () => context.go(AppRoute.login),
               ),
-              const SizedBox(height: 28),
+              const Spacer(flex: 3),
             ],
           ),
         ),

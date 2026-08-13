@@ -1,4 +1,4 @@
-/// Local-only prototype rules (docs/37 · docs/38). No network.
+/// Local-only prototype rules (docs/37 · docs/38 · docs/45). No network.
 abstract final class PrototypeConfig {
   static const bool enabled = true;
 
@@ -15,25 +15,64 @@ abstract final class PrototypeConfig {
   /// Forgot Password wireframe shows 06:00.
   static const int otpResendSecondsForgot = 360;
 
-  /// Mock CORE gate: mobile must look like MM local format.
-  static bool isCoreMobileOk(String mobile) {
-    final t = mobile.trim();
-    return t.startsWith('09') && t.length >= 9;
-  }
-
-  /// Demo: CORE-shaped number that lands on invitation pending screen.
+  /// Demo: always lands on Registration Inprogress (docs/45).
   static const String registrationPendingDemo = '09999999999';
 
-  static bool isRegistrationPending(String mobile) =>
-      mobile.trim().replaceAll(' ', '') == registrationPendingDemo;
+  /// Session memory — lost on app restart (prototype only).
+  static final Set<String> _pendingMobiles = {registrationPendingDemo};
+  static final Set<String> _activeMobiles = <String>{};
+
+  static String normalizeMobile(String mobile) =>
+      mobile.trim().replaceAll(' ', '');
+
+  /// Mock CORE gate: mobile must look like MM local format.
+  static bool isCoreMobileOk(String mobile) {
+    final t = normalizeMobile(mobile);
+    return t.startsWith('09') && t.length >= 9;
+  }
 
   static bool isWrongPassword(String password) =>
       password.trim() == wrongPasswordDemo;
 
-  // Bottom-nav indices in LifeInsurancePage
+  static bool isRegistrationPending(String mobile) {
+    final t = normalizeMobile(mobile);
+    if (t == registrationPendingDemo) return true;
+    return _pendingMobiles.contains(t);
+  }
+
+  static bool isRegistrationActive(String mobile) {
+    final t = normalizeMobile(mobile);
+    if (t == registrationPendingDemo) return false;
+    return _activeMobiles.contains(t);
+  }
+
+  static void markPending(String mobile) {
+    final t = normalizeMobile(mobile);
+    if (t.isEmpty) return;
+    _activeMobiles.remove(t);
+    _pendingMobiles.add(t);
+  }
+
+  /// After Create Password SAVE — invited agent can log in.
+  static void markActive(String mobile) {
+    final t = normalizeMobile(mobile);
+    if (t.isEmpty) return;
+    if (t == registrationPendingDemo) return;
+    _pendingMobiles.remove(t);
+    _activeMobiles.add(t);
+  }
+
+  // Bottom-nav slots (docs/44): Home · Customer · Product · Profile
   static const int tabHome = 0;
-  static const int tabLeads = 1;
-  static const int tabCustomers = 2;
-  static const int tabTasks = 3;
-  static const int tabMore = 4;
+  static const int tabCustomer = 1;
+  static const int tabProduct = 2;
+  static const int tabProfile = 3;
+  /// Off-nav stack pages (reachable via Home tiles / FAB).
+  static const int tabLeads = 4;
+  static const int tabTasks = 5;
+
+  /// Alias — prefer [tabCustomer].
+  static const int tabCustomers = tabCustomer;
+  /// Alias — prefer [tabProfile].
+  static const int tabMore = tabProfile;
 }

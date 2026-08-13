@@ -4,7 +4,7 @@ import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/auth/presentation/models/auth_flow_args.dart';
 import 'package:life_insurance/features/components/components.dart';
 
-/// Register Account — wireframe 5 fields (docs/40). Prototype · no API.
+/// Register Account — wireframe 5 fields (docs/40 · 45). Prototype · no API.
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
     await Future<void>.delayed(PrototypeConfig.shortDelay);
     if (!mounted) return;
 
-    final mobile = _mobileCtrl.text.trim().replaceAll(' ', '');
+    final mobile = PrototypeConfig.normalizeMobile(_mobileCtrl.text);
     final coreOk = PrototypeConfig.isCoreMobileOk(mobile);
     setState(() => _checking = false);
 
@@ -69,12 +69,25 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    // Already waiting for KBZ invitation — same pending screen, no OTP.
     if (PrototypeConfig.isRegistrationPending(mobile)) {
-      setState(() => _showBusy = true);
-      await Future<void>.delayed(PrototypeConfig.mediumDelay);
-      if (!mounted) return;
-      setState(() => _showBusy = false);
       context.go(AppRoute.registrationPending);
+      return;
+    }
+
+    // Password already created — send to Login.
+    if (PrototypeConfig.isRegistrationActive(mobile)) {
+      await AppStatusDialog.show(
+        context,
+        type: AppStatusType.info,
+        title: 'Already registered',
+        message: 'This mobile already has an account. Please log in.',
+        actionLabel: 'Login Now',
+        onAction: () {
+          Navigator.of(context).pop(true);
+          context.go(AppRoute.login);
+        },
+      );
       return;
     }
 
@@ -97,8 +110,8 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_showBusy) {
       return const Scaffold(
         body: AppBusyView(
-          message: 'Registration in progress',
-          detail: 'Checking CORE and preparing OTP…',
+          message: 'Please wait…',
+          detail: 'Checking your details…',
         ),
       );
     }

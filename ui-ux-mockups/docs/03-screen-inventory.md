@@ -20,6 +20,10 @@
 - [x] Update Password + OTP Verification full screen (`42`)
 - [x] Auth end-to-end journey — LoginRegister connected map (`43`)
 - [x] Auth P0 ship — Forgot→OTP · self-service dialogs · pending · Login chrome (`43`)
+- [x] Bottom nav pill + center FAB brainstorm (`44`)
+- [x] Bottom nav pill + FAB shipped in Flutter shell (`44`)
+- [x] Register again → pending invitation brainstorm (`45`)
+- [x] Register pending / re-register / login gate shipped (`45`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile
