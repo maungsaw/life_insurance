@@ -15,6 +15,11 @@
 - [x] Prototype mode map LoginRegister → Home, zero API (`37`)
 - [x] Flutter lib P0 prototype polish — wrong pw · OTP timer · tab switch (`38`)
 - [x] Splash/Login `main-logo.png` via `AppAssets` (`39`)
+- [x] Register Account 5-field wireframe form (`40`)
+- [x] Forgot Password + OTP modal wireframe (`41`)
+- [x] Update Password + OTP Verification full screen (`42`)
+- [x] Auth end-to-end journey — LoginRegister connected map (`43`)
+- [x] Auth P0 ship — Forgot→OTP · self-service dialogs · pending · Login chrome (`43`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

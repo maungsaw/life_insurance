@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             const AppBrandMark.login(),
             const SizedBox(height: 36),
             const Text(
-              'Login to your account',
+              'Login Account',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
@@ -112,14 +112,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 24),
             AppButton(
-              label: 'Login',
+              label: 'LOGIN',
               isLoading: _submitting,
               onPressed: _onLogin,
             ),
             const SizedBox(height: 28),
             AppTextLink(
-              prefix: "Don't have an account? ",
-              linkLabel: 'Register',
+              prefix: 'Not account yet? ',
+              linkLabel: 'Register here',
               onTap: () => context.push(AppRoute.register),
             ),
           ],

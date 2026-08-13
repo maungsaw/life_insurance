@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/core.dart'
+    show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/auth/presentation/models/auth_flow_args.dart';
 import 'package:life_insurance/features/components/components.dart';
 
-/// Forgot password — mobile + mandatory reset remark (FR-01).
+/// Forgot Password — mobile + GET CODE → OTP Verification (docs/43).
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
@@ -14,104 +17,162 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _mobileCtrl = TextEditingController();
-  final _remarkCtrl = TextEditingController();
+
   String? _mobileError;
-  String? _remarkError;
-  bool _submitting = false;
+  bool _gettingCode = false;
+  bool _codeSent = false;
+  int _secondsLeft = 0;
+  Timer? _timer;
 
   @override
   void dispose() {
+    _timer?.cancel();
     _mobileCtrl.dispose();
-    _remarkCtrl.dispose();
     super.dispose();
   }
 
-  Future<void> _submit() async {
+  String get _mmss {
+    final m = (_secondsLeft ~/ 60).toString().padLeft(2, '0');
+    final s = (_secondsLeft % 60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
+
+  String get _mobileNormalized =>
+      _mobileCtrl.text.trim().replaceAll(' ', '');
+
+  void _startTimer() {
+    _timer?.cancel();
+    setState(() => _secondsLeft = PrototypeConfig.otpResendSecondsForgot);
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      if (_secondsLeft <= 1) {
+        t.cancel();
+        setState(() => _secondsLeft = 0);
+      } else {
+        setState(() => _secondsLeft -= 1);
+      }
+    });
+  }
+
+  Future<void> _getCode({bool isResend = false}) async {
     setState(() {
       _mobileError =
-          _mobileCtrl.text.trim().isEmpty ? 'Enter your registered mobile number' : null;
-      _remarkError =
-          _remarkCtrl.text.trim().isEmpty ? 'Remark / reason is required (FR-01)' : null;
+          _mobileNormalized.isEmpty ? 'Enter your mobile number' : null;
     });
-    if (_mobileError != null || _remarkError != null) return;
+    if (_mobileError != null) return;
 
-    setState(() => _submitting = true);
+    setState(() => _gettingCode = true);
     await Future<void>.delayed(PrototypeConfig.shortDelay);
     if (!mounted) return;
-    setState(() => _submitting = false);
+    setState(() {
+      _gettingCode = false;
+      _codeSent = true;
+    });
+    _startTimer();
 
-    context.push(
-      AppRoute.otp,
-      extra: AuthOtpArgs(
-        mobile: _mobileCtrl.text.trim(),
-        purpose: AuthOtpPurpose.forgotPassword,
-        resetRemark: _remarkCtrl.text.trim(),
-      ),
-    );
+    if (!isResend) {
+      context.push(
+        AppRoute.otp,
+        extra: AuthOtpArgs(
+          mobile: _mobileNormalized,
+          purpose: AuthOtpPurpose.forgotPassword,
+          resetRemark: 'Password reset (forgot)',
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final canResend = _codeSent && _secondsLeft == 0 && !_gettingCode;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Forgot password'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        title: const SizedBox.shrink(),
+        elevation: 0,
       ),
       body: AppAuthShell(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const AppBrandMark(logoHeight: 48),
-            const SizedBox(height: 24),
             const Text(
-              'Reset via SMS OTP',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'We will send a 6-digit code to your registered mobile. A remark is required for audit.',
-              style: TextStyle(fontSize: 13, height: 1.4, color: Color(0xFF757575)),
+              'Forgot Password',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 24),
             AppTextField(
-              label: 'Mobile number',
-              hintText: '09xxxxxxxxx',
+              label: 'Enter Your Mobile Number',
+              isRequired: true,
+              hintText: '09 750337968',
               controller: _mobileCtrl,
               keyboardType: TextInputType.phone,
-              prefixIcon: Icons.phone_android_outlined,
+              textInputAction: TextInputAction.done,
               errorText: _mobileError,
-              textInputAction: TextInputAction.next,
               onChanged: (_) {
                 if (_mobileError != null) setState(() => _mobileError = null);
               },
+              onSubmitted: (_) => _getCode(),
             ),
-            const SizedBox(height: 14),
-            AppTextField(
-              label: 'Remark / reason *',
-              hintText: 'Why are you resetting?',
-              controller: _remarkCtrl,
-              prefixIcon: Icons.notes_outlined,
-              errorText: _remarkError,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _submit(),
-              onChanged: (_) {
-                if (_remarkError != null) setState(() => _remarkError = null);
-              },
-            ),
+            if (_codeSent) ...[
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Text(
+                          "Don't get a code? ",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: canResend
+                                ? AppColors.lightTextSecondary
+                                : AppColors.lightTextHint,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed:
+                              canResend ? () => _getCode(isResend: true) : null,
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors.lightPrimary,
+                            disabledForegroundColor: AppColors.lightTextHint,
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'Resend',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    _mmss,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             const SizedBox(height: 28),
             AppButton(
-              label: 'Send OTP',
-              isLoading: _submitting,
-              onPressed: _submit,
-            ),
-            const SizedBox(height: 16),
-            AppTextLink(
-              prefix: 'Remembered it? ',
-              linkLabel: 'Back to Login',
-              onTap: () => context.go(AppRoute.login),
+              label: 'GET CODE',
+              isLoading: _gettingCode,
+              onPressed: () => _getCode(),
             ),
           ],
         ),

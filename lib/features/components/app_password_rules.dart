@@ -9,28 +9,34 @@ class PasswordRule {
   final bool Function(String value) validator;
 }
 
-/// Wireframe defaults: 8–16 · uppercase · number · special.
+/// LoginRegister Update Password checklist (docs/42).
 abstract final class PasswordRulesCatalog {
   static List<PasswordRule> get wireframeDefaults => [
         PasswordRule(
           id: 'length',
-          label: 'At least 8–16 characters',
-          validator: (v) => v.length >= 8 && v.length <= 16,
-        ),
-        PasswordRule(
-          id: 'upper',
-          label: 'Must contain at least 1 uppercase letter',
-          validator: (v) => RegExp(r'[A-Z]').hasMatch(v),
+          label: 'Must be at least 8 Characters!',
+          validator: (v) => v.length >= 8,
         ),
         PasswordRule(
           id: 'number',
-          label: 'Must contain at least 1 number',
+          label: 'Must contain at least 1 number!',
           validator: (v) => RegExp(r'[0-9]').hasMatch(v),
         ),
         PasswordRule(
+          id: 'upper',
+          label: 'Must contain at least 1 Capital Case!',
+          validator: (v) => RegExp(r'[A-Z]').hasMatch(v),
+        ),
+        PasswordRule(
+          id: 'lower',
+          label: 'Must contain at least 1 Small Case!',
+          validator: (v) => RegExp(r'[a-z]').hasMatch(v),
+        ),
+        PasswordRule(
           id: 'special',
-          label: 'Must contain at least 1 special character',
-          validator: (v) => RegExp(r'[!@#$%^&*(),.?":{}|<>_\-\[\]\\;/+=~`]').hasMatch(v),
+          label: 'Must contain at least 1 Special Characters!',
+          validator: (v) =>
+              RegExp(r'[!@#$%^&*(),.?":{}|<>_\-\[\]\\;/+=~`]').hasMatch(v),
         ),
       ];
 
@@ -58,7 +64,7 @@ class AppPasswordRules extends StatelessWidget {
       children: list.map((rule) {
         final ok = rule.validator(password);
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -73,7 +79,7 @@ class AppPasswordRules extends StatelessWidget {
                   rule.label,
                   style: TextStyle(
                     fontSize: 13,
-                    color: ok ? AppColors.lightTextPrimary : AppColors.lightTextSecondary,
+                    color: ok ? AppColors.successGreen : AppColors.lightTextSecondary,
                     fontWeight: ok ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),

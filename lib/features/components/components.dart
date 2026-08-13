@@ -7,6 +7,7 @@ export 'dot_indicator.dart';
 export 'app_button.dart';
 export 'app_text_field.dart';
 export 'app_otp_field.dart';
+export 'app_otp_verify_dialog.dart';
 export 'app_password_rules.dart';
 export 'app_status_dialog.dart';
 export 'app_brand_mark.dart';

@@ -5,6 +5,7 @@ import 'package:life_insurance/features/components/app_button.dart';
 enum AppStatusType { success, warning, info }
 
 /// Centered status modal (Success / Warning / Info) from LoginRegister.
+/// Returns `true` on primary (YES/OK), `false` on secondary (NO).
 class AppStatusDialog extends StatelessWidget {
   const AppStatusDialog({
     super.key,
@@ -13,6 +14,8 @@ class AppStatusDialog extends StatelessWidget {
     required this.message,
     this.actionLabel = 'OK',
     this.onAction,
+    this.secondaryLabel,
+    this.onSecondary,
   });
 
   final AppStatusType type;
@@ -20,16 +23,21 @@ class AppStatusDialog extends StatelessWidget {
   final String message;
   final String actionLabel;
   final VoidCallback? onAction;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondary;
 
-  static Future<void> show(
+  /// Shows dialog. `true` = primary tapped, `false` = secondary, `null` = dismissed.
+  static Future<bool?> show(
     BuildContext context, {
     required AppStatusType type,
     required String title,
     required String message,
     String actionLabel = 'OK',
     VoidCallback? onAction,
+    String? secondaryLabel,
+    VoidCallback? onSecondary,
   }) {
-    return showDialog<void>(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AppStatusDialog(
@@ -37,7 +45,12 @@ class AppStatusDialog extends StatelessWidget {
         title: title,
         message: message,
         actionLabel: actionLabel,
-        onAction: onAction ?? () => Navigator.of(ctx).pop(),
+        secondaryLabel: secondaryLabel,
+        onAction: onAction ?? () => Navigator.of(ctx).pop(true),
+        onSecondary: onSecondary ??
+            (secondaryLabel != null
+                ? () => Navigator.of(ctx).pop(false)
+                : null),
       ),
     );
   }
@@ -56,6 +69,8 @@ class AppStatusDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (icon, color) = _visual;
+    final hasSecondary = secondaryLabel != null && secondaryLabel!.isNotEmpty;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       insetPadding: const EdgeInsets.symmetric(horizontal: 28),
@@ -86,10 +101,32 @@ class AppStatusDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 22),
-            AppButton(
-              label: actionLabel,
-              onPressed: onAction ?? () => Navigator.of(context).pop(),
-            ),
+            if (hasSecondary)
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      label: secondaryLabel!,
+                      variant: AppButtonVariant.secondary,
+                      onPressed: onSecondary ??
+                          () => Navigator.of(context).pop(false),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AppButton(
+                      label: actionLabel,
+                      onPressed:
+                          onAction ?? () => Navigator.of(context).pop(true),
+                    ),
+                  ),
+                ],
+              )
+            else
+              AppButton(
+                label: actionLabel,
+                onPressed: onAction ?? () => Navigator.of(context).pop(true),
+              ),
           ],
         ),
       ),

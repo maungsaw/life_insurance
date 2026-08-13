@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<AppearanceBloc, AppearanceState>(
           builder: (context, state) {
             return MaterialApp.router(
-              title: 'Secured App',
+              debugShowCheckedModeBanner: false,
+              title: 'KBZ Life Insurance',
               routerConfig: AppNavigator.router,
               theme: AppTheme.lightTheme,
               darkTheme: AppTheme.darkTheme,

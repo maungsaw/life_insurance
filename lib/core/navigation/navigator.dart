@@ -10,6 +10,7 @@ import 'package:life_insurance/features/features.dart'
         OtpVerifyPage,
         CreatePasswordPage,
         RegisterPage,
+        RegistrationPendingPage,
         AuthOtpArgs,
         AuthOtpPurpose,
         AuthPasswordArgs,
@@ -150,6 +151,16 @@ class AppNavigator {
           return AppTransition.slide(
             key: state.pageKey,
             child: const RegisterPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.registrationPending,
+        name: AppRoute.registrationPending,
+        pageBuilder: (context, state) {
+          return AppTransition.fade(
+            key: state.pageKey,
+            child: const RegistrationPendingPage(),
           );
         },
       ),

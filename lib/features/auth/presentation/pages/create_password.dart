@@ -4,7 +4,7 @@ import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/auth/presentation/models/auth_flow_args.dart';
 import 'package:life_insurance/features/components/components.dart';
 
-/// Create / Update password with live wireframe rules checklist.
+/// Update / Create password — wireframe checklist + SAVE (docs/42 · 43).
 class CreatePasswordPage extends StatefulWidget {
   const CreatePasswordPage({super.key, required this.args});
 
@@ -36,7 +36,8 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     final rulesOk = PasswordRulesCatalog.allPassed(_password);
 
     setState(() {
-      _passwordError = !rulesOk ? 'Password does not meet all requirements' : null;
+      _passwordError =
+          !rulesOk ? 'Password does not meet all requirements' : null;
       _confirmError = !match ? 'Passwords do not match' : null;
     });
     if (_passwordError != null || _confirmError != null) return;
@@ -46,16 +47,41 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     if (!mounted) return;
     setState(() => _submitting = false);
 
+    if (_isUpdate) {
+      final proceed = await AppStatusDialog.show(
+        context,
+        type: AppStatusType.warning,
+        title: 'Warning Message',
+        message:
+            'Your password will be updated on self-service. Do you want to proceed?',
+        actionLabel: 'YES',
+        secondaryLabel: 'NO',
+      );
+      if (!mounted || proceed != true) return;
+
+      await AppStatusDialog.show(
+        context,
+        type: AppStatusType.success,
+        title: 'Password Updated',
+        message:
+            'The password has also changed for self-service. Please log in again.',
+        actionLabel: 'OK',
+        onAction: () {
+          Navigator.of(context).pop(true);
+          context.go(AppRoute.login);
+        },
+      );
+      return;
+    }
+
     await AppStatusDialog.show(
       context,
       type: AppStatusType.success,
-      title: _isUpdate ? 'Password updated' : 'Password created',
-      message: _isUpdate
-          ? 'You can sign in with your new password.'
-          : 'Your account is ready. Sign in to continue.',
-      actionLabel: 'Go to Login',
+      title: 'Success!',
+      message: 'The password has been created successfully.',
+      actionLabel: 'OK',
       onAction: () {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
         context.go(AppRoute.login);
       },
     );
@@ -65,36 +91,28 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isUpdate ? 'Update password' : 'Create password'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        title: const SizedBox.shrink(),
+        elevation: 0,
       ),
       body: AppAuthShell(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const AppBrandMark(logoHeight: 48),
-            const SizedBox(height: 20),
             Text(
-              _isUpdate ? 'Set a new password' : 'Create your password',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+              _isUpdate ? 'Update Password' : 'Create Password',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
             ),
-            const SizedBox(height: 6),
-            Text(
-              _isUpdate && widget.args.resetRemark != null
-                  ? 'Reset reason on file: ${widget.args.resetRemark}'
-                  : 'Use a strong password that meets the rules below.',
-              style: const TextStyle(fontSize: 13, height: 1.4, color: Color(0xFF757575)),
-            ),
-            const SizedBox(height: 22),
+            const SizedBox(height: 24),
             AppTextField(
-              label: _isUpdate ? 'New password' : 'Password',
-              hintText: 'Enter password',
+              label: 'New Password',
+              isRequired: true,
+              hintText: 'Enter new password',
               controller: _passwordCtrl,
               obscureable: true,
-              prefixIcon: Icons.lock_outline,
               errorText: _passwordError,
               textInputAction: TextInputAction.next,
               onChanged: (v) => setState(() {
@@ -102,15 +120,13 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                 if (_passwordError != null) _passwordError = null;
               }),
             ),
-            const SizedBox(height: 12),
-            AppPasswordRules(password: _password),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             AppTextField(
-              label: 'Confirm password',
+              label: 'Confirm Password',
+              isRequired: true,
               hintText: 'Re-enter password',
               controller: _confirmCtrl,
               obscureable: true,
-              prefixIcon: Icons.lock_outline,
               errorText: _confirmError,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _submit(),
@@ -118,9 +134,11 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
                 if (_confirmError != null) setState(() => _confirmError = null);
               },
             ),
+            const SizedBox(height: 20),
+            AppPasswordRules(password: _password),
             const SizedBox(height: 28),
             AppButton(
-              label: _isUpdate ? 'Update password' : 'Create password',
+              label: 'SAVE',
               isLoading: _submitting,
               onPressed: _submit,
             ),

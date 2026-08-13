@@ -22,6 +22,7 @@ class AppTextField extends StatefulWidget {
     this.inputFormatters,
     this.autofillHints,
     this.textCapitalization = TextCapitalization.none,
+    this.isRequired = false,
   });
 
   final String? label;
@@ -40,6 +41,7 @@ class AppTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Iterable<String>? autofillHints;
   final TextCapitalization textCapitalization;
+  final bool isRequired;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -63,12 +65,24 @@ class _AppTextFieldState extends State<AppTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.label != null) ...[
-          Text(
-            widget.label!,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.lightTextPrimary,
+          Text.rich(
+            TextSpan(
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.lightTextPrimary,
+              ),
+              children: [
+                TextSpan(text: widget.label),
+                if (widget.isRequired)
+                  const TextSpan(
+                    text: ' *',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+              ],
             ),
           ),
           const SizedBox(height: 8),

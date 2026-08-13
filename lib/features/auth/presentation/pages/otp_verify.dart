@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/core.dart'
+    show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/auth/presentation/models/auth_flow_args.dart';
 import 'package:life_insurance/features/components/components.dart';
 
-/// OTP verification — prototype timer + local verify (docs/38).
+/// OTP Verification full screen — wireframe (docs/42).
 class OtpVerifyPage extends StatefulWidget {
   const OtpVerifyPage({super.key, required this.args});
 
@@ -24,6 +25,15 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
   late int _secondsLeft;
   Timer? _timer;
 
+  /// Wireframe OTP Verification always shows 06:00 (docs/43).
+  int get _resendTotal => PrototypeConfig.otpResendSecondsForgot;
+
+  String get _mmss {
+    final m = (_secondsLeft ~/ 60).toString().padLeft(2, '0');
+    final s = (_secondsLeft % 60).toString().padLeft(2, '0');
+    return '$m:$s';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +48,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
 
   void _startResendCooldown() {
     _timer?.cancel();
-    setState(() => _secondsLeft = PrototypeConfig.otpResendSeconds);
+    setState(() => _secondsLeft = _resendTotal);
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) {
         t.cancel();
@@ -53,7 +63,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
     });
   }
 
-  Future<void> _verify([String? completed]) async {
+  Future<void> _confirm([String? completed]) async {
     final code = completed ?? _code;
     if (code.length != PrototypeConfig.otpLength) {
       setState(() => _error = 'Enter the ${PrototypeConfig.otpLength}-digit OTP');
@@ -76,7 +86,9 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
       extra: AuthPasswordArgs(
         mobile: widget.args.mobile,
         mode: mode,
-        resetRemark: widget.args.resetRemark,
+        resetRemark: mode == AuthPasswordMode.update
+            ? (widget.args.resetRemark ?? 'Password reset (forgot)')
+            : widget.args.resetRemark,
       ),
     );
   }
@@ -88,41 +100,27 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
     if (!mounted) return;
     setState(() => _resending = false);
     _startResendCooldown();
-    await AppStatusDialog.show(
-      context,
-      type: AppStatusType.success,
-      title: 'OTP sent',
-      message: 'A new code was sent to ${widget.args.mobile}. (Prototype — any ${PrototypeConfig.otpLength} digits work.)',
-      actionLabel: 'OK',
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final masked = _maskMobile(widget.args.mobile);
     final canResend = _secondsLeft == 0 && !_resending;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify OTP'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        title: const SizedBox.shrink(),
+        elevation: 0,
       ),
       body: AppAuthShell(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const AppBrandMark(logoHeight: 48),
-            const SizedBox(height: 24),
             const Text(
-              'Enter verification code',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'We sent a ${PrototypeConfig.otpLength}-digit code to $masked',
-              style: const TextStyle(fontSize: 13, height: 1.4, color: Color(0xFF757575)),
+              'OTP Verification',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 28),
             AppOtpField(
@@ -131,7 +129,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                 _code = v;
                 if (_error != null) setState(() => _error = null);
               },
-              onCompleted: _verify,
+              onCompleted: _confirm,
             ),
             if (_error != null) ...[
               const SizedBox(height: 10),
@@ -144,11 +142,23 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                 ),
               ),
             ],
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _mmss,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.lightTextSecondary,
+                ),
+              ),
+            ),
             const SizedBox(height: 28),
             AppButton(
-              label: 'Verify',
+              label: 'CONFIRM',
               isLoading: _submitting,
-              onPressed: _verify,
+              onPressed: _confirm,
             ),
             const SizedBox(height: 16),
             if (_resending)
@@ -159,27 +169,41 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                   child: CircularProgressIndicator(strokeWidth: 2.4),
                 ),
               )
-            else if (!canResend)
-              Text(
-                'Resend code in 0:${_secondsLeft.toString().padLeft(2, '0')}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
-              )
             else
-              AppTextLink(
-                prefix: "Didn't receive the code? ",
-                linkLabel: 'Resend',
-                onTap: _resend,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't get a code? ",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: canResend
+                          ? AppColors.lightTextSecondary
+                          : AppColors.lightTextHint,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: canResend ? _resend : null,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.lightPrimary,
+                      disabledForegroundColor: AppColors.lightTextHint,
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text(
+                      'Resend',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
           ],
         ),
       ),
     );
-  }
-
-  String _maskMobile(String mobile) {
-    final t = mobile.trim();
-    if (t.length < 4) return t;
-    return '${t.substring(0, 2)}******${t.substring(t.length - 2)}';
   }
 }
