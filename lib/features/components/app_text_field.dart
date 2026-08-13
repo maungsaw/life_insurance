@@ -18,6 +18,9 @@ class AppTextField extends StatefulWidget {
     this.prefixIcon,
     this.obscureable = false,
     this.enabled = true,
+    this.readOnly = false,
+    this.onTap,
+    this.suffix,
     this.maxLength,
     this.inputFormatters,
     this.autofillHints,
@@ -37,6 +40,9 @@ class AppTextField extends StatefulWidget {
   final IconData? prefixIcon;
   final bool obscureable;
   final bool enabled;
+  final bool readOnly;
+  final VoidCallback? onTap;
+  final Widget? suffix;
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
   final Iterable<String>? autofillHints;
@@ -91,6 +97,8 @@ class _AppTextFieldState extends State<AppTextField> {
           controller: widget.controller,
           focusNode: widget.focusNode,
           enabled: widget.enabled,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
           obscureText: _obscure,
           keyboardType: widget.keyboardType,
           textInputAction: widget.textInputAction,
@@ -119,7 +127,7 @@ class _AppTextFieldState extends State<AppTextField> {
                       color: AppColors.lightTextSecondary,
                     ),
                   )
-                : null,
+                : widget.suffix,
             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,

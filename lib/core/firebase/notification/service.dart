@@ -58,9 +58,9 @@ class NotificationService {
   }) async {
     // 1. Initialize Firebase FIRST before accessing any Firebase instances
     if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(options: options);
     } else {
-      Firebase.app(); // Optional: returns the existing [DEFAULT] app
+      Firebase.app();
     }
 
     // 2. Now it is safe to assign the instances

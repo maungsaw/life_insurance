@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:life_insurance/core/core.dart'
     show FirebaseOptions, NotificationService, NotificationActions;
@@ -14,17 +16,20 @@ abstract class FirebaseInjection {
 
       final instance = NotificationService.instance;
 
-      await instance.initialize(
-        options: options,
-        onNavigate: NotificationActions.handleNotificationNavigation,
-        onPermissionResult: (status) => debugPrint('Permission: $status'),
-        backgroundMsgCallback: (data) async =>
-            debugPrint('Background msg: ${data.messageId}'),
-      );
+      await instance
+          .initialize(
+            options: options,
+            onNavigate: NotificationActions.handleNotificationNavigation,
+            onPermissionResult: (status) => debugPrint('Permission: $status'),
+            backgroundMsgCallback: (data) async =>
+                debugPrint('Background msg: ${data.messageId}'),
+          )
+          .timeout(const Duration(seconds: 6));
 
       try {
-        final fcmToken = await instance.getToken();
-        // await PushTokenService.saveFcmToken(fcmToken);
+        final fcmToken = await instance
+            .getToken()
+            .timeout(const Duration(seconds: 4));
         if (fcmToken != null && fcmToken.isNotEmpty) {
           debugPrint('FCM Token: $fcmToken');
         } else {
@@ -35,7 +40,14 @@ abstract class FirebaseInjection {
           'FCM token unavailable. Pushy will be used if available: $e',
         );
       }
-      await instance.subscribeTopic(topic: 'maintainance');
+
+      try {
+        await instance
+            .subscribeTopic(topic: 'maintainance')
+            .timeout(const Duration(seconds: 3));
+      } catch (e) {
+        debugPrint('Topic subscribe skipped: $e');
+      }
     } catch (e, stackTrace) {
       debugPrint('Firebase services init skipped: $e');
       debugPrint('$stackTrace');

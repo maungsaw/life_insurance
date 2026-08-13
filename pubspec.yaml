@@ -60,4 +60,5 @@ flutter:
   assets:
     - assets/main-logo.png
     - assets/images.png
+    - assets/galaxy-member.png
   

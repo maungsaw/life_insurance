@@ -12,6 +12,7 @@ class AppButton extends StatelessWidget {
     this.variant = AppButtonVariant.primary,
     this.isLoading = false,
     this.height = 50,
+    this.icon,
   });
 
   final String label;
@@ -19,20 +20,28 @@ class AppButton extends StatelessWidget {
   final AppButtonVariant variant;
   final bool isLoading;
   final double height;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null && !isLoading;
+    final labelStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w700);
     final child = isLoading
         ? const SizedBox(
             width: 22,
             height: 22,
             child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
           )
-        : Text(
-            label,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          );
+        : icon == null
+            ? Text(label, style: labelStyle)
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 20),
+                  const SizedBox(width: 8),
+                  Text(label, style: labelStyle),
+                ],
+              );
 
     switch (variant) {
       case AppButtonVariant.primary:
@@ -63,7 +72,7 @@ class AppButton extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: isLoading
-                ? SizedBox(
+                ? const SizedBox(
                     width: 22,
                     height: 22,
                     child: CircularProgressIndicator(
@@ -71,10 +80,7 @@ class AppButton extends StatelessWidget {
                       color: AppColors.lightPrimary,
                     ),
                   )
-                : Text(
-                    label,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
+                : child,
           ),
         );
       case AppButtonVariant.text:

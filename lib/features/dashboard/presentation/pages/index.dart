@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
+import 'package:go_router/go_router.dart';
+import 'package:life_insurance/core/core.dart'
+    show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
+import 'package:life_insurance/features/notification/presentation/models/notification_mock_data.dart';
 
-/// FA Home — wireframe layout, mock data only (docs/36 · docs/46).
+/// FA Home — wireframe layout, mock data only (docs/36 · docs/46 · docs/49).
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -20,6 +23,10 @@ class DashboardPage extends StatelessWidget {
 
   void _goTab(BuildContext context, int index) {
     MainTabScope.maybeOf(context)?.goToTab(index);
+  }
+
+  void _openNotifications(BuildContext context) {
+    context.push(AppRoute.notifications);
   }
 
   @override
@@ -90,11 +97,8 @@ class DashboardPage extends StatelessWidget {
                 child: AppHomeHeader(
                   name: HomeMockData.agentName,
                   greeting: HomeMockData.greeting,
-                  onNotifTap: () => _stub(
-                    context,
-                    'Notifications',
-                    'Inbox UI (FR-08) — next Flutter prototype pass.',
-                  ),
+                  hasUnread: NotificationMockData.unreadCount > 0,
+                  onNotifTap: () => _openNotifications(context),
                 ),
               ),
             ),
@@ -109,6 +113,14 @@ class DashboardPage extends StatelessWidget {
                       context,
                       'Commission',
                       'History list UI later — display only, no payout (docs/34).',
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  AppGalaxyMemberBanner(
+                    onTap: () => _stub(
+                      context,
+                      'Galaxy Member',
+                      'Membership benefits later — prototype stub, no API.',
                     ),
                   ),
                   const SizedBox(height: 22),
@@ -159,11 +171,7 @@ class DashboardPage extends StatelessWidget {
                     subtitle: HomeMockData.renewalBody,
                     icon: Icons.notifications_none_rounded,
                     timeLabel: HomeMockData.renewalTime,
-                    onTap: () => _stub(
-                      context,
-                      'Policy Renewal',
-                      HomeMockData.renewalBody,
-                    ),
+                    onTap: () => _openNotifications(context),
                   ),
                   const SizedBox(height: 22),
                   const AppSectionHeader(title: 'Promotion & Campaign'),

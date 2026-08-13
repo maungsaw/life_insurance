@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:life_insurance/app/di/app_injection.dart' show AppInjection;
@@ -14,26 +15,36 @@ class MaintenanceNotifier extends ValueNotifier<bool> {
 
   /// Initializes Remote Config and sets up event listeners
   void initialize() {
+    if (Firebase.apps.isEmpty) {
+      debugPrint('MaintenanceNotifier: Firebase not ready — skip Remote Config');
+      return;
+    }
+
     _configureRemoteConfig();
 
-    // 1. Listen to Remote Config updates from Firebase
-    _configSubscription = FirebaseRemoteConfig.instance.onConfigUpdated.listen((
-      event,
-    ) async {
-      await fetchAndCheckMaintenance();
-    });
+    try {
+      _configSubscription = FirebaseRemoteConfig.instance.onConfigUpdated.listen((
+        event,
+      ) async {
+        await fetchAndCheckMaintenance();
+      });
+    } catch (e) {
+      debugPrint('MaintenanceNotifier: onConfigUpdated skipped: $e');
+    }
 
-    // 2. Listen to network restoration
-    _networkSubscription = AppInjection.sl<NetworkConnectionService>()
-        .onConnected
-        .listen((_) {
-          debugPrint(
-            'MaintenanceNotifier: Network restored. Re-checking maintenance mode...',
-          );
-          fetchAndCheckMaintenance();
-        });
+    try {
+      _networkSubscription = AppInjection.sl<NetworkConnectionService>()
+          .onConnected
+          .listen((_) {
+            debugPrint(
+              'MaintenanceNotifier: Network restored. Re-checking maintenance mode...',
+            );
+            fetchAndCheckMaintenance();
+          });
+    } catch (e) {
+      debugPrint('MaintenanceNotifier: network listen skipped: $e');
+    }
 
-    // 3. Initial check
     fetchAndCheckMaintenance();
   }
 
@@ -42,7 +53,7 @@ class MaintenanceNotifier extends ValueNotifier<bool> {
       await FirebaseRemoteConfig.instance.setConfigSettings(
         RemoteConfigSettings(
           fetchTimeout: const Duration(seconds: 10),
-          minimumFetchInterval: Duration.zero, // Use Duration.zero for testing
+          minimumFetchInterval: Duration.zero,
         ),
       );
     } catch (e) {
@@ -50,29 +61,37 @@ class MaintenanceNotifier extends ValueNotifier<bool> {
     }
   }
 
-  /// Fetches latest Remote Config values if online, then updates maintenance state
   Future<void> fetchAndCheckMaintenance() async {
-    final networkService = AppInjection.sl<NetworkConnectionService>();
+    if (Firebase.apps.isEmpty) return;
 
-    if (networkService.value == NetworkStatus.online) {
-      try {
-        await FirebaseRemoteConfig.instance.fetchAndActivate();
-      } catch (e) {
-        debugPrint('RemoteConfig fetch error (offline/timeout): $e');
+    try {
+      final networkService = AppInjection.sl<NetworkConnectionService>();
+      if (networkService.value == NetworkStatus.online) {
+        try {
+          await FirebaseRemoteConfig.instance
+              .fetchAndActivate()
+              .timeout(const Duration(seconds: 8));
+        } catch (e) {
+          debugPrint('RemoteConfig fetch error (offline/timeout): $e');
+        }
       }
+      _checkMaintenance();
+    } catch (e) {
+      debugPrint('MaintenanceNotifier fetch skipped: $e');
     }
-
-    _checkMaintenance();
   }
 
   void _checkMaintenance() {
-    final isMaintenance = FirebaseRemoteConfig.instance.getBool(
-      RemoteConfigKeys.isMaintenanceMode,
-    );
-
-    // Notify listeners only when value changes
-    if (value != isMaintenance) {
-      value = isMaintenance;
+    if (Firebase.apps.isEmpty) return;
+    try {
+      final isMaintenance = FirebaseRemoteConfig.instance.getBool(
+        RemoteConfigKeys.isMaintenanceMode,
+      );
+      if (value != isMaintenance) {
+        value = isMaintenance;
+      }
+    } catch (e) {
+      debugPrint('MaintenanceNotifier check skipped: $e');
     }
   }
 

@@ -11,6 +11,19 @@ import 'package:life_insurance/features/features.dart'
         CreatePasswordPage,
         RegisterPage,
         RegistrationPendingPage,
+        NotificationsPage,
+        NotificationDetailPage,
+        NotificationProductPage,
+        NotificationItem,
+        NotificationMockData,
+        ProfileDetailsPage,
+        ChangePasswordPage,
+        FaqPage,
+        FaqDetailPage,
+        FaqItem,
+        FaqMockData,
+        NotificationPrefsPage,
+        CommissionReportPage,
         AuthOtpArgs,
         AuthOtpPurpose,
         AuthPasswordArgs,
@@ -161,6 +174,100 @@ class AppNavigator {
           return AppTransition.fade(
             key: state.pageKey,
             child: const RegistrationPendingPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.notifications,
+        name: AppRoute.notifications,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const NotificationsPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.notificationDetail,
+        name: AppRoute.notificationDetail,
+        pageBuilder: (context, state) {
+          final item = state.extra as NotificationItem? ??
+              NotificationMockData.items.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: NotificationDetailPage(item: item),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.notificationProduct,
+        name: AppRoute.notificationProduct,
+        pageBuilder: (context, state) {
+          final item = state.extra as NotificationItem?;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: NotificationProductPage(item: item),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profileDetails,
+        name: AppRoute.profileDetails,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const ProfileDetailsPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profilePassword,
+        name: AppRoute.profilePassword,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const ChangePasswordPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profileFaq,
+        name: AppRoute.profileFaq,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const FaqPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profileFaqDetail,
+        name: AppRoute.profileFaqDetail,
+        pageBuilder: (context, state) {
+          final item = state.extra as FaqItem? ?? FaqMockData.items.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: FaqDetailPage(item: item),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profileNotificationPrefs,
+        name: AppRoute.profileNotificationPrefs,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const NotificationPrefsPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.profileReport,
+        name: AppRoute.profileReport,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const CommissionReportPage(),
           );
         },
       ),

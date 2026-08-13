@@ -28,6 +28,12 @@
 - [x] Home dashboard wireframe layout shipped (`46`)
 - [x] Floating nav transparent host brainstorm (`47`)
 - [x] Floating nav overlay · transparent host shipped (`47`)
+- [x] Galaxy Member banner placement brainstorm (`48`)
+- [x] Galaxy Member banner on Home (after Commission) (`48`)
+- [x] Home bell → Notification inbox brainstorm (`49`)
+- [x] Home bell → Notification list + detail shipped (`49`)
+- [x] Profile settings hub brainstorm (`50`)
+- [x] Profile settings hub + sub-screens shipped (`50`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

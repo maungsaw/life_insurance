@@ -8,4 +8,7 @@ abstract final class AppAssets {
 
   /// Geometric brand mark only (no wordmark text).
   static const String brandMark = 'assets/images.png';
+
+  /// Galaxy Member status banner (Home, after Commission — docs/48).
+  static const String galaxyMember = 'assets/galaxy-member.png';
 }
