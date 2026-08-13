@@ -9,6 +9,12 @@
 - [x] FR-07 Tasks · Notifs · Announcements · Resources · Profile
 - [x] Coolors blue palette
 - [x] Web panel removed (portal is React)
+- [x] Wireframe × BRD source of truth (`34`) — backlog P0–P2 for parity
+- [x] Auth DRY widgets + Forgot/OTP/Password/Register (`35`)
+- [x] FA Home mock UI — commission · services · KPIs · MDRT (`36`)
+- [x] Prototype mode map LoginRegister → Home, zero API (`37`)
+- [x] Flutter lib P0 prototype polish — wrong pw · OTP timer · tab switch (`38`)
+- [x] Splash/Login `main-logo.png` via `AppAssets` (`39`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

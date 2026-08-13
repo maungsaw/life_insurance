@@ -1,8 +1,12 @@
 # KBZ LIFE Agent App — UI/UX Brainstorm & Information Architecture
 
 **Source:** Business Requirement Document v2.3 (Agency Sales Digital Platform)  
+**Wireframes:** `/Wireframe/` — visual reference (see governing pack **`34-wireframe-brd-mobile-source-of-truth.md`**)  
 **Scope of this pack:** End-to-end UI/UX exploration — 3 distinct design directions  
 **Audience:** Stakeholders, product, design, engineering
+
+> **Governing update:** For mobile work that must satisfy both BRD and stakeholder wireframes, use **`docs/34`** as the source of truth (BRD wins conflicts; Coolors blues; gap backlog P0–P2).  
+> **Prototype (no API):** clickable Splash → Auth → Home demo rules live in **`docs/37`**.
 
 ---
 

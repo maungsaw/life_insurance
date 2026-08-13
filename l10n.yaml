@@ -7,6 +7,3 @@ template-arb-file: app_en.arb
 output-dir: lib/core/localization
 
 output-localization-file: app_localizations.dart
-
-# Required to write directly to lib/ instead of .dart_tool
-synthetic-package: false
