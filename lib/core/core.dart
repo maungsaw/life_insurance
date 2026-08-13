@@ -10,3 +10,5 @@ export 'jobs/jobs.dart';
 export 'cache/cache.dart';
 export 'reminder/reminder.dart';
 export 'connection/connection.dart';
+export 'prototype/prototype.dart';
+export 'assets/assets.dart';

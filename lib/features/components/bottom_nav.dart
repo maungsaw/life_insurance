@@ -38,7 +38,7 @@ class AppBottomNavBar extends StatelessWidget {
       {
         'icon': Icons.menu,
         'activeIcon': Icons.menu_open_sharp,
-        'label': 'Profile',
+        'label': 'More',
       },
     ];
 

@@ -146,11 +146,11 @@ abstract class AppLocalizations {
   /// **'en'**
   String get languageCode;
 
-  /// Welcome message
+  /// Network connectivity status message
   ///
   /// In en, this message translates to:
-  /// **'Your network connection is :{status}.'**
-  String networkStatus(Object status);
+  /// **'Your network connection is: {status}.'**
+  String networkStatus(String status);
 
   /// No description provided for @offlineDataNotice.
   ///

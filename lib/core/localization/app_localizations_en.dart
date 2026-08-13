@@ -35,8 +35,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageCode => 'en';
 
   @override
-  String networkStatus(Object status) {
-    return 'Your network connection is :$status.';
+  String networkStatus(String status) {
+    return 'Your network connection is: $status.';
   }
 
   @override

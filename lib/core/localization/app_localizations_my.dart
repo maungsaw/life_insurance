@@ -29,14 +29,14 @@ class AppLocalizationsMy extends AppLocalizations {
   String get language => 'ဘာသာစကား';
 
   @override
-  String get english => 'English';
+  String get english => 'အင်္ဂလိပ်';
 
   @override
   String get languageCode => 'my';
 
   @override
-  String networkStatus(Object status) {
-    return 'Your network connection is :$status.';
+  String networkStatus(String status) {
+    return 'သင့်ကွန်ရက်ချိတ်ဆက်မှုအခြေအနေ - $status။';
   }
 
   @override

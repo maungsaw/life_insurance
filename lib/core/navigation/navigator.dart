@@ -6,6 +6,14 @@ import 'package:life_insurance/features/features.dart'
     show
         LanguagePage,
         LoginPage,
+        ForgotPasswordPage,
+        OtpVerifyPage,
+        CreatePasswordPage,
+        RegisterPage,
+        AuthOtpArgs,
+        AuthOtpPurpose,
+        AuthPasswordArgs,
+        AuthPasswordMode,
         SplashPage,
         ThemePage,
         LifeInsurancePage,
@@ -22,7 +30,7 @@ import 'transition.dart';
 class AppNavigator {
   static final GoRouter router = GoRouter(
     navigatorKey: AppRoot.rootKey,
-    initialLocation: AppRoute.home,
+    initialLocation: AppRoute.splash,
     debugLogDiagnostics: kDebugMode,
     //  refreshListenable: Injection.sl<AuthBloc>(),
     redirect: (context, state) async {
@@ -93,8 +101,56 @@ class AppNavigator {
       GoRoute(
         path: AppRoute.login,
         name: AppRoute.login,
-        builder: (_, _) {
-          return LoginPage();
+        builder: (_, _) => const LoginPage(),
+      ),
+      GoRoute(
+        path: AppRoute.forgotPassword,
+        name: AppRoute.forgotPassword,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const ForgotPasswordPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.otp,
+        name: AppRoute.otp,
+        pageBuilder: (context, state) {
+          final args = state.extra as AuthOtpArgs? ??
+              const AuthOtpArgs(
+                mobile: '',
+                purpose: AuthOtpPurpose.forgotPassword,
+              );
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: OtpVerifyPage(args: args),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.createPassword,
+        name: AppRoute.createPassword,
+        pageBuilder: (context, state) {
+          final args = state.extra as AuthPasswordArgs? ??
+              const AuthPasswordArgs(
+                mobile: '',
+                mode: AuthPasswordMode.create,
+              );
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: CreatePasswordPage(args: args),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.register,
+        name: AppRoute.register,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const RegisterPage(),
+          );
         },
       ),
     ],
