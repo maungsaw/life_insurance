@@ -22,11 +22,11 @@
   "english": "English",
 
   "languageCode": "en",
-  "networkStatus" :"Your network connection is :{status}.",
-    "@networkStatus": {
-    "description": "Welcome message",
-    "status": {
-      "username": {
+  "networkStatus": "Your network connection is: {status}.",
+  "@networkStatus": {
+    "description": "Network connectivity status message",
+    "placeholders": {
+      "status": {
         "type": "String"
       }
     }

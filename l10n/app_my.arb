@@ -4,13 +4,21 @@
   "appTitle": "လုံခြုံစိတ်ချရသော အက်ပ်",
 
   "welcomeMessage": "{username}၊ ပြန်လည်ကြိုဆိုပါသည်!",
-  "newtworkStatus" : "{status} အခြေအနေ ဖြစ်နေသည်။",
+  "networkStatus": "သင့်ကွန်ရက်ချိတ်ဆက်မှုအခြေအနေ - {status}။",
+  "@networkStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
 
   "login": "အကောင့်ဝင်ရန်",
   "logout": "ထွက်ရန်",
   "settings": "ဆက်တင်များ",
 
   "language": "ဘာသာစကား",
+  "english": "အင်္ဂလိပ်",
   "languageName": "မြန်မာ",
   "languageCode": "my",
 
