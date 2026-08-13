@@ -34,6 +34,8 @@
 - [x] Home bell → Notification list + detail shipped (`49`)
 - [x] Profile settings hub brainstorm (`50`)
 - [x] Profile settings hub + sub-screens shipped (`50`)
+- [x] Customer CRM hub brainstorm (`51`)
+- [x] Customer CRM hub + sub-screens shipped (`51`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

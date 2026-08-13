@@ -19,5 +19,7 @@ abstract class AppRoute {
   static const String profileNotificationPrefs = '/profile/notification-prefs';
   static const String profileReport = '/profile/report';
   static const String customerDetail = '/customer-detail';
+  static const String customerProfile = '/customer-profile';
+  static const String policyDetail = '/policy-detail';
   static const String leadDetail = '/lead-detail';
 }

@@ -32,7 +32,11 @@ import 'package:life_insurance/features/features.dart'
         ThemePage,
         LifeInsurancePage,
         CustomerDetailPage,
-        CustomerEntity,
+        CustomerProfileDetailsPage,
+        PolicyDetailsPage,
+        CustomerMock,
+        CustomerMockData,
+        PolicyMock,
         LeadEntity,
         LeadDetailPage;
 import 'package:life_insurance/features/widgets.dart';
@@ -86,9 +90,35 @@ class AppNavigator {
         path: AppRoute.customerDetail,
         name: AppRoute.customerDetail,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          return AppTransition.fade(
+          final customer = state.extra as CustomerMock? ??
+              CustomerMockData.customers.first;
+          return AppTransition.slide(
             key: state.pageKey,
-            child: CustomerDetailPage(customer: state.extra as CustomerEntity),
+            child: CustomerDetailPage(customer: customer),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.customerProfile,
+        name: AppRoute.customerProfile,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final customer = state.extra as CustomerMock? ??
+              CustomerMockData.customers.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: CustomerProfileDetailsPage(customer: customer),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.policyDetail,
+        name: AppRoute.policyDetail,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final policy = state.extra as PolicyMock? ??
+              CustomerMockData.customers.first.policies.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: PolicyDetailsPage(policy: policy),
           );
         },
       ),

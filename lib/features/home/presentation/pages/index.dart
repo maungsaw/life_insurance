@@ -18,7 +18,7 @@ class LifeInsurancePage extends StatefulWidget {
 class _LifeInsurancePageState extends State<LifeInsurancePage> {
   late final List<Widget> _pages = [
     const DashboardPage(),
-    CustomersPage(),
+    const CustomersPage(),
     const ProductHubPage(),
     const ProfilePage(),
     const LeadsPage(),
