@@ -55,76 +55,69 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                   color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.payments_outlined, color: Colors.white, size: 20),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () => setState(() => _hidden = !_hidden),
-                icon: Icon(
-                  _hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                child: const Icon(
+                  Icons.account_balance_wallet_outlined,
                   color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.95),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    if (widget.deltaLabel != null)
+                      Text(
+                        widget.deltaLabel!,
+                        style: const TextStyle(
+                          color: Color(0xFFBBF7D0),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            widget.title,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          if (widget.deltaLabel != null) ...[
-            const SizedBox(height: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFF4ADE80).withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                widget.deltaLabel!,
-                style: const TextStyle(
-                  color: Color(0xFFBBF7D0),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  _hidden ? '•••••••• MMK' : widget.amountLabel,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.2,
+                  ),
                 ),
               ),
-            ),
-          ],
-          const SizedBox(height: 10),
-          Text(
-            _hidden ? '•••••••• MMK' : widget.amountLabel,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.2,
-            ),
-          ),
-          if (widget.onDetails != null) ...[
-            const SizedBox(height: 12),
-            GestureDetector(
-              onTap: widget.onDetails,
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'View details',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                    ),
-                  ),
-                  SizedBox(width: 4),
-                  Icon(Icons.chevron_right, color: Colors.white, size: 18),
-                ],
+              IconButton(
+                onPressed: () => setState(() => _hidden = !_hidden),
+                icon: Icon(
+                  _hidden
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          ],
+              if (widget.onDetails != null)
+                IconButton(
+                  onPressed: widget.onDetails,
+                  icon: const Icon(Icons.arrow_forward, color: Colors.white),
+                ),
+            ],
+          ),
         ],
       ),
     );

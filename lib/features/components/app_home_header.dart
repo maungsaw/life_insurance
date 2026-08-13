@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/core/core.dart' show AppAssets, AppColors;
 
-/// Home top bar — greeting · avatar · period · notifications.
+/// Home top bar — brand mark · welcome · notification bell (docs/46).
 class AppHomeHeader extends StatelessWidget {
   const AppHomeHeader({
     super.key,
     required this.name,
-    this.greeting = 'Good day',
-    this.periodLabel = 'This month',
-    this.initials = 'FA',
-    this.onPeriodTap,
+    this.greeting = 'Good Morning',
     this.onNotifTap,
     this.hasUnread = true,
   });
 
   final String name;
   final String greeting;
-  final String periodLabel;
-  final String initials;
-  final VoidCallback? onPeriodTap;
   final VoidCallback? onNotifTap;
   final bool hasUnread;
 
@@ -26,69 +20,53 @@ class AppHomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          radius: 22,
-          backgroundColor: AppColors.lightPrimary,
-          child: Text(
-            initials,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 13,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            AppAssets.brandMark,
+            width: 40,
+            height: 40,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.lightPrimary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(Icons.shield_outlined, color: Colors.white),
             ),
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                greeting,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.lightTextSecondary,
-                ),
-              ),
-              Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        InkWell(
-          onTap: onPeriodTap,
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          child: Text.rich(
+            TextSpan(
               children: [
-                Text(
-                  periodLabel,
+                TextSpan(
+                  text: 'Welcome $name! ',
                   style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightPrimary,
+                    height: 1.25,
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down, size: 16),
+                TextSpan(
+                  text: greeting,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightTextSecondary,
+                    height: 1.25,
+                  ),
+                ),
               ],
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(width: 4),
         IconButton(
           onPressed: onNotifTap,
           icon: Badge(

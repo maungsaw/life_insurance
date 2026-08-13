@@ -24,6 +24,8 @@
 - [x] Bottom nav pill + FAB shipped in Flutter shell (`44`)
 - [x] Register again → pending invitation brainstorm (`45`)
 - [x] Register pending / re-register / login gate shipped (`45`)
+- [x] Home dashboard wireframe + brand-mark header brainstorm (`46`)
+- [x] Home dashboard wireframe layout shipped (`46`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

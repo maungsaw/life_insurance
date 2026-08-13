@@ -2,40 +2,33 @@ import 'package:flutter/material.dart' show Color;
 import 'package:life_insurance/features/components/components.dart'
     show AppPromoItem;
 
-/// Static demo data for Home until FR-02 APIs are wired (docs/36).
+/// Static demo data for Home until FR-02 APIs are wired (docs/36 · 46).
 abstract final class HomeMockData {
-  static const agentName = 'Mg Htet';
-  static const initials = 'MH';
-  static const greeting = 'Good morning';
-  static const periodLabel = 'Aug 2026';
+  static const agentName = 'Mr Chit';
+  static const greeting = 'Good Morning!';
 
   static const commissionAmount = '726,080.00 MMK';
-  static const commissionDelta = '↗ 15% vs last month';
+  static const commissionDelta = '↗ 15% up compared with last month';
 
-  static const newPolicies = '12';
-  static const activePolicies = '128';
-  static const fypPercent = '78%';
-  static const mdrtPercent = 0.62;
-  static const mdrtSubtitle = 'Premium 25.4M · Gate 41.0M';
+  static const policyActive = '20';
+  static const policyPending = '10';
+  static const policyExpired = '5';
 
-  static const dueAlertTitle = '3 premiums due this week';
-  static const dueAlertSubtitle = 'Follow up before grace period ends';
+  static const renewalTitle = 'Policy Renewal';
+  static const renewalBody =
+      'Your policy no 23471239074138 is expiring soon. Renew now to stay covered.';
+  static const renewalTime = '1d';
 
   static const promos = <AppPromoItem>[
     AppPromoItem(
-      title: 'Q3 Sales Incentive',
-      subtitle: 'Close 2 more policies for bonus tier',
+      title: 'Easily Claim Commission',
+      subtitle: 'Track and claim your earnings',
+      color: Color(0xFF00A6FB),
+    ),
+    AppPromoItem(
+      title: 'Unlock special discounts',
+      subtitle: 'Campaign offers for your clients',
       color: Color(0xFF006494),
-    ),
-    AppPromoItem(
-      title: 'MDRT Roadshow',
-      subtitle: 'Yangon · 20-Aug-2026',
-      color: Color(0xFF0582CA),
-    ),
-    AppPromoItem(
-      title: 'Product update',
-      subtitle: 'Endowment rates refreshed',
-      color: Color(0xFF003554),
     ),
   ];
 }

@@ -30,8 +30,15 @@ class AppServiceTile extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: Icon(item.icon, color: AppColors.lightPrimary, size: 26),
           ),
@@ -74,7 +81,7 @@ class AppServiceGrid extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 12,
         crossAxisSpacing: 8,
-        childAspectRatio: 0.92,
+        childAspectRatio: 0.78,
       ),
       itemBuilder: (context, i) => AppServiceTile(item: items[i]),
     );

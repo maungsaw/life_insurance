@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart'
-    show AppBottomNavBar, AppNavCenterFab, AppPillFabLocation, AppStatusDialog, AppStatusType;
+    show AppBottomNavBar, AppStatusDialog, AppStatusType;
 import 'package:life_insurance/features/features.dart'
     show DashboardPage, LeadsPage, TaskBoardPage, ProfilePage, CustomersPage;
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
@@ -157,11 +157,10 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
           index: _selectedIndex,
           children: _pages,
         ),
-        floatingActionButton: AppNavCenterFab(onPressed: _openFabSheet),
-        floatingActionButtonLocation: const AppPillFabLocation(),
         bottomNavigationBar: AppBottomNavBar(
           selectedIndex: _navHighlight,
           onTap: _onNavTap,
+          onFabPressed: _openFabSheet,
         ),
       ),
     );

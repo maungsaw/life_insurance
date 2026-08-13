@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
-import 'package:life_insurance/features/dashboard/presentation/widgets/chart.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 
-/// FA Home — wireframe + FR-02 layout, mock data only (docs/36 · docs/38).
+/// FA Home — wireframe layout, mock data only (docs/36 · docs/46).
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
@@ -27,34 +26,56 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final services = [
       AppServiceItem(
-        label: 'Leads',
-        icon: Icons.person_add_alt_1_outlined,
-        onTap: () => MainTabScope.maybeOf(context)?.openLeads(),
+        label: 'New Proposal',
+        icon: Icons.note_add_outlined,
+        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
       ),
       AppServiceItem(
-        label: 'Quote',
+        label: 'Product',
+        icon: Icons.grid_view_outlined,
+        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
+      ),
+      AppServiceItem(
+        label: 'Calculator',
         icon: Icons.calculate_outlined,
         onTap: () => _goTab(context, PrototypeConfig.tabProduct),
       ),
       AppServiceItem(
-        label: 'e-App',
-        icon: Icons.description_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
+        label: 'Commission',
+        icon: Icons.account_balance_wallet_outlined,
+        onTap: () => _stub(
+          context,
+          'Commission',
+          'History list later — display only, no payout (docs/34).',
+        ),
       ),
       AppServiceItem(
-        label: 'Customers',
-        icon: Icons.policy_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabCustomer),
+        label: 'Proposal Status',
+        icon: Icons.assignment_outlined,
+        onTap: () => _stub(
+          context,
+          'Proposal Status',
+          'Application tracker stub (FR-05).',
+        ),
       ),
       AppServiceItem(
-        label: 'Tasks',
+        label: 'Task Management',
         icon: Icons.task_alt_outlined,
         onTap: () => MainTabScope.maybeOf(context)?.openTasks(),
       ),
       AppServiceItem(
-        label: 'Profile',
-        icon: Icons.person_outline,
-        onTap: () => _goTab(context, PrototypeConfig.tabProfile),
+        label: 'CRM',
+        icon: Icons.groups_outlined,
+        onTap: () => _goTab(context, PrototypeConfig.tabCustomer),
+      ),
+      AppServiceItem(
+        label: 'Online',
+        icon: Icons.language_outlined,
+        onTap: () => _stub(
+          context,
+          'Online',
+          'Resources / portal stub — later pass.',
+        ),
       ),
     ];
 
@@ -65,17 +86,10 @@ class DashboardPage extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
+                padding: const EdgeInsets.fromLTRB(20, 12, 8, 8),
                 child: AppHomeHeader(
                   name: HomeMockData.agentName,
                   greeting: HomeMockData.greeting,
-                  periodLabel: HomeMockData.periodLabel,
-                  initials: HomeMockData.initials,
-                  onPeriodTap: () => _stub(
-                    context,
-                    'Period',
-                    'Month / YTD filter will bind to dashboard API later.',
-                  ),
                   onNotifTap: () => _stub(
                     context,
                     'Notifications',
@@ -97,70 +111,62 @@ class DashboardPage extends StatelessWidget {
                       'History list UI later — display only, no payout (docs/34).',
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const AppSectionHeader(title: 'Our services'),
+                  const SizedBox(height: 22),
+                  const AppSectionHeader(title: 'Our Services'),
                   const SizedBox(height: 12),
-                  AppServiceGrid(items: services),
+                  AppServiceGrid(items: services, crossAxisCount: 4),
                   const SizedBox(height: 8),
-                  const AppSectionHeader(title: 'This month'),
+                  AppSectionHeader(
+                    title: 'Policy',
+                    actionLabel: 'See all >',
+                    onAction: () => _stub(
+                      context,
+                      'Policies',
+                      'Policy list stub (FR-06).',
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
-                        child: AppKpiTile(
-                          label: 'New policies',
-                          value: HomeMockData.newPolicies,
-                          hint: 'vs last month +2',
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: AppKpiTile(
+                        child: AppPolicyStatCard(
                           label: 'Active',
-                          value: HomeMockData.activePolicies,
-                          hint: 'In force',
+                          value: HomeMockData.policyActive,
+                          accent: AppColors.successGreen,
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: AppKpiTile(
-                          label: 'FYP',
-                          value: HomeMockData.fypPercent,
-                          hint: 'of target',
+                        child: AppPolicyStatCard(
+                          label: 'Pending',
+                          value: HomeMockData.policyPending,
+                          accent: const Color(0xFFF59E0B),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: AppPolicyStatCard(
+                          label: 'Expired',
+                          value: HomeMockData.policyExpired,
+                          accent: const Color(0xFFE11D48),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  AppMdrtBar(
-                    percent: HomeMockData.mdrtPercent,
-                    subtitle: HomeMockData.mdrtSubtitle,
-                  ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   AppSoftBanner(
-                    title: HomeMockData.dueAlertTitle,
-                    subtitle: HomeMockData.dueAlertSubtitle,
-                    icon: Icons.notifications_active_outlined,
+                    title: HomeMockData.renewalTitle,
+                    subtitle: HomeMockData.renewalBody,
+                    icon: Icons.notifications_none_rounded,
+                    timeLabel: HomeMockData.renewalTime,
                     onTap: () => _stub(
                       context,
-                      'Premium due',
-                      'Due / renewal reminders — prototype stub (FR-08).',
+                      'Policy Renewal',
+                      HomeMockData.renewalBody,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  const AppSectionHeader(title: 'Performance trend'),
-                  const SizedBox(height: 10),
-                  const ChartCard(),
-                  const SizedBox(height: 20),
-                  AppSectionHeader(
-                    title: 'News & campaigns',
-                    actionLabel: 'See all',
-                    onAction: () => _stub(
-                      context,
-                      'Announcements',
-                      'Read-only feed stub (FR-09 / FR-10).',
-                    ),
-                  ),
+                  const SizedBox(height: 22),
+                  const AppSectionHeader(title: 'Promotion & Campaign'),
                   const SizedBox(height: 10),
                   AppPromoCarousel(
                     items: HomeMockData.promos,
@@ -170,18 +176,7 @@ class DashboardPage extends StatelessWidget {
                       HomeMockData.promos[i].subtitle,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  AppSoftBanner(
-                    title: 'Team performance',
-                    subtitle: 'Personal Team · Total Group · MDRT',
-                    onTap: () => _stub(
-                      context,
-                      'Manager view',
-                      'Flutter team hub (docs/32) — next pass. Prototype stub.',
-                    ),
-                  ),
                   const SizedBox(height: 28),
-                  // Clearance for floating pill nav + FAB (docs/44).
                   const SizedBox(height: 72),
                 ]),
               ),

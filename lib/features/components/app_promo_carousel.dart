@@ -83,59 +83,88 @@ class AppSoftBanner extends StatelessWidget {
     required this.subtitle,
     this.icon = Icons.groups_outlined,
     this.onTap,
+    this.timeLabel,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
   final VoidCallback? onTap;
+  final String? timeLabel;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.lightPrimary.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(14),
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      elevation: 0,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
           padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: AppColors.lightPrimary),
+                child: Icon(icon, color: AppColors.lightPrimary, size: 22),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                        color: AppColors.lightTextPrimary,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                              color: AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ),
+                        if (timeLabel != null)
+                          Text(
+                            timeLabel!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.lightTextHint,
+                            ),
+                          ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       subtitle,
                       style: const TextStyle(
                         fontSize: 12,
+                        height: 1.35,
                         color: AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.lightTextHint),
             ],
           ),
         ),
