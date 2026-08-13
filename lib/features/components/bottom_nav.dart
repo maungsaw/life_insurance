@@ -44,19 +44,22 @@ class AppBottomNavBar extends StatelessWidget {
       const _NavSpec(Icons.person_outline, Icons.person_rounded, 'Profile'),
     ];
 
-    return SizedBox(
-      height: topClearance + barHeight + bottomPad,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          horizontalInset,
-          0,
-          horizontalInset,
-          bottomPad,
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.bottomCenter,
-          children: [
+    // Transparent host — only the painted pill is opaque (docs/47).
+    return Material(
+      type: MaterialType.transparency,
+      child: SizedBox(
+        height: topClearance + barHeight + bottomPad,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalInset,
+            0,
+            horizontalInset,
+            bottomPad,
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.bottomCenter,
+            children: [
             // Pill bar
             SizedBox(
               height: barHeight,
@@ -89,6 +92,7 @@ class AppBottomNavBar extends StatelessWidget {
               child: _NavCenterFab(onPressed: onFabPressed),
             ),
           ],
+        ),
         ),
       ),
     );

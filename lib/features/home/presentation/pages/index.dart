@@ -153,14 +153,22 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
       openFabSheet: _openFabSheet,
       child: Scaffold(
         extendBody: true,
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _pages,
-        ),
-        bottomNavigationBar: AppBottomNavBar(
-          selectedIndex: _navHighlight,
-          onTap: _onNavTap,
-          onFabPressed: _openFabSheet,
+        backgroundColor: const Color(0xFFF8FAFC),
+        body: Stack(
+          children: [
+            IndexedStack(
+              index: _selectedIndex,
+              children: _pages,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: AppBottomNavBar(
+                selectedIndex: _navHighlight,
+                onTap: _onNavTap,
+                onFabPressed: _openFabSheet,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -26,6 +26,8 @@
 - [x] Register pending / re-register / login gate shipped (`45`)
 - [x] Home dashboard wireframe + brand-mark header brainstorm (`46`)
 - [x] Home dashboard wireframe layout shipped (`46`)
+- [x] Floating nav transparent host brainstorm (`47`)
+- [x] Floating nav overlay · transparent host shipped (`47`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile
