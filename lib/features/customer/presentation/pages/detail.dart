@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/core/core.dart'
+    show AppColors, AppRoute, AppExternalLaunch, ExternalLaunchResult;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
@@ -19,6 +20,7 @@ class CustomerDetailPage extends StatefulWidget {
 class _CustomerDetailPageState extends State<CustomerDetailPage> {
   late CustomerMock _customer;
   CustomerFilterSelection _policyFilter = CustomerFilterSelection.all;
+  bool _launching = false;
 
   @override
   void initState() {
@@ -40,22 +42,40 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     if (mounted) setState(() {});
   }
 
-  void _phone() {
-    AppStatusDialog.show(
+  Future<void> _phone() async {
+    if (_launching) return;
+    setState(() => _launching = true);
+    final result = await AppExternalLaunch.phone(_customer.phone);
+    if (!mounted) return;
+    setState(() => _launching = false);
+    if (result == ExternalLaunchResult.opened) return;
+    await AppStatusDialog.show(
       context,
       type: AppStatusType.info,
-      title: 'Phone',
-      message: _customer.phone,
+      title: result == ExternalLaunchResult.empty ? 'No phone on file' : 'Couldn’t open Phone',
+      message: result == ExternalLaunchResult.empty
+          ? 'This customer has no mobile number.'
+          : _customer.phone,
       actionLabel: 'OK',
     );
   }
 
-  void _email() {
-    AppStatusDialog.show(
+  Future<void> _email() async {
+    if (_launching) return;
+    setState(() => _launching = true);
+    final result = await AppExternalLaunch.email(_customer.email);
+    if (!mounted) return;
+    setState(() => _launching = false);
+    if (result == ExternalLaunchResult.opened) return;
+    await AppStatusDialog.show(
       context,
       type: AppStatusType.info,
-      title: 'Email',
-      message: _customer.email.isEmpty ? 'No email on file' : _customer.email,
+      title: result == ExternalLaunchResult.empty
+          ? 'No email on file'
+          : 'Couldn’t open Mail',
+      message: result == ExternalLaunchResult.empty
+          ? 'This customer has no email address.'
+          : _customer.email,
       actionLabel: 'OK',
     );
   }

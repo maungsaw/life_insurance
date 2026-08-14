@@ -26,13 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _createQuote() {
     MainTabScope.maybeOf(context)?.goToTab(PrototypeConfig.tabProduct);
-    AppStatusDialog.show(
-      context,
-      type: AppStatusType.info,
-      title: 'Create New Quote',
-      message: 'Opens Product hub — full quote spine later (FR-04).',
-      actionLabel: 'OK',
-    );
   }
 
   Future<void> _logout() async {
@@ -164,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          const SizedBox(height: 100),
+          SizedBox(height: AppBottomNavBar.scrollClearance(context)),
         ],
       ),
     );

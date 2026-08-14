@@ -13,6 +13,8 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.height = 50,
     this.icon,
+    this.fontSize = 16,
+    this.padding,
   });
 
   final String label;
@@ -21,11 +23,22 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final double height;
   final IconData? icon;
+  final double fontSize;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null && !isLoading;
-    final labelStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w700);
+    final labelStyle = TextStyle(fontSize: fontSize, fontWeight: FontWeight.w700);
+    final labelChild = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        label,
+        maxLines: 1,
+        softWrap: false,
+        style: labelStyle,
+      ),
+    );
     final child = isLoading
         ? const SizedBox(
             width: 22,
@@ -33,13 +46,13 @@ class AppButton extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
           )
         : icon == null
-            ? Text(label, style: labelStyle)
+            ? labelChild
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(icon, size: 20),
                   const SizedBox(width: 8),
-                  Text(label, style: labelStyle),
+                  Flexible(child: labelChild),
                 ],
               );
 
@@ -55,6 +68,9 @@ class AppButton extends StatelessWidget {
               foregroundColor: Colors.white,
               disabledBackgroundColor: AppColors.lightPrimary.withValues(alpha: 0.45),
               elevation: 0,
+              padding: padding,
+              minimumSize: Size(0, height),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: child,
@@ -69,6 +85,8 @@ class AppButton extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.lightPrimary,
               side: const BorderSide(color: AppColors.lightPrimary, width: 1.4),
+              padding: padding,
+              minimumSize: Size(0, height),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: isLoading

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart'
-    show AppBottomNavBar, AppStatusDialog, AppStatusType;
+    show AppBottomNavBar;
 import 'package:life_insurance/features/features.dart'
     show DashboardPage, LeadsPage, TaskBoardPage, ProfilePage, CustomersPage;
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
@@ -98,17 +98,10 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
                     color: AppColors.lightPrimary,
                   ),
                   title: const Text('New Proposal'),
-                  subtitle: const Text('Product → quote stub'),
+                  subtitle: const Text('Open Product catalog'),
                   onTap: () {
                     Navigator.pop(ctx);
                     _goToTab(PrototypeConfig.tabProduct);
-                    AppStatusDialog.show(
-                      context,
-                      type: AppStatusType.info,
-                      title: 'New Proposal',
-                      message:
-                          'Opens Product hub — full quote spine later (FR-04).',
-                    );
                   },
                 ),
                 ListTile(

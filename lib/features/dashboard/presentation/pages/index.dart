@@ -6,6 +6,8 @@ import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/notification/presentation/models/notification_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
+import 'package:life_insurance/features/profile/presentation/models/commission_mock_data.dart';
 
 /// FA Home — wireframe layout, mock data only (docs/36 · docs/46 · docs/49).
 class DashboardPage extends StatelessWidget {
@@ -45,25 +47,20 @@ class DashboardPage extends StatelessWidget {
       AppServiceItem(
         label: 'Calculator',
         icon: Icons.calculate_outlined,
-        onTap: () => _goTab(context, PrototypeConfig.tabProduct),
+        onTap: () => context.push(
+          AppRoute.productQuote,
+          extra: ProductSession.lastOrDefaultProduct,
+        ),
       ),
       AppServiceItem(
         label: 'Commission',
         icon: Icons.account_balance_wallet_outlined,
-        onTap: () => _stub(
-          context,
-          'Commission',
-          'History list later — display only, no payout (docs/34).',
-        ),
+        onTap: () => context.push(AppRoute.commissionHistory),
       ),
       AppServiceItem(
         label: 'Proposal Status',
         icon: Icons.assignment_outlined,
-        onTap: () => _stub(
-          context,
-          'Proposal Status',
-          'Application tracker stub (FR-05).',
-        ),
+        onTap: () => context.push(AppRoute.productTracker),
       ),
       AppServiceItem(
         label: 'Task Management',
@@ -107,13 +104,10 @@ class DashboardPage extends StatelessWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   AppCommissionCard(
-                    amountLabel: HomeMockData.commissionAmount,
-                    deltaLabel: HomeMockData.commissionDelta,
-                    onDetails: () => _stub(
-                      context,
-                      'Commission',
-                      'History list UI later — display only, no payout (docs/34).',
-                    ),
+                    amountLabel: CommissionMockData.totalLabel,
+                    deltaLabel: CommissionMockData.deltaLabel,
+                    onDetails: () =>
+                        context.push(AppRoute.commissionHistory),
                   ),
                   const SizedBox(height: 14),
                   AppGalaxyMemberBanner(
@@ -145,6 +139,7 @@ class DashboardPage extends StatelessWidget {
                           label: 'Active',
                           value: HomeMockData.policyActive,
                           accent: AppColors.successGreen,
+                          icon: Icons.gpp_good_rounded,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -153,6 +148,7 @@ class DashboardPage extends StatelessWidget {
                           label: 'Pending',
                           value: HomeMockData.policyPending,
                           accent: const Color(0xFFF59E0B),
+                          icon: Icons.schedule_rounded,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -161,6 +157,7 @@ class DashboardPage extends StatelessWidget {
                           label: 'Expired',
                           value: HomeMockData.policyExpired,
                           accent: const Color(0xFFE11D48),
+                          icon: Icons.cancel_rounded,
                         ),
                       ),
                     ],
@@ -185,7 +182,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 28),
-                  const SizedBox(height: 72),
+                  SizedBox(height: AppBottomNavBar.scrollClearance(context)),
                 ]),
               ),
             ),

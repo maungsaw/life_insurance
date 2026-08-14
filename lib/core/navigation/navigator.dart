@@ -24,6 +24,7 @@ import 'package:life_insurance/features/features.dart'
         FaqMockData,
         NotificationPrefsPage,
         CommissionReportPage,
+        CommissionHistoryPage,
         AuthOtpArgs,
         AuthOtpPurpose,
         AuthPasswordArgs,
@@ -38,7 +39,22 @@ import 'package:life_insurance/features/features.dart'
         CustomerMockData,
         PolicyMock,
         LeadEntity,
-        LeadDetailPage;
+        LeadDetailPage,
+        CatalogProduct,
+        ProductMockData,
+        SavedQuote,
+        EappDraft,
+        ProductDetailPage,
+        ProductQuotePage,
+        ProductQuoteSavedPage,
+        ProductQuotesPage,
+        ProductTrackerPage,
+        ProductTrackerDetailPage,
+        ProductEappPage,
+        ProductEappSuccessPage,
+        ProductSearchPage,
+        ProductComparePage,
+        ProductSession;
 import 'package:life_insurance/features/widgets.dart';
 
 import 'root.dart';
@@ -298,6 +314,152 @@ class AppNavigator {
           return AppTransition.slide(
             key: state.pageKey,
             child: const CommissionReportPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.commissionHistory,
+        name: AppRoute.commissionHistory,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const CommissionHistoryPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productDetail,
+        name: AppRoute.productDetail,
+        pageBuilder: (context, state) {
+          final product = state.extra as CatalogProduct? ??
+              ProductMockData.products.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: ProductDetailPage(product: product),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productQuote,
+        name: AppRoute.productQuote,
+        pageBuilder: (context, state) {
+          final product = state.extra as CatalogProduct? ??
+              ProductMockData.products.first;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: ProductQuotePage(product: product),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productQuoteSaved,
+        name: AppRoute.productQuoteSaved,
+        pageBuilder: (context, state) {
+          final quote = state.extra as SavedQuote? ??
+              (ProductSession.quotes.isNotEmpty
+                  ? ProductSession.quotes.first
+                  : null);
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: quote == null
+                ? const ProductQuotesPage()
+                : ProductQuoteSavedPage(quote: quote),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productQuotes,
+        name: AppRoute.productQuotes,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const ProductQuotesPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productTracker,
+        name: AppRoute.productTracker,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const ProductTrackerPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productTrackerDetail,
+        name: AppRoute.productTrackerDetail,
+        pageBuilder: (context, state) {
+          final draft = state.extra as EappDraft? ??
+              (ProductSession.applications.isNotEmpty
+                  ? ProductSession.applications.first
+                  : null);
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: draft == null
+                ? const ProductTrackerPage()
+                : ProductTrackerDetailPage(draft: draft),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productEapp,
+        name: AppRoute.productEapp,
+        pageBuilder: (context, state) {
+          final draft = state.extra as EappDraft? ??
+              (ProductSession.applications.isNotEmpty
+                  ? ProductSession.applications.first
+                  : null);
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: draft == null
+                ? const ProductQuotesPage()
+                : ProductEappPage(draft: draft),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productEappSuccess,
+        name: AppRoute.productEappSuccess,
+        pageBuilder: (context, state) {
+          final draft = state.extra as EappDraft? ??
+              (ProductSession.applications.isNotEmpty
+                  ? ProductSession.applications.first
+                  : null);
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: draft == null
+                ? const ProductTrackerPage()
+                : ProductEappSuccessPage(draft: draft),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productSearch,
+        name: AppRoute.productSearch,
+        pageBuilder: (context, state) {
+          final q = state.extra as String? ?? '';
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: ProductSearchPage(initialQuery: q),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.productCompare,
+        name: AppRoute.productCompare,
+        pageBuilder: (context, state) {
+          final pair = state.extra as List<CatalogProduct>?;
+          final left = pair != null && pair.isNotEmpty
+              ? pair[0]
+              : ProductMockData.products.first;
+          final right = pair != null && pair.length > 1
+              ? pair[1]
+              : ProductMockData.products[1];
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: ProductComparePage(left: left, right: right),
           );
         },
       ),

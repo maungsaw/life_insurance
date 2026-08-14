@@ -9,12 +9,15 @@ class AppCommissionCard extends StatefulWidget {
     this.title = 'Commission',
     this.deltaLabel,
     this.onDetails,
+    this.showDetailsChevron = true,
   });
 
   final String amountLabel;
   final String title;
   final String? deltaLabel;
   final VoidCallback? onDetails;
+  /// Home shows chevron; history screen hides it.
+  final bool showDetailsChevron;
 
   @override
   State<AppCommissionCard> createState() => _AppCommissionCardState();
@@ -25,7 +28,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -111,7 +114,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                   color: Colors.white,
                 ),
               ),
-              if (widget.onDetails != null)
+              if (widget.onDetails != null && widget.showDetailsChevron)
                 IconButton(
                   onPressed: widget.onDetails,
                   icon: const Icon(Icons.arrow_forward, color: Colors.white),
@@ -119,6 +122,16 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
             ],
           ),
         ],
+      ),
+    );
+
+    if (widget.onDetails == null) return card;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.onDetails,
+        borderRadius: BorderRadius.circular(20),
+        child: card,
       ),
     );
   }

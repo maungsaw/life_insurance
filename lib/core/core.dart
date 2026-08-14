@@ -12,3 +12,4 @@ export 'reminder/reminder.dart';
 export 'connection/connection.dart';
 export 'prototype/prototype.dart';
 export 'assets/assets.dart';
+export 'launch/launch.dart';

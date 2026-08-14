@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/features/components/components.dart'
-    show AppFooterLineTab;
+    show AppFooterLineTab, AppBottomNavBar;
 
 import '../../data/repository/repository.dart' show leadsData;
 import 'item.dart';
@@ -64,6 +64,9 @@ class _LeadsPageState extends State<LeadsPage> {
             final lead = leadsData[index];
             return LeadItemPage(lead: lead);
           },
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(height: AppBottomNavBar.scrollClearance(context)),
         ),
       ],
     );

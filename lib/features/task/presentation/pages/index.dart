@@ -26,6 +26,8 @@ import 'package:flutter/material.dart'
 import '../../domain/domain.dart' show TaskEntities;
 
 import '../widgets/widgets.dart' show FilterView, SummaryView;
+import 'package:life_insurance/features/components/bottom_nav.dart'
+    show AppBottomNavBar;
 import 'item.dart';
 
 class TaskBoardPage extends StatefulWidget {
@@ -152,7 +154,9 @@ class _TaskBoardViewState extends State<TaskBoardPage> {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          SliverToBoxAdapter(
+            child: SizedBox(height: AppBottomNavBar.scrollClearance(context)),
+          ),
         ],
       ),
     );

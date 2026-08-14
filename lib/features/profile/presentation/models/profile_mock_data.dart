@@ -11,7 +11,8 @@ class ProfileMockData {
   static ProfileGender gender = ProfileGender.female;
 
   static const String totalPremium = '39,485,908.00';
-  static const String totalCommission = '3,795,000.00';
+  // Prefer CommissionMockData.totalCommissionPlain on UI chips (docs/61).
+  static const String totalCommission = '726,080.00';
 
   static String get initials {
     final parts = displayName.trim().split(RegExp(r'\s+'));
@@ -62,7 +63,7 @@ abstract final class FaqMockData {
       id: 'commission',
       question: 'How to check commission?',
       answer:
-          'Total commission is shown on Profile and Home. Open Report for a category breakdown. Commission is display-only — there is no withdraw or payout in this app.',
+          'Commission is on Home and Profile. Open the Commission screen for history, or Report for a category chart. Display only — no withdraw or payout in this app.',
     ),
   ];
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/customer_filter_sheet.dart';
@@ -150,7 +151,12 @@ class _CustomersPageState extends State<CustomersPage> {
                       ),
                     )
                   : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 100),
+                      padding: EdgeInsets.fromLTRB(
+                        8,
+                        8,
+                        8,
+                        AppBottomNavBar.scrollClearance(context),
+                      ),
                       itemCount: list.length,
                       separatorBuilder: (_, _) => Divider(
                         height: 1,

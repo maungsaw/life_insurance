@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart' show Color;
 import 'package:life_insurance/features/components/components.dart'
     show AppPromoItem;
+import 'package:life_insurance/features/profile/presentation/models/commission_mock_data.dart';
 
 /// Static demo data for Home until FR-02 APIs are wired (docs/36 · 46).
 abstract final class HomeMockData {
   static const agentName = 'Mr Chit';
   static const greeting = 'Good Morning!';
 
-  static const commissionAmount = '726,080.00 MMK';
-  static const commissionDelta = '↗ 15% up compared with last month';
+  static const commissionAmount = CommissionMockData.totalLabel;
+  static const commissionDelta = CommissionMockData.deltaLabel;
 
   static const policyActive = '20';
   static const policyPending = '10';

@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 
-/// Compact Policy KPI (Active / Pending / Expired) — docs/46.
+/// Compact Policy KPI (Active / Pending / Expired) — docs/46, icon chip docs/58.
 class AppPolicyStatCard extends StatelessWidget {
   const AppPolicyStatCard({
     super.key,
     required this.label,
     required this.value,
     required this.accent,
+    this.icon = Icons.gpp_good_rounded,
   });
 
   final String label;
   final String value;
   final Color accent;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
+      padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -29,39 +31,47 @@ class AppPolicyStatCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(Icons.verified_rounded, size: 16, color: accent),
-              const Spacer(),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: accent,
-                  height: 1,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.lightTextSecondary,
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: accent,
+              shape: BoxShape.circle,
             ),
+            alignment: Alignment.center,
+            child: Icon(icon, size: 20, color: Colors.white),
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 18,
-            width: double.infinity,
-            child: CustomPaint(
-              painter: _SparklinePainter(color: accent),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  value,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: accent,
+                    height: 1.05,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -70,40 +80,41 @@ class AppPolicyStatCard extends StatelessWidget {
   }
 }
 
-class _SparklinePainter extends CustomPainter {
-  _SparklinePainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.6
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final path = Path()
-      ..moveTo(0, size.height * 0.7)
-      ..quadraticBezierTo(
-        size.width * 0.2,
-        size.height * 0.15,
-        size.width * 0.4,
-        size.height * 0.45,
-      )
-      ..quadraticBezierTo(
-        size.width * 0.65,
-        size.height * 0.9,
-        size.width,
-        size.height * 0.35,
-      );
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _SparklinePainter oldDelegate) =>
-      oldDelegate.color != color;
-}
+// P1 sparkline (docs/55) — not on the icon-count chip (docs/58).
+// class _SparklinePainter extends CustomPainter {
+//   _SparklinePainter({required this.color});
+//
+//   final Color color;
+//
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final paint = Paint()
+//       ..color = color
+//       ..strokeWidth = 1.6
+//       ..style = PaintingStyle.stroke
+//       ..strokeCap = StrokeCap.round;
+//
+//     final path = Path()
+//       ..moveTo(0, size.height * 0.7)
+//       ..quadraticBezierTo(
+//         size.width * 0.2,
+//         size.height * 0.15,
+//         size.width * 0.4,
+//         size.height * 0.45,
+//       )
+//       ..quadraticBezierTo(
+//         size.width * 0.65,
+//         size.height * 0.9,
+//         size.width,
+//         size.height * 0.35,
+//       );
+//     canvas.drawPath(path, paint);
+//   }
+//
+//   @override
+//   bool shouldRepaint(covariant _SparklinePainter oldDelegate) =>
+//       oldDelegate.color != color;
+// }
 
 class AppKpiTile extends StatelessWidget {
   const AppKpiTile({

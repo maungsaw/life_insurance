@@ -18,8 +18,19 @@ abstract class AppRoute {
   static const String profileFaqDetail = '/profile/faq/detail';
   static const String profileNotificationPrefs = '/profile/notification-prefs';
   static const String profileReport = '/profile/report';
+  static const String commissionHistory = '/commission/history';
   static const String customerDetail = '/customer-detail';
   static const String customerProfile = '/customer-profile';
   static const String policyDetail = '/policy-detail';
   static const String leadDetail = '/lead-detail';
+  static const String productDetail = '/product/detail';
+  static const String productQuote = '/product/quote';
+  static const String productQuoteSaved = '/product/quote-saved';
+  static const String productQuotes = '/product/quotes';
+  static const String productTracker = '/product/tracker';
+  static const String productTrackerDetail = '/product/tracker/detail';
+  static const String productEapp = '/product/eapp';
+  static const String productEappSuccess = '/product/eapp/success';
+  static const String productSearch = '/product/search';
+  static const String productCompare = '/product/compare';
 }
