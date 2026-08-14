@@ -57,6 +57,8 @@
 - [x] Identification sheet shipped (`62`)
 - [x] Get A Quote Product Type/Name chips brainstorm (`63`)
 - [x] Get A Quote Product Type/Name chips shipped (`63`)
+- [x] e-App Success corner confetti brainstorm (`64`)
+- [x] e-App Success corner confetti + layout polish shipped (`64`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile
