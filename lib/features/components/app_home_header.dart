@@ -10,6 +10,7 @@ class AppHomeHeader extends StatelessWidget {
     this.roleLabel,
     this.onNotifTap,
     this.hasUnread = true,
+    this.guest = false,
   });
 
   final String name;
@@ -17,6 +18,7 @@ class AppHomeHeader extends StatelessWidget {
   final String? roleLabel;
   final VoidCallback? onNotifTap;
   final bool hasUnread;
+  final bool guest;
 
   @override
   Widget build(BuildContext context) {
@@ -41,35 +43,38 @@ class AppHomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Welcome $name! ',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.lightPrimary,
-                    height: 1.25,
+        if (guest)
+          const Spacer()
+        else
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Welcome $name! ',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.lightPrimary,
+                      height: 1.25,
+                    ),
                   ),
-                ),
-                TextSpan(
-                  text: greeting,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
-                    height: 1.25,
+                  TextSpan(
+                    text: greeting,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.lightTextSecondary,
+                      height: 1.25,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        if (roleLabel != null && roleLabel!.isNotEmpty) ...[
+        if (!guest && roleLabel != null && roleLabel!.isNotEmpty) ...[
           const SizedBox(width: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

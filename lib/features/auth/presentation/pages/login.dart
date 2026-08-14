@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' show GoRouterHelper;
 import 'package:life_insurance/core/core.dart'
-    show AppRoute, PrototypeConfig;
+    show AppRoute, GuestSession, PrototypeConfig;
 import 'package:life_insurance/core/secure/biometric_prefs.dart';
 import 'package:life_insurance/features/components/components.dart';
 
@@ -80,6 +80,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    GuestSession.signIn();
     context.go(AppRoute.home);
   }
 
@@ -97,6 +98,7 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
     setState(() => _unlocking = false);
     if (ok) {
+      GuestSession.signIn();
       context.go(AppRoute.home);
       return;
     }

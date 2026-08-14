@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Future<void>.delayed(PrototypeConfig.splashDelay, () {
       if (!mounted) return;
-      context.go(AppRoute.login);
+      context.go(AppRoute.guestHome);
     });
   }
 

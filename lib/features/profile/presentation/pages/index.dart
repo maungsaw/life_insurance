@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
-    show AppColors, AppRoute, PrototypeConfig, PrototypeRole, PrototypeRoleId;
+    show
+        AppColors,
+        AppRoute,
+        GuestSession,
+        PrototypeConfig,
+        PrototypeRole,
+        PrototypeRoleId;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 import 'package:life_insurance/core/secure/biometric_prefs.dart';
 import 'package:life_insurance/features/components/components.dart';
@@ -56,7 +62,8 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!mounted || proceed != true) return;
     PrototypeRole.reset();
     TeamMockData.scope = TeamScope.personal;
-    context.go(AppRoute.login);
+    GuestSession.signOut();
+    context.go(AppRoute.guestHome);
   }
 
   bool get _bioCanToggle =>
@@ -177,7 +184,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   title: Text(_previewLabel(role)),
                   trailing: role == PrototypeRole.id
-                      ? const Icon(Icons.check_rounded, color: AppColors.lightPrimary)
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: AppColors.lightPrimary,
+                        )
                       : null,
                   onTap: () => Navigator.of(ctx).pop(role),
                 ),

@@ -4,8 +4,9 @@ import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/components/components.dart'
     show AppStatusDialog, AppStatusType;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
+import 'package:life_insurance/features/dashboard/presentation/widgets/team_visuals.dart';
 
-/// One FA — read-only performance, not their login (docs/71).
+/// One FA — read-only performance (docs/72 · mockup 5).
 class TeamFaPage extends StatelessWidget {
   const TeamFaPage({super.key, required this.memberId});
 
@@ -14,6 +15,9 @@ class TeamFaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final member = TeamMockData.memberById(memberId);
+    final ringColor = member != null && member.ringValue >= 0.9
+        ? AppColors.successGreen
+        : AppColors.lightPrimary;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -23,7 +27,7 @@ class TeamFaPage extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          member?.name ?? 'Agent',
+          member?.name ?? 'FA Performance Detail',
           style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         centerTitle: false,
@@ -69,61 +73,143 @@ class TeamFaPage extends StatelessWidget {
                               color: AppColors.lightTextSecondary,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Individual performance · not their login',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: AppColors.lightTextHint,
-                            ),
-                          ),
+                          const SizedBox(height: 6),
+                          TeamMdrtBadge(member: member),
                         ],
                       ),
                     ),
                   ],
                 ),
-                if (member.belowTarget) ...[
-                  const SizedBox(height: 14),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Below monthly FYP target',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFFB45309),
-                      ),
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 18),
-                _row('APE', member.ape),
-                _row('FYP', member.fyp),
-                _row('Subsequent FYP', member.sfyp),
-                _row('Weighted Freelance FYP', member.wtdFyp),
-                _row('MoM', member.momDelta),
-                const SizedBox(height: 18),
+                const SizedBox(height: 4),
                 const Text(
-                  'Road to MDRT',
+                  'Individual performance · not their login',
+                  style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      TeamRing(
+                        value: member.ringValue,
+                        color: ringColor,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Achievement',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            Text(
+                              member.actualCompact.isEmpty
+                                  ? member.ape
+                                  : '${member.actualCompact} / ${member.targetCompact}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Text(
+                              'MoM ${member.momDelta}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Performance breakdown',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
-                LinearProgressIndicator(
-                  value: member.mdrtPct.clamp(0.0, 1.0),
-                  minHeight: 10,
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.lightPrimary,
-                  backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+                TeamKpiBar(
+                  label: 'APE',
+                  actual: member.ape,
+                  target: member.apeTarget.isEmpty ? '—' : member.apeTarget,
+                  pct: member.achievementLabel,
+                  pctValue: member.ringValue,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  '${(member.mdrtPct * 100).round()}% · ${member.mdrtLabel}',
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+                const SizedBox(height: 8),
+                TeamKpiBar(
+                  label: 'FYP',
+                  actual: member.fyp,
+                  target: member.fypTarget.isEmpty ? '—' : member.fypTarget,
+                  pct: member.achievementLabel,
+                  pctValue: member.ringValue,
+                ),
+                const SizedBox(height: 8),
+                TeamKpiBar(
+                  label: 'Subsequent FYP',
+                  actual: member.sfyp,
+                  target: member.sfypTarget.isEmpty ? '—' : member.sfypTarget,
+                  pct: member.achievementLabel,
+                  pctValue: member.ringValue,
+                ),
+                const SizedBox(height: 8),
+                TeamKpiBar(
+                  label: 'Weighted Freelance FYP',
+                  actual: member.wtdFyp,
+                  target: member.wtdTarget.isEmpty ? '—' : member.wtdTarget,
+                  pct: member.achievementLabel,
+                  pctValue: member.ringValue,
+                ),
+                const SizedBox(height: 14),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: member.qualified
+                        ? const Color(0xFFFFF7ED)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        member.qualified ? 'MDRT Qualified' : 'Road to MDRT',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: member.qualified
+                              ? const Color(0xFFB45309)
+                              : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        member.mdrtOfTarget.isEmpty
+                            ? '${(member.mdrtPct * 100).round()}% of target'
+                            : 'Achieved ${member.mdrtOfTarget} of target',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      const SizedBox(height: 8),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: member.mdrtPct.clamp(0.0, 1.0),
+                          minHeight: 8,
+                          color: member.qualified
+                              ? AppColors.gold
+                              : AppColors.lightPrimary,
+                          backgroundColor:
+                              AppColors.lightPrimary.withValues(alpha: 0.12),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -151,38 +237,6 @@ class TeamFaPage extends StatelessWidget {
                 ),
               ],
             ),
-    );
-  }
-
-  Widget _row(String label, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.lightTextSecondary,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

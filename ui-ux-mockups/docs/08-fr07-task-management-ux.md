@@ -77,11 +77,10 @@ Month grid · dots on busy days · CTA into selected day agenda
 **App bar vs FAB**
 | Zone | Content |
 |------|---------|
-| Top left | Title `My work` + count only — no create button |
-| FAB | Round `+` sticky bottom-right above tab bar → Create task |
-| Why FAB | Primary create action stays reachable while scrolling agenda; header stays calm/readable |
-| A11y | `aria-label="Create task"` · visible label for screen readers |
-| Don’t | Duplicate `+ Task` in header and FAB |
+| Top left | Title `My work` + count |
+| Top right | Filled `+` → Create task (`73` — page FAB removed) |
+| Why header | One create control · doesn’t sit on the shell shield FAB |
+| Don’t | Duplicate `+` in header **and** a page FAB |
 
 ---
 

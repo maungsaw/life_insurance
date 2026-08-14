@@ -75,42 +75,51 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
   Widget build(BuildContext context) {
     final rows = _rows;
     final newCount = TaskSession.tasks.where((t) => t.isNewAssignment).length;
-    // Nested Scaffold FAB sits under the shell pill — dock in a Stack instead.
-    final fabBottom = AppBottomNavBar.overlayHeight(context) + 8;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      body: Stack(
-        children: [
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          SliverAppBar(
+            backgroundColor: const Color(0xFFF8FAFC),
+            elevation: 0,
+            floating: true,
+            snap: true,
+            pinned: false,
+            centerTitle: false,
+            title: Text(
+              'My work · ${TaskSession.tasks.length}',
+              style: const TextStyle(
+                color: AppColors.lightTextPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+              ),
             ),
-            slivers: [
-              SliverAppBar(
-                backgroundColor: const Color(0xFFF8FAFC),
-                elevation: 0,
-                floating: true,
-                snap: true,
-                pinned: false,
-                centerTitle: false,
-                title: Text(
-                  'My work · ${TaskSession.tasks.length}',
-                  style: const TextStyle(
-                    color: AppColors.lightTextPrimary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                  ),
-                ),
-                actions: [
-                  IconButton(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: Material(
+                  color: AppColors.lightPrimary,
+                  shape: const CircleBorder(),
+                  clipBehavior: Clip.antiAlias,
+                  child: IconButton(
                     tooltip: 'Create task',
                     onPressed: () => _openForm(),
-                    icon: const Icon(Icons.add_circle_outline),
-                    color: AppColors.lightPrimary,
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    iconSize: 22,
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(
+                      minWidth: 40,
+                      minHeight: 40,
+                    ),
                   ),
-                ],
+                ),
               ),
+            ],
+          ),
               SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -315,21 +324,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             ),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: AppBottomNavBar.scrollClearance(context) + 56,
-            ),
-          ),
-            ],
-          ),
-          Positioned(
-            right: 16,
-            bottom: fabBottom,
-            child: FloatingActionButton(
-              onPressed: () => _openForm(),
-              tooltip: 'Create task',
-              heroTag: 'my-work-create-fab',
-              backgroundColor: AppColors.lightPrimary,
-              shape: const CircleBorder(),
-              child: const Icon(Icons.add, color: Colors.white),
+              height: AppBottomNavBar.scrollClearance(context),
             ),
           ),
         ],

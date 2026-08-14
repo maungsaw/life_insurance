@@ -1,5 +1,6 @@
 abstract class AppRoute {
   static const String home = '/';
+  static const String guestHome = '/welcome';
   static const String splash = '/splash';
   static const String language = '/language';
   static const String theme = '/theme';

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 import 'package:life_insurance/features/dashboard/presentation/widgets/team_member_tile.dart';
+import 'package:life_insurance/features/dashboard/presentation/widgets/team_visuals.dart';
 
 class TeamMdrtPage extends StatefulWidget {
   const TeamMdrtPage({super.key});
@@ -16,9 +17,12 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
 
   @override
   Widget build(BuildContext context) {
-    final rows = TeamMockData.mdrtLane(_lane);
     final all = TeamMockData.current.members;
+    final rows = TeamMockData.mdrtLane(_lane);
     final qualified = all.where((m) => m.qualified).length;
+    final inProgress =
+        all.where((m) => m.badgeKind == TeamBadgeKind.inProgress).length;
+    final notYet = all.where((m) => m.isNotYet).length;
     final ring = all.isEmpty ? 0.0 : qualified / all.length;
 
     return Scaffold(
@@ -29,7 +33,7 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
           onPressed: () => context.pop(),
         ),
         title: const Text(
-          'Road to MDRT',
+          'MDRT Tracker',
           style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         centerTitle: false,
@@ -50,32 +54,10 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
               ),
               child: Column(
                 children: [
-                  SizedBox(
-                    width: 88,
-                    height: 88,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          value: ring,
-                          strokeWidth: 8,
-                          color: AppColors.lightPrimary,
-                          backgroundColor:
-                              AppColors.lightPrimary.withValues(alpha: 0.12),
-                        ),
-                        Text(
-                          '${(ring * 100).round()}%',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  TeamRing(value: ring),
                   const SizedBox(height: 8),
                   Text(
-                    '$qualified of ${all.length} qualified',
+                    '$qualified / ${all.length} FAs Qualified',
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppColors.lightTextSecondary,
@@ -86,7 +68,8 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
             ),
           ),
           const SizedBox(height: 12),
-          Padding(
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
@@ -94,17 +77,80 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
                 const SizedBox(width: 8),
                 _chip('Qualified', MdrtLane.qualified),
                 const SizedBox(width: 8),
-                _chip('In progress', MdrtLane.inProgress),
+                _chip('In Progress', MdrtLane.inProgress),
+                const SizedBox(width: 8),
+                _chip('Not Yet', MdrtLane.notYet),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TeamCountChip(
+                    value: '$qualified',
+                    label: 'Qualified',
+                    icon: Icons.emoji_events_outlined,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TeamCountChip(
+                    value: '$inProgress',
+                    label: 'In Progress',
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TeamCountChip(
+                    value: '$notYet',
+                    label: 'Not Yet',
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 12),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-              itemCount: rows.length,
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              itemCount: rows.length + 1,
               separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, i) {
+                if (i == rows.length) {
+                  return Material(
+                    color: AppColors.lightPrimary.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(14),
+                    child: InkWell(
+                      onTap: () =>
+                          setState(() => _lane = MdrtLane.inProgress),
+                      borderRadius: BorderRadius.circular(14),
+                      child: const Padding(
+                        padding: EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.emoji_events_outlined,
+                              color: AppColors.lightPrimary,
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'Drive More MDRT! Help your team reach qualification.',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.lightPrimary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 final m = rows[i];
                 return TeamMemberTile(
                   member: m,

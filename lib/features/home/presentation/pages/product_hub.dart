@@ -7,7 +7,9 @@ import 'package:life_insurance/features/product/presentation/widgets/product_wid
 
 /// Product tab catalog (docs/59). Old stub tiles replaced.
 class ProductHubPage extends StatefulWidget {
-  const ProductHubPage({super.key});
+  const ProductHubPage({super.key, this.guestMode = false});
+
+  final bool guestMode;
 
   @override
   State<ProductHubPage> createState() => _ProductHubPageState();
@@ -47,16 +49,18 @@ class _ProductHubPageState extends State<ProductHubPage> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    tooltip: 'Saved quotes',
-                    onPressed: () => context.push(AppRoute.productQuotes),
-                    icon: const Icon(Icons.description_outlined),
-                  ),
-                  IconButton(
-                    tooltip: 'Tracker',
-                    onPressed: () => context.push(AppRoute.productTracker),
-                    icon: const Icon(Icons.assignment_outlined),
-                  ),
+                  if (!widget.guestMode) ...[
+                    IconButton(
+                      tooltip: 'Saved quotes',
+                      onPressed: () => context.push(AppRoute.productQuotes),
+                      icon: const Icon(Icons.description_outlined),
+                    ),
+                    IconButton(
+                      tooltip: 'Tracker',
+                      onPressed: () => context.push(AppRoute.productTracker),
+                      icon: const Icon(Icons.assignment_outlined),
+                    ),
+                  ],
                   IconButton(
                     tooltip: 'Search',
                     onPressed: () => context.push(AppRoute.productSearch),

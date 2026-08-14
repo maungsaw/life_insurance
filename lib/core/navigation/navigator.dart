@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/error/error.dart' show ExceptionHandler;
+import 'package:life_insurance/core/prototype/guest_session.dart';
 import 'package:life_insurance/features/features.dart'
     show
         LanguagePage,
@@ -32,6 +33,7 @@ import 'package:life_insurance/features/features.dart'
         SplashPage,
         ThemePage,
         LifeInsurancePage,
+        GuestShellPage,
         CustomerDetailPage,
         CustomerProfileDetailsPage,
         PolicyDetailsPage,
@@ -63,7 +65,8 @@ import 'package:life_insurance/features/features.dart'
         TeamMembersPage,
         TeamFaPage,
         TeamGroupPage,
-        TeamMdrtPage;
+        TeamMdrtPage,
+        TeamLineArgs;
 import 'package:life_insurance/features/widgets.dart';
 
 import 'root.dart';
@@ -78,7 +81,13 @@ class AppNavigator {
     //  refreshListenable: Injection.sl<AuthBloc>(),
     redirect: (context, state) async {
       debugPrint("state.matchedLocation  ${state.matchedLocation}");
-
+      final loc = state.matchedLocation;
+      if (GuestSession.isGuest && loc == AppRoute.home) {
+        return AppRoute.guestHome;
+      }
+      if (GuestSession.signedIn && loc == AppRoute.guestHome) {
+        return AppRoute.home;
+      }
       return null;
     },
     errorBuilder: (context, state) {
@@ -115,8 +124,8 @@ class AppNavigator {
         path: AppRoute.customerDetail,
         name: AppRoute.customerDetail,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          final customer = state.extra as CustomerMock? ??
-              CustomerMockData.customers.first;
+          final customer =
+              state.extra as CustomerMock? ?? CustomerMockData.customers.first;
           return AppTransition.slide(
             key: state.pageKey,
             child: CustomerDetailPage(customer: customer),
@@ -127,8 +136,8 @@ class AppNavigator {
         path: AppRoute.customerProfile,
         name: AppRoute.customerProfile,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          final customer = state.extra as CustomerMock? ??
-              CustomerMockData.customers.first;
+          final customer =
+              state.extra as CustomerMock? ?? CustomerMockData.customers.first;
           return AppTransition.slide(
             key: state.pageKey,
             child: CustomerProfileDetailsPage(customer: customer),
@@ -139,7 +148,9 @@ class AppNavigator {
         path: AppRoute.policyList,
         name: AppRoute.policyList,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          final status = state.extra is CrmStatus ? state.extra as CrmStatus : null;
+          final status = state.extra is CrmStatus
+              ? state.extra as CrmStatus
+              : null;
           return AppTransition.slide(
             key: state.pageKey,
             child: PolicyListPage(initialStatus: status),
@@ -150,7 +161,8 @@ class AppNavigator {
         path: AppRoute.policyDetail,
         name: AppRoute.policyDetail,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          final policy = state.extra as PolicyMock? ??
+          final policy =
+              state.extra as PolicyMock? ??
               CustomerMockData.customers.first.policies.first;
           return AppTransition.slide(
             key: state.pageKey,
@@ -195,6 +207,16 @@ class AppNavigator {
         },
       ),
       GoRoute(
+        path: AppRoute.guestHome,
+        name: AppRoute.guestHome,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const GuestShellPage(),
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoute.login,
         name: AppRoute.login,
         builder: (_, _) => const LoginPage(),
@@ -213,7 +235,8 @@ class AppNavigator {
         path: AppRoute.otp,
         name: AppRoute.otp,
         pageBuilder: (context, state) {
-          final args = state.extra as AuthOtpArgs? ??
+          final args =
+              state.extra as AuthOtpArgs? ??
               const AuthOtpArgs(
                 mobile: '',
                 purpose: AuthOtpPurpose.forgotPassword,
@@ -228,11 +251,9 @@ class AppNavigator {
         path: AppRoute.createPassword,
         name: AppRoute.createPassword,
         pageBuilder: (context, state) {
-          final args = state.extra as AuthPasswordArgs? ??
-              const AuthPasswordArgs(
-                mobile: '',
-                mode: AuthPasswordMode.create,
-              );
+          final args =
+              state.extra as AuthPasswordArgs? ??
+              const AuthPasswordArgs(mobile: '', mode: AuthPasswordMode.create);
           return AppTransition.slide(
             key: state.pageKey,
             child: CreatePasswordPage(args: args),
@@ -273,7 +294,8 @@ class AppNavigator {
         path: AppRoute.notificationDetail,
         name: AppRoute.notificationDetail,
         pageBuilder: (context, state) {
-          final item = state.extra as NotificationItem? ??
+          final item =
+              state.extra as NotificationItem? ??
               NotificationMockData.items.first;
           return AppTransition.slide(
             key: state.pageKey,
@@ -367,8 +389,8 @@ class AppNavigator {
         path: AppRoute.productDetail,
         name: AppRoute.productDetail,
         pageBuilder: (context, state) {
-          final product = state.extra as CatalogProduct? ??
-              ProductMockData.products.first;
+          final product =
+              state.extra as CatalogProduct? ?? ProductMockData.products.first;
           return AppTransition.slide(
             key: state.pageKey,
             child: ProductDetailPage(product: product),
@@ -379,8 +401,8 @@ class AppNavigator {
         path: AppRoute.productQuote,
         name: AppRoute.productQuote,
         pageBuilder: (context, state) {
-          final product = state.extra as CatalogProduct? ??
-              ProductMockData.products.first;
+          final product =
+              state.extra as CatalogProduct? ?? ProductMockData.products.first;
           return AppTransition.slide(
             key: state.pageKey,
             child: ProductQuotePage(product: product),
@@ -391,7 +413,8 @@ class AppNavigator {
         path: AppRoute.productQuoteSaved,
         name: AppRoute.productQuoteSaved,
         pageBuilder: (context, state) {
-          final quote = state.extra as SavedQuote? ??
+          final quote =
+              state.extra as SavedQuote? ??
               (ProductSession.quotes.isNotEmpty
                   ? ProductSession.quotes.first
                   : null);
@@ -427,7 +450,8 @@ class AppNavigator {
         path: AppRoute.productTrackerDetail,
         name: AppRoute.productTrackerDetail,
         pageBuilder: (context, state) {
-          final draft = state.extra as EappDraft? ??
+          final draft =
+              state.extra as EappDraft? ??
               (ProductSession.applications.isNotEmpty
                   ? ProductSession.applications.first
                   : null);
@@ -443,7 +467,8 @@ class AppNavigator {
         path: AppRoute.productEapp,
         name: AppRoute.productEapp,
         pageBuilder: (context, state) {
-          final draft = state.extra as EappDraft? ??
+          final draft =
+              state.extra as EappDraft? ??
               (ProductSession.applications.isNotEmpty
                   ? ProductSession.applications.first
                   : null);
@@ -459,7 +484,8 @@ class AppNavigator {
         path: AppRoute.productEappSuccess,
         name: AppRoute.productEappSuccess,
         pageBuilder: (context, state) {
-          final draft = state.extra as EappDraft? ??
+          final draft =
+              state.extra as EappDraft? ??
               (ProductSession.applications.isNotEmpty
                   ? ProductSession.applications.first
                   : null);
@@ -513,9 +539,12 @@ class AppNavigator {
         path: AppRoute.teamMembers,
         name: AppRoute.teamMembers,
         pageBuilder: (context, state) {
+          final args = state.extra is TeamLineArgs
+              ? state.extra as TeamLineArgs
+              : const TeamLineArgs();
           return AppTransition.slide(
             key: state.pageKey,
-            child: const TeamMembersPage(),
+            child: TeamMembersPage(args: args),
           );
         },
       ),

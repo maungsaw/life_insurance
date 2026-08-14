@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
+import 'package:life_insurance/features/dashboard/presentation/widgets/team_visuals.dart';
 
 class TeamMemberTile extends StatelessWidget {
   const TeamMemberTile({super.key, required this.member, required this.onTap});
@@ -46,50 +47,43 @@ class TeamMemberTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${member.roleLabel} · ${member.code}',
+                      member.actualCompact.isEmpty
+                          ? member.code
+                          : '${member.actualCompact} / ${member.targetCompact}',
                       style: const TextStyle(
                         fontSize: 11,
                         color: AppColors.lightTextSecondary,
                       ),
                     ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: member.ringValue,
+                        minHeight: 5,
+                        color: AppColors.lightPrimary,
+                        backgroundColor:
+                            AppColors.lightPrimary.withValues(alpha: 0.12),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              if (member.belowTarget)
-                Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF59E0B).withValues(alpha: 0.16),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text(
-                    'Below target',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFFB45309),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    member.achievementLabel,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.lightPrimary,
                     ),
                   ),
-                ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: member.qualified
-                      ? AppColors.successGreen.withValues(alpha: 0.12)
-                      : AppColors.lightPrimary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  member.mdrtLabel,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    color: member.qualified
-                        ? AppColors.successGreen
-                        : AppColors.lightPrimary,
-                  ),
-                ),
+                  const SizedBox(height: 4),
+                  TeamMdrtBadge(member: member),
+                ],
               ),
             ],
           ),

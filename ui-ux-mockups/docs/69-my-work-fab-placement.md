@@ -33,6 +33,8 @@
 
 **P0 pick: A · Soft dock** — keep local create on My work, fix height; keep shell Quick actions as secondary path (OK for Home).
 
+> **Follow-up (`73`):** User chose **B · AppBar `+` only** — page FAB removed. This file stays as the height-diagnosis record.
+
 **Also:** On empty state, show a **center CTA** (“Create task”) so Week empty doesn’t rely on a floating `+` alone.
 
 ---

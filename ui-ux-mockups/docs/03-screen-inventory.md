@@ -73,6 +73,12 @@
 - [x] Profile biometric toggle + Login unlock shipped (`70`)
 - [x] Role-based dashboards (FR-02) brainstorm (`71`)
 - [x] Role-based Home overlay + Team hub shipped (`71`)
+- [x] Team Sales Performance 6-up · FA vs Leaders brainstorm (`72`)
+- [x] Team Sales Performance visual pass shipped (`72`)
+- [x] My work AppBar create · no page FAB brainstorm (`73`)
+- [x] My work FAB removed · AppBar `+` only (`73`)
+- [x] Before login · Guest Home brainstorm (`74`)
+- [x] Guest Home shell · Partner banner · lock map shipped (`74`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

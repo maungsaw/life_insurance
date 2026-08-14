@@ -33,46 +33,39 @@ class _ProductComparePageState extends State<ProductComparePage> {
   }
 
   List<_CompareRow> get _rows => [
-        _CompareRow('Policy Term', _left.terms.first, _right.terms.first),
-        _CompareRow(
-          'Premium (indicative)',
-          ProductFormat.money(
-            ProductMockData.monthlyPremiumFor(
-              product: _left,
-              si: _left.defaultSi,
-            ),
-          ),
-          ProductFormat.money(
-            ProductMockData.monthlyPremiumFor(
-              product: _right,
-              si: _right.defaultSi,
-            ),
-          ),
+    _CompareRow('Policy Term', _left.terms.first, _right.terms.first),
+    _CompareRow(
+      'Premium (indicative)',
+      ProductFormat.money(
+        ProductMockData.monthlyPremiumFor(product: _left, si: _left.defaultSi),
+      ),
+      ProductFormat.money(
+        ProductMockData.monthlyPremiumFor(
+          product: _right,
+          si: _right.defaultSi,
         ),
-        _CompareRow(
-          'Benefit',
-          '${_left.whyBuy.length} highlights',
-          '${_right.whyBuy.length} highlights',
-        ),
-        _CompareRow(
-          'Coverage',
-          ProductFormat.money(_left.defaultSi),
-          ProductFormat.money(_right.defaultSi),
-        ),
-        _CompareRow(
-          'Line',
-          _left.lineLabel,
-          _right.lineLabel,
-        ),
-        _CompareRow('Code', _left.code, _right.code),
-        _CompareRow(
-          'Top-up',
-          _left.defaultTopup > 0 ? 'Yes' : 'No',
-          _right.defaultTopup > 0 ? 'Yes' : 'No',
-        ),
-        _CompareRow('Individual', 'Yes', 'Yes'),
-        _CompareRow('Corporate / entity', 'No', 'No'),
-      ];
+      ),
+    ),
+    _CompareRow(
+      'Benefit',
+      '${_left.whyBuy.length} highlights',
+      '${_right.whyBuy.length} highlights',
+    ),
+    _CompareRow(
+      'Coverage',
+      ProductFormat.money(_left.defaultSi),
+      ProductFormat.money(_right.defaultSi),
+    ),
+    _CompareRow('Line', _left.lineLabel, _right.lineLabel),
+    _CompareRow('Code', _left.code, _right.code),
+    _CompareRow(
+      'Top-up',
+      _left.defaultTopup > 0 ? 'Yes' : 'No',
+      _right.defaultTopup > 0 ? 'Yes' : 'No',
+    ),
+    _CompareRow('Individual', 'Yes', 'Yes'),
+    _CompareRow('Corporate / entity', 'No', 'No'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +86,9 @@ class _ProductComparePageState extends State<ProductComparePage> {
                 border: TableBorder.all(color: AppColors.lightBorder),
                 children: [
                   TableRow(
-                    decoration: const BoxDecoration(color: AppColors.lightPrimary),
+                    decoration: const BoxDecoration(
+                      color: AppColors.lightPrimary,
+                    ),
                     children: [
                       const _HeadCell('Feature', white: true),
                       _HeadCell(_left.name, white: true),
@@ -140,20 +135,30 @@ class _ProductComparePageState extends State<ProductComparePage> {
                     child: AppButton(
                       label: 'Use ${_left.name.split(' ').first}',
                       variant: AppButtonVariant.secondary,
-                      onPressed: () => context.push(
-                        AppRoute.productQuote,
-                        extra: _left,
-                      ),
+                      onPressed: () {
+                        if (gateIfGuest(
+                          context,
+                          message: 'Sign in to calculate a premium.',
+                        )) {
+                          return;
+                        }
+                        context.push(AppRoute.productQuote, extra: _left);
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: AppButton(
                       label: 'Use ${_right.name.split(' ').first}',
-                      onPressed: () => context.push(
-                        AppRoute.productQuote,
-                        extra: _right,
-                      ),
+                      onPressed: () {
+                        if (gateIfGuest(
+                          context,
+                          message: 'Sign in to calculate a premium.',
+                        )) {
+                          return;
+                        }
+                        context.push(AppRoute.productQuote, extra: _right);
+                      },
                     ),
                   ),
                 ],
@@ -258,7 +263,10 @@ class _PinCell extends StatelessWidget {
                   elevation: 0,
                   padding: EdgeInsets.zero,
                 ),
-                child: const Text('Pin', style: TextStyle(fontWeight: FontWeight.w800)),
+                child: const Text(
+                  'Pin',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
               ),
             ),
     );
@@ -271,8 +279,5 @@ void openCompareFor(BuildContext context, CatalogProduct product) {
     (p) => p.id != product.id,
     orElse: () => ProductMockData.products.first,
   );
-  context.push(
-    AppRoute.productCompare,
-    extra: <CatalogProduct>[product, peer],
-  );
+  context.push(AppRoute.productCompare, extra: <CatalogProduct>[product, peer]);
 }

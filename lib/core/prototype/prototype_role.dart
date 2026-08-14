@@ -43,6 +43,21 @@ abstract final class PrototypeRole {
     }
   }
 
+  static String get teamRoleLine {
+    switch (id) {
+      case PrototypeRoleId.fa:
+        return 'Financial Advisor';
+      case PrototypeRoleId.teamLead:
+        return 'Team Lead (TL)';
+      case PrototypeRoleId.am:
+        return 'Agency Manager (AM)';
+      case PrototypeRoleId.sam:
+        return 'Senior Agency Manager (SAM)';
+      case PrototypeRoleId.dm:
+        return 'Sales Manager (DM)';
+    }
+  }
+
   static bool get canSell => true;
 
   static bool get canViewOwnKpis => true;
