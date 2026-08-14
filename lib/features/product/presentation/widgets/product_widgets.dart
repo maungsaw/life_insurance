@@ -8,6 +8,146 @@ class ProductSelectChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    /// When true (default), fills parent — use inside [Expanded]/[Row].
+    /// When false, sizes to label — use inside [Wrap] (Get A Quote type).
+    this.expand = true,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  final bool expand;
+
+  @override
+  Widget build(BuildContext context) {
+    final child = Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: expand ? double.infinity : null,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: selected
+                      ? AppColors.lightPrimary
+                      : (expand ? AppColors.lightBorder : Colors.transparent),
+                  width: selected ? 1.6 : (expand ? 1 : 0),
+                ),
+              ),
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: expand ? 2 : 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                  color: selected
+                      ? AppColors.lightPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+              ),
+            ),
+            if (selected)
+              Positioned(
+                top: -4,
+                right: -4,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: const BoxDecoration(
+                    color: AppColors.lightPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+    return child;
+  }
+}
+
+/// Get A Quote · Product Type chip — intrinsic width for [Wrap] (docs/63).
+class QuoteTypeChip extends StatelessWidget {
+  const QuoteTypeChip({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? Colors.white : const Color(0xFFF1F5F9),
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: selected ? AppColors.lightPrimary : Colors.transparent,
+                  width: selected ? 1.6 : 0,
+                ),
+              ),
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                  color: selected
+                      ? AppColors.lightPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+              ),
+            ),
+            if (selected)
+              Positioned(
+                top: -4,
+                right: -4,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: const BoxDecoration(
+                    color: AppColors.lightPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Get A Quote · Product Name tile — equal-width cell (docs/63).
+class QuoteNameTile extends StatelessWidget {
+  const QuoteNameTile({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
   });
 
   final String label;
@@ -27,23 +167,28 @@ class ProductSelectChip extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
+              constraints: const BoxConstraints(minHeight: 48),
               alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: selected ? AppColors.lightPrimary : AppColors.lightBorder,
-                  width: selected ? 1.6 : 1,
+                  color: selected ? AppColors.lightPrimary : Colors.transparent,
+                  width: selected ? 1.6 : 0,
                 ),
               ),
               child: Text(
                 label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
                   fontSize: 13,
+                  height: 1.2,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextSecondary,
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ),
@@ -62,6 +207,35 @@ class ProductSelectChip extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class QuoteRequiredLabel extends StatelessWidget {
+  const QuoteRequiredLabel(this.text, {super.key});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(
+        style: const TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+          color: AppColors.lightTextPrimary,
+        ),
+        children: [
+          TextSpan(text: text),
+          const TextSpan(
+            text: ' *',
+            style: TextStyle(
+              color: Colors.redAccent,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
       ),
     );
   }

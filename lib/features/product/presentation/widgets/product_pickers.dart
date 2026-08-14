@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/components/components.dart';
-import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
 
-/// Height · Weight · Identification bottom sheets (docs/59 P1 · wireframe pickers).
+/// Height · Weight · Identification bottom sheets (docs/59 · docs/62).
 
 class HeightPick {
   const HeightPick({required this.feet, required this.inches});
@@ -32,14 +31,17 @@ class IdPick {
     this.number,
   });
 
+  /// NRC · Old NRC · Passport · No ID
   final String type;
   final String? state;
   final String? township;
   final String? nrcType;
   final String? number;
 
+  bool get isNrcFamily => type == 'NRC' || type == 'Old NRC';
+
   String get display {
-    if (type == 'NRC' || type == 'Old NRC') {
+    if (isNrcFamily) {
       final s = state ?? '12';
       final t = township ?? 'KaMaNa';
       final n = nrcType ?? 'N';
@@ -48,6 +50,36 @@ class IdPick {
     }
     if (type == 'Passport') return number ?? '';
     return 'No ID';
+  }
+
+  /// Parse `12/KaMaNa(N)127487` · passport · No ID back into parts.
+  static IdPick parse({
+    required String idType,
+    required String raw,
+  }) {
+    final t = raw.trim();
+    if (idType == 'No ID' || t == 'No ID' || t.isEmpty && idType == 'No ID') {
+      return const IdPick(type: 'No ID');
+    }
+    if (idType == 'Passport') {
+      return IdPick(type: 'Passport', number: t);
+    }
+    final type = idType == 'Old NRC' ? 'Old NRC' : 'NRC';
+    final re = RegExp(
+      r'^(\d+)\s*/\s*([A-Za-z]+)\s*\(\s*([A-Za-z])\s*\)\s*(\d*)$',
+    );
+    final m = re.firstMatch(t.replaceAll(' ', ''));
+    if (m != null) {
+      return IdPick(
+        type: type,
+        state: m.group(1),
+        township: m.group(2),
+        nrcType: m.group(3)?.toUpperCase(),
+        number: m.group(4),
+      );
+    }
+    // Fallback: treat whole string as serial if already on NRC type.
+    return IdPick(type: type, state: '12', township: 'KaMaNa', nrcType: 'N', number: t);
   }
 }
 
@@ -59,6 +91,7 @@ Future<HeightPick?> showHeightPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -74,6 +107,7 @@ Future<WeightPick?> showWeightPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -89,6 +123,7 @@ Future<IdPick?> showIdentificationPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
+    backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -300,18 +335,23 @@ class _IdSheetState extends State<_IdSheet> {
   late final TextEditingController _number;
 
   static const _types = ['NRC', 'Old NRC', 'Passport', 'No ID'];
-  static const _states = ['12', '9', '5', '7', '1'];
-  static const _townships = ['KaMaNa', 'PaZaTa', 'LaMaNa', 'AhGaYa'];
+  static const _states = [
+    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14',
+  ];
+  static const _townships = [
+    'KaMaNa', 'PaZaTa', 'LaMaNa', 'AhGaYa', 'SaKaNa', 'YaKaNa',
+  ];
   static const _nrcTypes = ['N', 'P', 'E'];
 
   @override
   void initState() {
     super.initState();
-    _type = widget.initial?.type ?? 'NRC';
-    _state = widget.initial?.state ?? '12';
-    _township = widget.initial?.township ?? 'KaMaNa';
-    _nrcType = widget.initial?.nrcType ?? 'N';
-    _number = TextEditingController(text: widget.initial?.number ?? '127487');
+    final init = widget.initial ?? const IdPick(type: 'NRC');
+    _type = init.type;
+    _state = init.state ?? '12';
+    _township = init.township ?? 'KaMaNa';
+    _nrcType = init.nrcType ?? 'N';
+    _number = TextEditingController(text: init.number ?? '');
   }
 
   @override
@@ -320,101 +360,125 @@ class _IdSheetState extends State<_IdSheet> {
     super.dispose();
   }
 
+  IdPick get _draft => IdPick(
+        type: _type,
+        state: _isNrc ? _state : null,
+        township: _isNrc ? _township : null,
+        nrcType: _isNrc ? _nrcType : null,
+        number: _type == 'No ID' ? null : _number.text.trim(),
+      );
+
+  bool get _isNrc => _type == 'NRC' || _type == 'Old NRC';
+
   @override
   Widget build(BuildContext context) {
-    final showNrc = _type == 'NRC' || _type == 'Old NRC';
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          16 + MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Identification',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final t in _types)
-                    SizedBox(
-                      width: (MediaQuery.sizeOf(context).width - 56) / 2,
-                      child: ProductSelectChip(
+    return Material(
+      color: Colors.white,
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            0,
+            20,
+            16 + MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Identification',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 14),
+                GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 2.6,
+                  children: [
+                    for (final t in _types)
+                      _IdTypeTile(
                         label: t,
                         selected: _type == t,
                         onTap: () => setState(() => _type = t),
                       ),
-                    ),
-                ],
-              ),
-              if (showNrc) ...[
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _MiniDrop(
-                        label: 'State',
-                        value: _state,
-                        options: _states,
-                        onPick: (v) => setState(() => _state = v),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _MiniDrop(
-                        label: 'Township',
-                        value: _township,
-                        options: _townships,
-                        onPick: (v) => setState(() => _township = v),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: _MiniDrop(
-                        label: 'Type',
-                        value: _nrcType,
-                        options: _nrcTypes,
-                        onPick: (v) => setState(() => _nrcType = v),
-                      ),
-                    ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                AppTextField(
-                  label: 'NRC Number',
-                  controller: _number,
-                  keyboardType: TextInputType.number,
-                ),
-              ] else if (_type == 'Passport') ...[
-                const SizedBox(height: 16),
-                AppTextField(
-                  label: 'Passport Number',
-                  controller: _number,
+                if (_isNrc) ...[
+                  const SizedBox(height: 18),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _OutlinedDrop(
+                          label: 'State',
+                          value: _state,
+                          options: _states,
+                          onPick: (v) => setState(() => _state = v),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _OutlinedDrop(
+                          label: 'Township',
+                          value: _township,
+                          options: _townships,
+                          onPick: (v) => setState(() => _township = v),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _OutlinedDrop(
+                          label: 'Type',
+                          value: _nrcType,
+                          options: _nrcTypes,
+                          onPick: (v) => setState(() => _nrcType = v),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _draft.display,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.lightTextHint,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  AppTextField(
+                    label: 'NRC Number',
+                    controller: _number,
+                    keyboardType: TextInputType.number,
+                    onChanged: (_) => setState(() {}),
+                  ),
+                ] else if (_type == 'Passport') ...[
+                  const SizedBox(height: 18),
+                  AppTextField(
+                    label: 'Passport Number',
+                    controller: _number,
+                  ),
+                ] else ...[
+                  const SizedBox(height: 18),
+                  const Text(
+                    'No identification on file for this person.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.lightTextSecondary,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 20),
+                AppButton(
+                  label: 'Done',
+                  onPressed: () => Navigator.pop(context, _draft),
                 ),
               ],
-              const SizedBox(height: 16),
-              AppButton(
-                label: 'Done',
-                onPressed: () => Navigator.pop(
-                  context,
-                  IdPick(
-                    type: _type,
-                    state: showNrc ? _state : null,
-                    township: showNrc ? _township : null,
-                    nrcType: showNrc ? _nrcType : null,
-                    number: _type == 'No ID' ? null : _number.text.trim(),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -422,8 +486,70 @@ class _IdSheetState extends State<_IdSheet> {
   }
 }
 
-class _MiniDrop extends StatelessWidget {
-  const _MiniDrop({
+class _IdTypeTile extends StatelessWidget {
+  const _IdTypeTile({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? Colors.white : const Color(0xFFF1F5F9),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: selected ? AppColors.lightPrimary : Colors.transparent,
+                  width: selected ? 1.6 : 0,
+                ),
+              ),
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                  color: selected
+                      ? AppColors.lightPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+              ),
+            ),
+            if (selected)
+              Positioned(
+                top: -4,
+                right: -4,
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: const BoxDecoration(
+                    color: AppColors.lightPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlinedDrop extends StatelessWidget {
+  const _OutlinedDrop({
     required this.label,
     required this.value,
     required this.options,
@@ -442,9 +568,10 @@ class _MiniDrop extends StatelessWidget {
         final picked = await showModalBottomSheet<String>(
           context: context,
           showDragHandle: true,
+          backgroundColor: Colors.white,
           builder: (ctx) => SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: ListView(
+              shrinkWrap: true,
               children: [
                 for (final o in options)
                   ListTile(
@@ -460,13 +587,32 @@ class _MiniDrop extends StatelessWidget {
         );
         if (picked != null) onPick(picked);
       },
+      borderRadius: BorderRadius.circular(10),
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          labelStyle: const TextStyle(
+            color: AppColors.lightPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 12,
+          ),
+          suffixIcon: const Icon(Icons.keyboard_arrow_down_rounded, size: 20),
+          contentPadding: const EdgeInsets.fromLTRB(12, 14, 4, 14),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: AppColors.lightPrimary),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: AppColors.lightPrimary),
+          ),
         ),
-        child: Text(value, overflow: TextOverflow.ellipsis),
+        child: Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+        ),
       ),
     );
   }

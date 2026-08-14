@@ -18,6 +18,7 @@ class ProductQuotePage extends StatefulWidget {
 
 class _ProductQuotePageState extends State<ProductQuotePage> {
   late CatalogProduct _product;
+  late ProductLine _type;
   late String _variant;
   late String _frequency;
   late String _term;
@@ -38,6 +39,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   void initState() {
     super.initState();
     _product = widget.product;
+    _type = widget.product.line;
     ProductSession.rememberProduct(_product);
     _variant = _product.variants.first;
     _frequency = _product.frequencies.first;
@@ -88,6 +90,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     ProductSession.rememberProduct(product);
     setState(() {
       _product = product;
+      _type = product.line;
       _variant = product.variants.first;
       _frequency = product.frequencies.first;
       _term = product.terms.first;
@@ -98,6 +101,11 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
       _termCtrl.text = _term;
     });
     _recalc();
+  }
+
+  void _selectType(ProductLine line) {
+    final next = ProductMockData.products.firstWhere((p) => p.line == line);
+    _applyProduct(next);
   }
 
   Future<void> _pickDob() async {
@@ -198,7 +206,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   Widget build(BuildContext context) {
     final typeLines = ProductMockData.linesInCatalog;
     final names = ProductMockData.products
-        .where((p) => p.line == _product.line)
+        .where((p) => p.line == _type)
         .toList();
 
     return Scaffold(
@@ -207,17 +215,14 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         children: [
-          const Text(
-            'Product Type',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          ),
+          const QuoteRequiredLabel('Product Type'),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
               for (final line in typeLines)
-                ProductSelectChip(
+                QuoteTypeChip(
                   label: switch (line) {
                     ProductLine.protection => 'Protection',
                     ProductLine.saving => 'Saving',
@@ -225,34 +230,49 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                     ProductLine.health => 'Health',
                     ProductLine.bundled => 'Bundle',
                   },
-                  selected: _product.line == line,
-                  onTap: () {
-                    final next = ProductMockData.products.firstWhere(
-                      (p) => p.line == line,
-                    );
-                    _applyProduct(next);
-                  },
+                  selected: _type == line,
+                  onTap: () => _selectType(line),
                 ),
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Product Name',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          ),
+          const QuoteRequiredLabel('Product Name'),
           const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final p in names)
-                ProductSelectChip(
+          if (names.length <= 3)
+            Row(
+              children: [
+                for (var i = 0; i < names.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 8),
+                  Expanded(
+                    child: QuoteNameTile(
+                      label: names[i].name,
+                      selected: _product.id == names[i].id,
+                      onTap: () => _applyProduct(names[i]),
+                    ),
+                  ),
+                ],
+              ],
+            )
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: names.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 2.4,
+              ),
+              itemBuilder: (context, i) {
+                final p = names[i];
+                return QuoteNameTile(
                   label: p.name,
                   selected: _product.id == p.id,
                   onTap: () => _applyProduct(p),
-                ),
-            ],
-          ),
+                );
+              },
+            ),
           const SizedBox(height: 18),
           AppTextField(
             label: 'Date of Birth (Insured Person)',

@@ -323,28 +323,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
         ],
       ),
       const SizedBox(height: 12),
-      const Text('Identification Type *', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-      const SizedBox(height: 8),
-      Row(
-        children: [
-          Expanded(
-            child: ProductSelectChip(
-              label: 'NRC',
-              selected: _ph.idType == 'NRC',
-              onTap: () => setState(() => _ph.idType = 'NRC'),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ProductSelectChip(
-              label: 'Passport',
-              selected: _ph.idType == 'Passport',
-              onTap: () => setState(() => _ph.idType = 'Passport'),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 12),
+      // Identification type lives only in the Identification sheet (docs/62).
       AppTextField(
         label: 'Identification',
         isRequired: true,
@@ -764,15 +743,16 @@ class _ProductEappPageState extends State<ProductEappPage> {
   Future<void> _pickId() async {
     final picked = await showIdentificationPickerSheet(
       context,
-      initial: IdPick(type: _ph.idType, number: _ph.identification),
+      initial: IdPick.parse(
+        idType: _ph.idType,
+        raw: _ph.identification,
+      ),
     );
     if (picked == null) return;
     setState(() {
-      _ph.idType = picked.type == 'No ID' ? 'NRC' : picked.type;
-      if (picked.type != 'No ID') {
-        _ph.identification = picked.display;
-        _phId.text = picked.display;
-      }
+      _ph.idType = picked.type;
+      _ph.identification = picked.display;
+      _phId.text = picked.display;
     });
   }
 
