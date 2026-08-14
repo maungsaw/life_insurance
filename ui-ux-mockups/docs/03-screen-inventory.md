@@ -81,6 +81,8 @@
 - [x] Guest Home shell · Partner banner · lock map shipped (`74`)
 - [x] Guest calculator · Login to Save Quote brainstorm (`75`)
 - [x] Guest Get A Quote estimate · Login to save shipped (`75`)
+- [x] On-Boarding task · Agent Info + Training brainstorm (`76`)
+- [x] On-Boarding task type form shipped (`76`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

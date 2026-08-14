@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart'
-    show AppColors, PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
+import 'package:life_insurance/features/task/presentation/widgets/onboarding_detail_fields.dart';
 
 /// Create / edit task — wireframe Task Management form (docs/68).
 class TaskFormPage extends StatefulWidget {
@@ -30,6 +30,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
   late final TextEditingController _typeCtrl;
   late final TextEditingController _priorityCtrl;
   late final TextEditingController _statusCtrl;
+  late final TextEditingController _idCtrl;
+  late OnboardingMock _onboard;
+  final _onboardKey = GlobalKey<OnboardingDetailFieldsState>();
+  int _onboardTab = 0;
   int _attachments = 0;
   bool _saving = false;
   String? _error;
@@ -51,6 +55,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _title = TextEditingController(text: t.title);
       _description = TextEditingController(text: t.description);
       _attachments = t.attachmentCount;
+      _onboard = t.onboarding?.copy() ?? OnboardingMock(agentName: t.title);
     } else {
       _start = DateTime(day.year, day.month, day.day, 9, 0);
       _end = DateTime(day.year, day.month, day.day, 10, 0);
@@ -59,12 +64,14 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _status = TaskStatus.pending;
       _title = TextEditingController();
       _description = TextEditingController();
+      _onboard = OnboardingMock();
     }
     _startCtrl = TextEditingController(text: TaskFormat.dob(_start));
     _endCtrl = TextEditingController(text: TaskFormat.dob(_end));
     _typeCtrl = TextEditingController(text: _type.label);
     _priorityCtrl = TextEditingController(text: _priority.label);
     _statusCtrl = TextEditingController(text: _status.label);
+    _idCtrl = TextEditingController(text: _existing?.id ?? 'New');
   }
 
   @override
@@ -76,6 +83,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
     _typeCtrl.dispose();
     _priorityCtrl.dispose();
     _statusCtrl.dispose();
+    _idCtrl.dispose();
     super.dispose();
   }
 
@@ -134,7 +142,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+              child: Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.w800),
+              ),
             ),
             for (final o in options)
               ListTile(
@@ -152,11 +163,25 @@ class _TaskFormPageState extends State<TaskFormPage> {
     onPick(picked);
   }
 
+  bool get _isOnboarding => _type == TaskType.onboarding;
+
   Future<void> _save({bool markCompleted = false}) async {
-    final title = _title.text.trim();
+    _onboardKey.currentState?.flush();
+    final title = _isOnboarding
+        ? (_onboard.agentName.trim().isNotEmpty
+              ? _onboard.agentName.trim()
+              : _title.text.trim())
+        : _title.text.trim();
     if (title.isEmpty) {
-      setState(() => _error = 'Task title is required.');
+      setState(
+        () => _error = _isOnboarding
+            ? 'Agent name is required for On-Boarding.'
+            : 'Task title is required.',
+      );
       return;
+    }
+    if (_isOnboarding && _onboard.agentName.trim().isEmpty) {
+      _onboard.agentName = title;
     }
     setState(() {
       _error = null;
@@ -170,25 +195,27 @@ class _TaskFormPageState extends State<TaskFormPage> {
       final t = _existing!;
       t
         ..title = title
-        ..description = _description.text.trim()
+        ..description = _isOnboarding ? '' : _description.text.trim()
         ..type = _type
         ..priority = _priority
         ..status = status
         ..startAt = _start
         ..endAt = _end
         ..attachmentCount = _attachments
-        ..isNewAssignment = false;
+        ..isNewAssignment = false
+        ..onboarding = _isOnboarding ? _onboard.copy() : null;
       TaskSession.upsert(t);
     } else {
       TaskSession.create(
         title: title,
-        description: _description.text.trim(),
+        description: _isOnboarding ? '' : _description.text.trim(),
         type: _type,
         priority: _priority,
         status: status,
         startAt: _start,
         endAt: _end,
         attachmentCount: _attachments,
+        onboarding: _isOnboarding ? _onboard.copy() : null,
       );
     }
     setState(() => _saving = false);
@@ -235,180 +262,24 @@ class _TaskFormPageState extends State<TaskFormPage> {
                   ),
                   const SizedBox(height: 10),
                 ],
-                AppTextField(
-                  label: 'Start Date',
-                  isRequired: true,
-                  controller: _startCtrl,
-                  readOnly: true,
-                  onTap: () => _pickDate(start: true),
-                  suffix: IconButton(
-                    onPressed: () => _pickDate(start: true),
-                    icon: const Icon(Icons.calendar_today_outlined, size: 18),
+                if (_isOnboarding)
+                  ..._onboardingHeader()
+                else
+                  ..._dailyHeader(),
+                if (_isOnboarding) ...[
+                  const SizedBox(height: 22),
+                  OnboardingDetailFields(
+                    key: _onboardKey,
+                    data: _onboard,
+                    tab: _onboardTab,
+                    onTab: (i) => setState(() => _onboardTab = i),
+                    onChanged: () => setState(() {}),
+                    uploadSlot: _onboardTab == 0 ? _uploadBlock() : null,
                   ),
-                ),
-                const SizedBox(height: 14),
-                AppTextField(
-                  label: 'End Date',
-                  isRequired: true,
-                  controller: _endCtrl,
-                  readOnly: true,
-                  onTap: () => _pickDate(start: false),
-                  suffix: IconButton(
-                    onPressed: () => _pickDate(start: false),
-                    icon: const Icon(Icons.calendar_today_outlined, size: 18),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                AppTextField(
-                  label: 'Task Title',
-                  isRequired: true,
-                  controller: _title,
-                ),
-                const SizedBox(height: 14),
-                AppTextField(
-                  label: 'Task Type',
-                  isRequired: true,
-                  controller: _typeCtrl,
-                  readOnly: true,
-                  onTap: () => _pickEnum<TaskType>(
-                    title: 'Task Type',
-                    options: TaskType.values,
-                    current: _type,
-                    labelOf: (t) => t.label,
-                    onPick: (t) => setState(() {
-                      _type = t;
-                      _typeCtrl.text = t.label;
-                    }),
-                  ),
-                  suffix: const Icon(Icons.expand_more, size: 18),
-                ),
-                const SizedBox(height: 14),
-                const Text(
-                  'Task Description *',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: _description,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Describe the task',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.lightPrimary),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppColors.lightPrimary.withValues(alpha: 0.55),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: AppColors.lightPrimary,
-                        width: 1.5,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.all(12),
-                  ),
-                ),
-                const SizedBox(height: 14),
-                AppTextField(
-                  label: 'Priority',
-                  isRequired: true,
-                  controller: _priorityCtrl,
-                  readOnly: true,
-                  onTap: () => _pickEnum<TaskPriority>(
-                    title: 'Priority',
-                    options: TaskPriority.values,
-                    current: _priority,
-                    labelOf: (p) => p.label,
-                    onPick: (p) => setState(() {
-                      _priority = p;
-                      _priorityCtrl.text = p.label;
-                    }),
-                  ),
-                  suffix: const Icon(Icons.expand_more, size: 18),
-                ),
-                const SizedBox(height: 14),
-                AppTextField(
-                  label: 'Status',
-                  isRequired: true,
-                  controller: _statusCtrl,
-                  readOnly: true,
-                  onTap: () => _pickEnum<TaskStatus>(
-                    title: 'Status',
-                    options: TaskStatus.values,
-                    current: _status,
-                    labelOf: (s) => s.label,
-                    onPick: (s) => setState(() {
-                      _status = s;
-                      _statusCtrl.text = s.label;
-                    }),
-                  ),
-                  suffix: const Icon(Icons.expand_more, size: 18),
-                ),
-                const SizedBox(height: 18),
-                const Text(
-                  'Upload',
-                  style: TextStyle(
-                    color: AppColors.lightPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    InkWell(
-                      onTap: () => setState(() {
-                        if (_attachments < 3) _attachments += 1;
-                      }),
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: AppColors.lightPrimary.withValues(alpha: 0.35),
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.create_new_folder_outlined,
-                          color: AppColors.lightPrimary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    for (var i = 0; i < _attachments; i++) ...[
-                      Container(
-                        width: 72,
-                        height: 56,
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.image_outlined,
-                          color: AppColors.lightPrimary,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 6),
-                const Text(
-                  'Attachment stub — prototype, no upload API.',
-                  style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
-                ),
+                ] else ...[
+                  const SizedBox(height: 18),
+                  _uploadBlock(),
+                ],
               ],
             ),
           ),
@@ -439,6 +310,250 @@ class _TaskFormPageState extends State<TaskFormPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _onTypePicked(TaskType t) {
+    _onboardKey.currentState?.flush();
+    setState(() {
+      _type = t;
+      _typeCtrl.text = t.label;
+      if (t == TaskType.onboarding &&
+          _onboard.agentName.isEmpty &&
+          _title.text.trim().isNotEmpty) {
+        _onboard.agentName = _title.text.trim();
+      }
+    });
+  }
+
+  List<Widget> _onboardingHeader() {
+    return [
+      AppTextField(
+        label: 'Task ID',
+        controller: _idCtrl,
+        readOnly: true,
+        enabled: false,
+      ),
+      const SizedBox(height: 14),
+      AppTextField(
+        label: 'Task Name',
+        isRequired: true,
+        controller: _title,
+        onChanged: (v) {
+          if (_onboard.agentName.isEmpty || _onboard.agentName == _title.text) {
+            _onboard.agentName = v;
+          }
+        },
+      ),
+      const SizedBox(height: 14),
+      _typeField(),
+      const SizedBox(height: 14),
+      _priorityField(),
+      const SizedBox(height: 14),
+      _statusField(),
+      const SizedBox(height: 14),
+      _startField(),
+      const SizedBox(height: 14),
+      _endField(),
+    ];
+  }
+
+  List<Widget> _dailyHeader() {
+    return [
+      _startField(),
+      const SizedBox(height: 14),
+      _endField(),
+      const SizedBox(height: 14),
+      AppTextField(label: 'Task Title', isRequired: true, controller: _title),
+      const SizedBox(height: 14),
+      _typeField(),
+      const SizedBox(height: 14),
+      const Text(
+        'Task Description *',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.lightTextSecondary,
+        ),
+      ),
+      const SizedBox(height: 6),
+      TextField(
+        controller: _description,
+        maxLines: 4,
+        decoration: InputDecoration(
+          hintText: 'Describe the task',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: AppColors.lightPrimary),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.lightPrimary.withValues(alpha: 0.55),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: AppColors.lightPrimary,
+              width: 1.5,
+            ),
+          ),
+          contentPadding: const EdgeInsets.all(12),
+        ),
+      ),
+      const SizedBox(height: 14),
+      _priorityField(),
+      const SizedBox(height: 14),
+      _statusField(),
+    ];
+  }
+
+  Widget _typeField() {
+    return AppTextField(
+      label: 'Task Type',
+      isRequired: true,
+      controller: _typeCtrl,
+      readOnly: true,
+      onTap: () => _pickEnum<TaskType>(
+        title: 'Task Type',
+        options: TaskType.values,
+        current: _type,
+        labelOf: (t) => t.label,
+        onPick: _onTypePicked,
+      ),
+      suffix: const Icon(Icons.expand_more, size: 18),
+    );
+  }
+
+  Widget _priorityField() {
+    return AppTextField(
+      label: 'Priority',
+      isRequired: true,
+      controller: _priorityCtrl,
+      readOnly: true,
+      onTap: () => _pickEnum<TaskPriority>(
+        title: 'Priority',
+        options: TaskPriority.values,
+        current: _priority,
+        labelOf: (p) => p.label,
+        onPick: (p) => setState(() {
+          _priority = p;
+          _priorityCtrl.text = p.label;
+        }),
+      ),
+      suffix: const Icon(Icons.expand_more, size: 18),
+    );
+  }
+
+  Widget _statusField() {
+    return AppTextField(
+      label: 'Status',
+      isRequired: true,
+      controller: _statusCtrl,
+      readOnly: true,
+      onTap: () => _pickEnum<TaskStatus>(
+        title: 'Status',
+        options: TaskStatus.values,
+        current: _status,
+        labelOf: (s) => s.label,
+        onPick: (s) => setState(() {
+          _status = s;
+          _statusCtrl.text = s.label;
+        }),
+      ),
+      suffix: const Icon(Icons.expand_more, size: 18),
+    );
+  }
+
+  Widget _startField() {
+    return AppTextField(
+      label: 'Start Date',
+      isRequired: true,
+      controller: _startCtrl,
+      readOnly: true,
+      onTap: () => _pickDate(start: true),
+      suffix: IconButton(
+        onPressed: () => _pickDate(start: true),
+        icon: const Icon(Icons.calendar_today_outlined, size: 18),
+      ),
+    );
+  }
+
+  Widget _endField() {
+    return AppTextField(
+      label: 'End Date',
+      isRequired: true,
+      controller: _endCtrl,
+      readOnly: true,
+      onTap: () => _pickDate(start: false),
+      suffix: IconButton(
+        onPressed: () => _pickDate(start: false),
+        icon: const Icon(Icons.calendar_today_outlined, size: 18),
+      ),
+    );
+  }
+
+  Widget _uploadBlock() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Upload',
+          style: TextStyle(
+            color: AppColors.lightPrimary,
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            InkWell(
+              onTap: () => setState(() {
+                if (_attachments < 3) _attachments += 1;
+              }),
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.lightPrimary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColors.lightPrimary.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: const Icon(
+                  Icons.create_new_folder_outlined,
+                  color: AppColors.lightPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            for (var i = 0; i < _attachments; i++) ...[
+              Container(
+                width: 72,
+                height: 56,
+                margin: const EdgeInsets.only(right: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.image_outlined,
+                  color: AppColors.lightPrimary,
+                ),
+              ),
+            ],
+          ],
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Attachment stub — prototype, no upload API.',
+          style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+        ),
+      ],
     );
   }
 }

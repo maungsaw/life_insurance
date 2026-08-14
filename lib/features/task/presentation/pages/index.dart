@@ -56,12 +56,11 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
       final out = TaskSession.tasks.where((t) {
         final inMonth =
             (t.startAt.year == _day.year && t.startAt.month == _day.month) ||
-                (t.endAt.year == _day.year && t.endAt.month == _day.month);
+            (t.endAt.year == _day.year && t.endAt.month == _day.month);
         final statusOk = _statusFilter == null || t.status == _statusFilter;
         final typeOk = _typeFilter == null || t.type == _typeFilter;
         return inMonth && statusOk && typeOk;
-      }).toList()
-        ..sort((a, b) => a.startAt.compareTo(b.startAt));
+      }).toList()..sort((a, b) => a.startAt.compareTo(b.startAt));
       return out;
     }
     return TaskSession.filtered(
@@ -120,7 +119,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
               ),
             ],
           ),
-              SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Column(
@@ -243,6 +242,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
                         for (final t in [
                           TaskType.meeting,
                           TaskType.call,
+                          TaskType.onboarding,
                           TaskType.servicing,
                           TaskType.eApp,
                           TaskType.leaveAppointment,
@@ -307,31 +307,27 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
               sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, i) {
-                    final t = rows[i];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _TaskAgendaCard(
-                        task: t,
-                        onTap: () => _openForm(taskId: t.id),
-                      ),
-                    );
-                  },
-                  childCount: rows.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, i) {
+                  final t = rows[i];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _TaskAgendaCard(
+                      task: t,
+                      onTap: () => _openForm(taskId: t.id),
+                    ),
+                  );
+                }, childCount: rows.length),
               ),
             ),
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: AppBottomNavBar.scrollClearance(context),
-            ),
+            child: SizedBox(height: AppBottomNavBar.scrollClearance(context)),
           ),
         ],
       ),
     );
   }
 }
+
 /// Args for GoRoute extra.
 class TaskFormArgs {
   const TaskFormArgs({this.taskId, this.initialDay});
@@ -365,7 +361,9 @@ class _ScopeChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: selected ? AppColors.lightPrimary : const Color(0xFFE5E7EB),
+              color: selected
+                  ? AppColors.lightPrimary
+                  : const Color(0xFFE5E7EB),
             ),
           ),
           child: Text(
@@ -561,8 +559,9 @@ class _TaskAgendaCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFE11D48)
-                                  .withValues(alpha: 0.1),
+                              color: const Color(
+                                0xFFE11D48,
+                              ).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: const Text(
@@ -580,10 +579,7 @@ class _TaskAgendaCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.lightTextHint,
-              ),
+              const Icon(Icons.chevron_right, color: AppColors.lightTextHint),
             ],
           ),
         ),
