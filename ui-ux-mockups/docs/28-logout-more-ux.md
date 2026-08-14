@@ -64,7 +64,7 @@ After confirm → **Sign in** (`s-login`) — faster re-entry than Splash. Splas
 - [x] Log out at bottom of More  
 - [x] Confirm sheet · Cancel / Log out  
 - [x] Lands on Sign in  
-- [ ] Real token clear / biometric lock (later)  
+- [x] Profile toggle + Login unlock (`70`) — real token clear still later  
 
 ---
 

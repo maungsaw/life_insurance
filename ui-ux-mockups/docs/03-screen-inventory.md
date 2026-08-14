@@ -69,6 +69,10 @@
 - [x] Task My work + create/edit form shipped (`68`)
 - [x] My work FAB placement brainstorm (`69`)
 - [x] My work FAB soft-dock shipped (`69`)
+- [x] Profile biometric login brainstorm (`70`)
+- [x] Profile biometric toggle + Login unlock shipped (`70`)
+- [x] Role-based dashboards (FR-02) brainstorm (`71`)
+- [x] Role-based Home overlay + Team hub shipped (`71`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

@@ -37,6 +37,7 @@ Optional: Total Premium | Total Commission  (read-only mock)
 Section: Setting
   Edit Profile >
   Change Password >
+  Security · Biometric login switch (`70`)
   FAQ >
   Language >
   Notification >

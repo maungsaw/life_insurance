@@ -7,6 +7,7 @@ abstract class LocalCacheService {
   Future<void> delete(String key);
   Future<void> clearAll();
   Future<bool> isBiometricsEnabled();
+  Future<void> setBiometricsEnabled(bool enabled);
 }
 
 class ILocalCacheService implements LocalCacheService {
@@ -48,5 +49,13 @@ class ILocalCacheService implements LocalCacheService {
   Future<bool> isBiometricsEnabled() async {
     final val = await _storage.read(key: CacheConstants.bioMetric);
     return val == 'true';
+  }
+
+  @override
+  Future<void> setBiometricsEnabled(bool enabled) {
+    return write(
+      key: CacheConstants.bioMetric,
+      value: enabled ? 'true' : 'false',
+    );
   }
 }

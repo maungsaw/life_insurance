@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/core/core.dart' show AppColors, PrototypeRole;
 import 'package:life_insurance/features/profile/presentation/models/profile_mock_data.dart';
 
 class ProfileIdentityCard extends StatelessWidget {
@@ -54,6 +54,15 @@ class ProfileIdentityCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 13,
                     color: AppColors.lightTextSecondary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  PrototypeRole.previewTitle,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightPrimary,
                   ),
                 ),
               ],

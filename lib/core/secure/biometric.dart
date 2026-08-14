@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:local_auth/local_auth.dart' show LocalAuthentication;
+import 'package:local_auth/local_auth.dart'
+    show LocalAuthentication, BiometricType, LocalAuthException;
 import 'package:flutter/services.dart' show PlatformException;
 
 class BiometricService {
@@ -11,7 +12,24 @@ class BiometricService {
       return canAuthenticateWithBiometrics && isDeviceSupported;
     } on PlatformException {
       return false;
+    } on LocalAuthException {
+      return false;
     }
+  }
+
+  /// Face ID / Fingerprint / Biometric — for Profile & Login copy.
+  Future<String> kindLabel() async {
+    try {
+      final types = await _auth.getAvailableBiometrics();
+      if (types.contains(BiometricType.face)) return 'Face ID';
+      if (types.contains(BiometricType.fingerprint)) return 'Fingerprint';
+      if (types.contains(BiometricType.iris)) return 'Iris';
+    } on PlatformException {
+      // Fall through to generic label.
+    } on LocalAuthException {
+      // Fall through to generic label.
+    }
+    return 'Biometric';
   }
 
   /// Trigger native biometric prompt
@@ -22,7 +40,9 @@ class BiometricService {
         biometricOnly: true,
       );
     } on PlatformException catch (e) {
-      // Handle OS errors (e.g., user canceled, too many failed attempts)
+      debugPrint("Bio Metric Error -> $e");
+      return false;
+    } on LocalAuthException catch (e) {
       debugPrint("Bio Metric Error -> $e");
       return false;
     }

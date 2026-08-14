@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart' show GoRouterHelper;
-import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/core.dart'
+    show AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/secure/biometric_prefs.dart';
 import 'package:life_insurance/features/components/components.dart';
 
 /// Login — prototype local auth (docs/38 · LoginRegister.png). No API.
@@ -17,6 +19,25 @@ class _LoginPageState extends State<LoginPage> {
   String? _mobileError;
   String? _passwordError;
   bool _submitting = false;
+  bool _unlocking = false;
+  bool _bioReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBiometrics();
+  }
+
+  Future<void> _loadBiometrics() async {
+    await BiometricPrefs.load();
+    if (!mounted) return;
+    setState(() => _bioReady = true);
+  }
+
+  bool get _showUnlock =>
+      _bioReady &&
+      BiometricPrefs.enabled &&
+      (BiometricPrefs.hardwareReady || BiometricPrefs.allowPrototypeMock);
 
   @override
   void dispose() {
@@ -60,6 +81,32 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     context.go(AppRoute.home);
+  }
+
+  Future<void> _onUnlock() async {
+    setState(() => _unlocking = true);
+    var ok = false;
+    if (BiometricPrefs.hardwareReady) {
+      ok = await BiometricPrefs.authenticate(
+        reason: 'Unlock with ${BiometricPrefs.kindLabel}',
+      );
+    } else if (BiometricPrefs.allowPrototypeMock) {
+      await Future<void>.delayed(PrototypeConfig.shortDelay);
+      ok = true;
+    }
+    if (!mounted) return;
+    setState(() => _unlocking = false);
+    if (ok) {
+      context.go(AppRoute.home);
+      return;
+    }
+    await AppStatusDialog.show(
+      context,
+      type: AppStatusType.warning,
+      title: 'Couldn’t verify',
+      message: 'Try again or use password.',
+      actionLabel: 'OK',
+    );
   }
 
   @override
@@ -120,8 +167,26 @@ class _LoginPageState extends State<LoginPage> {
             AppButton(
               label: 'LOGIN',
               isLoading: _submitting,
-              onPressed: _onLogin,
+              onPressed: _unlocking ? null : _onLogin,
             ),
+            if (_showUnlock) ...[
+              const SizedBox(height: 12),
+              AppButton(
+                label: BiometricPrefs.unlockCtaLabel,
+                variant: AppButtonVariant.secondary,
+                icon: BiometricPrefs.kindLabel == 'Face ID'
+                    ? Icons.face_rounded
+                    : Icons.fingerprint_rounded,
+                isLoading: _unlocking,
+                onPressed: _submitting ? null : _onUnlock,
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Use password',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, color: Color(0xFF757575)),
+              ),
+            ],
             const SizedBox(height: 28),
             AppTextLink(
               prefix: 'Not account yet? ',

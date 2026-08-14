@@ -58,7 +58,12 @@ import 'package:life_insurance/features/features.dart'
         ProductEappSuccessPage,
         ProductSearchPage,
         ProductComparePage,
-        ProductSession;
+        ProductSession,
+        TeamHubPage,
+        TeamMembersPage,
+        TeamFaPage,
+        TeamGroupPage,
+        TeamMdrtPage;
 import 'package:life_insurance/features/widgets.dart';
 
 import 'root.dart';
@@ -491,6 +496,57 @@ class AppNavigator {
           return AppTransition.slide(
             key: state.pageKey,
             child: ProductComparePage(left: left, right: right),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.teamHub,
+        name: AppRoute.teamHub,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const TeamHubPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.teamMembers,
+        name: AppRoute.teamMembers,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const TeamMembersPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.teamFa,
+        name: AppRoute.teamFa,
+        pageBuilder: (context, state) {
+          final id = state.extra is String ? state.extra as String : '';
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: TeamFaPage(memberId: id),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.teamGroup,
+        name: AppRoute.teamGroup,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const TeamGroupPage(),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.teamMdrt,
+        name: AppRoute.teamMdrt,
+        pageBuilder: (context, state) {
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: const TeamMdrtPage(),
           );
         },
       ),

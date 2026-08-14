@@ -35,4 +35,9 @@ abstract class AppRoute {
   static const String productEappSuccess = '/product/eapp/success';
   static const String productSearch = '/product/search';
   static const String productCompare = '/product/compare';
+  static const String teamHub = '/team';
+  static const String teamMembers = '/team/members';
+  static const String teamFa = '/team/fa';
+  static const String teamGroup = '/team/group';
+  static const String teamMdrt = '/team/mdrt';
 }

@@ -82,7 +82,7 @@ Mock model: `HomeMockData` in dashboard (swap for repository later).
 - [x] Bottom nav Home tab shows new dashboard  
 - [ ] Bind FR-02 APIs  
 - [ ] Real notif inbox route  
-- [ ] Team performance Flutter screen (`32` parity)  
+- [x] Team performance Flutter screen (`32` parity) — hub shipped in `71`  
 
 ---
 

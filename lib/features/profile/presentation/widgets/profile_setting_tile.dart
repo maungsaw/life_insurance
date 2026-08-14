@@ -7,11 +7,13 @@ class ProfileSettingTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.subtitle,
     this.showDivider = true,
   });
 
   final IconData icon;
   final String label;
+  final String? subtitle;
   final VoidCallback onTap;
   final bool showDivider;
 
@@ -36,13 +38,28 @@ class ProfileSettingTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 14),
                 Expanded(
-                  child: Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextPrimary,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.lightTextPrimary,
+                        ),
+                      ),
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle!,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
                 const Icon(

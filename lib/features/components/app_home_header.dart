@@ -7,12 +7,14 @@ class AppHomeHeader extends StatelessWidget {
     super.key,
     required this.name,
     this.greeting = 'Good Morning',
+    this.roleLabel,
     this.onNotifTap,
     this.hasUnread = true,
   });
 
   final String name;
   final String greeting;
+  final String? roleLabel;
   final VoidCallback? onNotifTap;
   final bool hasUnread;
 
@@ -67,6 +69,24 @@ class AppHomeHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (roleLabel != null && roleLabel!.isNotEmpty) ...[
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.lightPrimary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              roleLabel!,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: AppColors.lightPrimary,
+              ),
+            ),
+          ),
+        ],
         IconButton(
           onPressed: onNotifTap,
           icon: Badge(

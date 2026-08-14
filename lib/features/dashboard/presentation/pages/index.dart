@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
-    show AppColors, AppRoute, PrototypeConfig;
+    show AppColors, AppRoute, PrototypeConfig, PrototypeRole;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart'
     show CrmStatus;
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
+import 'package:life_insurance/features/dashboard/presentation/widgets/team_pulse_card.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/notification/presentation/models/notification_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
@@ -35,6 +36,15 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: PrototypeRole.current,
+      builder: (context, _, _) {
+        return _buildBody(context);
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
     final services = [
       AppServiceItem(
         label: 'New Proposal',
@@ -96,6 +106,7 @@ class DashboardPage extends StatelessWidget {
                 child: AppHomeHeader(
                   name: HomeMockData.agentName,
                   greeting: HomeMockData.greeting,
+                  roleLabel: PrototypeRole.chipLabel,
                   hasUnread: NotificationMockData.unreadCount > 0,
                   onNotifTap: () => _openNotifications(context),
                 ),
@@ -180,6 +191,12 @@ class DashboardPage extends StatelessWidget {
                     timeLabel: HomeMockData.renewalTime,
                     onTap: () => _openNotifications(context),
                   ),
+                  if (PrototypeRole.canViewTeam) ...[
+                    const SizedBox(height: 16),
+                    TeamPulseCard(
+                      onOpenTeam: () => context.push(AppRoute.teamHub),
+                    ),
+                  ],
                   const SizedBox(height: 22),
                   const AppSectionHeader(title: 'Promotion & Campaign'),
                   const SizedBox(height: 10),
