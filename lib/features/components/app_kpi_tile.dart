@@ -9,16 +9,18 @@ class AppPolicyStatCard extends StatelessWidget {
     required this.value,
     required this.accent,
     this.icon = Icons.gpp_good_rounded,
+    this.onTap,
   });
 
   final String label;
   final String value;
   final Color accent;
   final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -75,6 +77,15 @@ class AppPolicyStatCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+    if (onTap == null) return card;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: card,
       ),
     );
   }

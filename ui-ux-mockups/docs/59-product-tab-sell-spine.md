@@ -166,6 +166,8 @@ sticky  [ Save quote ]
 
 Per-product extra fields (riders, travel dates, health SI bands) = **P1** by product code; P0 uses the UL-style field set as the default template.
 
+> **Update (`65`):** Full PNG ↔ BRD map, shared chrome, schemas (lock-up · industry risk · travel by · units · …), discount stub, stamp/total, and Group Life OOS are specified in `65-products-premium-brd-wireframe.md`. Prefer schema-driven Get A Quote over one UL form forever.
+
 ### D. Quote saved
 
 - Ref `QT-2026-0814` · person · product · SI · premium · mode · date  

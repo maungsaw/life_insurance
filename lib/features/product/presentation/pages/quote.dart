@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
+import 'package:life_insurance/features/product/presentation/models/premium_schema.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/pages/compare.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
@@ -19,21 +20,48 @@ class ProductQuotePage extends StatefulWidget {
 class _ProductQuotePageState extends State<ProductQuotePage> {
   late CatalogProduct _product;
   late ProductLine _type;
+  late ProductPremiumSchema _schema;
   late String _variant;
   late String _frequency;
   late String _term;
+  late String _lockupPeriod;
+  late String _industryRisk;
+  late String _additionalCover;
+  late String _travelBy;
+  late String _riderPlan;
+  late String _riderFrequency;
+  late String _discountName;
   late DateTime _dob;
   late final TextEditingController _dobCtrl;
   late final TextEditingController _siCtrl;
   late final TextEditingController _premiumCtrl;
   late final TextEditingController _topupCtrl;
+  late final TextEditingController _lockupCtrl;
+  late final TextEditingController _plateCtrl;
+  late final TextEditingController _discountAmountCtrl;
+  late final TextEditingController _discountNameCtrl;
+  late final TextEditingController _partyCtrl;
   late final TextEditingController _variantCtrl;
   late final TextEditingController _freqCtrl;
   late final TextEditingController _termCtrl;
-  late final TextEditingController _partyCtrl;
+  late final TextEditingController _lockupPeriodCtrl;
+  late final TextEditingController _industryRiskCtrl;
+  late final TextEditingController _additionalCoverCtrl;
+  late final TextEditingController _travelByCtrl;
+  late final TextEditingController _riderPlanCtrl;
+  late final TextEditingController _riderFreqCtrl;
+  bool _optionalBundle = false;
   QuoteParty? _party;
   bool _saving = false;
   String? _partyError;
+  QuoteCalcResult _calc = const QuoteCalcResult(
+    premium: 0,
+    stampFee: 0,
+    riderPremium: 0,
+    total: 0,
+  );
+
+  static const _discountNames = ['Staff', 'Promo', 'Loyalty'];
 
   @override
   void initState() {
@@ -41,22 +69,27 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _product = widget.product;
     _type = widget.product.line;
     ProductSession.rememberProduct(_product);
-    _variant = _product.variants.first;
-    _frequency = _product.frequencies.first;
-    _term = _product.terms.first;
     _dob = DateTime(1999, 6, 4);
     _dobCtrl = TextEditingController(text: ProductFormat.dob(_dob));
-    _siCtrl = TextEditingController(
-      text: ProductFormat.money(_product.defaultSi),
-    );
-    _premiumCtrl = TextEditingController(text: _premiumLabel());
-    _topupCtrl = TextEditingController(
-      text: ProductFormat.money(_product.defaultTopup),
-    );
-    _variantCtrl = TextEditingController(text: _variant);
-    _freqCtrl = TextEditingController(text: _frequency);
-    _termCtrl = TextEditingController(text: _term);
+    _siCtrl = TextEditingController();
+    _premiumCtrl = TextEditingController();
+    _topupCtrl = TextEditingController();
+    _lockupCtrl = TextEditingController();
+    _plateCtrl = TextEditingController(text: '5K/3140');
+    _discountAmountCtrl = TextEditingController(text: ProductFormat.money(0));
+    _discountNameCtrl = TextEditingController();
     _partyCtrl = TextEditingController();
+    _variantCtrl = TextEditingController();
+    _freqCtrl = TextEditingController();
+    _termCtrl = TextEditingController();
+    _lockupPeriodCtrl = TextEditingController();
+    _industryRiskCtrl = TextEditingController();
+    _additionalCoverCtrl = TextEditingController();
+    _travelByCtrl = TextEditingController();
+    _riderPlanCtrl = TextEditingController();
+    _riderFreqCtrl = TextEditingController();
+    _discountName = '';
+    _resetForProduct(_product, keepParty: false);
   }
 
   @override
@@ -65,24 +98,82 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _siCtrl.dispose();
     _premiumCtrl.dispose();
     _topupCtrl.dispose();
+    _lockupCtrl.dispose();
+    _plateCtrl.dispose();
+    _discountAmountCtrl.dispose();
+    _discountNameCtrl.dispose();
+    _partyCtrl.dispose();
     _variantCtrl.dispose();
     _freqCtrl.dispose();
     _termCtrl.dispose();
-    _partyCtrl.dispose();
+    _lockupPeriodCtrl.dispose();
+    _industryRiskCtrl.dispose();
+    _additionalCoverCtrl.dispose();
+    _travelByCtrl.dispose();
+    _riderPlanCtrl.dispose();
+    _riderFreqCtrl.dispose();
     super.dispose();
   }
 
   int get _age => ProductFormat.ageOn(_dob);
 
-  String _premiumLabel() {
-    final si = ProductFormat.parseMoney(_siCtrl.text);
-    return ProductFormat.money(
-      ProductMockData.monthlyPremiumFor(product: _product, si: si),
+  void _resetForProduct(CatalogProduct product, {required bool keepParty}) {
+    _schema = PremiumSchemas.forProduct(product);
+    _variant = product.variants.first;
+    _frequency = product.frequencies.first;
+    _term = product.terms.first;
+    _lockupPeriod = _schema.of(PremiumFieldId.lockupPeriod)?.options.first ?? '';
+    _industryRisk =
+        _schema.of(PremiumFieldId.industryRisk)?.options.first ?? 'Low Risk';
+    _additionalCover =
+        _schema.of(PremiumFieldId.additionalCover)?.options.first ?? 'None';
+    _travelBy = _schema.of(PremiumFieldId.travelBy)?.options.first ?? 'Car';
+    _riderPlan = product.variants.first;
+    _riderFrequency = product.frequencies.first;
+    _optionalBundle = false;
+    _siCtrl.text = ProductFormat.money(product.defaultSi);
+    _topupCtrl.text = ProductFormat.money(
+      _schema.has(PremiumFieldId.topup) ? product.defaultTopup : 0,
     );
+    _lockupCtrl.text = ProductFormat.money(
+      _schema.has(PremiumFieldId.lockupAmount) ? 10000000 : 0,
+    );
+    if (!keepParty) {
+      _party = null;
+      _partyCtrl.clear();
+      _partyError = null;
+    }
+    _syncDropdownCtrls();
+    _recalc();
+  }
+
+  void _syncDropdownCtrls() {
+    _variantCtrl.text = _variant;
+    _freqCtrl.text = _frequency;
+    _termCtrl.text = _term;
+    _lockupPeriodCtrl.text = _lockupPeriod;
+    _industryRiskCtrl.text = _industryRisk;
+    _additionalCoverCtrl.text = _additionalCover;
+    _travelByCtrl.text = _travelBy;
+    _riderPlanCtrl.text = _riderPlan;
+    _riderFreqCtrl.text = _riderFrequency;
+    _discountNameCtrl.text = _discountName;
   }
 
   void _recalc() {
-    _premiumCtrl.text = _premiumLabel();
+    _calc = PremiumSchemas.calculate(
+      product: _product,
+      si: ProductFormat.parseMoney(_siCtrl.text),
+      topup: _schema.has(PremiumFieldId.topup)
+          ? ProductFormat.parseMoney(_topupCtrl.text)
+          : 0,
+      lockupAmount: _schema.has(PremiumFieldId.lockupAmount)
+          ? ProductFormat.parseMoney(_lockupCtrl.text)
+          : 0,
+      optionalBundle: _optionalBundle,
+      industryRisk: _industryRisk,
+    );
+    _premiumCtrl.text = ProductFormat.money(_calc.premium);
     setState(() {});
   }
 
@@ -91,16 +182,8 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     setState(() {
       _product = product;
       _type = product.line;
-      _variant = product.variants.first;
-      _frequency = product.frequencies.first;
-      _term = product.terms.first;
-      _siCtrl.text = ProductFormat.money(product.defaultSi);
-      _topupCtrl.text = ProductFormat.money(product.defaultTopup);
-      _variantCtrl.text = _variant;
-      _freqCtrl.text = _frequency;
-      _termCtrl.text = _term;
+      _resetForProduct(product, keepParty: true);
     });
-    _recalc();
   }
 
   void _selectType(ProductLine line) {
@@ -148,18 +231,38 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     if (!mounted) return;
     final quote = ProductSession.saveQuote(
       product: _product,
-      variant: _variant,
+      variant: _schema.has(PremiumFieldId.variant)
+          ? _variant
+          : (_industryRisk.isNotEmpty ? _industryRisk : _product.variants.first),
       frequency: _frequency,
       si: ProductFormat.parseMoney(_siCtrl.text),
-      topup: ProductFormat.parseMoney(_topupCtrl.text),
+      topup: _schema.has(PremiumFieldId.topup)
+          ? ProductFormat.parseMoney(_topupCtrl.text)
+          : 0,
       term: _term,
       dob: _dob,
       party: _party!,
+      lockupAmount: _schema.has(PremiumFieldId.lockupAmount)
+          ? ProductFormat.parseMoney(_lockupCtrl.text)
+          : 0,
+      lockupPeriod: _lockupPeriod,
+      optionalBundle: _optionalBundle,
+      industryRisk: _industryRisk,
+      additionalCover: _additionalCover,
+      travelBy: _travelBy,
+      plateNumber: _showPlate ? _plateCtrl.text.trim() : '',
+      riderPlan: _optionalBundle ? _riderPlan : '',
+      riderFrequency: _optionalBundle ? _riderFrequency : '',
+      discountName: _discountName,
+      discountAmount: _discountAmountCtrl.text,
     );
     setState(() => _saving = false);
     if (!mounted) return;
     context.push(AppRoute.productQuoteSaved, extra: quote);
   }
+
+  bool get _showPlate =>
+      _schema.has(PremiumFieldId.plateNumber) && _travelBy == 'Car';
 
   Future<void> _dropdown({
     required String title,
@@ -197,20 +300,17 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     );
     if (picked == null) return;
     onPick(picked);
-    _variantCtrl.text = _variant;
-    _freqCtrl.text = _frequency;
-    _termCtrl.text = _term;
+    _recalc();
   }
 
   @override
   Widget build(BuildContext context) {
     final typeLines = ProductMockData.linesInCatalog;
-    final names = ProductMockData.products
-        .where((p) => p.line == _type)
-        .toList();
+    final names =
+        ProductMockData.products.where((p) => p.line == _type).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF7F8FA),
       appBar: const ProductSubAppBar(title: 'Get A Quote'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
@@ -294,63 +394,41 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             ),
           ),
           const SizedBox(height: 14),
-          AppTextField(
-            label: 'Variant',
-            isRequired: true,
-            controller: _variantCtrl,
-            readOnly: true,
-            onTap: () => _dropdown(
-              title: 'Variant',
-              options: _product.variants,
-              current: _variant,
-              onPick: (v) => setState(() => _variant = v),
-            ),
-          ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Payment Frequency',
-            isRequired: true,
-            controller: _freqCtrl,
-            readOnly: true,
-            onTap: () => _dropdown(
-              title: 'Payment Frequency',
-              options: _product.frequencies,
-              current: _frequency,
-              onPick: (v) => setState(() => _frequency = v),
-            ),
-          ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Sum Insured Amount',
-            isRequired: true,
-            controller: _siCtrl,
-            keyboardType: TextInputType.number,
-            onChanged: (_) => _recalc(),
-          ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Monthly Premium',
-            controller: _premiumCtrl,
-            enabled: false,
-          ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Topup Premium',
-            controller: _topupCtrl,
-            keyboardType: TextInputType.number,
-          ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Policy Terms',
-            isRequired: true,
-            controller: _termCtrl,
-            readOnly: true,
-            onTap: () => _dropdown(
-              title: 'Policy Terms',
-              options: _product.terms,
-              current: _term,
-              onPick: (v) => setState(() => _term = v),
-            ),
+          ..._schemaFields(),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AppTextField(
+                  label: 'Discount Name',
+                  controller: _discountNameCtrl,
+                  readOnly: true,
+                  hintText: 'Optional',
+                  onTap: () => _dropdown(
+                    title: 'Discount Name',
+                    options: ['(None)', ..._discountNames],
+                    current: _discountName.isEmpty ? '(None)' : _discountName,
+                    onPick: (v) {
+                      setState(() {
+                        _discountName = v == '(None)' ? '' : v;
+                        _discountNameCtrl.text = _discountName;
+                      });
+                    },
+                  ),
+                  suffix: const Icon(Icons.expand_more, size: 18),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: AppTextField(
+                  label: 'Discount Amount',
+                  controller: _discountAmountCtrl,
+                  keyboardType: TextInputType.number,
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 14),
           AppTextField(
@@ -364,27 +442,47 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             suffix: const Icon(Icons.unfold_more, size: 18),
           ),
           const SizedBox(height: 18),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              'Premium (${_frequency.toLowerCase()})  ${_premiumCtrl.text} MMK',
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.lightPrimary,
-              ),
-            ),
+          QuotePremiumSummaryCard(
+            productName: _product.name,
+            frequency: _frequency,
+            premium: ProductFormat.money(_calc.premium),
+            age: _age,
+            variant: _schema.has(PremiumFieldId.variant)
+                ? _variant
+                : (_industryRisk.isNotEmpty ? _industryRisk : null),
+            sumInsured: _siCtrl.text,
+            topup: _schema.has(PremiumFieldId.topup) ? _topupCtrl.text : null,
+            term: _term,
+            stampFee: ProductFormat.money(_calc.stampFee),
+            total: ProductFormat.money(_calc.total),
+            extraRows: {
+              if (_schema.has(PremiumFieldId.lockupAmount))
+                'Lock-Up Amount': _lockupCtrl.text,
+              if (_lockupPeriod.isNotEmpty &&
+                  _schema.has(PremiumFieldId.lockupPeriod))
+                'Lock-Up Period': _lockupPeriod,
+              if (_additionalCover.isNotEmpty && _additionalCover != 'None')
+                'Additional Cover': _additionalCover,
+              if (_travelBy.isNotEmpty &&
+                  _schema.has(PremiumFieldId.travelBy))
+                'Travel By': _travelBy,
+              if (_showPlate) 'Plate Number': _plateCtrl.text,
+              if (_optionalBundle) ...{
+                'Rider Plan': _riderPlan,
+                'Rider Payment Frequency': _riderFrequency,
+                'Rider Premium': ProductFormat.money(_calc.riderPremium),
+              },
+              if (_discountName.isNotEmpty) 'Discount Name': _discountName,
+              if (ProductFormat.parseMoney(_discountAmountCtrl.text) > 0)
+                'Discount Amount': _discountAmountCtrl.text,
+            },
           ),
-          const SizedBox(height: 10),
-          _kv('Product Name', 'KBZ ${_product.name}'),
-          _kv('Your Age', '$_age'),
-          _kv('Sum Insured', '${_siCtrl.text} MMK'),
-          _kv('Top-Up Premium', '${_topupCtrl.text} MMK'),
-          _kv('Policy Term', _term),
+          const SizedBox(height: 8),
+          const Text(
+            'Indicative · final premium from Core calculator',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+          ),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -400,10 +498,301 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 tooltip: 'Compare',
                 onPressed: () => openCompareFor(context, _product),
                 style: IconButton.styleFrom(
-                  backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  backgroundColor:
+                      AppColors.lightPrimary.withValues(alpha: 0.12),
                   foregroundColor: AppColors.lightPrimary,
                 ),
                 icon: const Icon(Icons.compare_arrows_rounded),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _schemaFields() {
+    final out = <Widget>[];
+    for (final field in _schema.fields) {
+      if (field.id == PremiumFieldId.riderPlan ||
+          field.id == PremiumFieldId.riderFrequency) {
+        if (!_optionalBundle) continue;
+      }
+      if (field.id == PremiumFieldId.plateNumber && !_showPlate) continue;
+
+      out.add(_buildField(field));
+      out.add(const SizedBox(height: 14));
+    }
+    return out;
+  }
+
+  Widget _buildField(PremiumFieldSpec field) {
+    switch (field.id) {
+      case PremiumFieldId.variant:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _variantCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _variant = v),
+        );
+      case PremiumFieldId.frequency:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _freqCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _frequency = v),
+        );
+      case PremiumFieldId.policyTerms:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _termCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _term = v),
+        );
+      case PremiumFieldId.lockupPeriod:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _lockupPeriodCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _lockupPeriod = v),
+        );
+      case PremiumFieldId.industryRisk:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _industryRiskCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _industryRisk = v),
+        );
+      case PremiumFieldId.additionalCover:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _additionalCoverCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _additionalCover = v),
+        );
+      case PremiumFieldId.travelBy:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _travelByCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _travelBy = v),
+        );
+      case PremiumFieldId.riderPlan:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _riderPlanCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _riderPlan = v),
+        );
+      case PremiumFieldId.riderFrequency:
+        return _dropdownField(
+          label: field.label,
+          required: field.isRequired,
+          controller: _riderFreqCtrl,
+          options: field.options,
+          onPick: (v) => setState(() => _riderFrequency = v),
+        );
+      case PremiumFieldId.sumInsured:
+        return AppTextField(
+          label: field.label,
+          isRequired: field.isRequired,
+          controller: _siCtrl,
+          readOnly: field.readOnly,
+          enabled: !field.readOnly,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => _recalc(),
+        );
+      case PremiumFieldId.premium:
+        return AppTextField(
+          label: field.label,
+          controller: _premiumCtrl,
+          enabled: false,
+        );
+      case PremiumFieldId.topup:
+        return AppTextField(
+          label: field.label,
+          controller: _topupCtrl,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => _recalc(),
+        );
+      case PremiumFieldId.lockupAmount:
+        return AppTextField(
+          label: field.label,
+          controller: _lockupCtrl,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => _recalc(),
+        );
+      case PremiumFieldId.plateNumber:
+        return AppTextField(
+          label: field.label,
+          isRequired: field.isRequired,
+          controller: _plateCtrl,
+        );
+      case PremiumFieldId.optionalBundle:
+        return CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          value: _optionalBundle,
+          activeColor: AppColors.lightPrimary,
+          title: Text(
+            field.label,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          controlAffinity: ListTileControlAffinity.leading,
+          onChanged: (v) {
+            setState(() => _optionalBundle = v ?? false);
+            _recalc();
+          },
+        );
+    }
+  }
+
+  Widget _dropdownField({
+    required String label,
+    required bool required,
+    required TextEditingController controller,
+    required List<String> options,
+    required ValueChanged<String> onPick,
+  }) {
+    return AppTextField(
+      label: label,
+      isRequired: required,
+      controller: controller,
+      readOnly: true,
+      onTap: () => _dropdown(
+        title: label,
+        options: options,
+        current: controller.text,
+        onPick: (v) {
+          onPick(v);
+          controller.text = v;
+        },
+      ),
+      suffix: const Icon(Icons.expand_more, size: 18),
+    );
+  }
+}
+
+class QuotePremiumSummaryCard extends StatelessWidget {
+  const QuotePremiumSummaryCard({
+    super.key,
+    required this.productName,
+    required this.frequency,
+    required this.premium,
+    required this.age,
+    required this.sumInsured,
+    required this.term,
+    required this.stampFee,
+    required this.total,
+    this.variant,
+    this.topup,
+    this.extraRows = const {},
+  });
+
+  final String productName;
+  final String frequency;
+  final String premium;
+  final int age;
+  final String sumInsured;
+  final String term;
+  final String stampFee;
+  final String total;
+  final String? variant;
+  final String? topup;
+  final Map<String, String> extraRows;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  productName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.bookmark_border,
+                color: AppColors.lightPrimary.withValues(alpha: 0.7),
+                size: 22,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.lightPrimary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Premium ($frequency)',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Text(
+                  premium,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _kv('Product Name', productName),
+          if (variant != null) _kv('Variant', variant!),
+          _kv('Payment Frequency', frequency),
+          _kv('Your Age', '$age'),
+          _kv('Sum Insured', sumInsured),
+          if (topup != null && topup != '0.00') _kv('Top-Up Premium', topup!),
+          _kv('Policy Terms', term),
+          for (final e in extraRows.entries) _kv(e.key, e.value),
+          _kv('Stamp Fee', stampFee),
+          const Divider(height: 20),
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  'Total Amount',
+                  style: TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+              Text(
+                total,
+                style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ],
           ),
@@ -423,7 +812,13 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
               style: const TextStyle(color: AppColors.lightTextSecondary),
             ),
           ),
-          Text(v, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Flexible(
+            child: Text(
+              v,
+              textAlign: TextAlign.right,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
         ],
       ),
     );

@@ -35,9 +35,11 @@ import 'package:life_insurance/features/features.dart'
         CustomerDetailPage,
         CustomerProfileDetailsPage,
         PolicyDetailsPage,
+        PolicyListPage,
         CustomerMock,
         CustomerMockData,
         PolicyMock,
+        CrmStatus,
         LeadEntity,
         LeadDetailPage,
         CatalogProduct,
@@ -123,6 +125,17 @@ class AppNavigator {
           return AppTransition.slide(
             key: state.pageKey,
             child: CustomerProfileDetailsPage(customer: customer),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.policyList,
+        name: AppRoute.policyList,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final status = state.extra is CrmStatus ? state.extra as CrmStatus : null;
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: PolicyListPage(initialStatus: status),
           );
         },
       ),

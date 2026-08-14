@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
+import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart'
+    show CrmStatus;
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/notification/presentation/models/notification_mock_data.dart';
@@ -125,11 +127,7 @@ class DashboardPage extends StatelessWidget {
                   AppSectionHeader(
                     title: 'Policy',
                     actionLabel: 'See all >',
-                    onAction: () => _stub(
-                      context,
-                      'Policies',
-                      'Policy list stub (FR-06).',
-                    ),
+                    onAction: () => context.push(AppRoute.policyList),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -140,6 +138,10 @@ class DashboardPage extends StatelessWidget {
                           value: HomeMockData.policyActive,
                           accent: AppColors.successGreen,
                           icon: Icons.gpp_good_rounded,
+                          onTap: () => context.push(
+                            AppRoute.policyList,
+                            extra: CrmStatus.active,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -149,6 +151,10 @@ class DashboardPage extends StatelessWidget {
                           value: HomeMockData.policyPending,
                           accent: const Color(0xFFF59E0B),
                           icon: Icons.schedule_rounded,
+                          onTap: () => context.push(
+                            AppRoute.policyList,
+                            extra: CrmStatus.pending,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -158,6 +164,10 @@ class DashboardPage extends StatelessWidget {
                           value: HomeMockData.policyExpired,
                           accent: const Color(0xFFE11D48),
                           icon: Icons.cancel_rounded,
+                          onTap: () => context.push(
+                            AppRoute.policyList,
+                            extra: CrmStatus.expired,
+                          ),
                         ),
                       ),
                     ],

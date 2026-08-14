@@ -5,7 +5,7 @@ import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
 
-/// Policy Details — accordion sections (docs/51).
+/// Policy Details — accordion + signature display (docs/51 · 66). Read-only.
 class PolicyDetailsPage extends StatefulWidget {
   const PolicyDetailsPage({super.key, required this.policy});
 
@@ -16,7 +16,8 @@ class PolicyDetailsPage extends StatefulWidget {
 }
 
 class _PolicyDetailsPageState extends State<PolicyDetailsPage> {
-  int _openIndex = 0;
+  /// Default open = Policy Information (index 1 after Policyholder).
+  int _openIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -53,40 +54,123 @@ class _PolicyDetailsPageState extends State<PolicyDetailsPage> {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
         children: [
           _ExpandCard(
+            title: 'Policyholder Information',
+            open: _openIndex == 0,
+            onToggle: () =>
+                setState(() => _openIndex = _openIndex == 0 ? -1 : 0),
+            child: _PartyRows(info: p.policyholder),
+          ),
+          const SizedBox(height: 10),
+          _ExpandCard(
             title: 'Policy Information',
             status: p.status,
-            open: _openIndex == 0,
-            onToggle: () => setState(() => _openIndex = _openIndex == 0 ? -1 : 0),
+            open: _openIndex == 1,
+            onToggle: () =>
+                setState(() => _openIndex = _openIndex == 1 ? -1 : 1),
             child: Column(
               children: [
                 _KvRow(label: 'Product Name', value: p.productName),
+                _KvRow(label: 'Your Age', value: '${p.ageAtIssue}'),
                 _KvRow(label: 'Sum Insured', value: p.sumInsured),
                 _KvRow(label: 'Policy Term', value: p.term),
                 _KvRow(label: 'Payment Frequency', value: p.frequency),
                 _KvRow(label: 'Premium', value: p.premium),
+                _KvRow(label: 'Next due date', value: p.nextDueLabel),
+                _KvRow(label: 'Client', value: p.clientName),
               ],
             ),
           ),
           const SizedBox(height: 10),
           _ExpandCard(
             title: 'Insured Information',
-            open: _openIndex == 1,
-            onToggle: () => setState(() => _openIndex = _openIndex == 1 ? -1 : 1),
-            child: _PartyRows(info: p.insured),
-          ),
-          const SizedBox(height: 10),
-          _ExpandCard(
-            title: 'Policyholder Information',
             open: _openIndex == 2,
-            onToggle: () => setState(() => _openIndex = _openIndex == 2 ? -1 : 2),
-            child: _PartyRows(info: p.policyholder),
+            onToggle: () =>
+                setState(() => _openIndex = _openIndex == 2 ? -1 : 2),
+            child: _PartyRows(info: p.insured),
           ),
           const SizedBox(height: 10),
           _ExpandCard(
             title: 'Beneficiary Information',
             open: _openIndex == 3,
-            onToggle: () => setState(() => _openIndex = _openIndex == 3 ? -1 : 3),
+            onToggle: () =>
+                setState(() => _openIndex = _openIndex == 3 ? -1 : 3),
             child: _PartyRows(info: p.beneficiary),
+          ),
+          const SizedBox(height: 10),
+          _SignatureCard(hasSignature: p.hasSignature),
+        ],
+      ),
+    );
+  }
+}
+
+class _SignatureCard extends StatelessWidget {
+  const _SignatureCard({required this.hasSignature});
+
+  final bool hasSignature;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Signature',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            height: 120,
+            decoration: BoxDecoration(
+              color: AppColors.lightPrimary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Center(
+                  child: hasSignature
+                      ? Text(
+                          'Chan',
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.lightTextPrimary
+                                .withValues(alpha: 0.75),
+                            fontFamily: 'serif',
+                          ),
+                        )
+                      : const Text(
+                          'No signature on file',
+                          style: TextStyle(
+                            color: AppColors.lightTextHint,
+                            fontSize: 13,
+                          ),
+                        ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Icon(
+                    Icons.refresh_rounded,
+                    size: 20,
+                    color: AppColors.lightPrimary.withValues(alpha: 0.45),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Display only — signing is on e-App (FR-05), not issued policy edit.',
+            style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
           ),
         ],
       ),

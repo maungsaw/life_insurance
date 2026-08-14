@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/lead/data/repository/repository.dart'
     show leadsData;
+import 'package:life_insurance/features/product/presentation/models/premium_schema.dart';
 
 /// Product catalog + in-memory quotes / e-Apps (docs/59). No API.
 
@@ -110,6 +111,9 @@ class SavedQuote {
     required this.age,
     required this.party,
     required this.savedAt,
+    this.stampFee = '0.00',
+    this.totalAmount = '0.00',
+    this.extras = const {},
   });
 
   final String id;
@@ -127,6 +131,10 @@ class SavedQuote {
   final int age;
   final QuoteParty party;
   final DateTime savedAt;
+  final String stampFee;
+  final String totalAmount;
+  /// Schema extras for e-App snapshot (lock-up, travel, risk, rider, …).
+  final Map<String, String> extras;
 }
 
 class BeneficiaryDraft {
@@ -333,9 +341,9 @@ abstract final class ProductMockData {
         'Insurable interest on the life assured',
         'Final eligibility is confirmed at e-App / underwriting',
       ],
-      variants: ['5 Plus 100', '10 Plus 100'],
+      variants: ['2 years Saving Plus', '5 Plus 100', '10 Plus 100', '300 DIET'],
       frequencies: ['Monthly', 'Quarterly', 'Annual'],
-      terms: ['5 years', '10 years', '15 years'],
+      terms: ['5 years', '10 years', '15 years', '20 years'],
       defaultTopup: 10000000,
     ),
     CatalogProduct(
@@ -431,9 +439,9 @@ abstract final class ProductMockData {
         'Occupation class reviewed at e-App',
       ],
       variants: ['Plan A', 'Plan B'],
-      frequencies: ['Annual'],
-      terms: ['1 year'],
-      defaultSi: 500000,
+      frequencies: ['Lumpsum', 'Annual'],
+      terms: ['6 Months', '1 year'],
+      defaultSi: 5000000,
     ),
     CatalogProduct(
       id: 'cl',
@@ -475,10 +483,15 @@ abstract final class ProductMockData {
         'Age 18–60',
         'Insurable interest / loan evidence at e-App',
       ],
-      variants: ['Decreasing', 'Level'],
-      frequencies: ['Annual', 'Monthly'],
+      variants: [
+        'Decreasing',
+        'Level',
+        'Default Variant',
+        'Short Term Single Premium',
+      ],
+      frequencies: ['Lumpsum', 'Annual', 'Monthly'],
       terms: ['1 year', '5 years'],
-      defaultSi: 10000000,
+      defaultSi: 100000,
     ),
     CatalogProduct(
       id: 'fh',
@@ -520,10 +533,10 @@ abstract final class ProductMockData {
         'Age 18–60',
         'Health questions at e-App',
       ],
-      variants: ['Silver', 'Gold'],
-      frequencies: ['Annual'],
+      variants: ['Silver', 'Gold', 'Basic Cover', 'Default Variant'],
+      frequencies: ['Lumpsum', 'Annual'],
       terms: ['1 year'],
-      defaultSi: 5000000,
+      defaultSi: 1000000,
     ),
     CatalogProduct(
       id: 'tp',
@@ -565,10 +578,10 @@ abstract final class ProductMockData {
         'Age 16–70',
         'Trip term selected on the quote',
       ],
-      variants: ['Domestic', 'Overseas'],
-      frequencies: ['Single'],
-      terms: ['15 days', '30 days'],
-      defaultSi: 5000000,
+      variants: ['Domestic', 'Overseas', 'Default Variant'],
+      frequencies: ['Lumpsum', 'Single'],
+      terms: ['3 Days', '15 days', '30 days', '1 year'],
+      defaultSi: 1000000,
     ),
     CatalogProduct(
       id: 'lp',
@@ -610,10 +623,10 @@ abstract final class ProductMockData {
         'Age 18–60',
         'Single life — no multi-product cart',
       ],
-      variants: ['Pack A', 'Pack B'],
-      frequencies: ['Monthly', 'Annual'],
-      terms: ['5 years', '10 years'],
-      defaultSi: 20000000,
+      variants: ['Pack A', 'Pack B', 'Grand Plan 1'],
+      frequencies: ['Monthly', 'Semi-Annually', 'Annual'],
+      terms: ['1 year', '5 years', '10 years'],
+      defaultSi: 60000000,
     ),
   ];
 
@@ -722,10 +735,45 @@ abstract final class ProductSession {
     required String term,
     required DateTime dob,
     required QuoteParty party,
+    int lockupAmount = 0,
+    bool optionalBundle = false,
+    String industryRisk = '',
+    String lockupPeriod = '',
+    String additionalCover = '',
+    String travelBy = '',
+    String plateNumber = '',
+    String riderPlan = '',
+    String riderFrequency = '',
+    String discountName = '',
+    String discountAmount = '0.00',
   }) {
     rememberProduct(product);
     _q += 1;
-    final premium = ProductMockData.monthlyPremiumFor(product: product, si: si);
+    final calc = PremiumSchemas.calculate(
+      product: product,
+      si: si,
+      topup: topup,
+      lockupAmount: lockupAmount,
+      optionalBundle: optionalBundle,
+      industryRisk: industryRisk,
+    );
+    final extras = <String, String>{
+      if (lockupAmount > 0) 'Lock-Up Amount': ProductFormat.money(lockupAmount),
+      if (lockupPeriod.isNotEmpty) 'Lock-Up Period': lockupPeriod,
+      if (industryRisk.isNotEmpty) 'Industry Risk': industryRisk,
+      if (additionalCover.isNotEmpty && additionalCover != 'None')
+        'Additional Cover': additionalCover,
+      if (travelBy.isNotEmpty) 'Travel By': travelBy,
+      if (plateNumber.isNotEmpty) 'Plate Number': plateNumber,
+      if (optionalBundle) ...{
+        if (riderPlan.isNotEmpty) 'Rider Plan': riderPlan,
+        if (riderFrequency.isNotEmpty) 'Rider Payment Frequency': riderFrequency,
+        'Rider Premium': ProductFormat.money(calc.riderPremium),
+      },
+      if (discountName.isNotEmpty) 'Discount Name': discountName,
+      if (discountAmount != '0.00' && discountAmount.isNotEmpty)
+        'Discount Amount': discountAmount,
+    };
     final quote = SavedQuote(
       id: 'QT-2026-${_q.toString().padLeft(4, '0')}',
       productId: product.id,
@@ -735,13 +783,16 @@ abstract final class ProductSession {
       variant: variant,
       frequency: frequency,
       sumInsured: ProductFormat.money(si),
-      monthlyPremium: ProductFormat.money(premium),
+      monthlyPremium: ProductFormat.money(calc.premium),
       topup: ProductFormat.money(topup),
       term: term,
       dob: dob,
       age: ProductFormat.ageOn(dob),
       party: party,
       savedAt: DateTime(2026, 8, 14),
+      stampFee: ProductFormat.money(calc.stampFee),
+      totalAmount: ProductFormat.money(calc.total),
+      extras: extras,
     );
     quotes.insert(0, quote);
     return quote;

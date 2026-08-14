@@ -42,6 +42,8 @@ class ProductQuoteSavedPage extends StatelessWidget {
             _row('Sum insured', '${quote.sumInsured} MMK'),
             _row('Premium', '${quote.monthlyPremium} MMK · ${quote.frequency}'),
             _row('Term', quote.term),
+            if (quote.totalAmount != '0.00')
+              _row('Total', '${quote.totalAmount} MMK'),
             _row('Saved', ProductFormat.dob(quote.savedAt)),
             const Spacer(),
             AppButton(

@@ -644,8 +644,12 @@ class _ProductEappPageState extends State<ProductEappPage> {
       _kv('Payment Frequency', q.frequency),
       _kv('Your Age', '${q.age}'),
       _kv('Sum Insured', q.sumInsured),
-      _kv('Top-Up Premium', q.topup),
+      if (q.topup != '0.00') _kv('Top-Up Premium', q.topup),
       _kv('Policy Term', q.term),
+      for (final e in q.extras.entries) _kv(e.key, e.value),
+      _kv('Stamp Fee', q.stampFee),
+      const Divider(height: 18),
+      _kv('Total Amount', q.totalAmount),
       const SizedBox(height: 8),
       const Text(
         'Locked from the saved quote. Change product or premium on Get A Quote.',
