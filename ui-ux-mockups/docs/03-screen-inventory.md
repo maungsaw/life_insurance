@@ -79,6 +79,8 @@
 - [x] My work FAB removed · AppBar `+` only (`73`)
 - [x] Before login · Guest Home brainstorm (`74`)
 - [x] Guest Home shell · Partner banner · lock map shipped (`74`)
+- [x] Guest calculator · Login to Save Quote brainstorm (`75`)
+- [x] Guest Get A Quote estimate · Login to save shipped (`75`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

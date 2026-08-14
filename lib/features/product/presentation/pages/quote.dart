@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
-    show AppColors, AppRoute, PrototypeConfig;
+    show AppColors, AppRoute, GuestQuoteDraft, GuestSession, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/product/presentation/models/premium_schema.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
@@ -90,6 +90,10 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _riderFreqCtrl = TextEditingController();
     _discountName = '';
     _resetForProduct(_product, keepParty: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _hydrateGuestDraft();
+    });
   }
 
   @override
@@ -122,7 +126,8 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _variant = product.variants.first;
     _frequency = product.frequencies.first;
     _term = product.terms.first;
-    _lockupPeriod = _schema.of(PremiumFieldId.lockupPeriod)?.options.first ?? '';
+    _lockupPeriod =
+        _schema.of(PremiumFieldId.lockupPeriod)?.options.first ?? '';
     _industryRisk =
         _schema.of(PremiumFieldId.industryRisk)?.options.first ?? 'Low Risk';
     _additionalCover =
@@ -175,6 +180,73 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     );
     _premiumCtrl.text = ProductFormat.money(_calc.premium);
     setState(() {});
+  }
+
+  void _hydrateGuestDraft() {
+    final d = GuestQuoteDraft.current;
+    if (d == null || GuestSession.isGuest) return;
+    final product = ProductSession.byProductId(d.productId);
+    if (product != null && product.id != _product.id) {
+      _product = product;
+      _type = product.line;
+      _schema = PremiumSchemas.forProduct(product);
+    }
+    _dob = d.dob;
+    _dobCtrl.text = ProductFormat.dob(_dob);
+    _variant = d.variant;
+    _frequency = d.frequency;
+    _term = d.term;
+    _siCtrl.text = d.si;
+    _topupCtrl.text = d.topup;
+    _lockupCtrl.text = d.lockupAmount;
+    _lockupPeriod = d.lockupPeriod;
+    _industryRisk = d.industryRisk;
+    _additionalCover = d.additionalCover;
+    _travelBy = d.travelBy;
+    _plateCtrl.text = d.plateNumber;
+    _optionalBundle = d.optionalBundle;
+    _riderPlan = d.riderPlan;
+    _riderFrequency = d.riderFrequency;
+    _discountName = d.discountName;
+    _discountAmountCtrl.text = d.discountAmount;
+    _syncDropdownCtrls();
+    GuestQuoteDraft.clear();
+    _recalc();
+  }
+
+  void _captureGuestDraft() {
+    GuestQuoteDraft.save(
+      GuestQuoteDraft(
+        productId: _product.id,
+        dob: _dob,
+        variant: _variant,
+        frequency: _frequency,
+        term: _term,
+        si: _siCtrl.text,
+        topup: _topupCtrl.text,
+        lockupAmount: _lockupCtrl.text,
+        lockupPeriod: _lockupPeriod,
+        industryRisk: _industryRisk,
+        additionalCover: _additionalCover,
+        travelBy: _travelBy,
+        plateNumber: _plateCtrl.text,
+        optionalBundle: _optionalBundle,
+        riderPlan: _riderPlan,
+        riderFrequency: _riderFrequency,
+        discountName: _discountName,
+        discountAmount: _discountAmountCtrl.text,
+        premiumLabel: ProductFormat.money(_calc.premium),
+      ),
+    );
+  }
+
+  Future<void> _loginToSave() async {
+    _captureGuestDraft();
+    await showLoginToSaveSheet(
+      context,
+      premiumLabel: ProductFormat.money(_calc.premium),
+      frequency: _frequency,
+    );
   }
 
   void _applyProduct(CatalogProduct product) {
@@ -233,7 +305,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
       product: _product,
       variant: _schema.has(PremiumFieldId.variant)
           ? _variant
-          : (_industryRisk.isNotEmpty ? _industryRisk : _product.variants.first),
+          : (_industryRisk.isNotEmpty
+                ? _industryRisk
+                : _product.variants.first),
       frequency: _frequency,
       si: ProductFormat.parseMoney(_siCtrl.text),
       topup: _schema.has(PremiumFieldId.topup)
@@ -306,8 +380,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   @override
   Widget build(BuildContext context) {
     final typeLines = ProductMockData.linesInCatalog;
-    final names =
-        ProductMockData.products.where((p) => p.line == _type).toList();
+    final names = ProductMockData.products
+        .where((p) => p.line == _type)
+        .toList();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
@@ -315,6 +390,26 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
         children: [
+          if (GuestSession.isGuest) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              decoration: BoxDecoration(
+                color: AppColors.lightPrimary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                'You’re not signed in. Estimates aren’t saved until you log in.',
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.35,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
           const QuoteRequiredLabel('Product Type'),
           const SizedBox(height: 8),
           Wrap(
@@ -430,17 +525,19 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
               ),
             ],
           ),
-          const SizedBox(height: 14),
-          AppTextField(
-            label: 'Link to',
-            isRequired: true,
-            controller: _partyCtrl,
-            readOnly: true,
-            errorText: _partyError,
-            hintText: 'Lead or Client',
-            onTap: _pickParty,
-            suffix: const Icon(Icons.unfold_more, size: 18),
-          ),
+          if (!GuestSession.isGuest) ...[
+            const SizedBox(height: 14),
+            AppTextField(
+              label: 'Link to',
+              isRequired: true,
+              controller: _partyCtrl,
+              readOnly: true,
+              errorText: _partyError,
+              hintText: 'Lead or Client',
+              onTap: _pickParty,
+              suffix: const Icon(Icons.unfold_more, size: 18),
+            ),
+          ],
           const SizedBox(height: 18),
           QuotePremiumSummaryCard(
             productName: _product.name,
@@ -463,8 +560,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 'Lock-Up Period': _lockupPeriod,
               if (_additionalCover.isNotEmpty && _additionalCover != 'None')
                 'Additional Cover': _additionalCover,
-              if (_travelBy.isNotEmpty &&
-                  _schema.has(PremiumFieldId.travelBy))
+              if (_travelBy.isNotEmpty && _schema.has(PremiumFieldId.travelBy))
                 'Travel By': _travelBy,
               if (_showPlate) 'Plate Number': _plateCtrl.text,
               if (_optionalBundle) ...{
@@ -488,9 +584,11 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             children: [
               Expanded(
                 child: AppButton(
-                  label: 'Save quote',
+                  label: GuestSession.isGuest
+                      ? 'Login to save quote'
+                      : 'Save quote',
                   isLoading: _saving,
-                  onPressed: _save,
+                  onPressed: GuestSession.isGuest ? _loginToSave : _save,
                 ),
               ),
               const SizedBox(width: 10),
@@ -498,8 +596,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 tooltip: 'Compare',
                 onPressed: () => openCompareFor(context, _product),
                 style: IconButton.styleFrom(
-                  backgroundColor:
-                      AppColors.lightPrimary.withValues(alpha: 0.12),
+                  backgroundColor: AppColors.lightPrimary.withValues(
+                    alpha: 0.12,
+                  ),
                   foregroundColor: AppColors.lightPrimary,
                 ),
                 icon: const Icon(Icons.compare_arrows_rounded),
@@ -790,10 +889,7 @@ class QuotePremiumSummaryCard extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
-              Text(
-                total,
-                style: const TextStyle(fontWeight: FontWeight.w800),
-              ),
+              Text(total, style: const TextStyle(fontWeight: FontWeight.w800)),
             ],
           ),
         ],

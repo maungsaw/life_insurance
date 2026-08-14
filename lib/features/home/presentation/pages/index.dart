@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/core.dart'
+    show AppColors, AppRoute, GuestQuoteDraft, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart'
     show AppBottomNavBar;
 import 'package:life_insurance/features/features.dart'
     show DashboardPage, LeadsPage, TaskBoardPage, ProfilePage, CustomersPage;
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/home/presentation/pages/product_hub.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart'
+    show ProductSession;
 import 'package:life_insurance/features/task/presentation/pages/index.dart'
     show TaskFormArgs;
 
@@ -29,6 +32,21 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
   ];
 
   int _selectedIndex = PrototypeConfig.tabHome;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _resumeGuestQuote());
+  }
+
+  void _resumeGuestQuote() {
+    if (!mounted || !GuestQuoteDraft.pendingResume) return;
+    GuestQuoteDraft.pendingResume = false;
+    final product =
+        ProductSession.byProductId(GuestQuoteDraft.current?.productId) ??
+        ProductSession.lastOrDefaultProduct;
+    context.push(AppRoute.productQuote, extra: product);
+  }
 
   void _goToTab(int index) {
     if (index < 0 || index >= _pages.length) return;
@@ -89,10 +107,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
                   padding: EdgeInsets.only(bottom: 8),
                   child: Text(
                     'Quick actions',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                   ),
                 ),
                 ListTile(
@@ -133,7 +148,8 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
                       extra: const TaskFormArgs(),
                     );
                   },
-                ),              ],
+                ),
+              ],
             ),
           ),
         );
@@ -154,10 +170,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
         backgroundColor: const Color(0xFFF8FAFC),
         body: Stack(
           children: [
-            IndexedStack(
-              index: _selectedIndex,
-              children: _pages,
-            ),
+            IndexedStack(index: _selectedIndex, children: _pages),
             Align(
               alignment: Alignment.bottomCenter,
               child: AppBottomNavBar(

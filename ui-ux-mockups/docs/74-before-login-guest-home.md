@@ -194,7 +194,7 @@ Do **not** strip the shield FAB on guest to “match `73`”. `73` is My work pa
 |-------|-------|
 | **P0** | Splash → Guest Home · Partner banner · lock map · gate sheet · Product browse · Profile unsigned · FAB/nav gates · Logout → guest · no fake bell badge |
 | **P1** | Resume destination after login · Language on unsigned Profile · Online = real resources |
-| **P2** | Option B guest calculator (`Calculator(Before login).png`) · Login to Save Quote |
+| **P2** | Option B guest calculator (`Calculator(Before login).png`) · Login to Save Quote → brainstorm `75` |
 
 ---
 
@@ -211,4 +211,4 @@ Do **not** strip the shield FAB on guest to “match `73`”. `73` is My work pa
 
 ## 11. Related
 
-Before Login PNG · `Calculator(Before login).png` · FR-01 · FR-04 · `34` §4.5 · `37` `43` `44` `45` `46` `59` `70` `73`
+Before Login PNG · `Calculator(Before login).png` · FR-01 · FR-04 · `34` §4.5 · `37` `43` `44` `45` `46` `59` `70` `73` · P2 `75`

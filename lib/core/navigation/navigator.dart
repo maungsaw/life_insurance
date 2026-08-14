@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/error/error.dart' show ExceptionHandler;
 import 'package:life_insurance/core/prototype/guest_session.dart';
+
+import 'name.dart';
+import 'root.dart';
+import 'transition.dart';
 import 'package:life_insurance/features/features.dart'
     show
         LanguagePage,
@@ -68,10 +72,6 @@ import 'package:life_insurance/features/features.dart'
         TeamMdrtPage,
         TeamLineArgs;
 import 'package:life_insurance/features/widgets.dart';
-
-import 'root.dart';
-import 'name.dart';
-import 'transition.dart';
 
 class AppNavigator {
   static final GoRouter router = GoRouter(

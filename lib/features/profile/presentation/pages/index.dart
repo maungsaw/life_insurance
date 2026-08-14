@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
     show
         AppColors,
-        AppRoute,
         GuestSession,
+        GuestQuoteDraft,
         PrototypeConfig,
         PrototypeRole,
         PrototypeRoleId;
+import 'package:life_insurance/core/navigation/name.dart' show AppRoute;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 import 'package:life_insurance/core/secure/biometric_prefs.dart';
 import 'package:life_insurance/features/components/components.dart';
@@ -63,6 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
     PrototypeRole.reset();
     TeamMockData.scope = TeamScope.personal;
     GuestSession.signOut();
+    GuestQuoteDraft.clear();
     context.go(AppRoute.guestHome);
   }
 

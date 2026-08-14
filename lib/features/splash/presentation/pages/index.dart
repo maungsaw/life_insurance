@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppRoute, PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show PrototypeConfig;
+import 'package:life_insurance/core/navigation/name.dart' show AppRoute;
 import 'package:life_insurance/features/components/components.dart';
 
 /// Splash — LoginRegister 1st screen · follows app / system theme (docs/39).

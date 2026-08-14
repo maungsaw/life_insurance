@@ -136,15 +136,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
               child: AppButton(
                 label: 'GET A QUOTE',
-                onPressed: () {
-                  if (gateIfGuest(
-                    context,
-                    message: 'Sign in to calculate a premium.',
-                  )) {
-                    return;
-                  }
-                  context.push(AppRoute.productQuote, extra: p);
-                },
+                onPressed: () => context.push(AppRoute.productQuote, extra: p),
               ),
             ),
           ),

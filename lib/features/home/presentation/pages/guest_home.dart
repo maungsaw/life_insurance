@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 
 /// Before-login Home — Partner banner + teaser services (docs/74).
 class GuestHomePage extends StatelessWidget {
@@ -40,8 +41,10 @@ class GuestHomePage extends StatelessWidget {
       AppServiceItem(
         label: 'Calculator',
         icon: Icons.calculate_outlined,
-        onTap: () =>
-            showAuthGate(context, message: 'Sign in to calculate a premium.'),
+        onTap: () => context.push(
+          AppRoute.productQuote,
+          extra: ProductSession.lastOrDefaultProduct,
+        ),
       ),
       AppServiceItem(
         label: 'Commission',

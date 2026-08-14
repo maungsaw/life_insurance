@@ -135,30 +135,20 @@ class _ProductComparePageState extends State<ProductComparePage> {
                     child: AppButton(
                       label: 'Use ${_left.name.split(' ').first}',
                       variant: AppButtonVariant.secondary,
-                      onPressed: () {
-                        if (gateIfGuest(
-                          context,
-                          message: 'Sign in to calculate a premium.',
-                        )) {
-                          return;
-                        }
-                        context.push(AppRoute.productQuote, extra: _left);
-                      },
+                      onPressed: () => context.push(
+                        AppRoute.productQuote,
+                        extra: _left,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: AppButton(
                       label: 'Use ${_right.name.split(' ').first}',
-                      onPressed: () {
-                        if (gateIfGuest(
-                          context,
-                          message: 'Sign in to calculate a premium.',
-                        )) {
-                          return;
-                        }
-                        context.push(AppRoute.productQuote, extra: _right);
-                      },
+                      onPressed: () => context.push(
+                        AppRoute.productQuote,
+                        extra: _right,
+                      ),
                     ),
                   ),
                 ],
