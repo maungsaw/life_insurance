@@ -59,7 +59,9 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
     super.dispose();
   }
 
-  void _goProposal() => popToShell(context);
+  void _goHome() {
+    context.go(AppRoute.home);
+  }
 
   void _goTracking() {
     final router = GoRouter.of(context);
@@ -142,16 +144,15 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
                         children: [
                           Expanded(
                             child: AppButton(
-                              label: 'PROPOSAL',
+                              label: 'HOME',
                               variant: AppButtonVariant.secondary,
-                              onPressed: _goProposal,
+                              onPressed: _goHome,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: AppButton(
                               label: 'TRACKING',
-                              variant: AppButtonVariant.secondary,
                               onPressed: _goTracking,
                             ),
                           ),

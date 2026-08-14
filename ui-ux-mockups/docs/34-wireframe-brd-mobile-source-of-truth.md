@@ -56,12 +56,12 @@
 | `Calculator(Before login).png` | FR-04 / FR-01 | Guest-ish quote → login gate mid-flow | **Decide** — BRD quoting = authorized; treat as optional “try calculator → sign in to save” |
 | `Calculator.png` | FR-04 · FR-05 | Quote inputs · compare · KYC scan · parties · health · confirm · success | Align with sell spine `24` `25` `26` |
 | `New Proposal.png` | FR-05 | Product pick · NRC · forms · beneficiary · health · premium · review · success | Same spine; prefer **one** wizard model |
-| `One Touch.png` | FR-05 | NRC OCR (optional) · accordion submit · signature · underwriting track | OCR = optional per BRD; keep Skip |
+| `One Touch.png` | FR-05 | NRC OCR (optional) · accordion submit · signature · underwriting track | OCR = optional per BRD; keep Skip — Confirm length plan `67` |
 | `Product Info.png` | FR-04 | Catalog categories · detail · Get Quote · apply path | Product detail `24` `25` |
 | `Products Premium.png` | FR-04 | Per-product premium parameter screens | Calculator variants by product code — brainstorm `65` |
 | `Customer.png` | FR-03 · FR-06 | Customer list · detail · edit · policy accordion · filters | Concept A: **Leads \| Clients** (BRD), not single “Customer” bag |
 | `Policy.png` | FR-06 | Policy list · chart · detail · filter sheet | Read-only policy; no admin edit — brainstorm `66` |
-| `Task Management.png` | FR-07 | Task create/edit · dates · type · priority · status · attach · complete | Docs `08` `21` |
+| `Task Management.png` | FR-07 | Task create/edit · dates · type · priority · status · attach · complete | Docs `08` `21` · full hub plan `68` |
 | `Notification.png` | FR-08 consume · FR-09 | Inbox list by day · detail / deep link | Docs `11` `22` |
 | `Agent Profile.png` | FR-11 | Profile · settings · password · FAQ · language · notif toggles · reports | More tab `28` |
 | `Comission.png` | FR-02 (display) | Balance / commission history UI | **Phase 1 = product commission display only** — not payout wallet |
@@ -200,7 +200,7 @@ Web overlay: Overview Manager | FTE (`30` `31`) — not duplicated as mobile-fir
 - [ ] Auth: CORE-exists gate messaging (no open register)  
 - [ ] Commission **display** screen (read-only history) from `Comission.png` patterns — not payout  
 - [x] Policy list filters sheet (status · product · date) per `Policy.png` — shipped (`66`)
-- [ ] Task create form fields parity with `Task Management.png` (type · priority · attach)  
+- [x] Task create form fields parity with `Task Management.png` (type · priority · attach) — shipped (`68`)
 - [ ] Notification day grouping (“Today / Yesterday / date”)  
 
 ### P1 — Sell fidelity

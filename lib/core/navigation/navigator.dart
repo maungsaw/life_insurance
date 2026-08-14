@@ -40,6 +40,8 @@ import 'package:life_insurance/features/features.dart'
         CustomerMockData,
         PolicyMock,
         CrmStatus,
+        TaskFormPage,
+        TaskFormArgs,
         LeadEntity,
         LeadDetailPage,
         CatalogProduct,
@@ -148,6 +150,22 @@ class AppNavigator {
           return AppTransition.slide(
             key: state.pageKey,
             child: PolicyDetailsPage(policy: policy),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoute.taskForm,
+        name: AppRoute.taskForm,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final args = state.extra is TaskFormArgs
+              ? state.extra as TaskFormArgs
+              : const TaskFormArgs();
+          return AppTransition.slide(
+            key: state.pageKey,
+            child: TaskFormPage(
+              taskId: args.taskId,
+              initialDay: args.initialDay,
+            ),
           );
         },
       ),

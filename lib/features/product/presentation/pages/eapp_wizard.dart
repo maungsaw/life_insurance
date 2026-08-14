@@ -179,6 +179,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
     setState(() {});
   }
 
+  void _jumpToStep(int target) {
+    _flushPerson();
+    setState(() {
+      _error = null;
+      d.step = target;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,44 +247,57 @@ class _ProductEappPageState extends State<ProductEappPage> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: Row(
-                children: [
-                  if (step == 2)
-                    Expanded(
-                      child: AppButton(
-                        label: 'Skip',
-                        variant: AppButtonVariant.secondary,
-                        onPressed: () {
-                          d.nrcCaptured = false;
-                          _next();
-                        },
-                      ),
+              child: step == 6
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AppButton(
+                          label: 'SUBMIT APPLICATION',
+                          isLoading: _busy,
+                          onPressed: _next,
+                        ),
+                        const SizedBox(height: 8),
+                        AppButton(
+                          label: 'Back',
+                          variant: AppButtonVariant.secondary,
+                          onPressed: _back,
+                        ),
+                      ],
                     )
-                  else
-                    Expanded(
-                      child: AppButton(
-                        label: 'Back',
-                        variant: AppButtonVariant.secondary,
-                        onPressed: _back,
-                      ),
+                  : Row(
+                      children: [
+                        if (step == 2)
+                          Expanded(
+                            child: AppButton(
+                              label: 'Skip',
+                              variant: AppButtonVariant.secondary,
+                              onPressed: () {
+                                d.nrcCaptured = false;
+                                _next();
+                              },
+                            ),
+                          )
+                        else
+                          Expanded(
+                            child: AppButton(
+                              label: 'Back',
+                              variant: AppButtonVariant.secondary,
+                              onPressed: _back,
+                            ),
+                          ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: AppButton(
+                            label: step == 2 ? 'Save' : 'NEXT',
+                            isLoading: _busy,
+                            onPressed: () {
+                              if (step == 2) d.nrcCaptured = true;
+                              _next();
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: AppButton(
-                      label: step == 6
-                          ? 'CONFIRM'
-                          : step == 2
-                              ? 'Save'
-                              : 'NEXT',
-                      isLoading: _busy,
-                      onPressed: () {
-                        if (step == 2) d.nrcCaptured = true;
-                        _next();
-                      },
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -659,28 +680,89 @@ class _ProductEappPageState extends State<ProductEappPage> {
   }
 
   List<Widget> _confirm() {
+    final q = d.quote;
+    final insuredName = d.sameAsLifeAssured ? _ph.name : _la.name;
+    final benSummary = d.beneficiaries.isEmpty
+        ? 'None'
+        : '${d.beneficiaries.length} · ${ProductSession.beneficiaryTotal(d)}%';
+
     return [
-      _acc('Policyholder Information', [
-        _kv('Name', _ph.name),
-        _kv('Mobile', _ph.mobile),
-        _kv('ID', _ph.identification),
-      ]),
-      _acc('Insured Information', [
-        _kv('Same as policyholder', d.sameAsLifeAssured ? 'Yes' : 'No'),
-        _kv('Name', d.sameAsLifeAssured ? _ph.name : _la.name),
-      ]),
-      _acc('Beneficiary Information', [
-        for (final b in d.beneficiaries) _kv(b.name, '${b.relationship} · ${b.percent}%'),
-      ]),
-      _acc('Health Declaration Information', [
-        _kv('High risk', d.highRisk ? 'Yes' : 'No'),
-        _kv('Remark', d.healthRemark.isEmpty ? '—' : d.healthRemark),
-      ]),
-      _acc('Policy Information', [
-        _kv('Premium', '${d.quote.monthlyPremium} · ${d.quote.frequency}'),
-        _kv('Product', d.quote.productName),
-        _kv('Sum Insured', d.quote.sumInsured),
-      ]),
+      const Text(
+        'Review only — expand a section for details. Edit jumps back to that step.',
+        style: TextStyle(fontSize: 12, color: AppColors.lightTextHint, height: 1.35),
+      ),
+      const SizedBox(height: 12),
+      _ConfirmProductCard(
+        productName: q.productName,
+        frequency: q.frequency,
+        premium: q.monthlyPremium,
+        age: q.age,
+        sumInsured: q.sumInsured,
+        topup: q.topup,
+        term: q.term,
+        total: q.totalAmount,
+        onEdit: () => _jumpToStep(5),
+      ),
+      const SizedBox(height: 10),
+      _ConfirmReviewTile(
+        title: 'Policyholder Information',
+        subtitle: '${_ph.name} · ${_ph.identification}',
+        onEdit: () => _jumpToStep(0),
+        rows: {
+          'Name': _ph.name,
+          'Mobile': _ph.mobile,
+          'Gender': _ph.gender,
+          'Identification': _ph.identification,
+          'Date of Birth': ProductFormat.dob(_ph.dob),
+          'Age': '${ProductFormat.ageOn(_ph.dob)}',
+          'Email': _ph.email,
+          'Height': _ph.height,
+          'Weight': _ph.weight,
+          'Occupation': _ph.occupation,
+          'Town': _ph.town,
+          'Township': _ph.township,
+          'State': _ph.state,
+          'Address': _ph.address,
+        },
+      ),
+      const SizedBox(height: 10),
+      _ConfirmReviewTile(
+        title: 'Insured Information',
+        subtitle: d.sameAsLifeAssured
+            ? 'Same as policyholder'
+            : insuredName,
+        onEdit: () => _jumpToStep(d.sameAsLifeAssured ? 0 : 1),
+        rows: {
+          'Same as policyholder': d.sameAsLifeAssured ? 'Yes' : 'No',
+          'Name': insuredName,
+          if (!d.sameAsLifeAssured) 'Identification': _la.identification,
+        },
+      ),
+      const SizedBox(height: 10),
+      _ConfirmReviewTile(
+        title: 'Beneficiary Information',
+        subtitle: benSummary,
+        onEdit: () => _jumpToStep(3),
+        rows: {
+          for (final b in d.beneficiaries)
+            b.name: '${b.relationship} · ${b.percent}%',
+        },
+      ),
+      const SizedBox(height: 10),
+      _ConfirmReviewTile(
+        title: 'Health Declaration',
+        subtitle: d.highRisk ? 'High risk · Yes' : 'High risk · No',
+        onEdit: () => _jumpToStep(4),
+        rows: {
+          'High risk': d.highRisk ? 'Yes' : 'No',
+          'Remark': d.healthRemark.isEmpty ? '—' : d.healthRemark,
+        },
+      ),
+      const SizedBox(height: 14),
+      const Text(
+        'Signature',
+        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+      ),
       const SizedBox(height: 8),
       SignaturePad(
         label: 'Client signature *',
@@ -692,14 +774,6 @@ class _ProductEappPageState extends State<ProductEappPage> {
         onChanged: (has) => setState(() => _agentSign = has),
       ),
     ];
-  }
-
-  Widget _acc(String title, List<Widget> children) {
-    return ExpansionTile(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
-      childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      children: children,
-    );
   }
 
   Widget _kv(String k, String v) {
@@ -715,7 +789,6 @@ class _ProductEappPageState extends State<ProductEappPage> {
       ),
     );
   }
-
   Future<void> _pickHeight() async {
     final parts = RegExp(r"(\d+)'\s*(\d+)").firstMatch(_phHeight.text);
     final initial = HeightPick(
@@ -839,6 +912,239 @@ class _ProductEappPageState extends State<ProductEappPage> {
       }
     });
   }
+}
+
+class _ConfirmProductCard extends StatefulWidget {
+  const _ConfirmProductCard({
+    required this.productName,
+    required this.frequency,
+    required this.premium,
+    required this.age,
+    required this.sumInsured,
+    required this.topup,
+    required this.term,
+    required this.total,
+    required this.onEdit,
+  });
+
+  final String productName;
+  final String frequency;
+  final String premium;
+  final int age;
+  final String sumInsured;
+  final String topup;
+  final String term;
+  final String total;
+  final VoidCallback onEdit;
+
+  @override
+  State<_ConfirmProductCard> createState() => _ConfirmProductCardState();
+}
+
+class _ConfirmProductCardState extends State<_ConfirmProductCard> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE8ECF0)),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () => setState(() => _open = !_open),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.productName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Premium (${widget.frequency})  ${widget.premium}',
+                          style: const TextStyle(
+                            color: AppColors.lightPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: widget.onEdit,
+                    child: const Text('Edit'),
+                  ),
+                  Icon(
+                    _open
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_open) ...[
+            Divider(height: 1, color: Colors.grey.shade200),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+              child: Column(
+                children: [
+                  _confirmKv('Your Age', '${widget.age}'),
+                  _confirmKv('Sum Insured', widget.sumInsured),
+                  if (widget.topup != '0.00')
+                    _confirmKv('Top-Up Premium', widget.topup),
+                  _confirmKv('Policy Term', widget.term),
+                  if (widget.total != '0.00')
+                    _confirmKv('Total Amount', widget.total),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _ConfirmReviewTile extends StatefulWidget {
+  const _ConfirmReviewTile({
+    required this.title,
+    required this.subtitle,
+    required this.rows,
+    required this.onEdit,
+  });
+
+  final String title;
+  final String subtitle;
+  final Map<String, String> rows;
+  final VoidCallback onEdit;
+
+  @override
+  State<_ConfirmReviewTile> createState() => _ConfirmReviewTileState();
+}
+
+class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFE8ECF0)),
+      ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () => setState(() => _open = !_open),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.check_circle,
+                    size: 18,
+                    color: AppColors.successGreen,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          widget.subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: widget.onEdit,
+                    child: const Text('Edit'),
+                  ),
+                  Icon(
+                    _open
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_open && widget.rows.isNotEmpty) ...[
+            Divider(height: 1, color: Colors.grey.shade200),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+              child: Column(
+                children: [
+                  for (final e in widget.rows.entries)
+                    _confirmKv(e.key, e.value),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+Widget _confirmKv(String k, String v) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 6),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            k,
+            style: const TextStyle(
+              color: AppColors.lightTextSecondary,
+              fontSize: 13,
+            ),
+          ),
+        ),
+        Flexible(
+          child: Text(
+            v,
+            textAlign: TextAlign.right,
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _ScanFramePainter extends CustomPainter {

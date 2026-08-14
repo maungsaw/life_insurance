@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
+import 'package:go_router/go_router.dart';
+import 'package:life_insurance/core/core.dart' show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart'
     show AppBottomNavBar;
 import 'package:life_insurance/features/features.dart'
     show DashboardPage, LeadsPage, TaskBoardPage, ProfilePage, CustomersPage;
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/home/presentation/pages/product_hub.dart';
+import 'package:life_insurance/features/task/presentation/pages/index.dart'
+    show TaskFormArgs;
 
 /// App shell — pill bottom nav + center FAB (docs/44).
 class LifeInsurancePage extends StatefulWidget {
@@ -122,13 +125,15 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
                     color: AppColors.lightPrimary,
                   ),
                   title: const Text('New Task'),
-                  subtitle: const Text('Open task board'),
+                  subtitle: const Text('Create a task'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    _goToTab(PrototypeConfig.tabTasks);
+                    context.push(
+                      AppRoute.taskForm,
+                      extra: const TaskFormArgs(),
+                    );
                   },
-                ),
-              ],
+                ),              ],
             ),
           ),
         );

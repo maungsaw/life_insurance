@@ -63,6 +63,12 @@
 - [x] Products Premium schema-driven Get A Quote shipped (`65`)
 - [x] Policy List · Details · Filter (FR-06) brainstorm (`66`)
 - [x] Policy List · Details · Filter shipped (`66`)
+- [x] One Touch · Confirm length · FR-05 brainstorm (`67`)
+- [x] Confirm review board + Success HOME shipped (`67`)
+- [x] Task Management · FR-07 + wireframe brainstorm (`68`)
+- [x] Task My work + create/edit form shipped (`68`)
+- [x] My work FAB placement brainstorm (`69`)
+- [x] My work FAB soft-dock shipped (`69`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

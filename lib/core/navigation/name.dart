@@ -23,6 +23,7 @@ abstract class AppRoute {
   static const String customerProfile = '/customer-profile';
   static const String policyDetail = '/policy-detail';
   static const String policyList = '/policy-list';
+  static const String taskForm = '/task/form';
   static const String leadDetail = '/lead-detail';
   static const String productDetail = '/product/detail';
   static const String productQuote = '/product/quote';
