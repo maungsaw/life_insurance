@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/profile/presentation/models/commission_mock_data.dart';
+import 'package:life_insurance/features/profile/presentation/models/commission_overview_layout.dart';
+import 'package:life_insurance/features/profile/presentation/widgets/commission_overview_chart.dart';
 
-/// Report dashboard body — category bars, top performer, summary (docs/80).
+/// Report dashboard body — category bars, top performer, summary (docs/80 · 85).
 class CommissionReportBody extends StatelessWidget {
   const CommissionReportBody({
     super.key,
@@ -15,7 +17,9 @@ class CommissionReportBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lines = CommissionMockData.reportLines(period);
+    final plan = CommissionOverviewLayout.plan(
+      CommissionMockData.reportLines(period),
+    );
     final top = CommissionMockData.topLine(period);
     final total = CommissionMockData.sumFor(period);
     final count = CommissionMockData.filtered(period).length;
@@ -24,7 +28,6 @@ class CommissionReportBody extends StatelessWidget {
         : 0.0;
     final vsPct = last > 0 ? ((total - last) / last * 100).round() : null;
     final vsAmount = last > 0 ? (total - last).abs() : 0.0;
-    final maxAmount = lines.fold<double>(0, (m, s) => s.amount > m ? s.amount : m);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -66,7 +69,7 @@ class CommissionReportBody extends StatelessWidget {
           label: 'Commission Overview',
         ),
         const SizedBox(height: 14),
-        if (maxAmount <= 0)
+        if (plan.mode == CommissionOverviewMode.empty)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
             child: Center(
@@ -80,21 +83,7 @@ class CommissionReportBody extends StatelessWidget {
             ),
           )
         else
-          SizedBox(
-            height: 220,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (final stat in lines)
-                  Expanded(
-                    child: _CategoryBar(
-                      stat: stat,
-                      maxAmount: maxAmount,
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          CommissionOverviewChart(plan: plan),
         if (top != null) ...[
           const SizedBox(height: 20),
           _TopCategoryCard(stat: top),
@@ -237,82 +226,6 @@ class _SectionTitle extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _CategoryBar extends StatelessWidget {
-  const _CategoryBar({required this.stat, required this.maxAmount});
-
-  final CommissionLineStat stat;
-  final double maxAmount;
-
-  @override
-  Widget build(BuildContext context) {
-    final h = maxAmount <= 0 ? 0.0 : (stat.amount / maxAmount) * 120;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            stat.amount <= 0 ? '—' : CommissionFormat.money(stat.amount),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w700,
-              color: AppColors.onSurfaceSecondary(context),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            height: h.clamp(8, 120),
-            width: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  stat.line.color,
-                  stat.line.color.withValues(alpha: 0.7),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              '${stat.count}',
-              style: TextStyle(
-                color: AppColors.surface(context),
-                fontWeight: FontWeight.w800,
-                fontSize: 11,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              color: stat.line.color.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(stat.line.icon, size: 14, color: stat.line.color),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            stat.line.label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: AppColors.onSurfaceSecondary(context),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

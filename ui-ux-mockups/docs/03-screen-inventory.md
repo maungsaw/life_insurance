@@ -100,6 +100,8 @@
 - [x] Bottom nav Dark contrast brainstorm (`84`)
 - [x] Bottom nav Dark inactive + pill contrast shipped (`84`)
 - [x] Compare Details dark zebra rows readable (`82` follow-up)
+- [x] Commission Report few vs many categories brainstorm (`85`)
+- [x] Commission Report few vs many density switch shipped (`85`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile
