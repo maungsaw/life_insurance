@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Card, PageHeader, Pill, SegmentedControl } from '@/components/ui'
+import { Button, Card, EmptyState, PageHeader, Pill, SegmentedControl } from '@/components/ui'
 import { cn } from '@/lib/cn'
+import { useAuth } from '@/auth/AuthContext'
 
 type NType = 'all' | 'task' | 'premium' | 'app' | 'news' | 'system'
 
@@ -85,9 +86,19 @@ export function NotificationsPage() {
   const [filter, setFilter] = useState<NType>('all')
   const [items, setItems] = useState(ITEMS)
   const nav = useNavigate()
+  const { caps } = useAuth()
 
   const visible = items.filter((i) => filter === 'all' || i.type === filter)
   const unread = items.filter((i) => i.unread).length
+
+  const openItem = (item: Item) => {
+    setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, unread: false } : i)))
+    if (item.to.startsWith('/management') && !caps.canAdmin) {
+      nav('/notifications')
+      return
+    }
+    nav(item.to)
+  }
 
   return (
     <div>
@@ -121,14 +132,17 @@ export function NotificationsPage() {
 
       <Card className="mt-1 p-0 overflow-hidden">
         {visible.length === 0 ? (
-          <p className="p-8 text-center text-sm font-semibold text-muted">No notifications in this filter.</p>
+          <EmptyState
+            title="No notifications in this filter"
+            hint="HQ inbox is consume-only. Setup lives under Management → Notification (Admin)."
+          />
         ) : (
           <ul className="divide-y divide-line">
             {visible.map((item) => (
               <li key={item.id}>
                 <button
                   type="button"
-                  onClick={() => nav(item.to)}
+                  onClick={() => openItem(item)}
                   className={cn(
                     'flex w-full items-start gap-3 px-4 py-3.5 text-left transition hover:bg-soft',
                     item.unread && 'bg-sky/5',

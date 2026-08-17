@@ -13,24 +13,25 @@ import {
   Smartphone,
   PieChart,
   UsersRound,
-  // Package, // Products tab — restore with nav child below when needed
+  Package,
 } from 'lucide-react'
 import { HeaderActions } from '@/layout/HeaderActions'
 import { BrandLogo } from '@/components/BrandLogo'
 import { PLATFORM_NAME, PLATFORM_SHORT } from '@/lib/brand'
 import { cn } from '@/lib/cn'
+import { useAuth } from '@/auth/AuthContext'
 
 const DASH_CHILDREN = [
-  { to: 'overview', label: 'Overview', icon: PieChart },
-  { to: 'team-performance', label: 'Team Performance', icon: UsersRound },
+  { to: 'overview', labelEn: 'Overview', labelMm: 'အနှစ်ချုပ်', icon: PieChart },
+  { to: 'team-performance', labelEn: 'Team Performance', labelMm: 'အဖွဲ့စွမ်းဆောင်ရည်', icon: UsersRound },
 ] as const
 
 const MGMT_CHILDREN = [
-  { to: 'resources', label: 'Resource', icon: Library },
-  { to: 'notifications', label: 'Notification', icon: BellRing },
-  { to: 'announcements', label: 'Announcement', icon: Megaphone },
-  // { to: 'products', label: 'Products', icon: Package }, // hidden for now
-  { to: 'devices', label: 'Remote data wipe', icon: Smartphone },
+  { to: 'resources', labelEn: 'Resource', labelMm: 'အရင်းအမြစ်', icon: Library, wipe: false },
+  { to: 'notifications', labelEn: 'Notification', labelMm: 'အသိပေးချက်', icon: BellRing, wipe: false },
+  { to: 'announcements', labelEn: 'Announcement', labelMm: 'ကြေညာချက်', icon: Megaphone, wipe: false },
+  { to: 'products', labelEn: 'Products', labelMm: 'ထုတ်ကုန်', icon: Package, wipe: false },
+  { to: 'devices', labelEn: 'Devices', labelMm: 'စက်များ', icon: Smartphone, wipe: true },
 ] as const
 
 function linkClass(active: boolean, compact?: boolean) {
@@ -83,10 +84,12 @@ function NavGroup({
 
 export function AppShell() {
   const { pathname } = useLocation()
+  const { caps, lang, hat } = useAuth()
+  const mm = lang === 'mm'
   const onDashboard = pathname.startsWith('/dashboard')
   const onManagement = pathname.startsWith('/management')
-  const [dashOpen, setDashOpen] = useState(onDashboard)
-  const [mgmtOpen, setMgmtOpen] = useState(onManagement)
+  const [dashOpen, setDashOpen] = useState(hat !== 'admin' || onDashboard)
+  const [mgmtOpen, setMgmtOpen] = useState(onManagement || hat === 'admin')
 
   useEffect(() => {
     if (onDashboard) setDashOpen(true)
@@ -95,6 +98,13 @@ export function AppShell() {
   useEffect(() => {
     if (onManagement) setMgmtOpen(true)
   }, [onManagement])
+
+  useEffect(() => {
+    if (hat === 'admin' && !onDashboard) setDashOpen(false)
+    if (hat === 'admin') setMgmtOpen(true)
+  }, [hat, onDashboard])
+
+  const mgmtItems = MGMT_CHILDREN.filter((c) => (c.wipe ? caps.canWipe : caps.canAdmin))
 
   return (
     <div className="grid min-h-screen grid-cols-[72px_1fr] lg:grid-cols-[220px_1fr]">
@@ -107,60 +117,64 @@ export function AppShell() {
           <div className="hidden font-display text-[13px] font-semibold leading-snug lg:block">
             {PLATFORM_SHORT}
             <small className="mt-0.5 block font-sans text-[10px] font-semibold tracking-wide text-white/65 uppercase">
-              Digital Platform
+              {mm ? 'ဝဘ်ပေါ်တယ်' : 'Digital Platform'}
             </small>
           </div>
         </div>
 
         <NavGroup
-          label="Dashboard"
+          label={mm ? 'ဒက်ရှ်ဘုတ်' : 'Dashboard'}
           icon={LayoutDashboard}
           active={onDashboard}
           open={dashOpen}
           onToggle={() => setDashOpen((v) => !v)}
         >
-          {DASH_CHILDREN.map(({ to, label, icon: ChildIcon }) => (
+          {DASH_CHILDREN.map(({ to, labelEn, labelMm, icon: ChildIcon }) => (
             <NavLink
               key={to}
               to={`/dashboard/${to}`}
-              title={label}
+              title={mm ? labelMm : labelEn}
               className={({ isActive }) => linkClass(isActive, true)}
             >
               <ChildIcon className="size-3.5 shrink-0" />
-              <span className="max-lg:hidden">{label}</span>
+              <span className="max-lg:hidden">{mm ? labelMm : labelEn}</span>
             </NavLink>
           ))}
         </NavGroup>
 
-        <NavLink to="/tasks" title="Tasks" className={({ isActive }) => linkClass(isActive)}>
+        <NavLink to="/tasks" title={mm ? 'အလုပ်များ' : 'Tasks'} className={({ isActive }) => linkClass(isActive)}>
           <CheckSquare className="size-4 shrink-0" />
-          <span className="max-lg:hidden">Tasks</span>
+          <span className="max-lg:hidden">{mm ? 'အလုပ်များ' : 'Tasks'}</span>
         </NavLink>
 
-        <NavGroup
-          label="Management"
-          icon={FolderCog}
-          active={onManagement}
-          open={mgmtOpen}
-          onToggle={() => setMgmtOpen((v) => !v)}
-        >
-          {MGMT_CHILDREN.map(({ to, label, icon: ChildIcon }) => (
-            <NavLink
-              key={to}
-              to={`/management/${to}`}
-              title={label}
-              className={({ isActive }) => linkClass(isActive, true)}
-            >
-              <ChildIcon className="size-3.5 shrink-0" />
-              <span className="max-lg:hidden">{label}</span>
-            </NavLink>
-          ))}
-        </NavGroup>
+        {caps.canAdmin ? (
+          <NavGroup
+            label={mm ? 'စီမံခန့်ခွဲမှု' : 'Management'}
+            icon={FolderCog}
+            active={onManagement}
+            open={mgmtOpen}
+            onToggle={() => setMgmtOpen((v) => !v)}
+          >
+            {mgmtItems.map(({ to, labelEn, labelMm, icon: ChildIcon }) => (
+              <NavLink
+                key={to}
+                to={`/management/${to}`}
+                title={mm ? labelMm : labelEn}
+                className={({ isActive }) => linkClass(isActive, true)}
+              >
+                <ChildIcon className="size-3.5 shrink-0" />
+                <span className="max-lg:hidden">{mm ? labelMm : labelEn}</span>
+              </NavLink>
+            ))}
+          </NavGroup>
+        ) : null}
 
-        <NavLink to="/audit" title="Audit" className={({ isActive }) => linkClass(isActive)}>
-          <Shield className="size-4 shrink-0" />
-          <span className="max-lg:hidden">Audit</span>
-        </NavLink>
+        {caps.canAdmin ? (
+          <NavLink to="/audit" title={mm ? 'စစ်ဆေးမှု' : 'Audit'} className={({ isActive }) => linkClass(isActive)}>
+            <Shield className="size-4 shrink-0" />
+            <span className="max-lg:hidden">{mm ? 'စစ်ဆေးမှု' : 'Audit'}</span>
+          </NavLink>
+        ) : null}
       </aside>
 
       <div className="flex min-w-0 flex-col">
@@ -169,7 +183,9 @@ export function AppShell() {
             <BrandLogo className="shrink-0" imgClassName="h-9" />
             <div className="min-w-0 leading-tight">
               <span className="block truncate text-sm sm:text-[15px]">{PLATFORM_SHORT}</span>
-              <span className="hidden text-xs font-semibold text-muted sm:block">Digital Platform · Web</span>
+              <span className="hidden text-xs font-semibold text-muted sm:block">
+                {mm ? 'ဒစ်ဂျစ်တယ် ပလက်ဖောင်း · ဝဘ်' : 'Digital Platform · Web'}
+              </span>
             </div>
           </div>
           <HeaderActions unread={3} />

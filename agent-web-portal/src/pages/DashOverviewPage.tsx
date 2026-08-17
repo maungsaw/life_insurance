@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { colors } from '@/lib/colors'
 import {
   Chart as ChartJS,
@@ -14,8 +14,10 @@ import {
 } from 'chart.js'
 import { Bar, Doughnut, Line } from 'react-chartjs-2'
 import { Download, TriangleAlert } from 'lucide-react'
-import { Button, Card, DataTable, PageHeader, Pill, Td } from '@/components/ui'
+import { Button, Card, DataTable, Dialog, PageHeader, Pill, Td } from '@/components/ui'
 import { cn } from '@/lib/cn'
+import { Link } from 'react-router-dom'
+import { useAuth } from '@/auth/AuthContext'
 
 ChartJS.register(
   CategoryScale,
@@ -172,14 +174,11 @@ function AlertsStrip() {
       <span className="rounded-full bg-danger/10 px-2.5 py-1 text-xs font-bold text-danger">12 Critical</span>
       <span className="rounded-full bg-warn/10 px-2.5 py-1 text-xs font-bold text-warn">18 Warning</span>
       <span className="rounded-full bg-ok/10 px-2.5 py-1 text-xs font-bold text-ok">46 On Track</span>
-      <Button
-        type="button"
-        size="sm"
-        className="ml-auto !bg-baltic hover:!bg-deep"
-        onClick={() => alert('Critical issues (mock)')}
-      >
-        View critical issues
-      </Button>
+      <Link to="/dashboard/team-performance" className="ml-auto">
+        <Button type="button" size="sm" className="!bg-baltic hover:!bg-deep">
+          View critical issues
+        </Button>
+      </Link>
     </div>
   )
 }
@@ -308,7 +307,7 @@ function MdrtCard({
       <button
         type="button"
         className="mt-4 w-full text-center text-xs font-bold text-baltic underline-offset-2 hover:underline"
-        onClick={() => alert('View all MDRT (mock)')}
+        onClick={() => onTab('all')}
       >
         {showTabs ? 'View all portfolio members' : 'View all MDRT members'}
       </button>
@@ -316,7 +315,15 @@ function MdrtCard({
   )
 }
 
-function ManagerView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t: MdrtTab) => void }) {
+function ManagerView({
+  mdrtTab,
+  setMdrtTab,
+  onExport,
+}: {
+  mdrtTab: MdrtTab
+  setMdrtTab: (t: MdrtTab) => void
+  onExport: () => void
+}) {
   return (
     <>
       <div className="mb-4 grid grid-cols-2 gap-3 xl:grid-cols-6">
@@ -367,7 +374,7 @@ function ManagerView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t
               className="min-w-[180px] flex-1 rounded-[10px] border border-line px-3 py-2 text-sm"
               placeholder="Search FA…"
             />
-            <Button type="button" variant="secondary" size="sm" onClick={() => alert('Export table (mock)')}>
+            <Button type="button" variant="secondary" size="sm" onClick={onExport}>
               Export table
             </Button>
           </div>
@@ -392,7 +399,15 @@ function ManagerView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t
   )
 }
 
-function FteView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t: MdrtTab) => void }) {
+function FteView({
+  mdrtTab,
+  setMdrtTab,
+  onExport,
+}: {
+  mdrtTab: MdrtTab
+  setMdrtTab: (t: MdrtTab) => void
+  onExport: () => void
+}) {
   return (
     <>
       <div className="mb-4 grid grid-cols-2 gap-3 xl:grid-cols-6">
@@ -436,7 +451,7 @@ function FteView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t: Md
               className="min-w-[180px] flex-1 rounded-[10px] border border-line px-3 py-2 text-sm"
               placeholder="Search FA…"
             />
-            <Button type="button" variant="secondary" size="sm" onClick={() => alert('Export full dataset (mock)')}>
+            <Button type="button" variant="secondary" size="sm" onClick={onExport}>
               Export full dataset
             </Button>
           </div>
@@ -465,10 +480,55 @@ function FteView({ mdrtTab, setMdrtTab }: { mdrtTab: MdrtTab; setMdrtTab: (t: Md
   )
 }
 
-/** Overview · Manager View + FTE Employees (docs/31) */
+/** Overview · Manager View + FTE Employees (docs/31 · 86) */
 export function DashOverviewPage() {
-  const [view, setView] = useState<OverviewView>('manager')
+  const { hat, caps } = useAuth()
+  const [view, setView] = useState<OverviewView>(hat === 'fte' ? 'fte' : 'manager')
   const [mdrtTab, setMdrtTab] = useState<MdrtTab>('progress')
+  const [exportOpen, setExportOpen] = useState(false)
+
+  useEffect(() => {
+    if (hat === 'fte') setView('fte')
+    else if (hat === 'manager') setView('manager')
+  }, [hat])
+
+  if (hat === 'admin') {
+    return (
+      <div>
+        <PageHeader
+          title="Overview"
+          subtitle="HQ admin · production BI is optional — setup lives under Management"
+        />
+        <Card>
+          <p className="mb-3 text-sm text-muted">
+            Super Admin does not use an MDRT war-room as home. Open{' '}
+            <Link to="/management/resources" className="font-bold text-steel">
+              Resource
+            </Link>
+            ,{' '}
+            <Link to="/management/products" className="font-bold text-steel">
+              Products
+            </Link>
+            , or{' '}
+            <Link to="/audit" className="font-bold text-steel">
+              Audit
+            </Link>
+            . Managers and FTE use the tabs below when you switch <b className="text-deep">View as</b>.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/management/resources">
+              <Button type="button">Management</Button>
+            </Link>
+            <Link to="/audit">
+              <Button variant="secondary" type="button">
+                Audit
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -480,18 +540,20 @@ export function DashOverviewPage() {
             : 'FTE Employees View (5.2.4.2) · full portfolio · persistency · variance alerts'
         }
         actions={
-          <Button
-            type="button"
-            className="!bg-baltic shadow-baltic/25 hover:!bg-deep"
-            onClick={() => alert(view === 'manager' ? 'Export Excel (mock)' : 'Export Full Dataset (mock)')}
-          >
-            <Download className="size-4" />
-            {view === 'manager' ? 'Export Excel' : 'Export Full Dataset'}
-          </Button>
+          caps.canExport ? (
+            <Button
+              type="button"
+              className="!bg-baltic shadow-baltic/25 hover:!bg-deep"
+              onClick={() => setExportOpen(true)}
+            >
+              <Download className="size-4" />
+              {view === 'manager' ? 'Export Excel' : 'Export Full Dataset'}
+            </Button>
+          ) : null
         }
       />
 
-      {/* View tabs — both live on Overview */}
+      {/* View tabs — FTE tab only when portfolio cap (docs/86) */}
       <div className="mb-4 inline-flex rounded-xl border border-line bg-soft p-1">
         <button
           type="button"
@@ -503,25 +565,43 @@ export function DashOverviewPage() {
         >
           Manager View
         </button>
-        <button
-          type="button"
-          onClick={() => setView('fte')}
-          className={cn(
-            'rounded-lg px-4 py-2 text-sm font-bold transition',
-            view === 'fte' ? 'bg-baltic text-white shadow-sm' : 'text-muted hover:text-deep',
-          )}
-        >
-          FTE Employees
-        </button>
+        {caps.canViewPortfolio ? (
+          <button
+            type="button"
+            onClick={() => setView('fte')}
+            className={cn(
+              'rounded-lg px-4 py-2 text-sm font-bold transition',
+              view === 'fte' ? 'bg-baltic text-white shadow-sm' : 'text-muted hover:text-deep',
+            )}
+          >
+            FTE Employees
+          </button>
+        ) : null}
       </div>
 
       <FilterBar />
 
       {view === 'manager' ? (
-        <ManagerView mdrtTab={mdrtTab} setMdrtTab={setMdrtTab} />
+        <ManagerView mdrtTab={mdrtTab} setMdrtTab={setMdrtTab} onExport={() => setExportOpen(true)} />
       ) : (
-        <FteView mdrtTab={mdrtTab} setMdrtTab={setMdrtTab} />
+        <FteView mdrtTab={mdrtTab} setMdrtTab={setMdrtTab} onExport={() => setExportOpen(true)} />
       )}
+
+      <Dialog
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        title={view === 'manager' ? 'Export Excel' : 'Export Full Dataset'}
+        subtitle="Current hierarchy + weighting slice · API numbers only"
+        footer={
+          <Button type="button" onClick={() => setExportOpen(false)}>
+            Done
+          </Button>
+        }
+      >
+        <p className="text-sm text-muted">
+          Dates DD-MMM-YYYY · amounts 2 decimals with commas. Commission payout is not included.
+        </p>
+      </Dialog>
     </div>
   )
 }

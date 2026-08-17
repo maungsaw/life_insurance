@@ -4,6 +4,7 @@ import {
   Card,
   DataTable,
   Dialog,
+  EmptyState,
   Field,
   Input,
   PageHeader,
@@ -15,7 +16,7 @@ import {
 import { cn } from '@/lib/cn'
 
 type Status = 'pending' | 'progress' | 'completed'
-type TaskType = 'Leave appointment' | 'Servicing' | 'e-App' | 'Other'
+type TaskType = 'Leave appointment' | 'Servicing' | 'e-App' | 'On-Boarding' | 'Other'
 
 type Task = {
   id: string
@@ -26,6 +27,9 @@ type Task = {
   dueIso: string
   status: Status
   notes: string
+  agentName?: string
+  nrc?: string
+  trainingModule?: string
 }
 
 const COLUMNS: { id: Status; label: string; hint: string }[] = [
@@ -95,6 +99,19 @@ const SEED: Task[] = [
     status: 'pending',
     notes: 'Overdue — reschedule if no reply.',
   },
+  {
+    id: 't7',
+    title: 'On-Boarding · Zaw Ko',
+    assignee: 'Alliance',
+    type: 'On-Boarding',
+    due: '20-Aug-2026',
+    dueIso: '2026-08-20',
+    status: 'progress',
+    notes: 'LC training pack issued.',
+    agentName: 'Zaw Ko',
+    nrc: '12/YGN(N)123456',
+    trainingModule: 'LC Training · Module 2',
+  },
 ]
 
 const TODAY = '2026-08-05'
@@ -107,6 +124,7 @@ function typeTone(type: TaskType): 'default' | 'sky' | 'warn' | 'ok' {
   if (type === 'Leave appointment') return 'sky'
   if (type === 'Servicing') return 'warn'
   if (type === 'e-App') return 'ok'
+  if (type === 'On-Boarding') return 'ok'
   return 'default'
 }
 
@@ -124,6 +142,7 @@ export function TasksPage() {
   const [assigneeFilter, setAssigneeFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
   const [dragId, setDragId] = useState<string | null>(null)
   const [draft, setDraft] = useState({
     title: '',
@@ -131,6 +150,9 @@ export function TasksPage() {
     type: 'Leave appointment' as TaskType,
     dueIso: '2026-08-06',
     notes: '',
+    agentName: '',
+    nrc: '',
+    trainingModule: 'LC Training · Module 1',
   })
 
   const assignees = useMemo(
@@ -164,6 +186,9 @@ export function TasksPage() {
       type: 'Leave appointment',
       dueIso: '2026-08-06',
       notes: '',
+      agentName: '',
+      nrc: '',
+      trainingModule: 'LC Training · Module 1',
     })
     setShowForm(true)
   }
@@ -177,6 +202,9 @@ export function TasksPage() {
       type: t.type,
       dueIso: t.dueIso,
       notes: t.notes,
+      agentName: t.agentName ?? '',
+      nrc: t.nrc ?? '',
+      trainingModule: t.trainingModule ?? 'LC Training · Module 1',
     })
     setShowForm(true)
   }
@@ -190,6 +218,14 @@ export function TasksPage() {
   const saveTask = () => {
     const title = draft.title.trim()
     if (!title) return
+    const onboarding =
+      draft.type === 'On-Boarding'
+        ? {
+            agentName: draft.agentName.trim(),
+            nrc: draft.nrc.trim(),
+            trainingModule: draft.trainingModule,
+          }
+        : {}
     if (editingId) {
       setTasks((prev) =>
         prev.map((t) =>
@@ -203,6 +239,7 @@ export function TasksPage() {
                 due: formatDue(draft.dueIso),
                 notes: draft.notes,
                 status: createStatus,
+                ...onboarding,
               }
             : t,
         ),
@@ -218,6 +255,7 @@ export function TasksPage() {
           due: formatDue(draft.dueIso),
           status: createStatus,
           notes: draft.notes,
+          ...onboarding,
         },
         ...prev,
       ])
@@ -227,12 +265,12 @@ export function TasksPage() {
   }
 
   const deleteTask = (id: string) => {
-    if (!confirm('Delete this task permanently?')) return
     setTasks((prev) => prev.filter((t) => t.id !== id))
     if (editingId === id) {
       setShowForm(false)
       setEditingId(null)
     }
+    setDeleteId(null)
   }
 
   const moveTask = (id: string, status: Status) => {
@@ -300,6 +338,7 @@ export function TasksPage() {
           <option>Leave appointment</option>
           <option>Servicing</option>
           <option>e-App</option>
+          <option>On-Boarding</option>
           <option>Other</option>
         </Select>
         <Select
@@ -369,7 +408,7 @@ export function TasksPage() {
                                 type="button"
                                 className="text-xs font-bold text-muted hover:text-danger"
                                 title="Delete"
-                                onClick={() => deleteTask(t.id)}
+                                onClick={() => setDeleteId(t.id)}
                               >
                                 ✕
                               </button>
@@ -417,7 +456,18 @@ export function TasksPage() {
             </div>
           ) : (
             <Card title="Task list">
-              <DataTable headers={['Task', 'Assignee', 'Type', 'Due', 'Status', '']}>
+              {filtered.length === 0 ? (
+                <EmptyState
+                  title="No tasks in this filter"
+                  hint="Clear search or type / assignee, or add a task to this board."
+                  action={
+                    <Button type="button" onClick={() => startCreate('pending')}>
+                      + Add task
+                    </Button>
+                  }
+                />
+              ) : (
+                <DataTable headers={['Task', 'Assignee', 'Type', 'Due', 'Status', '']}>
                 {filtered.map((t) => (
                   <tr key={t.id}>
                     <Td>
@@ -450,7 +500,7 @@ export function TasksPage() {
                           size="sm"
                           type="button"
                           className="text-danger"
-                          onClick={() => deleteTask(t.id)}
+                          onClick={() => setDeleteId(t.id)}
                         >
                           Delete
                         </Button>
@@ -459,6 +509,7 @@ export function TasksPage() {
                   </tr>
                 ))}
               </DataTable>
+              )}
             </Card>
           )}
       </div>
@@ -484,7 +535,7 @@ export function TasksPage() {
               Cancel
             </Button>
             {editingId ? (
-              <Button variant="danger" type="button" onClick={() => deleteTask(editingId)}>
+              <Button variant="danger" type="button" onClick={() => setDeleteId(editingId)}>
                 Delete
               </Button>
             ) : null}
@@ -521,6 +572,7 @@ export function TasksPage() {
               <option>Leave appointment</option>
               <option>Servicing</option>
               <option>e-App</option>
+              <option>On-Boarding</option>
               <option>Other</option>
             </Select>
           </Field>
@@ -542,6 +594,36 @@ export function TasksPage() {
             </Select>
           </Field>
         </div>
+        {draft.type === 'On-Boarding' ? (
+          <div className="mb-3 rounded-xl border border-line bg-soft/50 p-3">
+            <p className="mb-2 text-xs font-extrabold text-muted uppercase">Agent Info · Training (docs/76)</p>
+            <div className="grid gap-0 sm:grid-cols-2 sm:gap-3">
+              <Field label="Agent name *">
+                <Input
+                  value={draft.agentName}
+                  onChange={(e) => setDraft((d) => ({ ...d, agentName: e.target.value }))}
+                />
+              </Field>
+              <Field label="NRC / Passport">
+                <Input
+                  value={draft.nrc}
+                  onChange={(e) => setDraft((d) => ({ ...d, nrc: e.target.value }))}
+                  placeholder="12/YGN(N)123456"
+                />
+              </Field>
+              <Field label="Training module" className="sm:col-span-2">
+                <Select
+                  value={draft.trainingModule}
+                  onChange={(e) => setDraft((d) => ({ ...d, trainingModule: e.target.value }))}
+                >
+                  <option>LC Training · Module 1</option>
+                  <option>LC Training · Module 2</option>
+                  <option>Structure interview</option>
+                </Select>
+              </Field>
+            </div>
+          </div>
+        ) : null}
         <Field label="Notes" className="mb-0">
           <Textarea
             rows={3}
@@ -550,6 +632,27 @@ export function TasksPage() {
             placeholder="Optional context for the FA"
           />
         </Field>
+      </Dialog>
+
+      <Dialog
+        open={deleteId !== null}
+        onClose={() => setDeleteId(null)}
+        title="Delete task?"
+        subtitle="FR-07 · this cannot be undone in the prototype"
+        footer={
+          <>
+            <Button variant="secondary" type="button" onClick={() => setDeleteId(null)}>
+              Cancel
+            </Button>
+            <Button variant="danger" type="button" onClick={() => deleteId && deleteTask(deleteId)}>
+              Delete
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-muted">
+          The FA will no longer see this assignment on My work after the next sync.
+        </p>
       </Dialog>
     </div>
   )

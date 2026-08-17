@@ -1,25 +1,29 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/AuthContext'
 import { AuthLayout } from '@/layout/AuthLayout'
 import { Button, Input } from '@/components/ui'
 
 export function OtpPage() {
   const nav = useNavigate()
-  const { login } = useAuth()
+  const { login, landing } = useAuth()
+  const loc = useLocation()
+  const mobile =
+    (loc.state as { mobile?: string } | null)?.mobile ?? '09 771 234 567'
+
   return (
     <AuthLayout
       backTo="/login"
       title="Enter OTP"
-      subtitle="We sent a 6-digit code to 09 771 234 567"
+      subtitle={`We sent a 6-digit code to ${mobile}`}
     >
-      <div className="mb-4 flex gap-2.5">
+      <div className="mb-4 grid grid-cols-6 gap-2">
         {['4', '8', '2', '1', '9', '0'].map((d, i) => (
           <Input
             key={i}
             defaultValue={d}
             maxLength={1}
             inputMode="numeric"
-            className="h-14 min-w-0 flex-1 px-0 text-center text-xl font-extrabold"
+            className="h-14 min-w-0 px-0 text-center text-xl font-extrabold"
           />
         ))}
       </div>
@@ -28,11 +32,12 @@ export function OtpPage() {
         type="button"
         onClick={() => {
           login()
-          nav('/dashboard/overview')
+          nav(landing, { replace: true })
         }}
       >
         Verify & open portal
       </Button>
+      <p className="mt-3 text-center text-xs text-muted">Resend available in 0:28 · same SMS OTP as the Agent App</p>
     </AuthLayout>
   )
 }

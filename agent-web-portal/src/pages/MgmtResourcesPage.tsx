@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   DataTable,
+  Dialog,
   Field,
   Input,
   PageHeader,
@@ -114,6 +115,8 @@ export function MgmtResourcesPage() {
   const [showSectionEditor, setShowSectionEditor] = useState(false)
   const [showUpload, setShowUpload] = useState(false)
   const [newSectionName, setNewSectionName] = useState('')
+  const [publishDocId, setPublishDocId] = useState<string | null>(null)
+  const [archiveDocId, setArchiveDocId] = useState<string | null>(null)
 
   const filteredDocs = useMemo(
     () => docs.filter((d) => d.sectionId === activeSection && d.status !== 'archived'),
@@ -281,7 +284,7 @@ export function MgmtResourcesPage() {
               </p>
             ) : (
               /* Offline column hidden for now — restore header + Td when needed (docs/33) */
-              <DataTable headers={['Title', 'File', 'Version', /* 'Offline', */ 'Status', 'Updated']}>
+              <DataTable headers={['Title', 'File', 'Version', /* 'Offline', */ 'Status', 'Updated', '']}>
                 {filteredDocs.map((d) => (
                   <tr key={d.id}>
                     <Td className="font-bold">{d.title}</Td>
@@ -290,6 +293,26 @@ export function MgmtResourcesPage() {
                     {/* <Td>{offlinePill(d.offline)}</Td> */}
                     <Td>{statusPill(d.status)}</Td>
                     <Td>{d.updated}</Td>
+                    <Td>
+                      <div className="flex flex-wrap gap-1">
+                        {d.status === 'draft' ? (
+                          <Button size="sm" type="button" onClick={() => setPublishDocId(d.id)}>
+                            Publish
+                          </Button>
+                        ) : null}
+                        {d.status !== 'archived' ? (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            type="button"
+                            className="text-danger"
+                            onClick={() => setArchiveDocId(d.id)}
+                          >
+                            Archive
+                          </Button>
+                        ) : null}
+                      </div>
+                    </Td>
                   </tr>
                 ))}
               </DataTable>
@@ -374,6 +397,63 @@ export function MgmtResourcesPage() {
           ) : null}
         </div>
       </div>
+
+      <Dialog
+        open={publishDocId !== null}
+        onClose={() => setPublishDocId(null)}
+        title="Publish document"
+        subtitle="Live documents appear on the next FA sync"
+        footer={
+          <>
+            <Button variant="secondary" type="button" onClick={() => setPublishDocId(null)}>
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                if (!publishDocId) return
+                setDocs((prev) =>
+                  prev.map((d) => (d.id === publishDocId ? { ...d, status: 'live' as const } : d)),
+                )
+                setPublishDocId(null)
+              }}
+            >
+              Publish
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-muted">Confirm this brochure / pack is ready for field download.</p>
+      </Dialog>
+
+      <Dialog
+        open={archiveDocId !== null}
+        onClose={() => setArchiveDocId(null)}
+        title="Archive document"
+        subtitle="Archived files are hidden from FAs but kept for audit"
+        footer={
+          <>
+            <Button variant="secondary" type="button" onClick={() => setArchiveDocId(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              type="button"
+              onClick={() => {
+                if (!archiveDocId) return
+                setDocs((prev) =>
+                  prev.map((d) => (d.id === archiveDocId ? { ...d, status: 'archived' as const } : d)),
+                )
+                setArchiveDocId(null)
+              }}
+            >
+              Archive
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-muted">FAs will stop seeing this file after the next sync.</p>
+      </Dialog>
     </div>
   )
 }

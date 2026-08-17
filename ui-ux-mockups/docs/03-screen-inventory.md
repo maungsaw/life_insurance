@@ -108,3 +108,6 @@
 - [x] Unified login / OTP / forgot
 - [x] Dashboard 5.2.1 + 5.2.2 weighting + bar/line charts
 - [x] Performance · CRM · Policies · Tasks · Recruit · Announce · Ops · Agents
+- [x] Web admin view · mobile-referenced UX map brainstorm (`86`)
+- [x] Web admin view · role hats · Products · Audit HQ shipped (`86`)
+- [x] Web admin P2 polish · empty states · FA drill · confirms (`86`)

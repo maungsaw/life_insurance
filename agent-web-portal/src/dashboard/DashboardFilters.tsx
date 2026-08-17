@@ -44,7 +44,10 @@ export function DashboardFilterBar({ scopeNote }: { scopeNote: string }) {
           { value: 'internal', label: 'Internal FYP (weighted)' },
         ]}
       />
-      <p className="mb-3 text-xs text-muted">Weighting from Core · applies across Overview and Team Performance.</p>
+      <p className="mb-3 text-xs text-muted">
+        Weighting from Core · applies across Overview and Team Performance. Persistency K1/K2 uses Core
+        grace-period rules — the portal does not invent the ratio.
+      </p>
 
       <div className="mb-5 flex flex-wrap items-end gap-2.5 rounded-2xl border border-line bg-card p-3.5">
         {[

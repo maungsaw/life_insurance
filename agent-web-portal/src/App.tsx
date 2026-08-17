@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AuthProvider, useAuth } from '@/auth/AuthContext'
+import { HomeRedirect, RequireAdmin, RequireWipe } from '@/auth/RequireCap'
 import { LoginPage } from '@/pages/LoginPage'
 import { OtpPage } from '@/pages/OtpPage'
 import { ForgotPage } from '@/pages/ForgotPage'
@@ -13,9 +14,11 @@ import { MgmtResourcesPage } from '@/pages/MgmtResourcesPage'
 import { MgmtNotificationPage } from '@/pages/MgmtNotificationPage'
 import { MgmtAnnouncementPage } from '@/pages/MgmtAnnouncementPage'
 import { MgmtDevicesPage } from '@/pages/MgmtDevicesPage'
-// import { MgmtProductsPage } from '@/pages/MgmtProductsPage' // Products tab — restore with route below
+import { MgmtProductsPage } from '@/pages/MgmtProductsPage'
 import { AuditPage } from '@/pages/AuditPage'
 import { NotificationsPage } from '@/pages/NotificationsPage'
+import { ProfilePage } from '@/pages/ProfilePage'
+import { ChangePasswordPage } from '@/pages/ChangePasswordPage'
 
 function Private({ children }: { children: ReactNode }) {
   const { authed } = useAuth()
@@ -38,7 +41,7 @@ export default function App() {
             </Private>
           }
         >
-          <Route index element={<Navigate to="/dashboard/overview" replace />} />
+          <Route index element={<HomeRedirect />} />
           <Route path="dashboard" element={<DashboardLayout />}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<DashOverviewPage />} />
@@ -50,18 +53,62 @@ export default function App() {
           <Route path="tasks" element={<TasksPage />} />
           <Route path="recruit" element={<Navigate to="/tasks" replace />} />
           <Route path="management" element={<Navigate to="/management/resources" replace />} />
-          <Route path="management/resources" element={<MgmtResourcesPage />} />
-          <Route path="management/notifications" element={<MgmtNotificationPage />} />
-          <Route path="management/announcements" element={<MgmtAnnouncementPage />} />
-          {/* <Route path="management/products" element={<MgmtProductsPage />} /> */}
-          <Route path="management/devices" element={<MgmtDevicesPage />} />
+          <Route
+            path="management/resources"
+            element={
+              <RequireAdmin>
+                <MgmtResourcesPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="management/notifications"
+            element={
+              <RequireAdmin>
+                <MgmtNotificationPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="management/announcements"
+            element={
+              <RequireAdmin>
+                <MgmtAnnouncementPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="management/products"
+            element={
+              <RequireAdmin>
+                <MgmtProductsPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="management/devices"
+            element={
+              <RequireWipe>
+                <MgmtDevicesPage />
+              </RequireWipe>
+            }
+          />
           <Route path="announce" element={<Navigate to="/management/announcements" replace />} />
           <Route path="ops" element={<Navigate to="/management/resources" replace />} />
-          <Route path="audit" element={<AuditPage />} />
+          <Route
+            path="audit"
+            element={
+              <RequireAdmin>
+                <AuditPage />
+              </RequireAdmin>
+            }
+          />
           <Route path="agents" element={<Navigate to="/audit" replace />} />
           <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/password" element={<ChangePasswordPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard/overview" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
   )

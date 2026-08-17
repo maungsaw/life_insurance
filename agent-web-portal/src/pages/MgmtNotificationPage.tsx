@@ -18,6 +18,7 @@ type Rule = {
   name: string
   trigger: string
   leadTime: string
+  audience: string
   enabled: boolean
 }
 
@@ -54,6 +55,7 @@ const SEED: Rule[] = [
     name: 'Recurring premium reminder',
     trigger: 'Core · premium due date',
     leadTime: '7 days before',
+    audience: 'All FAs · Yangon A',
     enabled: true,
   },
   {
@@ -61,6 +63,7 @@ const SEED: Rule[] = [
     name: 'Annual renewal reminder',
     trigger: 'Core · policy renewal',
     leadTime: '60 days before',
+    audience: 'All FAs',
     enabled: true,
   },
   {
@@ -68,6 +71,7 @@ const SEED: Rule[] = [
     name: 'Task assigned / updated',
     trigger: 'Tasks module',
     leadTime: 'Immediate',
+    audience: 'Assignee FA only',
     enabled: true,
   },
   {
@@ -75,6 +79,7 @@ const SEED: Rule[] = [
     name: 'e-App mark for correction',
     trigger: 'Core · application status',
     leadTime: 'Immediate',
+    audience: 'Owner FA + manager line',
     enabled: true,
   },
   {
@@ -82,6 +87,7 @@ const SEED: Rule[] = [
     name: 'Team flag · below target',
     trigger: 'Dashboard performance',
     leadTime: 'Daily digest',
+    audience: 'DM · Yangon district',
     enabled: false,
   },
 ]
@@ -97,6 +103,9 @@ export function MgmtNotificationPage() {
   const [name, setName] = useState('')
   const [triggerKey, setTriggerKey] = useState<keyof typeof TRIGGER_PRESETS>('premium')
   const [leadTime, setLeadTime] = useState('7 days before')
+  const [audience, setAudience] = useState('All FAs · Yangon A')
+  const [previewId, setPreviewId] = useState<string | null>(null)
+  const [removeId, setRemoveId] = useState<string | null>(null)
 
   const editing = editId ? rules.find((r) => r.id === editId) : null
   const dialogOpen = formMode !== 'closed'
@@ -105,6 +114,7 @@ export function MgmtNotificationPage() {
     setName('')
     setTriggerKey('premium')
     setLeadTime('7 days before')
+    setAudience('All FAs · Yangon A')
     setEditId(null)
   }
 
@@ -117,6 +127,7 @@ export function MgmtNotificationPage() {
     setEditId(r.id)
     setName(r.name)
     setLeadTime(r.leadTime)
+    setAudience(r.audience)
     const key =
       (Object.entries(TRIGGER_PRESETS).find(([, v]) => v.trigger === r.trigger)?.[0] as
         | keyof typeof TRIGGER_PRESETS
@@ -144,6 +155,7 @@ export function MgmtNotificationPage() {
       name: name.trim(),
       trigger: triggerLabel,
       leadTime: leadTime.trim(),
+      audience: audience.trim(),
     }
     if (formMode === 'edit' && editId) {
       setRules((prev) => prev.map((r) => (r.id === editId ? { ...r, ...payload } : r)))
@@ -158,10 +170,12 @@ export function MgmtNotificationPage() {
   }
 
   const deleteRule = (id: string) => {
-    if (!confirm('Remove this notification rule?')) return
     setRules((prev) => prev.filter((r) => r.id !== id))
     if (editId === id) closeForm()
+    setRemoveId(null)
   }
+
+  const previewRule = previewId ? rules.find((r) => r.id === previewId) : null
 
   return (
     <div>
@@ -211,15 +225,19 @@ export function MgmtNotificationPage() {
             </Button>
           </div>
         ) : (
-          <DataTable headers={['Rule', 'Trigger', 'Lead time', 'Status', '']}>
+          <DataTable headers={['Rule', 'Trigger', 'Lead time', 'Audience', 'Status', '']}>
             {rules.map((r) => (
               <tr key={r.id}>
                 <Td className="font-bold">{r.name}</Td>
                 <Td className="text-xs text-muted">{r.trigger}</Td>
                 <Td>{r.leadTime}</Td>
+                <Td className="text-xs text-muted">{r.audience}</Td>
                 <Td>{r.enabled ? <Pill tone="ok">On</Pill> : <Pill>Off</Pill>}</Td>
                 <Td>
                   <div className="flex flex-wrap gap-1">
+                    <Button variant="ghost" size="sm" type="button" onClick={() => setPreviewId(r.id)}>
+                      Preview
+                    </Button>
                     <Button variant="ghost" size="sm" type="button" onClick={() => openEdit(r)}>
                       Edit
                     </Button>
@@ -267,14 +285,14 @@ export function MgmtNotificationPage() {
         open={dialogOpen}
         onClose={closeForm}
         title={formMode === 'add' ? 'Add notification rule' : `Edit · ${editing?.name ?? 'rule'}`}
-        subtitle="FR-08 · name · trigger · lead time only"
+        subtitle="FR-08 · name · trigger · lead time · audience"
         footer={
           <>
             <Button variant="secondary" type="button" onClick={closeForm}>
               Cancel
             </Button>
             {formMode === 'edit' && editId ? (
-              <Button variant="danger" type="button" onClick={() => deleteRule(editId)}>
+              <Button variant="danger" type="button" onClick={() => setRemoveId(editId)}>
                 Remove
               </Button>
             ) : null}
@@ -305,6 +323,16 @@ export function MgmtNotificationPage() {
             <option value="custom">Custom trigger</option>
           </Select>
         </Field>
+        <Field label="Audience *">
+          <Select value={audience} onChange={(e) => setAudience(e.target.value)}>
+            <option>All FAs · Yangon A</option>
+            <option>All FAs</option>
+            <option>Assignee FA only</option>
+            <option>Owner FA + manager line</option>
+            <option>DM · Yangon district</option>
+            <option>Managers only</option>
+          </Select>
+        </Field>
         <Field label="Lead time *" className="mb-2">
           <Input
             value={leadTime}
@@ -316,6 +344,52 @@ export function MgmtNotificationPage() {
           New rules start <b className="text-deep">On</b>. Use Turn off in the table to pause. Audience and
           delivery channel are set by Core for each trigger.
         </p>
+      </Dialog>
+
+      <Dialog
+        open={previewId !== null}
+        onClose={() => setPreviewId(null)}
+        title={`Preview · ${previewRule?.name ?? 'rule'}`}
+        subtitle="Who would receive the next automated send (mock)"
+        footer={
+          <Button variant="secondary" type="button" onClick={() => setPreviewId(null)}>
+            Close
+          </Button>
+        }
+      >
+        {previewRule ? (
+          <div className="space-y-2 text-sm">
+            <p>
+              <b className="text-deep">Trigger:</b> {previewRule.trigger} · {previewRule.leadTime}
+            </p>
+            <p>
+              <b className="text-deep">Audience:</b> {previewRule.audience}
+            </p>
+            <p className="rounded-xl border border-line bg-soft px-3 py-2.5 text-muted">
+              Sample: 3 FAs in Yangon A would get a tray notification on the next Core batch. Personal
+              toggles on mobile still respect FR-08 delivery.
+            </p>
+          </div>
+        ) : null}
+      </Dialog>
+
+      <Dialog
+        open={removeId !== null}
+        onClose={() => setRemoveId(null)}
+        title="Remove notification rule?"
+        subtitle="FAs stop receiving this automated alert after the next Core batch"
+        footer={
+          <>
+            <Button variant="secondary" type="button" onClick={() => setRemoveId(null)}>
+              Cancel
+            </Button>
+            <Button variant="danger" type="button" onClick={() => removeId && deleteRule(removeId)}>
+              Remove
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-muted">This does not delete already-delivered inbox rows.</p>
       </Dialog>
     </div>
   )

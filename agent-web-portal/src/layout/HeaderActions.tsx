@@ -1,13 +1,18 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Bell, ChevronDown, Languages, LogOut, UserRound } from 'lucide-react'
+import { Bell, ChevronDown, KeyRound, Languages, LogOut, UserRound } from 'lucide-react'
 import { useAuth } from '@/auth/AuthContext'
+import { HAT_PROFILES, type PortalHat } from '@/auth/portalRole'
 import { cn } from '@/lib/cn'
+import { Button, Dialog } from '@/components/ui'
+
+const HATS: PortalHat[] = ['manager', 'fte', 'admin']
 
 export function HeaderActions({ unread = 3 }: { unread?: number }) {
-  const { logout } = useAuth()
+  const { logout, profile, hat, setHat, lang, setLang } = useAuth()
   const nav = useNavigate()
   const [open, setOpen] = useState(false)
+  const [signOutOpen, setSignOutOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuId = useId()
 
@@ -31,6 +36,25 @@ export function HeaderActions({ unread = 3 }: { unread?: number }) {
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
+      <div className="hidden items-center rounded-xl border border-line bg-white p-0.5 md:flex">
+        {HATS.map((h) => (
+          <button
+            key={h}
+            type="button"
+            onClick={() => {
+              setHat(h)
+              nav(HAT_PROFILES[h].landing)
+            }}
+            className={cn(
+              'rounded-lg px-2.5 py-1.5 text-[11px] font-extrabold transition',
+              hat === h ? 'bg-steel text-white' : 'text-muted hover:text-deep',
+            )}
+          >
+            {HAT_PROFILES[h].label}
+          </button>
+        ))}
+      </div>
+
       <Link
         to="/notifications"
         aria-label={`Notifications, ${unread} unread`}
@@ -54,11 +78,11 @@ export function HeaderActions({ unread = 3 }: { unread?: number }) {
           className="flex items-center gap-2 rounded-xl border border-transparent px-1.5 py-1 transition hover:border-line hover:bg-soft"
         >
           <div className="hidden text-right sm:block">
-            <div className="text-sm font-bold text-deep">Aye Chan</div>
-            <div className="text-[11px] text-muted">DM · Yangon</div>
+            <div className="text-sm font-bold text-deep">{profile.name}</div>
+            <div className="text-[11px] text-muted">{profile.roleLine}</div>
           </div>
           <div className="grid size-9 place-items-center rounded-full bg-deep text-sm font-extrabold text-white">
-            A
+            {profile.initial}
           </div>
           <ChevronDown className={cn('size-4 text-muted transition', open && 'rotate-180')} />
         </button>
@@ -67,27 +91,54 @@ export function HeaderActions({ unread = 3 }: { unread?: number }) {
           <div
             id={menuId}
             role="menu"
-            className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-2xl border border-line bg-white py-1.5 shadow-[0_18px_50px_rgba(0,53,84,0.14)]"
+            className="absolute right-0 z-20 mt-2 w-60 overflow-hidden rounded-2xl border border-line bg-white py-1.5 shadow-[0_18px_50px_rgba(0,53,84,0.14)]"
           >
             <div className="border-b border-line px-3.5 py-2.5 sm:hidden">
-              <div className="text-sm font-bold">Aye Chan</div>
-              <div className="text-[11px] text-muted">DM · Yangon</div>
+              <div className="text-sm font-bold">{profile.name}</div>
+              <div className="text-[11px] text-muted">{profile.roleLine}</div>
+            </div>
+            <p className="px-3.5 pt-2 text-[10px] font-extrabold tracking-wide text-muted uppercase">
+              {lang === 'mm' ? 'ကြည့်ရှုမည့်အမြင်' : 'View as'}
+            </p>
+            <div className="flex gap-1 px-3 pb-2 md:hidden">
+              {HATS.map((h) => (
+                <button
+                  key={h}
+                  type="button"
+                  className={cn(
+                    'flex-1 rounded-lg px-2 py-1.5 text-[10px] font-extrabold',
+                    hat === h ? 'bg-steel text-white' : 'bg-soft text-muted',
+                  )}
+                  onClick={() => {
+                    setHat(h)
+                    setOpen(false)
+                    nav(HAT_PROFILES[h].landing)
+                  }}
+                >
+                  {HAT_PROFILES[h].label}
+                </button>
+              ))}
             </div>
             <MenuItem
               icon={<UserRound className="size-4" />}
-              label="Profile"
+              label={lang === 'mm' ? 'ပရိုဖိုင်' : 'Profile'}
               onClick={() => {
                 setOpen(false)
-                alert('Profile settings (mock)')
+                nav('/profile')
+              }}
+            />
+            <MenuItem
+              icon={<KeyRound className="size-4" />}
+              label={lang === 'mm' ? 'စကားဝှက်ပြောင်း' : 'Change password'}
+              onClick={() => {
+                setOpen(false)
+                nav('/profile/password')
               }}
             />
             <MenuItem
               icon={<Languages className="size-4" />}
-              label="Language · ENG"
-              onClick={() => {
-                setOpen(false)
-                alert('Language toggle (mock)')
-              }}
+              label={lang === 'en' ? 'Language · ENG' : 'ဘာသာ · MM'}
+              onClick={() => setLang(lang === 'en' ? 'mm' : 'en')}
             />
             <div className="my-1.5 border-t border-line" />
             <button
@@ -96,16 +147,46 @@ export function HeaderActions({ unread = 3 }: { unread?: number }) {
               className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-sm font-bold text-danger transition hover:bg-red-50"
               onClick={() => {
                 setOpen(false)
-                logout()
-                nav('/login')
+                setSignOutOpen(true)
               }}
             >
               <LogOut className="size-4" />
-              Sign out
+              {lang === 'mm' ? 'ထွက်မည်' : 'Sign out'}
             </button>
           </div>
         ) : null}
       </div>
+
+      <Dialog
+        open={signOutOpen}
+        onClose={() => setSignOutOpen(false)}
+        title={lang === 'mm' ? 'ထွက်မည်လား။' : 'Sign out?'}
+        subtitle={lang === 'mm' ? 'ဤစက်တွင် session ပိတ်မည်' : 'Ends this desk session on this browser'}
+        footer={
+          <>
+            <Button variant="secondary" type="button" onClick={() => setSignOutOpen(false)}>
+              {lang === 'mm' ? 'မလုပ်တော့' : 'Cancel'}
+            </Button>
+            <Button
+              variant="danger"
+              type="button"
+              onClick={() => {
+                setSignOutOpen(false)
+                logout()
+                nav('/login')
+              }}
+            >
+              {lang === 'mm' ? 'ထွက်မည်' : 'Sign out'}
+            </Button>
+          </>
+        }
+      >
+        <p className="text-sm text-muted">
+          {lang === 'mm'
+            ? 'Agent App ရှိ biometric ကို မထိပါ။ ပြန်ဝင်ရန် OTP လိုအပ်နိုင်သည်။'
+            : 'Does not clear Agent App biometric. You may need SMS OTP to sign in again.'}
+        </p>
+      </Dialog>
     </div>
   )
 }
