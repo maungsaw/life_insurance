@@ -89,6 +89,17 @@ const ITEMS: Item[] = [
     pill: 'Users',
     to: '/users/u-zaw',
   },
+  {
+    id: '8',
+    type: 'news',
+    title: 'Product turned off',
+    meta: 'Term Life · TL · Pricing update · Sell catalog hides after sync',
+    time: 'Today',
+    unread: true,
+    tone: 'warn',
+    pill: 'Catalog',
+    to: '/management/products',
+  },
 ]
 
 export function NotificationsPage() {

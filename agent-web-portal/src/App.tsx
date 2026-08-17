@@ -14,7 +14,9 @@ import { MgmtResourcesPage } from '@/pages/MgmtResourcesPage'
 import { MgmtNotificationPage } from '@/pages/MgmtNotificationPage'
 import { MgmtAnnouncementPage } from '@/pages/MgmtAnnouncementPage'
 import { MgmtDevicesPage } from '@/pages/MgmtDevicesPage'
+import { CatalogProvider } from '@/data/CatalogContext'
 import { MgmtProductsPage } from '@/pages/MgmtProductsPage'
+import { MgmtProductSetupPage } from '@/pages/MgmtProductSetupPage'
 import { AuditPage } from '@/pages/AuditPage'
 import { NotificationsPage } from '@/pages/NotificationsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
@@ -36,6 +38,7 @@ function Private({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <AuthProvider>
+      <CatalogProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />
@@ -125,6 +128,22 @@ export default function App() {
             }
           />
           <Route
+            path="management/products/new"
+            element={
+              <RequireAdmin>
+                <MgmtProductSetupPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
+            path="management/products/:id"
+            element={
+              <RequireAdmin>
+                <MgmtProductSetupPage />
+              </RequireAdmin>
+            }
+          />
+          <Route
             path="management/devices"
             element={
               <RequireWipe>
@@ -176,6 +195,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </CatalogProvider>
     </AuthProvider>
   )
 }

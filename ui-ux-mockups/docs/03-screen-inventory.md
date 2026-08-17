@@ -115,3 +115,5 @@
 - [x] Web HQ CRM · e-Apps · Users/Roles shipped (`87`)
 - [x] Web Tasks global stage + substatus brainstorm (`88`)
 - [x] Web Tasks global stage + substatus shipped (`88`)
+- [x] Web HQ Product CRUD + catalog setup brainstorm (`89`)
+- [x] Web HQ Product CRUD + catalog setup shipped (`89`)
