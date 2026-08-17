@@ -20,6 +20,8 @@
 8. Submit → Application Tracker (Draft / Submitted / Mark for Correction / Approved / Rejected)  
 9. On approve → Lead converts to Client; Policy appears in Policy Search  
 
+**Renewal (`81`):** Policy List/Details **Renew** (expiry window or Expired) → same e-App, prefilled from the policy. Not a new form.  
+
 ## Flow 3 — Daily servicing loop
 1. Home shows “Premium due in 7 days” + “Renewal in 60 days”  
 2. Tap alert → Client profile / Policy detail  

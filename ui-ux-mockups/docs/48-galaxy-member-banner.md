@@ -129,6 +129,12 @@ Widget: `AppGalaxyMemberBanner` (DRY) · path `AppAssets.galaxyMember`.
 
 ---
 
-## 9. Related
+## 9. Superseded on Home (`78`)
 
-`46` Home stack · `39` AppAssets · `47` nav host · LoginRegister home board  
+**2026-08-17:** FA Home no longer shows Galaxy between Commission and Services. That slot becomes **Promotion & Campaign** so campaigns appear without scrolling. Galaxy may return later under Profile / rewards — not between money and tools.
+
+---
+
+## 10. Related
+
+`46` Home stack · `39` AppAssets · `47` nav host · LoginRegister home board · `78` promo lift 

@@ -12,6 +12,8 @@ enum QuotePartyKind { client, lead }
 
 enum EappStatus { draft, submitted, correction, approved, rejected }
 
+enum EappLaunchIntent { newSale, renewal, repurchase }
+
 class WhoShouldRow {
   const WhoShouldRow({required this.icon, required this.title, required this.body});
 
@@ -92,6 +94,14 @@ class QuoteParty {
   final String? gender;
 
   String get kindLabel => kind == QuotePartyKind.client ? 'Client' : 'Lead';
+}
+
+/// Extra for Get A Quote when opened from a Client / Lead (`81`).
+class QuoteLaunchArgs {
+  const QuoteLaunchArgs({this.product, this.party});
+
+  final CatalogProduct? product;
+  final QuoteParty? party;
 }
 
 class SavedQuote {
@@ -208,6 +218,8 @@ class EappDraft {
     required this.beneficiaries,
     required this.highRisk,
     required this.healthRemark,
+    this.intent = EappLaunchIntent.newSale,
+    this.sourcePolicyId,
   });
 
   final String id;
@@ -222,6 +234,10 @@ class EappDraft {
   bool highRisk;
   String healthRemark;
   String? appRef;
+  final EappLaunchIntent intent;
+  final String? sourcePolicyId;
+
+  bool get isRenewal => intent == EappLaunchIntent.renewal;
 
   String get statusLabel => switch (status) {
         EappStatus.draft => 'Draft',
@@ -237,6 +253,12 @@ class EappDraft {
         EappStatus.correction => 'Fix the flagged step and re-submit',
         EappStatus.approved => 'Ready to view as policy (stub)',
         EappStatus.rejected => 'Closed — start a new quote if needed',
+      };
+
+  String get intentLabel => switch (intent) {
+        EappLaunchIntent.newSale => 'New sale',
+        EappLaunchIntent.renewal => 'Renewal',
+        EappLaunchIntent.repurchase => 'Additional',
       };
 
   static String _stepName(int step) {
@@ -633,6 +655,31 @@ abstract final class ProductMockData {
   static CatalogProduct byId(String id) =>
       products.firstWhere((p) => p.id == id, orElse: () => products.first);
 
+  static CatalogProduct byNameNear(String name) {
+    final n = name.toLowerCase();
+    for (final p in products) {
+      if (p.name.toLowerCase() == n) return p;
+    }
+    for (final p in products) {
+      if (n.contains(p.name.toLowerCase()) || p.name.toLowerCase().contains(n)) {
+        return p;
+      }
+    }
+    if (n.contains('health')) {
+      return products.firstWhere(
+        (p) => p.line == ProductLine.health,
+        orElse: () => products.first,
+      );
+    }
+    if (n.contains('education') || n.contains('endowment')) {
+      return products.firstWhere(
+        (p) => p.line == ProductLine.saving,
+        orElse: () => products.first,
+      );
+    }
+    return products.first;
+  }
+
   static List<CatalogProduct> filtered({
     required String query,
     ProductLine? line,
@@ -798,7 +845,12 @@ abstract final class ProductSession {
     return quote;
   }
 
-  static EappDraft startEapp(SavedQuote quote) {
+  static EappDraft startEapp(
+    SavedQuote quote, {
+    EappLaunchIntent intent = EappLaunchIntent.newSale,
+    String? sourcePolicyId,
+    List<BeneficiaryDraft>? beneficiaries,
+  }) {
     _a += 1;
     final ph = _personFrom(quote.party, fallbackDob: quote.dob);
     final draft = EappDraft(
@@ -810,22 +862,84 @@ abstract final class ProductSession {
       sameAsLifeAssured: true,
       lifeAssured: _copyPerson(ph),
       nrcCaptured: false,
-      beneficiaries: [
-        BeneficiaryDraft(
-          name: 'Zaw Min Thu',
-          relationship: 'Father',
-          fatherName: 'U Min Thu',
-          identification: '12/PAZATA(N)548964',
-          dob: DateTime(1972, 3, 8),
-          mobile: quote.party.phone ?? '09 750337968',
-          percent: 100,
-        ),
-      ],
+      beneficiaries: beneficiaries ??
+          [
+            BeneficiaryDraft(
+              name: 'Zaw Min Thu',
+              relationship: 'Father',
+              fatherName: 'U Min Thu',
+              identification: '12/PAZATA(N)548964',
+              dob: DateTime(1972, 3, 8),
+              mobile: quote.party.phone ?? '09 750337968',
+              percent: 100,
+            ),
+          ],
       highRisk: false,
       healthRemark: '',
+      intent: intent,
+      sourcePolicyId: sourcePolicyId,
     );
     applications.insert(0, draft);
     return draft;
+  }
+
+  static List<SavedQuote> quotesForParty(String partyId) =>
+      quotes.where((q) => q.party.id == partyId).toList();
+
+  static int _parseSi(String raw) {
+    final n = int.tryParse(raw.replaceAll(RegExp(r'[^0-9]'), ''));
+    if (n == null || n == 0) return 30000000;
+    if (n < 1000) return n * 1000000;
+    return n;
+  }
+
+  static EappDraft startEappFromPolicy(PolicyMock policy) {
+    final product = ProductMockData.byNameNear(policy.productName);
+    final party = QuoteParty(
+      id: policy.clientId,
+      name: policy.clientName,
+      kind: QuotePartyKind.client,
+      phone: policy.policyholder.rows['Mobile'],
+      email: policy.policyholder.rows['Email'],
+      identification: policy.insured.rows['Identification'],
+      gender: policy.insured.rows['Gender'],
+    );
+    _q += 1;
+    final quote = SavedQuote(
+      id: 'QT-REN-${_q.toString().padLeft(3, '0')}',
+      productId: product.id,
+      productName: product.name,
+      productCode: product.code,
+      lineLabel: product.lineLabel,
+      variant: product.variants.first,
+      frequency: policy.frequency,
+      sumInsured: _parseSi(policy.sumInsured),
+      monthlyPremium: _parseSi(policy.premium),
+      topup: 0,
+      term: policy.term,
+      dob: DateTime(1999, 6, 4),
+      age: policy.ageAtIssue,
+      party: party,
+      savedAt: DateTime(2026, 8, 17),
+    );
+    quotes.insert(0, quote);
+    final benName = policy.beneficiary.rows['Name'] ?? 'Beneficiary';
+    return startEapp(
+      quote,
+      intent: EappLaunchIntent.renewal,
+      sourcePolicyId: policy.id,
+      beneficiaries: [
+        BeneficiaryDraft(
+          name: benName,
+          relationship: policy.beneficiary.rows['Relationship'] ?? 'Spouse',
+          fatherName: '',
+          identification: '',
+          dob: DateTime(1972, 3, 8),
+          mobile: policy.policyholder.rows['Mobile'] ?? '09 750337968',
+          percent: 100,
+        ),
+      ],
+    );
   }
 
   static EappDraft? appById(String id) {

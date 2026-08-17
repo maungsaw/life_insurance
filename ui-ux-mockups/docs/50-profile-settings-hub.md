@@ -63,7 +63,7 @@ pill clearance
 | **FAQ** | Cards → answer page or expand. Copy **fix typos**: claim · commission. No withdraw/payout FAQ that implies cash-out | Back |
 | **Language** | English (UK) · Myanmar · check on current. Wire `AppearanceBloc` / existing `LanguagePage` restyle | Instant apply · pop optional |
 | **Notification (prefs)** | Toggles — **not** inbox | Local bools / cache later |
-| **Report** | Commission Report bar chart (Protection · Saving · Health · Travel) mock `fl_chart` | Back |
+| **Report** | Commission Report dashboard (Protection · Saving · Health · Travel) — layout + jobs in `80`; Settings row opens the **Report** tab of the Commission hub | Back |
 
 ### Notification prefs (PNG has duplicate “Push Notification”)
 

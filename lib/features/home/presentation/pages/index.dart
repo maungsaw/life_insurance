@@ -8,6 +8,7 @@ import 'package:life_insurance/features/features.dart'
     show DashboardPage, LeadsPage, TaskBoardPage, ProfilePage, CustomersPage;
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
 import 'package:life_insurance/features/home/presentation/pages/product_hub.dart';
+import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart'
     show ProductSession;
 import 'package:life_insurance/features/task/presentation/pages/index.dart'
@@ -51,6 +52,11 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
   void _goToTab(int index) {
     if (index < 0 || index >= _pages.length) return;
     setState(() => _selectedIndex = index);
+  }
+
+  void _openLeads() {
+    CustomerHubSession.openLeads();
+    _goToTab(PrototypeConfig.tabCustomer);
   }
 
   /// Map stack index → highlighted nav slot (0..3), or -1 if none.
@@ -131,7 +137,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
                   subtitle: const Text('Open leads list'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    _goToTab(PrototypeConfig.tabLeads);
+                    _openLeads();
                   },
                 ),
                 ListTile(
@@ -162,7 +168,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
     return MainTabScope(
       selectedIndex: _selectedIndex,
       goToTab: _goToTab,
-      openLeads: () => _goToTab(PrototypeConfig.tabLeads),
+      openLeads: _openLeads,
       openTasks: () => _goToTab(PrototypeConfig.tabTasks),
       openFabSheet: _openFabSheet,
       child: Scaffold(

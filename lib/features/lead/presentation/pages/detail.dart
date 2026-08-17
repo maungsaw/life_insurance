@@ -12,7 +12,6 @@ import 'package:flutter/material.dart'
         SizedBox,
         Divider,
         IconData,
-        Spacer,
         Colors,
         Icons,
         Navigator,
@@ -30,12 +29,16 @@ import 'package:flutter/material.dart'
         CrossAxisAlignment,
         TextAlign,
         GestureDetector,
+        FilledButton,
         Expanded,
         Padding,
         SingleChildScrollView,
         Scaffold;
 import 'package:life_insurance/features/lead/domain/domain.dart'
     show LeadEntity;
+import 'package:life_insurance/features/components/components.dart'
+    show AppStatusDialog, AppStatusType;
+import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 
 class LeadDetailPage extends StatefulWidget {
   final LeadEntity lead;
@@ -62,7 +65,9 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
         return const Color(0xFFE3F2FD);
       case 'Contacted':
         return const Color(0xFFFFF8E1);
-      case 'Qualified':
+      case 'Quoted':
+        return const Color(0xFFF3E8FF);
+      case 'Applied':
         return const Color(0xE8E8F5E9);
       default:
         return const Color(0xFFF5F5F5);
@@ -75,11 +80,28 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
         return const Color(0xFF1976D2);
       case 'Contacted':
         return const Color(0xFFF57F17);
-      case 'Qualified':
+      case 'Quoted':
+        return const Color(0xFF7C3AED);
+      case 'Applied':
         return const Color(0xFF388E3C);
       default:
         return Colors.black87;
     }
+  }
+
+  Future<void> _submitCondition() async {
+    final confirmed = await AppStatusDialog.show(
+      context,
+      type: AppStatusType.warning,
+      title: 'Submit condition?',
+      message:
+          'This creates a Pending policy and moves ${widget.lead.name} from Leads to Clients.',
+      actionLabel: 'SUBMIT',
+      secondaryLabel: 'CANCEL',
+    );
+    if (confirmed != true || !mounted) return;
+    CustomerHubSession.convertLead(widget.lead);
+    Navigator.pop(context, true);
   }
 
   @override
@@ -213,7 +235,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                     ),
                     const SizedBox(height: 12),
                     Row(
-                      children: ['New', 'Contacted', 'Qualified'].map((status) {
+                      children: ['New', 'Contacted', 'Quoted', 'Applied'].map((status) {
                         final isSelected = _currentStatus == status;
                         return Expanded(
                           child: GestureDetector(
@@ -248,6 +270,26 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                       }).toList(),
                     ),
                   ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: _submitCondition,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF00A6C8),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text(
+                    'Submit condition · Move to Clients',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -363,10 +405,14 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
           Icon(icon, size: 18, color: Colors.grey[600]),
           const SizedBox(width: 12),
           Text(title, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
-          const Spacer(),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              maxLines: 2,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),

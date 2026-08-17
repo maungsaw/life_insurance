@@ -274,6 +274,87 @@ abstract final class TaskFormat {
   }
 
   static DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  static String weekdayShort(DateTime d) => _weekdays[(d.weekday - 1) % 7];
+
+  static String monthShort(DateTime d) => _monthsShort[d.month - 1];
+
+  /// `Fri, 14 Aug` — agenda group heading.
+  static String dayHeading(DateTime d) =>
+      '${weekdayShort(d)}, ${d.day} ${monthShort(d)}';
+
+  /// `August 2026` — Month scope title.
+  static String monthTitle(DateTime d) => '${_monthNames[d.month - 1]} ${d.year}';
+
+  /// `10 – 16 Aug 2026`, or `28 Aug – 3 Sep 2026` across months.
+  static String weekRangeTitle(DateTime start) {
+    final end = start.add(const Duration(days: 6));
+    if (start.month == end.month) {
+      return '${start.day} – ${end.day} ${monthShort(end)} ${end.year}';
+    }
+    return '${start.day} ${monthShort(start)} – ${end.day} ${monthShort(end)} ${end.year}';
+  }
+
+  static const _monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+}
+
+/// Assignment lens on My work (docs/77).
+enum TaskAssignment { all, assignedToMe, newOnly }
+
+extension TaskAssignmentX on TaskAssignment {
+  String get label => switch (this) {
+    TaskAssignment.all => 'All',
+    TaskAssignment.assignedToMe => 'Assigned to me',
+    TaskAssignment.newOnly => 'New',
+  };
+}
+
+/// One filter set for the My work calendar (docs/77 — replaces chip rows).
+class TaskFilter {
+  const TaskFilter({
+    this.status,
+    this.type,
+    this.assignment = TaskAssignment.all,
+  });
+
+  final TaskStatus? status;
+  final TaskType? type;
+  final TaskAssignment assignment;
+
+  bool get isActive =>
+      status != null || type != null || assignment != TaskAssignment.all;
+
+  int get activeCount =>
+      (status == null ? 0 : 1) +
+      (type == null ? 0 : 1) +
+      (assignment == TaskAssignment.all ? 0 : 1);
+
+  TaskFilter copyWith({
+    TaskStatus? status,
+    TaskType? type,
+    TaskAssignment? assignment,
+    bool clearStatus = false,
+    bool clearType = false,
+  }) {
+    return TaskFilter(
+      status: clearStatus ? null : (status ?? this.status),
+      type: clearType ? null : (type ?? this.type),
+      assignment: assignment ?? this.assignment,
+    );
+  }
 }
 
 abstract final class TaskSession {
@@ -389,16 +470,70 @@ abstract final class TaskSession {
     return list;
   }
 
-  static List<TaskMock> filtered({
-    required DateTime day,
-    TaskStatus? status,
-    TaskType? type,
+  /// Prototype "now" — mock data is anchored to this date.
+  static DateTime get today => DateTime(2026, 8, 14);
+
+  static DateTime startOfWeek(DateTime d) {
+    final date = TaskFormat.dateOnly(d);
+    return date.subtract(Duration(days: date.weekday - 1));
+  }
+
+  static bool matches(TaskMock t, TaskFilter filter) {
+    if (filter.status != null && t.status != filter.status) return false;
+    if (filter.type != null && t.type != filter.type) return false;
+    switch (filter.assignment) {
+      case TaskAssignment.all:
+        return true;
+      case TaskAssignment.assignedToMe:
+        return t.assignedBy.isNotEmpty;
+      case TaskAssignment.newOnly:
+        return t.isNewAssignment;
+    }
+  }
+
+  /// Tasks touching any day between [start] and [end] inclusive.
+  static List<TaskMock> forRange(
+    DateTime start,
+    DateTime end, {
+    TaskFilter filter = const TaskFilter(),
   }) {
-    return forDay(day).where((t) {
-      final statusOk = status == null || t.status == status;
-      final typeOk = type == null || t.type == type;
-      return statusOk && typeOk;
-    }).toList();
+    final from = TaskFormat.dateOnly(start);
+    final to = TaskFormat.dateOnly(end);
+    final out = tasks.where((t) {
+      final s = TaskFormat.dateOnly(t.startAt);
+      final e = TaskFormat.dateOnly(t.endAt);
+      final overlaps = !e.isBefore(from) && !s.isAfter(to);
+      return overlaps && matches(t, filter);
+    }).toList()..sort((a, b) => a.startAt.compareTo(b.startAt));
+    return out;
+  }
+
+  static List<TaskMock> forDayFiltered(
+    DateTime day, {
+    TaskFilter filter = const TaskFilter(),
+  }) {
+    return forDay(day).where((t) => matches(t, filter)).toList();
+  }
+
+  static int countForDay(DateTime day, {TaskFilter filter = const TaskFilter()}) {
+    return forDayFiltered(day, filter: filter).length;
+  }
+
+  /// Weeks of the month grid, Monday-first, always full 7-day rows.
+  static List<List<DateTime>> monthMatrix(DateTime month) {
+    final first = DateTime(month.year, month.month, 1);
+    final last = DateTime(month.year, month.month + 1, 0);
+    final gridStart = startOfWeek(first);
+    final rows = <List<DateTime>>[];
+    var cursor = gridStart;
+    while (!cursor.isAfter(last)) {
+      rows.add([
+        for (var i = 0; i < 7; i++)
+          DateTime(cursor.year, cursor.month, cursor.day + i),
+      ]);
+      cursor = DateTime(cursor.year, cursor.month, cursor.day + 7);
+    }
+    return rows;
   }
 
   static TaskMock? byId(String id) {

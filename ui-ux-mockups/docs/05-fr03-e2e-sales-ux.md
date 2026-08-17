@@ -86,7 +86,7 @@ Prospect (Lead)
 
 ## 6. Acceptance checklist
 
-- [ ] Leads and Clients are separate searchable lists  
+- [ ] Leads and Clients are separate searchable lists → **hub tabs in `79` (await implement)**  
 - [ ] Lead can be edited after create  
 - [ ] Lead profile shows quotes + apps + notes  
 - [ ] Client profile shows active **and** lapsed policies  
@@ -94,3 +94,5 @@ Prospect (Lead)
 - [ ] Activity/notes timeline present  
 - [ ] Conversion from Approved is explicit in UI  
 - [ ] Quote / e-App CTAs available from both Lead and Client profiles  
+
+**Superseding UX detail:** Customer bottom-nav destination becomes **Leads | Clients** two-tab hub (`79`). Convert trigger remains BRD “successful policy insurance”; condition/application submit lands on Clients when a Pending policy exists.

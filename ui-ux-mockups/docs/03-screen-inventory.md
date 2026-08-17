@@ -83,6 +83,15 @@
 - [x] Guest Get A Quote estimate · Login to save shipped (`75`)
 - [x] On-Boarding task · Agent Info + Training brainstorm (`76`)
 - [x] On-Boarding task type form shipped (`76`)
+- [x] My work Day / Week / Month calendar clarity brainstorm (`77`)
+- [x] My work Day timeline · Week strip · Month grid + Filter sheet shipped (`77`)
+- [x] Home drop Galaxy · lift Promotion & Campaign brainstorm (`78`)
+- [x] Home Galaxy removed · promo under Commission shipped (`78`)
+- [x] Customer hub · Leads \| Clients tabs brainstorm (`79`)
+- [x] Customer hub Leads/Clients tabs · filters · condition conversion shipped (`79`)
+- [x] Commission hub · History + Report clarity brainstorm (`80`)
+- [x] Commission History \| Report hub · identity rows · dashboard shipped (`80`)
+- [x] e-App start points · Renewal & repurchase brainstorm (`81`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

@@ -54,7 +54,7 @@ pill clearance ~100
 | Tap row | `push(customerDetail)` with mock entity |
 | Empty | “No customers” + clear filters CTA |
 
-**Do not** put Leads rows here. FR-03 split stays: this tab = **Clients**. Leads = existing off-nav `LeadsPage`.
+**Do not** mix Lead rows into the Clients list without the tab split. FR-03 hard split: this list chrome = **Clients** when the Clients tab is selected. **Leads** use the same row pattern under the Leads tab (`79` supersedes “Leads stay off this tab”).
 
 ---
 

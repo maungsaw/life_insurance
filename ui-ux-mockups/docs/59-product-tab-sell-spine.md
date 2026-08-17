@@ -240,7 +240,8 @@ Blue AppBar · pill search · results grouped by line. P0 can filter the in-tab 
 | Profile **Create New Quote** | Catalog |
 | FAB **New Proposal / Quote** | Catalog (or last product’s Get A Quote) |
 | Customer / Lead **Quote** later | Get A Quote with person pre-linked |
-| Customer / Lead **e-App** later | Start e-App hub (need a saved quote) |
+| Customer / Lead **e-App** later | Start e-App hub (need a saved quote) · **now specified in `81`** |
+| Policy List / Details **Renew** | Same wizard, `intent: renewal`, prefill from policy (`81`) |
 
 ---
 

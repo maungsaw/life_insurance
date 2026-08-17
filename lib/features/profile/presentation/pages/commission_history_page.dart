@@ -1,57 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/profile/presentation/models/commission_mock_data.dart';
+import 'package:life_insurance/features/profile/presentation/pages/commission_report_body.dart';
 import 'package:life_insurance/features/profile/presentation/widgets/profile_sub_app_bar.dart';
 
-/// Commission history — display only (docs/61 · Comission.png).
+/// Commission hub — History ledger + Report dashboard (docs/80).
 class CommissionHistoryPage extends StatefulWidget {
-  const CommissionHistoryPage({super.key});
+  const CommissionHistoryPage({super.key, this.initialReport = false});
+
+  final bool initialReport;
 
   @override
   State<CommissionHistoryPage> createState() => _CommissionHistoryPageState();
 }
 
 class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
-  CommissionPeriodFilter _period = CommissionPeriodFilter.all;
+  late int _tab;
+  late CommissionPeriodFilter _period;
+  CommissionLine? _line;
+
+  @override
+  void initState() {
+    super.initState();
+    _tab = widget.initialReport ? 1 : 0;
+    _period = widget.initialReport
+        ? CommissionPeriodFilter.thisMonth
+        : CommissionPeriodFilter.all;
+  }
 
   Future<void> _openFilter() async {
-    final picked = await showModalBottomSheet<CommissionPeriodFilter>(
+    final result = await showModalBottomSheet<(CommissionPeriodFilter, CommissionLine?)>(
       context: context,
       showDragHandle: true,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Filter history',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 8),
-                for (final p in CommissionPeriodFilter.values)
-                  ListTile(
-                    title: Text(_periodLabel(p)),
-                    trailing: _period == p
-                        ? const Icon(Icons.check, color: AppColors.lightPrimary)
-                        : null,
-                    onTap: () => Navigator.pop(ctx, p),
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (ctx) => _HistoryFilterSheet(period: _period, line: _line),
     );
-    if (picked == null || !mounted) return;
-    setState(() => _period = picked);
+    if (result == null || !mounted) return;
+    setState(() {
+      _period = result.$1;
+      _line = result.$2;
+    });
   }
 
   void _openRow(CommissionEntry entry) {
@@ -70,7 +62,7 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  entry.title,
+                  entry.productName,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
@@ -79,9 +71,9 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
                 const SizedBox(height: 12),
                 _kv('Amount', '${entry.amountLabel} MMK'),
                 _kv('When', entry.whenLabel),
-                if (entry.productName != null)
-                  _kv('Product', entry.productName!),
-                if (entry.policyRef != null) _kv('Ref', entry.policyRef!),
+                _kv('Category', entry.line.label),
+                if (entry.clientName != null) _kv('Client', entry.clientName!),
+                if (entry.policyRef != null) _kv('Policy', entry.policyRef!),
                 const SizedBox(height: 12),
                 const Text(
                   'Display only · paid via company process outside this app. No withdraw in Phase 1.',
@@ -106,142 +98,165 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final list = CommissionMockData.filtered(_period);
+    final list = CommissionMockData.filtered(_period, line: _line);
+    final showReport = _tab == 1;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF8FAFC),
       appBar: const ProfileSubAppBar(title: 'Commission'),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(AppRoute.profileReport),
-        backgroundColor: AppColors.lightPrimary,
-        foregroundColor: Colors.white,
-        tooltip: 'Report',
-        child: const Icon(Icons.bar_chart_rounded),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-            child: AppCommissionCard(
-              amountLabel: CommissionMockData.totalLabel,
-              deltaLabel: CommissionMockData.deltaLabel,
-              showDetailsChevron: false,
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            child: _HubTabs(
+              selectedIndex: _tab,
+              onChanged: (i) => setState(() => _tab = i),
             ),
           ),
-          const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Product commission · display only',
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.lightTextHint,
+          if (showReport)
+            Expanded(
+              child: CommissionReportBody(
+                period: _period,
+                onPeriodChanged: (p) => setState(() => _period = p),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'History',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Filter',
-                  onPressed: _openFilter,
-                  icon: const Icon(Icons.tune_rounded),
-                ),
-              ],
-            ),
-          ),
-          if (_period != CommissionPeriodFilter.all)
+            )
+          else ...[
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: AppCommissionCard(
+                amountLabel: CommissionMockData.totalLabel,
+                deltaLabel: CommissionMockData.deltaLabel,
+                showDetailsChevron: false,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                _periodLabel(_period),
-                style: const TextStyle(
+                'Product commission · display only',
+                style: TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.lightPrimary,
+                  color: AppColors.lightTextHint,
                 ),
               ),
             ),
-          Expanded(
-            child: list.isEmpty
-                ? const Center(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 8, 4),
+              child: Row(
+                children: [
+                  const Expanded(
                     child: Text(
-                      'No commission history yet',
+                      'History',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextSecondary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 88),
-                    itemCount: list.length,
-                    separatorBuilder: (_, _) => Divider(
-                      height: 1,
-                      indent: 72,
-                      color: Colors.grey.shade200,
-                    ),
-                    itemBuilder: (context, i) {
-                      final e = list[i];
-                      return ListTile(
-                        onTap: () => _openRow(e),
-                        leading: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.monetization_on_outlined,
-                            color: AppColors.lightPrimary,
-                          ),
-                        ),
-                        title: Text(
-                          e.title,
-                          style: const TextStyle(fontWeight: FontWeight.w800),
-                        ),
-                        subtitle: Text(
-                          e.whenLabel,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: AppColors.lightTextSecondary,
-                          ),
-                        ),
-                        trailing: Text(
-                          e.amountLabel,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.lightPrimary,
-                            fontSize: 15,
-                          ),
-                        ),
-                      );
-                    },
                   ),
-          ),
+                  IconButton(
+                    tooltip: 'Filter',
+                    onPressed: _openFilter,
+                    icon: const Icon(Icons.tune_rounded),
+                  ),
+                ],
+              ),
+            ),
+            if (_period != CommissionPeriodFilter.all || _line != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                child: Text(
+                  [
+                    if (_period != CommissionPeriodFilter.all)
+                      commissionPeriodLabel(_period),
+                    if (_line != null) _line!.label,
+                  ].join(' · '),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightPrimary,
+                  ),
+                ),
+              ),
+            Expanded(
+              child: list.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'No commission in this period',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.lightTextSecondary,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => setState(() {
+                              _period = CommissionPeriodFilter.all;
+                              _line = null;
+                            }),
+                            child: const Text('Reset filters'),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 24),
+                      itemCount: list.length,
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        indent: 72,
+                        color: Colors.grey.shade200,
+                      ),
+                      itemBuilder: (context, i) {
+                        final e = list[i];
+                        return ListTile(
+                          onTap: () => _openRow(e),
+                          leading: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: e.line.color.withValues(alpha: 0.12),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(e.line.icon, color: e.line.color),
+                          ),
+                          title: Text(
+                            [
+                              e.productName,
+                              if (e.clientName != null) e.clientName!,
+                            ].join(' · '),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: Text(
+                            e.subtitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.lightTextSecondary,
+                            ),
+                          ),
+                          trailing: Text(
+                            e.amountLabel,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.lightPrimary,
+                              fontSize: 15,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ],
       ),
     );
   }
-
-  static String _periodLabel(CommissionPeriodFilter p) => switch (p) {
-        CommissionPeriodFilter.all => 'All',
-        CommissionPeriodFilter.thisMonth => 'This month',
-        CommissionPeriodFilter.lastMonth => 'Last month',
-        CommissionPeriodFilter.last90 => 'Last 90 days',
-      };
 
   static Widget _kv(String k, String v) {
     return Padding(
@@ -264,5 +279,207 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
         ],
       ),
     );
+  }
+}
+
+class _HubTabs extends StatelessWidget {
+  const _HubTabs({required this.selectedIndex, required this.onChanged});
+
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F4F6),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          _tab('History', 0),
+          _tab('Report', 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _tab(String label, int index) {
+    final selected = selectedIndex == index;
+    return Expanded(
+      child: Material(
+        color: selected ? AppColors.lightPrimary : Colors.transparent,
+        borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          onTap: () => onChanged(index),
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                color: selected ? Colors.white : AppColors.lightTextSecondary,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryFilterSheet extends StatefulWidget {
+  const _HistoryFilterSheet({required this.period, required this.line});
+
+  final CommissionPeriodFilter period;
+  final CommissionLine? line;
+
+  @override
+  State<_HistoryFilterSheet> createState() => _HistoryFilterSheetState();
+}
+
+class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
+  late CommissionPeriodFilter _period;
+  late CommissionLine? _line;
+
+  @override
+  void initState() {
+    super.initState();
+    _period = widget.period;
+    _line = widget.line;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Filter history',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Period',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.lightTextSecondary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final p in CommissionPeriodFilter.values)
+                  ChoiceChip(
+                    label: Text(commissionPeriodLabel(p)),
+                    selected: _period == p,
+                    showCheckmark: false,
+                    onSelected: (_) => setState(() => _period = p),
+                    selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      color: _period == p
+                          ? AppColors.lightPrimary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Product line',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.lightTextSecondary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ChoiceChip(
+                  label: const Text('All'),
+                  selected: _line == null,
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _line = null),
+                  selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: _line == null
+                        ? AppColors.lightPrimary
+                        : AppColors.lightTextSecondary,
+                  ),
+                ),
+                for (final line in CommissionLine.values)
+                  ChoiceChip(
+                    label: Text(line.label),
+                    selected: _line == line,
+                    showCheckmark: false,
+                    onSelected: (_) => setState(() => _line = line),
+                    selectedColor: line.color.withValues(alpha: 0.12),
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      color: _line == line
+                          ? line.color
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => setState(() {
+                      _period = CommissionPeriodFilter.all;
+                      _line = null;
+                    }),
+                    child: const Text('Reset'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: FilledButton(
+                    onPressed: () => Navigator.pop(context, (_period, _line)),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.lightPrimary,
+                    ),
+                    child: const Text('Apply'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Settings → Report still uses this route name; opens the Report tab.
+class CommissionReportPage extends StatelessWidget {
+  const CommissionReportPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CommissionHistoryPage(initialReport: true);
   }
 }

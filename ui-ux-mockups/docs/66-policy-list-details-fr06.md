@@ -22,6 +22,8 @@
 
 **Nearby BRD:** FR-08 recurring premium + annual renewal reminders → Home banners / Notifs deep-link **into** this list (filter Pending / due window) — don’t rebuild reminder logic inside Policy Details.
 
+**Renew / additional e-App (`81`):** Policy List + Details gain a **Renew** CTA inside the configurable expiry window (or when Expired). That CTA starts the **existing** e-App wizard with policy data pre-filled — it is not a FR-06 edit.
+
 ---
 
 ## 2. Wireframe screens (layout source)

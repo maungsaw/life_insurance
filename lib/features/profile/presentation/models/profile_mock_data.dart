@@ -70,8 +70,3 @@ abstract final class FaqMockData {
   static FaqItem byId(String id) =>
       items.firstWhere((e) => e.id == id, orElse: () => items.first);
 }
-
-abstract final class CommissionReportMock {
-  static const categories = <String>['Protection', 'Saving', 'Health', 'Travel'];
-  static const values = <double>[24, 8, 13, 33];
-}

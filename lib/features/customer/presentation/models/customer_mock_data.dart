@@ -91,6 +91,26 @@ class PolicyMock {
   }
 
   String get effectiveLabel => PolicyFormat.dob(effectiveDate);
+
+  String get expiryLabel => PolicyFormat.dob(expiryDate);
+
+  /// FR-08 / `81`: Renew when Expired or within the Web-configurable window.
+  bool get isRenewalEligible {
+    if (status == CrmStatus.pending) return false;
+    if (status == CrmStatus.expired) return true;
+    final opensOn = DateTime(
+      expiryDate.year,
+      expiryDate.month,
+      expiryDate.day,
+    ).subtract(Duration(days: PolicyRenewalRules.windowDays));
+    return !PolicyRenewalRules.today.isBefore(opensOn);
+  }
+}
+
+/// Mock of the Web Portal renewal-window setting (`81`). Default 30 days.
+abstract final class PolicyRenewalRules {
+  static const windowDays = 30;
+  static DateTime get today => DateTime(2026, 8, 17);
 }
 
 abstract final class PolicyFormat {
@@ -535,6 +555,20 @@ abstract final class CustomerMockData {
       }
     }
     return out;
+  }
+
+  static PolicyMock? policyById(String id) {
+    for (final p in allPolicies) {
+      if (p.id == id) return p;
+    }
+    return null;
+  }
+
+  static PolicyMock? get firstRenewalPolicy {
+    for (final p in allPolicies) {
+      if (p.isRenewalEligible) return p;
+    }
+    return allPolicies.isEmpty ? null : allPolicies.first;
   }
 
   /// Illustrative trend for Policy List chart (docs/66) — not live Core.

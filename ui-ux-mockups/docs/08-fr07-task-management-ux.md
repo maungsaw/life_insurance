@@ -74,6 +74,8 @@ Do **not** use rollup summary cards (“Mon · 3 tasks”) — that felt like a 
 **Month**  
 Month grid · dots on busy days · CTA into selected day agenda  
 
+**Superseded by `77` (shipped):** each scope now has its own calendar body (Day 7-day strip + working-hours timeline · Week date strip + grouped agenda · Month grid + selected-day agenda), arrows move by day/week/month, the three stat cards and both chip carousels collapse into one compact count line + Filter sheet, and the “New from AM” banner becomes a `n new` badge plus per-task `NEW` pill.
+
 **App bar vs FAB**
 | Zone | Content |
 |------|---------|

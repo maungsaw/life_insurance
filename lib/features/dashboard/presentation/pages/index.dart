@@ -123,14 +123,17 @@ class DashboardPage extends StatelessWidget {
                         context.push(AppRoute.commissionHistory),
                   ),
                   const SizedBox(height: 14),
-                  AppGalaxyMemberBanner(
-                    onTap: () => _stub(
+                  const AppSectionHeader(title: 'Promotion & Campaign'),
+                  const SizedBox(height: 10),
+                  AppPromoCarousel(
+                    items: HomeMockData.promos,
+                    onTap: (i) => _stub(
                       context,
-                      'Galaxy Member',
-                      'Membership benefits later — prototype stub, no API.',
+                      HomeMockData.promos[i].title,
+                      HomeMockData.promos[i].subtitle,
                     ),
                   ),
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 20),
                   const AppSectionHeader(title: 'Our Services'),
                   const SizedBox(height: 12),
                   AppServiceGrid(items: services, crossAxisCount: 4),
@@ -197,17 +200,6 @@ class DashboardPage extends StatelessWidget {
                       onOpenTeam: () => context.push(AppRoute.teamHub),
                     ),
                   ],
-                  const SizedBox(height: 22),
-                  const AppSectionHeader(title: 'Promotion & Campaign'),
-                  const SizedBox(height: 10),
-                  AppPromoCarousel(
-                    items: HomeMockData.promos,
-                    onTap: (i) => _stub(
-                      context,
-                      HomeMockData.promos[i].title,
-                      HomeMockData.promos[i].subtitle,
-                    ),
-                  ),
                   const SizedBox(height: 28),
                   SizedBox(height: AppBottomNavBar.scrollClearance(context)),
                 ]),

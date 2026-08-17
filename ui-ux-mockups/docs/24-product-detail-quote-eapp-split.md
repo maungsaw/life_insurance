@@ -139,6 +139,8 @@ Keeps e-App tab as sell home without stuffing every job on one list.
 - [x] App tracker remains review/resume path  
 - [ ] Core pricing / brochure APIs (later)  
 
+**More doors (`81`):** Client / Lead / Policy Renew / Home renewal banner also start this **same** wizard. Catalog still does not skip Save Quote on a cold start.
+
 ---
 
 ## 9. Out of scope here

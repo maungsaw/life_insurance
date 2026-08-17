@@ -14,7 +14,7 @@ class LeadsPage extends StatefulWidget {
 
 class _LeadsPageState extends State<LeadsPage> {
   int _selectedTabIndex = 0;
-  final List<String> _tabs = ['All', 'New', 'Contacted', 'Qualified'];
+  final List<String> _tabs = ['All', 'New', 'Contacted', 'Quoted', 'Applied'];
 
   @override
   Widget build(BuildContext context) {

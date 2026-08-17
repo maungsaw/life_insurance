@@ -4,6 +4,7 @@ class LeadEntity {
   final String id;
   final String name;
   final String email;
+  final String phone;
   final String status; // 'New', 'Contacted', 'Qualified', etc.
   final String timeAgo;
   final Color avatarColor;
@@ -12,6 +13,7 @@ class LeadEntity {
     required this.id,
     required this.name,
     required this.email,
+    required this.phone,
     required this.status,
     required this.timeAgo,
     required this.avatarColor,

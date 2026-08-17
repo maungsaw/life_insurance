@@ -2,7 +2,7 @@
 
 **Source:** `Wireframe/Comission.png` · Home Commission crop (balance card + History + filter + wallet FAB)  
 **BRD:** Phase 1 **display product commission** only · **direct commission payment / payout out of scope**  
-**Flutter today:** Commission history page shipped — Home card / service / Profile chip → history · FAB → Report (`61`).  
+**Flutter today:** Commission hub shipped — History \| Report tabs, identity rows, dashboard (`80`). FAB removed.  
 **Related:** `34` §4.4 · `46` Home card · `50` Report · `36`  
 **Date:** 2026-08-14
 
@@ -223,4 +223,4 @@ Comment-out stubs; don’t delete until wired.
 
 ## 11. Related
 
-`Comission.png` · `34` · `46` · `50` · `AppCommissionCard` · `CommissionReportPage` · HomeMockData  
+`Comission.png` · `34` · `46` · `50` · `AppCommissionCard` · `CommissionReportPage` · HomeMockData · **`80` History \| Report hub (supersedes FAB-only Report)**  

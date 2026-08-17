@@ -22,7 +22,9 @@ class AppPromoCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 110,
+      // Trimmed so the lifted Home promo band still leaves Services in view (docs/78);
+      // 104 is the floor that still fits a 2-line title with a 2-line subtitle.
+      height: 104,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: items.length,

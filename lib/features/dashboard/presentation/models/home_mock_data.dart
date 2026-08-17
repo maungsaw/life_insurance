@@ -8,8 +8,8 @@ abstract final class HomeMockData {
   static const agentName = 'Mr Chit';
   static const greeting = 'Good Morning!';
 
-  static const commissionAmount = CommissionMockData.totalLabel;
-  static const commissionDelta = CommissionMockData.deltaLabel;
+  static String get commissionAmount => CommissionMockData.totalLabel;
+  static String get commissionDelta => CommissionMockData.deltaLabel;
 
   static const policyActive = '20';
   static const policyPending = '10';

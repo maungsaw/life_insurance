@@ -4,8 +4,13 @@ import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/components/components.dart'
     show AppBottomNavBar;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
+import 'package:life_insurance/features/task/presentation/widgets/task_calendar.dart';
+import 'package:life_insurance/features/task/presentation/widgets/task_filter_sheet.dart';
 
-/// My work — calendar-centric Day agenda (docs/08 · 68). P0: Day primary.
+const _kBorder = Color(0xFFE5E7EB);
+const _kRed = Color(0xFFE11D48);
+
+/// My work — one shell, three calendar bodies (docs/77 P0 · BRD FR-07).
 class TaskBoardPage extends StatefulWidget {
   const TaskBoardPage({super.key});
 
@@ -15,65 +20,109 @@ class TaskBoardPage extends StatefulWidget {
 
 enum _Scope { day, week, month }
 
+extension _ScopeX on _Scope {
+  String get label => switch (this) {
+    _Scope.day => 'Day',
+    _Scope.week => 'Week',
+    _Scope.month => 'Month',
+  };
+}
+
 class _TaskBoardPageState extends State<TaskBoardPage> {
-  DateTime _day = DateTime(2026, 8, 14);
+  DateTime _selected = TaskSession.today;
   _Scope _scope = _Scope.day;
-  TaskStatus? _statusFilter;
-  TaskType? _typeFilter;
+  TaskFilter _filter = const TaskFilter();
+
+  DateTime get _weekStart => TaskSession.startOfWeek(_selected);
+  DateTime get _weekEnd => DateTime(
+    _weekStart.year,
+    _weekStart.month,
+    _weekStart.day + 6,
+  );
+  DateTime get _monthFirst => DateTime(_selected.year, _selected.month, 1);
+  DateTime get _monthLast => DateTime(_selected.year, _selected.month + 1, 0);
+
+  List<TaskMock> _tasksFor(TaskFilter filter) => switch (_scope) {
+    _Scope.day => TaskSession.forDayFiltered(_selected, filter: filter),
+    _Scope.week => TaskSession.forRange(_weekStart, _weekEnd, filter: filter),
+    _Scope.month => TaskSession.forRange(
+      _monthFirst,
+      _monthLast,
+      filter: filter,
+    ),
+  };
+
+  List<TaskMock> get _scopeTasks => _tasksFor(_filter);
+
+  String get _title => switch (_scope) {
+    _Scope.day => TaskFormat.dayHero(_selected),
+    _Scope.week => TaskFormat.weekRangeTitle(_weekStart),
+    _Scope.month => TaskFormat.monthTitle(_selected),
+  };
+
+  bool get _showsToday => switch (_scope) {
+    _Scope.day => isSameDay(_selected, TaskSession.today),
+    _Scope.week =>
+      !TaskSession.today.isBefore(_weekStart) &&
+          !TaskSession.today.isAfter(_weekEnd),
+    _Scope.month =>
+      _selected.year == TaskSession.today.year &&
+          _selected.month == TaskSession.today.month,
+  };
+
+  /// Day ±1 day · Week ±7 days · Month ±1 month (docs/77 §3).
+  void _shift(int dir) {
+    setState(() {
+      switch (_scope) {
+        case _Scope.day:
+          _selected = DateTime(
+            _selected.year,
+            _selected.month,
+            _selected.day + dir,
+          );
+        case _Scope.week:
+          _selected = DateTime(
+            _selected.year,
+            _selected.month,
+            _selected.day + 7 * dir,
+          );
+        case _Scope.month:
+          final month = _selected.month + dir;
+          final lastDay = DateTime(_selected.year, month + 1, 0).day;
+          _selected = DateTime(
+            _selected.year,
+            month,
+            _selected.day > lastDay ? lastDay : _selected.day,
+          );
+      }
+    });
+  }
 
   Future<void> _openForm({String? taskId}) async {
-    final changed = await context.push<bool>(
+    if (taskId != null) {
+      // Opening the assignment acknowledges it (docs/77 §8).
+      TaskSession.byId(taskId)?.isNewAssignment = false;
+    }
+    await context.push<bool>(
       AppRoute.taskForm,
-      extra: TaskFormArgs(taskId: taskId, initialDay: _day),
+      extra: TaskFormArgs(taskId: taskId, initialDay: _selected),
     );
-    if (changed == true && mounted) setState(() {});
+    // Scope, date and filters are intentionally preserved (docs/77 §11).
+    if (mounted) setState(() {});
   }
 
-  void _shiftDay(int delta) {
-    setState(() => _day = _day.add(Duration(days: delta)));
-  }
-
-  List<TaskMock> get _rows {
-    if (_scope == _Scope.week) {
-      final start = _day.subtract(Duration(days: _day.weekday - 1));
-      final out = <TaskMock>[];
-      final seen = <String>{};
-      for (var i = 0; i < 7; i++) {
-        final d = start.add(Duration(days: i));
-        for (final t in TaskSession.filtered(
-          day: d,
-          status: _statusFilter,
-          type: _typeFilter,
-        )) {
-          if (seen.add(t.id)) out.add(t);
-        }
-      }
-      out.sort((a, b) => a.startAt.compareTo(b.startAt));
-      return out;
-    }
-    if (_scope == _Scope.month) {
-      // Month: show all tasks that fall in the month of _day.
-      final out = TaskSession.tasks.where((t) {
-        final inMonth =
-            (t.startAt.year == _day.year && t.startAt.month == _day.month) ||
-            (t.endAt.year == _day.year && t.endAt.month == _day.month);
-        final statusOk = _statusFilter == null || t.status == _statusFilter;
-        final typeOk = _typeFilter == null || t.type == _typeFilter;
-        return inMonth && statusOk && typeOk;
-      }).toList()..sort((a, b) => a.startAt.compareTo(b.startAt));
-      return out;
-    }
-    return TaskSession.filtered(
-      day: _day,
-      status: _statusFilter,
-      type: _typeFilter,
+  Future<void> _openFilters() async {
+    final next = await showTaskFilterSheet(
+      context,
+      initial: _filter,
+      count: (draft) => _tasksFor(draft).length,
     );
+    if (next != null && mounted) setState(() => _filter = next);
   }
 
   @override
   Widget build(BuildContext context) {
-    final rows = _rows;
-    final newCount = TaskSession.tasks.where((t) => t.isNewAssignment).length;
+    final rows = _scopeTasks;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -87,11 +136,10 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             elevation: 0,
             floating: true,
             snap: true,
-            pinned: false,
             centerTitle: false,
-            title: Text(
-              'My work · ${TaskSession.tasks.length}',
-              style: const TextStyle(
+            title: const Text(
+              'My work',
+              style: TextStyle(
                 color: AppColors.lightTextPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
@@ -121,207 +169,281 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => _shiftDay(-1),
-                        icon: const Icon(Icons.chevron_left),
-                      ),
-                      Expanded(
-                        child: Text(
-                          TaskFormat.dayHero(_day),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => _shiftDay(1),
-                        icon: const Icon(Icons.chevron_right),
-                      ),
-                    ],
+                  _ScopeBar(
+                    scope: _scope,
+                    onChanged: (s) => setState(() => _scope = s),
+                  ),
+                  const SizedBox(height: 10),
+                  _DateNav(
+                    title: _title,
+                    showToday: !_showsToday,
+                    onPrev: () => _shift(-1),
+                    onNext: () => _shift(1),
+                    onToday: () =>
+                        setState(() => _selected = TaskSession.today),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      for (final s in _Scope.values) ...[
-                        Expanded(
-                          child: _ScopeChip(
-                            label: switch (s) {
-                              _Scope.day => 'Day',
-                              _Scope.week => 'Week',
-                              _Scope.month => 'Month',
-                            },
-                            selected: _scope == s,
-                            onTap: () => setState(() => _scope = s),
-                          ),
-                        ),
-                        if (s != _Scope.month) const SizedBox(width: 8),
-                      ],
-                    ],
-                  ),
+                  _calendarHeader(),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _StatChip(
-                        label: 'Pending',
-                        value: '${TaskSession.pendingCount}',
-                        color: const Color(0xFFF59E0B),
-                      ),
-                      const SizedBox(width: 8),
-                      _StatChip(
-                        label: 'In progress',
-                        value: '${TaskSession.inProgressCount}',
-                        color: AppColors.lightPrimary,
-                      ),
-                      const SizedBox(width: 8),
-                      _StatChip(
-                        label: 'Overdue',
-                        value: '${TaskSession.overdueCount}',
-                        color: const Color(0xFFE11D48),
-                      ),
-                    ],
-                  ),
-                  if (newCount > 0) ...[
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        'New from AM · $newCount assignment${newCount == 1 ? '' : 's'}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.lightPrimary,
-                          fontSize: 13,
-                        ),
-                      ),
+                  _summaryRow(rows),
+                  if (_filter.isActive) ...[
+                    const SizedBox(height: 10),
+                    TaskActiveFilterRow(
+                      filter: _filter,
+                      onChanged: (f) => setState(() => _filter = f),
                     ),
                   ],
-                  const SizedBox(height: 12),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _FilterChip(
-                          label: 'All status',
-                          selected: _statusFilter == null,
-                          onTap: () => setState(() => _statusFilter = null),
-                        ),
-                        for (final s in TaskStatus.values)
-                          _FilterChip(
-                            label: s.label,
-                            selected: _statusFilter == s,
-                            onTap: () => setState(() => _statusFilter = s),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        _FilterChip(
-                          label: 'All types',
-                          selected: _typeFilter == null,
-                          onTap: () => setState(() => _typeFilter = null),
-                        ),
-                        for (final t in [
-                          TaskType.meeting,
-                          TaskType.call,
-                          TaskType.onboarding,
-                          TaskType.servicing,
-                          TaskType.eApp,
-                          TaskType.leaveAppointment,
-                        ])
-                          _FilterChip(
-                            label: t.label,
-                            selected: _typeFilter == t,
-                            onTap: () => setState(() => _typeFilter = t),
-                          ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
-          if (rows.isEmpty)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 48, 24, 24),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.event_available_outlined,
-                      size: 48,
-                      color: AppColors.lightPrimary.withValues(alpha: 0.45),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'No tasks for this scope',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: AppColors.lightTextPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Create a follow-up for this day, week, or month.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.lightTextHint,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton.icon(
-                      onPressed: () => _openForm(),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Create task'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.lightPrimary,
-                        textStyle: const TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          else
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate((context, i) {
-                  final t = rows[i];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: _TaskAgendaCard(
-                      task: t,
-                      onTap: () => _openForm(taskId: t.id),
-                    ),
-                  );
-                }, childCount: rows.length),
-              ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+              child: rows.isEmpty ? _emptyState() : _body(),
             ),
+          ),
           SliverToBoxAdapter(
             child: SizedBox(height: AppBottomNavBar.scrollClearance(context)),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _calendarHeader() {
+    void select(DateTime d) => setState(() => _selected = d);
+    return switch (_scope) {
+      _Scope.day => TaskDayStrip(
+        selectedDay: _selected,
+        filter: _filter,
+        onSelect: select,
+      ),
+      _Scope.week => TaskWeekStrip(
+        weekStart: _weekStart,
+        selectedDay: _selected,
+        filter: _filter,
+        onSelect: select,
+      ),
+      _Scope.month => TaskMonthGrid(
+        month: _monthFirst,
+        selectedDay: _selected,
+        filter: _filter,
+        onSelect: select,
+      ),
+    };
+  }
+
+  Widget _body() {
+    switch (_scope) {
+      case _Scope.day:
+        return TaskDayTimeline(
+          day: _selected,
+          tasks: TaskSession.forDayFiltered(_selected, filter: _filter),
+          onOpen: (t) => _openForm(taskId: t.id),
+        );
+      case _Scope.week:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < 7; i++)
+              ..._agendaGroup(
+                DateTime(_weekStart.year, _weekStart.month, _weekStart.day + i),
+              ),
+          ],
+        );
+      case _Scope.month:
+        final dayTasks = TaskSession.forDayFiltered(
+          _selected,
+          filter: _filter,
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TaskDayHeading(day: _selected, count: dayTasks.length),
+            if (dayTasks.isEmpty)
+              _hint('No tasks on ${TaskFormat.dayHeading(_selected)}.')
+            else
+              for (final t in dayTasks)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: TaskAgendaCard(
+                    task: t,
+                    onTap: () => _openForm(taskId: t.id),
+                  ),
+                ),
+          ],
+        );
+    }
+  }
+
+  /// Week agenda group — empty days stay in the strip only (docs/77 §5).
+  List<Widget> _agendaGroup(DateTime day) {
+    final tasks = TaskSession.forDayFiltered(day, filter: _filter);
+    if (tasks.isEmpty) return const [];
+    return [
+      TaskDayHeading(
+        day: day,
+        count: tasks.length,
+        highlighted: isSameDay(day, _selected),
+      ),
+      for (final t in tasks)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: TaskAgendaCard(
+            task: t,
+            onTap: () => _openForm(taskId: t.id),
+          ),
+        ),
+      const SizedBox(height: 6),
+    ];
+  }
+
+  Widget _hint(String text) => Padding(
+    padding: const EdgeInsets.only(top: 4, bottom: 8),
+    child: Text(
+      text,
+      style: const TextStyle(fontSize: 13, color: AppColors.lightTextHint),
+    ),
+  );
+
+  /// Scope-aware counts, not global totals (docs/77 §7).
+  Widget _summaryRow(List<TaskMock> rows) {
+    final inProgress = rows
+        .where((t) => t.status == TaskStatus.inProgress)
+        .length;
+    final overdue = rows.where((t) => t.isOverdue).length;
+    final fresh = rows.where((t) => t.isNewAssignment).length;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                '${rows.length} task${rows.length == 1 ? '' : 's'}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              if (inProgress > 0)
+                const Text(
+                  '·',
+                  style: TextStyle(color: AppColors.lightTextHint),
+                ),
+              if (inProgress > 0)
+                Text(
+                  '$inProgress in progress',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ),
+              if (overdue > 0)
+                const Text(
+                  '·',
+                  style: TextStyle(color: AppColors.lightTextHint),
+                ),
+              if (overdue > 0)
+                Text(
+                  '$overdue overdue',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: _kRed,
+                  ),
+                ),
+              if (fresh > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '$fresh new',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.lightPrimary,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 8),
+        _FilterButton(
+          activeCount: _filter.activeCount,
+          onTap: _openFilters,
+        ),
+      ],
+    );
+  }
+
+  Widget _emptyState() {
+    final filtered = _filter.isActive;
+    final copy = filtered
+        ? 'No tasks match these filters'
+        : switch (_scope) {
+            _Scope.day => 'No tasks on ${TaskFormat.dayHeading(_selected)}',
+            _Scope.week => 'No tasks this week',
+            _Scope.month =>
+              'No tasks in ${TaskFormat.monthTitle(_selected).split(' ').first}',
+          };
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 24, 8, 16),
+      child: Column(
+        children: [
+          Icon(
+            Icons.event_available_outlined,
+            size: 44,
+            color: AppColors.lightPrimary.withValues(alpha: 0.45),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            copy,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+              color: AppColors.lightTextPrimary,
+            ),
+          ),
+          const SizedBox(height: 14),
+          if (filtered)
+            TextButton.icon(
+              onPressed: () => setState(() => _filter = const TaskFilter()),
+              icon: const Icon(Icons.filter_alt_off_outlined),
+              label: const Text('Reset filters'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.lightPrimary,
+                textStyle: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            )
+          else
+            TextButton.icon(
+              onPressed: () => _openForm(),
+              icon: const Icon(Icons.add),
+              label: const Text('Create task'),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.lightPrimary,
+                textStyle: const TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
         ],
       ),
     );
@@ -336,282 +458,185 @@ class TaskFormArgs {
   final DateTime? initialDay;
 }
 
-class _ScopeChip extends StatelessWidget {
-  const _ScopeChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
+class _ScopeBar extends StatelessWidget {
+  const _ScopeBar({required this.scope, required this.onChanged});
 
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+  final _Scope scope;
+  final ValueChanged<_Scope> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected ? AppColors.lightPrimary : Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: selected
-                  ? AppColors.lightPrimary
-                  : const Color(0xFFE5E7EB),
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 13,
-              color: selected ? Colors.white : AppColors.lightTextPrimary,
-            ),
-          ),
-        ),
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _kBorder),
       ),
-    );
-  }
-}
-
-class _StatChip extends StatelessWidget {
-  const _StatChip({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
-                color: color,
-              ),
-            ),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 11,
-                color: AppColors.lightTextSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: Material(
-        color: selected
-            ? AppColors.lightPrimary.withValues(alpha: 0.12)
-            : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: selected
-                    ? AppColors.lightPrimary
-                    : const Color(0xFFE5E7EB),
-              ),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: selected
-                    ? AppColors.lightPrimary
-                    : AppColors.lightTextSecondary,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TaskAgendaCard extends StatelessWidget {
-  const _TaskAgendaCard({required this.task, required this.onTap});
-
-  final TaskMock task;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border(
-              left: BorderSide(color: task.priority.color, width: 4),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 44,
-                child: Text(
-                  TaskFormat.timeOf(task.startAt),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+      child: Row(
+        children: [
+          for (final s in _Scope.values)
+            Expanded(
+              child: InkWell(
+                onTap: () => onChanged(s),
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 9),
+                  decoration: BoxDecoration(
+                    color: scope == s
+                        ? AppColors.lightPrimary
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    s.label,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: scope == s
+                          ? Colors.white
+                          : AppColors.lightTextSecondary,
+                    ),
                   ),
                 ),
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      [
-                        task.type.label,
-                        if (task.linkLabel.isNotEmpty) task.linkLabel,
-                      ].join(' · '),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.lightTextSecondary,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _StatusPill(status: task.status),
-                        if (task.isOverdue) ...[
-                          const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFE11D48,
-                              ).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              'Overdue',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFFE11D48),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right, color: AppColors.lightTextHint),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }
 }
 
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({required this.status});
+class _DateNav extends StatelessWidget {
+  const _DateNav({
+    required this.title,
+    required this.showToday,
+    required this.onPrev,
+    required this.onNext,
+    required this.onToday,
+  });
 
-  final TaskStatus status;
+  final String title;
+  final bool showToday;
+  final VoidCallback onPrev;
+  final VoidCallback onNext;
+  final VoidCallback onToday;
 
   @override
   Widget build(BuildContext context) {
-    final color = switch (status) {
-      TaskStatus.pending => const Color(0xFFF59E0B),
-      TaskStatus.inProgress => AppColors.lightPrimary,
-      TaskStatus.completed => AppColors.successGreen,
-    };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+    return Row(
+      children: [
+        _NavArrow(icon: Icons.chevron_left, onTap: onPrev, tooltip: 'Previous'),
+        Expanded(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 15,
+              color: AppColors.lightTextPrimary,
+            ),
+          ),
+        ),
+        _NavArrow(icon: Icons.chevron_right, onTap: onNext, tooltip: 'Next'),
+        SizedBox(
+          width: 56,
+          child: showToday
+              ? TextButton(
+                  onPressed: onToday,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    foregroundColor: AppColors.lightPrimary,
+                    minimumSize: const Size(44, 44),
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 13,
+                    ),
+                  ),
+                  child: const Text('Today'),
+                )
+              : null,
+        ),
+      ],
+    );
+  }
+}
+
+class _NavArrow extends StatelessWidget {
+  const _NavArrow({
+    required this.icon,
+    required this.onTap,
+    required this.tooltip,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+  final String tooltip;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: tooltip,
+      onPressed: onTap,
+      icon: Icon(icon, color: AppColors.lightTextPrimary),
+      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+      padding: EdgeInsets.zero,
+    );
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+  const _FilterButton({required this.activeCount, required this.onTap});
+
+  final int activeCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final active = activeCount > 0;
+    return Material(
+      color: active
+          ? AppColors.lightPrimary.withValues(alpha: 0.12)
+          : Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        status.label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          color: color,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 36),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: active ? AppColors.lightPrimary : _kBorder,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.tune,
+                size: 16,
+                color: active
+                    ? AppColors.lightPrimary
+                    : AppColors.lightTextSecondary,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                active ? 'Filter · $activeCount' : 'Filter',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: active
+                      ? AppColors.lightPrimary
+                      : AppColors.lightTextSecondary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
