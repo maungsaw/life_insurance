@@ -11,7 +11,7 @@ class FaqPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: const ProfileSubAppBar(title: 'FAQ'),
       body: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
@@ -20,7 +20,7 @@ class FaqPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final item = FaqMockData.items[index];
           return Material(
-            color: Colors.white,
+            color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(14),
             child: InkWell(
               borderRadius: BorderRadius.circular(14),
@@ -35,16 +35,16 @@ class FaqPage extends StatelessWidget {
                     Expanded(
                       child: Text(
                         item.question,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextPrimary,
+                          color: AppColors.onSurface(context),
                         ),
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right_rounded,
-                      color: AppColors.lightTextHint,
+                      color: AppColors.hint(context),
                     ),
                   ],
                 ),
@@ -65,7 +65,7 @@ class FaqDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProfileSubAppBar(title: 'FAQ'),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -74,19 +74,19 @@ class FaqDetailPage extends StatelessWidget {
           children: [
             Text(
               item.question,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
             const SizedBox(height: 14),
             Text(
               item.answer,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 height: 1.5,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
           ],

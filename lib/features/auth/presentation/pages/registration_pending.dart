@@ -10,7 +10,7 @@ class RegistrationPendingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
@@ -41,23 +41,23 @@ class RegistrationPendingPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 28),
-              const Text(
+              Text(
                 'Registration Inprogress',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
+                  color: AppColors.onSurface(context),
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
+              Text(
                 'Your registration is in pending stage and please kindly wait invitation from KBZLIFE Insurance.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   height: 1.45,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
               const SizedBox(height: 36),

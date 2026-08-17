@@ -55,12 +55,12 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: AppColors.surface(context).withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.account_balance_wallet_outlined,
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   size: 20,
                 ),
               ),
@@ -72,7 +72,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.95),
+                        color: AppColors.surface(context).withValues(alpha: 0.95),
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                       ),
@@ -80,7 +80,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                     if (widget.deltaLabel != null)
                       Text(
                         widget.deltaLabel!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFFBBF7D0),
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -97,8 +97,8 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
               Expanded(
                 child: Text(
                   _hidden ? '•••••••• MMK' : widget.amountLabel,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.surface(context),
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.2,
@@ -111,7 +111,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
                   _hidden
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                 ),
               ),
               if (widget.onDetails != null && widget.showDetailsChevron)

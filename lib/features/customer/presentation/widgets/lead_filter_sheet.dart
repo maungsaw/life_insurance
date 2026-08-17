@@ -23,21 +23,21 @@ Future<String?> showLeadFilterSheet(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Filter leads',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
                 const SizedBox(height: 18),
-                const Text(
+                Text(
                   'Stage',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -106,14 +106,14 @@ class _StageChoice extends StatelessWidget {
       showCheckmark: false,
       selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
       side: BorderSide(
-        color: selected ? AppColors.lightPrimary : AppColors.lightBorder,
+        color: selected ? AppColors.lightPrimary : AppColors.border(context),
       ),
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
         color: selected
             ? AppColors.lightPrimary
-            : AppColors.lightTextSecondary,
+            : AppColors.onSurfaceSecondary(context),
       ),
     );
   }

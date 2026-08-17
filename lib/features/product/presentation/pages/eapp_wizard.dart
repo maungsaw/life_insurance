@@ -195,7 +195,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: ProductSubAppBar(
         title: _titles[step],
         actions: [
@@ -227,9 +227,9 @@ class _ProductEappPageState extends State<ProductEappPage> {
                     d.isRenewal
                         ? 'Renewal · ${d.sourcePolicyId} · ${d.quote.party.name}'
                         : '${d.quote.party.name} · ${d.quote.productName} · ${d.quote.monthlyPremium} MMK',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ],
@@ -241,7 +241,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Text(
                 _error!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.redAccent,
                   fontWeight: FontWeight.w600,
                 ),
@@ -464,14 +464,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
 
   List<Widget> _lifeAssuredNote() {
     return [
-      const Text(
+      Text(
         'Life Assured is different from the policyholder. Confirm details on the next scanner step, or go back and tick Same As Life Assured.',
-        style: TextStyle(height: 1.4, color: AppColors.lightTextSecondary),
+        style: TextStyle(height: 1.4, color: AppColors.onSurfaceSecondary(context)),
       ),
       const SizedBox(height: 12),
       Text(
         _la.name,
-        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
       ),
       Text(_la.identification),
     ];
@@ -489,7 +489,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
             color: AppColors.lightPrimary.withValues(alpha: 0.35),
           ),
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -505,7 +505,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
               style: TextStyle(
                 fontSize: 12,
                 height: 1.35,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
           ],
@@ -551,7 +551,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
           _ph.idType == 'Passport'
               ? 'Scan the Passport Photo'
               : 'Scan the Front NRC Photo',
-          style: const TextStyle(color: AppColors.lightTextSecondary),
+          style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
         ),
       ),
       const SizedBox(height: 20),
@@ -603,7 +603,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: const BorderSide(color: AppColors.lightBorder),
+            side: BorderSide(color: AppColors.border(context)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -618,19 +618,19 @@ class _ProductEappPageState extends State<ProductEappPage> {
                         d.beneficiaries[i].name.isEmpty
                             ? '?'
                             : d.beneficiaries[i].name[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.surface(context)),
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
                         '${d.beneficiaries[i].name}\n${d.beneficiaries[i].relationship}',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                        style: TextStyle(fontWeight: FontWeight.w700),
                       ),
                     ),
                     Text(
                       '${d.beneficiaries[i].percent}%',
-                      style: const TextStyle(fontWeight: FontWeight.w800),
+                      style: TextStyle(fontWeight: FontWeight.w800),
                     ),
                   ],
                 ),
@@ -665,9 +665,9 @@ class _ProductEappPageState extends State<ProductEappPage> {
 
   List<Widget> _health() {
     return [
-      const Text(
+      Text(
         'Do You Work in High Risk Industry?',
-        style: TextStyle(color: AppColors.lightTextSecondary),
+        style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
       ),
       const SizedBox(height: 10),
       Row(
@@ -699,7 +699,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
     return [
       Text(
         q.productName,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
       ),
       const SizedBox(height: 12),
       Container(
@@ -711,7 +711,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
         ),
         child: Text(
           'Premium (${q.frequency})  ${q.monthlyPremium}',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w800,
             color: AppColors.lightPrimary,
           ),
@@ -730,9 +730,9 @@ class _ProductEappPageState extends State<ProductEappPage> {
       const Divider(height: 18),
       _kv('Total Amount', q.totalAmount),
       const SizedBox(height: 8),
-      const Text(
+      Text(
         'Locked from the saved quote. Change product or premium on Get A Quote.',
-        style: TextStyle(fontSize: 12, color: AppColors.lightTextHint),
+        style: TextStyle(fontSize: 12, color: AppColors.hint(context)),
       ),
     ];
   }
@@ -745,11 +745,11 @@ class _ProductEappPageState extends State<ProductEappPage> {
         : '${d.beneficiaries.length} · ${ProductSession.beneficiaryTotal(d)}%';
 
     return [
-      const Text(
+      Text(
         'Review only — expand a section for details. Edit jumps back to that step.',
         style: TextStyle(
           fontSize: 12,
-          color: AppColors.lightTextHint,
+          color: AppColors.hint(context),
           height: 1.35,
         ),
       ),
@@ -844,14 +844,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
           Expanded(
             child: Text(
               k,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
             ),
           ),
           Flexible(
             child: Text(
               v,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -1019,7 +1019,7 @@ class _ConfirmProductCardState extends State<_ConfirmProductCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE8ECF0)),
       ),
@@ -1038,7 +1038,7 @@ class _ConfirmProductCardState extends State<_ConfirmProductCard> {
                       children: [
                         Text(
                           widget.productName,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 15,
                           ),
@@ -1046,7 +1046,7 @@ class _ConfirmProductCardState extends State<_ConfirmProductCard> {
                         const SizedBox(height: 4),
                         Text(
                           'Premium (${widget.frequency})  ${widget.premium}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.lightPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
@@ -1063,25 +1063,25 @@ class _ConfirmProductCardState extends State<_ConfirmProductCard> {
                     _open
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ],
               ),
             ),
           ),
           if (_open) ...[
-            Divider(height: 1, color: Colors.grey.shade200),
+            Divider(height: 1, color: AppColors.border(context)),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
               child: Column(
                 children: [
-                  _confirmKv('Your Age', '${widget.age}'),
-                  _confirmKv('Sum Insured', widget.sumInsured),
+                  _confirmKv(context, 'Your Age', '${widget.age}'),
+                  _confirmKv(context, 'Sum Insured', widget.sumInsured),
                   if (widget.topup != '0.00')
-                    _confirmKv('Top-Up Premium', widget.topup),
-                  _confirmKv('Policy Term', widget.term),
+                    _confirmKv(context, 'Top-Up Premium', widget.topup),
+                  _confirmKv(context, 'Policy Term', widget.term),
                   if (widget.total != '0.00')
-                    _confirmKv('Total Amount', widget.total),
+                    _confirmKv(context, 'Total Amount', widget.total),
                 ],
               ),
             ),
@@ -1116,7 +1116,7 @@ class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: AppColors.background(context),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFE8ECF0)),
       ),
@@ -1141,7 +1141,7 @@ class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
                       children: [
                         Text(
                           widget.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 14,
                           ),
@@ -1151,9 +1151,9 @@ class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
                           widget.subtitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: AppColors.onSurfaceSecondary(context),
                           ),
                         ),
                       ],
@@ -1167,20 +1167,20 @@ class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
                     _open
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ],
               ),
             ),
           ),
           if (_open && widget.rows.isNotEmpty) ...[
-            Divider(height: 1, color: Colors.grey.shade200),
+            Divider(height: 1, color: AppColors.border(context)),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
               child: Column(
                 children: [
                   for (final e in widget.rows.entries)
-                    _confirmKv(e.key, e.value),
+                    _confirmKv(context, e.key, e.value),
                 ],
               ),
             ),
@@ -1191,7 +1191,7 @@ class _ConfirmReviewTileState extends State<_ConfirmReviewTile> {
   }
 }
 
-Widget _confirmKv(String k, String v) {
+Widget _confirmKv(BuildContext context, String k, String v) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 6),
     child: Row(
@@ -1200,8 +1200,8 @@ Widget _confirmKv(String k, String v) {
         Expanded(
           child: Text(
             k,
-            style: const TextStyle(
-              color: AppColors.lightTextSecondary,
+            style: TextStyle(
+              color: AppColors.onSurfaceSecondary(context),
               fontSize: 13,
             ),
           ),
@@ -1210,7 +1210,7 @@ Widget _confirmKv(String k, String v) {
           child: Text(
             v,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           ),
         ),
       ],

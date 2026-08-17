@@ -20,10 +20,10 @@ class AppSectionHeader extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
         ),
@@ -38,7 +38,7 @@ class AppSectionHeader extends StatelessWidget {
             ),
             child: Text(
               actionLabel!,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
       ],

@@ -1,3 +1,4 @@
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:fl_chart/fl_chart.dart'
     show
         LineChart,
@@ -47,7 +48,7 @@ class ChartCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -116,7 +117,7 @@ class ChartCard extends StatelessWidget {
                   show: true,
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) => FlLine(
-                    color: Colors.grey.shade200,
+                    color: AppColors.border(context),
                     strokeWidth: 1,
                     dashArray: [4, 4],
                   ),

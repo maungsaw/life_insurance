@@ -21,7 +21,7 @@ class TeamMembersPage extends StatelessWidget {
     final faCount = line?.faCount ?? members.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -29,21 +29,21 @@ class TeamMembersPage extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: members.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
                 child: Text(
                   'Team view appears when you have a downline.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.lightTextSecondary),
+                  style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
                 ),
               ),
             )
@@ -56,9 +56,9 @@ class TeamMembersPage extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         args.breadcrumb!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     ),
@@ -68,7 +68,7 @@ class TeamMembersPage extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.surface(context),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -81,7 +81,7 @@ class TeamMembersPage extends StatelessWidget {
                             children: [
                               Text(
                                 '$faCount FAs',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -89,16 +89,16 @@ class TeamMembersPage extends StatelessWidget {
                               if (line != null)
                                 Text(
                                   '${line.actual} / ${line.target}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 13,
-                                    color: AppColors.lightTextSecondary,
+                                    color: AppColors.onSurfaceSecondary(context),
                                   ),
                                 ),
-                              const Text(
+                              Text(
                                 'Sorted by achievement',
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: AppColors.lightTextHint,
+                                  color: AppColors.hint(context),
                                 ),
                               ),
                             ],

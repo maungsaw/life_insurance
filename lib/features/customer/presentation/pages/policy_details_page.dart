@@ -26,7 +26,7 @@ class _PolicyDetailsPageState extends State<PolicyDetailsPage> {
     final p = widget.policy;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -38,8 +38,8 @@ class _PolicyDetailsPageState extends State<PolicyDetailsPage> {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => AppStatusDialog.show(
@@ -147,7 +147,7 @@ class _SignatureCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -174,16 +174,16 @@ class _SignatureCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 36,
                             fontStyle: FontStyle.italic,
-                            color: AppColors.lightTextPrimary.withValues(
+                            color: AppColors.onSurface(context).withValues(
                               alpha: 0.75,
                             ),
                             fontFamily: 'serif',
                           ),
                         )
-                      : const Text(
+                      : Text(
                           'No signature on file',
                           style: TextStyle(
-                            color: AppColors.lightTextHint,
+                            color: AppColors.hint(context),
                             fontSize: 13,
                           ),
                         ),
@@ -201,9 +201,9 @@ class _SignatureCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
+          Text(
             'Display only — signing is on e-App (FR-05), not issued policy edit.',
-            style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+            style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
           ),
         ],
       ),
@@ -230,7 +230,7 @@ class _ExpandCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -251,10 +251,10 @@ class _ExpandCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                   ),
@@ -266,14 +266,14 @@ class _ExpandCard extends StatelessWidget {
                     open
                         ? Icons.keyboard_arrow_up_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ],
               ),
             ),
           ),
           if (open) ...[
-            Divider(height: 1, color: Colors.grey.shade200),
+            Divider(height: 1, color: AppColors.border(context)),
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 8, 14, 14),
               child: child,
@@ -316,9 +316,9 @@ class _KvRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
           ),
@@ -326,10 +326,10 @@ class _KvRow extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
           ),

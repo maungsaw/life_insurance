@@ -71,7 +71,7 @@ class AppPasswordRules extends StatelessWidget {
               Icon(
                 ok ? Icons.check_circle : Icons.radio_button_unchecked,
                 size: 18,
-                color: ok ? AppColors.successGreen : AppColors.lightTextHint,
+                color: ok ? AppColors.successGreen : AppColors.hint(context),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -79,7 +79,7 @@ class AppPasswordRules extends StatelessWidget {
                   rule.label,
                   style: TextStyle(
                     fontSize: 13,
-                    color: ok ? AppColors.successGreen : AppColors.lightTextSecondary,
+                    color: ok ? AppColors.successGreen : AppColors.onSurfaceSecondary(context),
                     fontWeight: ok ? FontWeight.w600 : FontWeight.w400,
                   ),
                 ),

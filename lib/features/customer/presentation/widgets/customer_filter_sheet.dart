@@ -48,21 +48,21 @@ class _CustomerFilterSheetState extends State<CustomerFilterSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Filter',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
             const SizedBox(height: 18),
-            const Text(
+            Text(
               'Status',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 10),
@@ -88,12 +88,12 @@ class _CustomerFilterSheetState extends State<CustomerFilterSheet> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Product',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 10),
@@ -200,7 +200,7 @@ class _FilterChip extends StatelessWidget {
     return Material(
       color: selected
           ? AppColors.lightPrimary.withValues(alpha: 0.06)
-          : const Color(0xFFF3F4F6),
+          : AppColors.mutedFill(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -226,7 +226,7 @@ class _FilterChip extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextSecondary,
+                      : AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ),

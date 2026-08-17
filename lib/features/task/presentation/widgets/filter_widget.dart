@@ -1,3 +1,4 @@
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:flutter/material.dart'
     show
         StatelessWidget,
@@ -57,7 +58,7 @@ class FilterView extends StatelessWidget {
                   selected: isSelected,
                   onSelected: (_) => onStatusChanged(index),
                   selectedColor: const Color(0xFF1E3A8A),
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.surface(context),
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.white : Colors.grey.shade700,
                     fontWeight: isSelected
@@ -91,7 +92,7 @@ class FilterView extends StatelessWidget {
                   selected: isSelected,
                   onSelected: (_) => onTypeChanged(index),
                   selectedColor: const Color(0xFF7C3AED),
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.surface(context),
                   labelStyle: TextStyle(
                     color: isSelected ? Colors.white : Colors.grey.shade700,
                     fontWeight: isSelected

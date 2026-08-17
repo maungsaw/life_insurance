@@ -43,28 +43,28 @@ class ProfileSettingTile extends StatelessWidget {
                     children: [
                       Text(
                         label,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.lightTextPrimary,
+                          color: AppColors.onSurface(context),
                         ),
                       ),
                       if (subtitle != null) ...[
                         const SizedBox(height: 2),
                         Text(
                           subtitle!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: AppColors.onSurfaceSecondary(context),
                           ),
                         ),
                       ],
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.chevron_right_rounded,
-                  color: AppColors.lightTextHint,
+                  color: AppColors.hint(context),
                 ),
               ],
             ),

@@ -82,11 +82,11 @@ class AppBrandMark extends StatelessWidget {
           Text(
             subtitle!,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               height: 1.35,
               fontWeight: FontWeight.w500,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
         ],

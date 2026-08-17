@@ -93,7 +93,7 @@ class DashboardPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [

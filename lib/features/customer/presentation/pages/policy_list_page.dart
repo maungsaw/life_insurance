@@ -49,7 +49,7 @@ class _PolicyListPageState extends State<PolicyListPage> {
     final rows = _rows;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -61,8 +61,8 @@ class _PolicyListPageState extends State<PolicyListPage> {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: Column(
         children: [
@@ -76,26 +76,26 @@ class _PolicyListPageState extends State<PolicyListPage> {
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
                       hintText: 'Search..',
-                      hintStyle: const TextStyle(
-                        color: AppColors.lightTextHint,
+                      hintStyle: TextStyle(
+                        color: AppColors.hint(context),
                       ),
-                      suffixIcon: const Icon(
+                      suffixIcon: Icon(
                         Icons.search,
-                        color: AppColors.lightTextHint,
+                        color: AppColors.hint(context),
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppColors.surface(context),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 12,
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                        borderSide: BorderSide(color: AppColors.border(context)),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+                        borderSide: BorderSide(color: AppColors.border(context)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -108,7 +108,7 @@ class _PolicyListPageState extends State<PolicyListPage> {
                 ),
                 const SizedBox(width: 10),
                 Material(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   borderRadius: BorderRadius.circular(12),
                   child: InkWell(
                     onTap: _openFilter,
@@ -118,7 +118,7 @@ class _PolicyListPageState extends State<PolicyListPage> {
                       height: 48,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: const Color(0xFFE5E7EB)),
+                        border: Border.all(color: AppColors.border(context)),
                       ),
                       child: Icon(
                         Icons.tune_rounded,
@@ -127,7 +127,7 @@ class _PolicyListPageState extends State<PolicyListPage> {
                                 _filter.product != null ||
                                 _filter.hasDate
                             ? AppColors.lightPrimary
-                            : AppColors.lightTextSecondary,
+                            : AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ),
@@ -142,12 +142,12 @@ class _PolicyListPageState extends State<PolicyListPage> {
                 const _PolicyTrendChart(),
                 const SizedBox(height: 14),
                 if (rows.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(top: 40),
                     child: Center(
                       child: Text(
                         'No policies match',
-                        style: TextStyle(color: AppColors.lightTextHint),
+                        style: TextStyle(color: AppColors.hint(context)),
                       ),
                     ),
                   )
@@ -188,7 +188,7 @@ class _PolicyTrendChart extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 14, 16, 10),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -212,7 +212,7 @@ class _PolicyTrendChart extends StatelessWidget {
                     drawVerticalLine: false,
                     horizontalInterval: 10,
                     getDrawingHorizontalLine: (v) =>
-                        FlLine(color: Colors.grey.shade200, strokeWidth: 1),
+                        FlLine(color: AppColors.border(context), strokeWidth: 1),
                   ),
                   borderData: FlBorderData(show: false),
                   titlesData: FlTitlesData(
@@ -309,9 +309,9 @@ class _Legend extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.onSurfaceSecondary(context),
           ),
         ),
       ],
@@ -333,13 +333,13 @@ class _PolicyListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: Container(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFEEF0F3)),
+          border: Border.all(color: AppColors.border(context)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -371,7 +371,7 @@ class _PolicyListTile extends StatelessWidget {
                           policy.id,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w800,
                             fontSize: 14,
                           ),
@@ -381,9 +381,9 @@ class _PolicyListTile extends StatelessWidget {
                           policy.productName,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: AppColors.onSurfaceSecondary(context),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -391,9 +391,9 @@ class _PolicyListTile extends StatelessWidget {
                           '${policy.clientName} · expires ${policy.expiryLabel}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
-                            color: AppColors.lightTextHint,
+                            color: AppColors.hint(context),
                           ),
                         ),
                       ],

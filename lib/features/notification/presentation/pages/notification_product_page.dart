@@ -25,7 +25,7 @@ class NotificationProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -37,8 +37,8 @@ class NotificationProductPage extends StatelessWidget {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
@@ -69,22 +69,22 @@ class NotificationProductPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'Protects you with the payouts from 71 category of accidents.',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               height: 1.4,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
+          Text(
             'Coverage for accidental death and total permanent disability, with clear benefit categories designed for field agents to explain with confidence.',
             style: TextStyle(
               fontSize: 13,
               height: 1.45,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 20),
@@ -166,10 +166,10 @@ class _BulletRow extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
               height: 1.4,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
         ),

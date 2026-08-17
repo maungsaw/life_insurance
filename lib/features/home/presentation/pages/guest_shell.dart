@@ -3,6 +3,7 @@ import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/home/presentation/pages/guest_home.dart';
 import 'package:life_insurance/features/home/presentation/pages/guest_profile.dart';
 import 'package:life_insurance/features/home/presentation/pages/product_hub.dart';
+import 'package:life_insurance/core/core.dart' show AppColors;
 
 /// Guest chrome — same pill + FAB as the agent shell (docs/74).
 class GuestShellPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _GuestShellPageState extends State<GuestShellPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       body: Stack(
         children: [
           IndexedStack(

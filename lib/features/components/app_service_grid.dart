@@ -30,7 +30,7 @@ class AppServiceTile extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
@@ -48,11 +48,11 @@ class AppServiceTile extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               height: 1.2,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
         ],

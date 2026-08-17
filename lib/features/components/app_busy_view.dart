@@ -32,10 +32,10 @@ class AppBusyView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
             if (detail != null) ...[
@@ -43,9 +43,9 @@ class AppBusyView extends StatelessWidget {
               Text(
                 detail!,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ],

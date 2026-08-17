@@ -16,7 +16,7 @@ class TeamGroupPage extends StatelessWidget {
     final crumb = '${PrototypeRole.chipLabel} ${HomeMockData.agentName}';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -28,24 +28,24 @@ class TeamGroupPage extends StatelessWidget {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
           Text(
             crumb,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -58,16 +58,16 @@ class TeamGroupPage extends StatelessWidget {
                     children: [
                       Text(
                         '${snap.overallActual} / ${snap.overallTarget}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
                         '${(snap.overallPct * 100).round()}% · ${snap.pulseSubtitle(TeamScope.total)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     ],
@@ -95,10 +95,10 @@ class TeamGroupPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -111,7 +111,7 @@ class TeamGroupPage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.4,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ],
@@ -132,7 +132,7 @@ class _LineTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap,
@@ -150,7 +150,7 @@ class _LineTile extends StatelessWidget {
                       children: [
                         Text(
                           line.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),
@@ -161,9 +161,9 @@ class _LineTile extends StatelessWidget {
                             if (line.region.isNotEmpty) line.region,
                             '${line.faCount} FAs',
                           ].join(' · '),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: AppColors.onSurfaceSecondary(context),
                           ),
                         ),
                       ],
@@ -171,15 +171,15 @@ class _LineTile extends StatelessWidget {
                   ),
                   Text(
                     line.fypPct,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppColors.lightPrimary,
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
-                    color: AppColors.lightTextHint,
+                    color: AppColors.hint(context),
                   ),
                 ],
               ),
@@ -187,9 +187,9 @@ class _LineTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '${line.actual} / ${line.target}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ],

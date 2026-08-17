@@ -7,7 +7,6 @@ import 'package:life_insurance/features/task/presentation/models/task_mock_data.
 import 'package:life_insurance/features/task/presentation/widgets/task_calendar.dart';
 import 'package:life_insurance/features/task/presentation/widgets/task_filter_sheet.dart';
 
-const _kBorder = Color(0xFFE5E7EB);
 const _kRed = Color(0xFFE11D48);
 
 /// My work — one shell, three calendar bodies (docs/77 P0 · BRD FR-07).
@@ -125,22 +124,22 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
     final rows = _scopeTasks;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
         ),
         slivers: [
           SliverAppBar(
-            backgroundColor: const Color(0xFFF8FAFC),
+            backgroundColor: AppColors.background(context),
             elevation: 0,
             floating: true,
             snap: true,
             centerTitle: false,
-            title: const Text(
+            title: Text(
               'My work',
               style: TextStyle(
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
               ),
@@ -307,7 +306,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
     padding: const EdgeInsets.only(top: 4, bottom: 8),
     child: Text(
       text,
-      style: const TextStyle(fontSize: 13, color: AppColors.lightTextHint),
+      style: TextStyle(fontSize: 13, color: AppColors.hint(context)),
     ),
   );
 
@@ -329,34 +328,34 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             children: [
               Text(
                 '${rows.length} task${rows.length == 1 ? '' : 's'}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
+                  color: AppColors.onSurface(context),
                 ),
               ),
               if (inProgress > 0)
-                const Text(
+                Text(
                   '·',
-                  style: TextStyle(color: AppColors.lightTextHint),
+                  style: TextStyle(color: AppColors.hint(context)),
                 ),
               if (inProgress > 0)
                 Text(
                   '$inProgress in progress',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               if (overdue > 0)
-                const Text(
+                Text(
                   '·',
-                  style: TextStyle(color: AppColors.lightTextHint),
+                  style: TextStyle(color: AppColors.hint(context)),
                 ),
               if (overdue > 0)
                 Text(
                   '$overdue overdue',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: _kRed,
@@ -374,7 +373,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
                   ),
                   child: Text(
                     '$fresh new',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       color: AppColors.lightPrimary,
@@ -417,10 +416,10 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
           Text(
             copy,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           const SizedBox(height: 14),
@@ -431,7 +430,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
               label: const Text('Reset filters'),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.lightPrimary,
-                textStyle: const TextStyle(fontWeight: FontWeight.w800),
+                textStyle: TextStyle(fontWeight: FontWeight.w800),
               ),
             )
           else
@@ -441,7 +440,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
               label: const Text('Create task'),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.lightPrimary,
-                textStyle: const TextStyle(fontWeight: FontWeight.w800),
+                textStyle: TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
         ],
@@ -469,9 +468,9 @@ class _ScopeBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _kBorder),
+        border: Border.all(color: AppColors.border(context)),
       ),
       child: Row(
         children: [
@@ -496,7 +495,7 @@ class _ScopeBar extends StatelessWidget {
                       fontSize: 13,
                       color: scope == s
                           ? Colors.white
-                          : AppColors.lightTextSecondary,
+                          : AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ),
@@ -534,10 +533,10 @@ class _DateNav extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 15,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
         ),
@@ -551,7 +550,7 @@ class _DateNav extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     foregroundColor: AppColors.lightPrimary,
                     minimumSize: const Size(44, 44),
-                    textStyle: const TextStyle(
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                     ),
@@ -581,7 +580,7 @@ class _NavArrow extends StatelessWidget {
     return IconButton(
       tooltip: tooltip,
       onPressed: onTap,
-      icon: Icon(icon, color: AppColors.lightTextPrimary),
+      icon: Icon(icon, color: AppColors.onSurface(context)),
       constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
       padding: EdgeInsets.zero,
     );
@@ -611,7 +610,7 @@ class _FilterButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: active ? AppColors.lightPrimary : _kBorder,
+              color: active ? AppColors.lightPrimary : AppColors.border(context),
             ),
           ),
           child: Row(
@@ -622,7 +621,7 @@ class _FilterButton extends StatelessWidget {
                 size: 16,
                 color: active
                     ? AppColors.lightPrimary
-                    : AppColors.lightTextSecondary,
+                    : AppColors.onSurfaceSecondary(context),
               ),
               const SizedBox(width: 6),
               Text(
@@ -632,7 +631,7 @@ class _FilterButton extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: active
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextSecondary,
+                      : AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ],

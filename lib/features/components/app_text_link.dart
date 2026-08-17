@@ -22,7 +22,7 @@ class AppTextLink extends StatelessWidget {
       onTap: onTap,
       child: Text(
         linkLabel,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
           color: AppColors.lightPrimary,
@@ -44,7 +44,7 @@ class AppTextLink extends StatelessWidget {
         children: [
           Text(
             prefix!,
-            style: const TextStyle(fontSize: 13, color: AppColors.lightTextSecondary),
+            style: TextStyle(fontSize: 13, color: AppColors.onSurfaceSecondary(context)),
           ),
           link,
         ],

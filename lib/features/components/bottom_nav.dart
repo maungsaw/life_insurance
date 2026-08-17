@@ -22,8 +22,10 @@ class AppBottomNavBar extends StatelessWidget {
   static const double barHeight = 64;
   static const double horizontalInset = 16;
   static const double fabSize = 56;
+
   /// How far the FAB sits above the bar top (into the notch).
   static const double fabOverlap = 22;
+
   /// Extra paint above the pill so the halo is not clipped (docs/54).
   static const double shadowSpread = 16;
 
@@ -76,7 +78,11 @@ class AppBottomNavBar extends StatelessWidget {
               child: CustomPaint(
                 painter: _PillNotchPainter(
                   notchRadius: notchRadius,
-                  color: Colors.white,
+                  color: AppColors.navPill(context),
+                  outline: AppColors.isDark(context)
+                      ? AppColors.border(context)
+                      : null,
+                  darkHalo: AppColors.isDark(context),
                   horizontalInset: horizontalInset,
                   topInset: shadowSpread,
                 ),
@@ -122,9 +128,15 @@ class _NavCenterFab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 6,
-      shadowColor: Colors.black38,
-      shape: const CircleBorder(),
-      color: Colors.white,
+      shadowColor: AppColors.isDark(context) ? Colors.black54 : Colors.black38,
+      shape: CircleBorder(
+        side: BorderSide(
+          color: AppColors.isDark(context)
+              ? AppColors.border(context)
+              : Colors.transparent,
+        ),
+      ),
+      color: AppColors.navPill(context),
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onPressed,
@@ -140,12 +152,12 @@ class _NavCenterFab extends StatelessWidget {
                   size: 32,
                   color: AppColors.lightPrimary,
                 ),
-                const Text(
+                Text(
                   '+',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white,
+                    color: AppColors.onPrimary,
                     height: 1,
                   ),
                 ),
@@ -178,8 +190,9 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        selected ? AppColors.lightPrimary : const Color(0xFF2D2D2D);
+    final color = selected
+        ? AppColors.lightPrimary
+        : AppColors.navInactive(context);
 
     return InkWell(
       onTap: onTap,
@@ -187,11 +200,7 @@ class _NavItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            selected ? spec.activeIcon : spec.icon,
-            size: 24,
-            color: color,
-          ),
+          Icon(selected ? spec.activeIcon : spec.icon, size: 24, color: color),
           const SizedBox(height: 2),
           Text(
             spec.label,
@@ -216,10 +225,14 @@ class _PillNotchPainter extends CustomPainter {
     required this.color,
     required this.horizontalInset,
     required this.topInset,
+    this.outline,
+    this.darkHalo = false,
   });
 
   final double notchRadius;
   final Color color;
+  final Color? outline;
+  final bool darkHalo;
   final double horizontalInset;
   final double topInset;
 
@@ -245,25 +258,30 @@ class _PillNotchPainter extends CustomPainter {
 
     final path = Path.combine(PathOperation.difference, pill, notch);
 
-    canvas.drawShadow(
-      path,
-      Colors.black.withValues(alpha: 0.12),
-      16,
-      false,
-    );
-    canvas.drawShadow(
-      path,
-      Colors.black.withValues(alpha: 0.20),
-      8,
-      false,
-    );
+    if (darkHalo) {
+      canvas.drawShadow(path, Colors.white.withValues(alpha: 0.10), 14, false);
+    } else {
+      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.12), 16, false);
+      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.20), 8, false);
+    }
     canvas.drawPath(path, Paint()..color = color);
+    if (outline != null) {
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = outline!
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(covariant _PillNotchPainter oldDelegate) =>
       oldDelegate.notchRadius != notchRadius ||
       oldDelegate.color != color ||
+      oldDelegate.outline != outline ||
+      oldDelegate.darkHalo != darkHalo ||
       oldDelegate.horizontalInset != horizontalInset ||
       oldDelegate.topInset != topInset;
 }

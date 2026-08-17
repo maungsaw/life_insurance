@@ -11,16 +11,16 @@ class ProductQuotesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final list = ProductSession.quotes;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProductSubAppBar(title: 'Saved quotes'),
       body: list.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
                   'Save a quote from GET A QUOTE first.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.lightTextSecondary),
+                  style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
                 ),
               ),
             )

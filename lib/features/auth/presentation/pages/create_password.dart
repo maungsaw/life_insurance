@@ -105,7 +105,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
           children: [
             Text(
               _isUpdate ? 'Update Password' : 'Create Password',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 24),
             AppTextField(

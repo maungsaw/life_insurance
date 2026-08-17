@@ -84,7 +84,7 @@ class AppButton extends StatelessWidget {
             onPressed: enabled ? onPressed : null,
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.lightPrimary,
-              side: const BorderSide(color: AppColors.lightPrimary, width: 1.4),
+              side: BorderSide(color: AppColors.lightPrimary, width: 1.4),
               padding: padding,
               minimumSize: Size(0, height),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -106,7 +106,7 @@ class AppButton extends StatelessWidget {
           onPressed: enabled ? onPressed : null,
           child: Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: AppColors.lightPrimary,

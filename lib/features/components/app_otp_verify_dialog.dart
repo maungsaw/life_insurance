@@ -118,10 +118,10 @@ class _AppOtpVerifyDialogState extends State<AppOtpVerifyDialog> {
               padding: const EdgeInsets.only(right: 8),
               child: Text(
                 'Please Enter the code sent to ${widget.mobileDisplay}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   height: 1.35,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ),
@@ -141,7 +141,7 @@ class _AppOtpVerifyDialogState extends State<AppOtpVerifyDialog> {
               const SizedBox(height: 8),
               Text(
                 _error!,
-                style: const TextStyle(color: Colors.redAccent, fontSize: 12),
+                style: TextStyle(color: Colors.redAccent, fontSize: 12),
               ),
             ],
             const SizedBox(height: 12),
@@ -149,10 +149,10 @@ class _AppOtpVerifyDialogState extends State<AppOtpVerifyDialog> {
               alignment: Alignment.centerRight,
               child: Text(
                 _mmss,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ),
@@ -163,11 +163,11 @@ class _AppOtpVerifyDialogState extends State<AppOtpVerifyDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Don't get a code? ",
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                   TextButton(
@@ -192,17 +192,17 @@ class _AppOtpVerifyDialogState extends State<AppOtpVerifyDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Don't get a code? ",
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextHint,
+                      color: AppColors.hint(context),
                     ),
                   ),
                   TextButton(
                     onPressed: null,
                     style: TextButton.styleFrom(
-                      disabledForegroundColor: AppColors.lightTextHint,
+                      disabledForegroundColor: AppColors.hint(context),
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

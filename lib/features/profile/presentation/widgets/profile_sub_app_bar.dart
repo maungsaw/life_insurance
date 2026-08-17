@@ -20,12 +20,12 @@ class ProfileSubAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
       ),
       centerTitle: false,
       elevation: 0,
-      backgroundColor: Colors.white,
-      foregroundColor: AppColors.lightTextPrimary,
+      backgroundColor: AppColors.surface(context),
+      foregroundColor: AppColors.onSurface(context),
     );
   }
 }

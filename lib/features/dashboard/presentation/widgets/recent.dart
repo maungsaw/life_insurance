@@ -25,6 +25,7 @@ import 'package:flutter/material.dart'
         Container;
 
 import 'recent_item.dart';
+import 'package:life_insurance/core/core.dart' show AppColors;
 
 class RecentActivitiesCard extends StatelessWidget {
   const RecentActivitiesCard({super.key});
@@ -34,7 +35,7 @@ class RecentActivitiesCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -83,7 +84,7 @@ class RecentActivitiesCard extends StatelessWidget {
             subtitle: 'Jane Cooper • Life Insurance',
             time: '2m ago',
           ),
-          Divider(color: Colors.grey.shade100, height: 24),
+          Divider(color: AppColors.border(context), height: 24),
           const ActivityItem(
             icon: Icons.account_balance_wallet,
             iconBg: Color(0xFFDBEAFE),

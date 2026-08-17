@@ -56,8 +56,8 @@ class _CustomTabBarState extends State<CustomTabBar>
         tabAlignment: TabAlignment.start,
         dividerColor: Colors.transparent,
         unselectedLabelColor: Colors.grey,
-        labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(
+        labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.normal,
         ),

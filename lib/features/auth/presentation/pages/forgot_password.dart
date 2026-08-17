@@ -198,15 +198,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           style: TextStyle(
                             fontSize: 13,
                             color: canResend
-                                ? AppColors.lightTextSecondary
-                                : AppColors.lightTextHint,
+                                ? AppColors.onSurfaceSecondary(context)
+                                : AppColors.hint(context),
                           ),
                         ),
                         TextButton(
                           onPressed: canResend ? _getCode : null,
                           style: TextButton.styleFrom(
                             foregroundColor: AppColors.lightPrimary,
-                            disabledForegroundColor: AppColors.lightTextHint,
+                            disabledForegroundColor: AppColors.hint(context),
                             padding: EdgeInsets.zero,
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -224,10 +224,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                   Text(
                     _mmss,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ],

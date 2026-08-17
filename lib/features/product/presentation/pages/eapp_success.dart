@@ -83,7 +83,7 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
     final draft = widget.draft;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       body: AnimatedBuilder(
         animation: _entry,
         builder: (context, _) {
@@ -109,9 +109,9 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
                               color: AppColors.successGreen,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.check,
-                              color: Colors.white,
+                              color: AppColors.surface(context),
                               size: 48,
                             ),
                           ),
@@ -126,18 +126,18 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Your proposal has been successfully submitted.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                           height: 1.4,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '${draft.appRef ?? draft.id} · Submitted',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                        style: TextStyle(fontWeight: FontWeight.w700),
                       ),
                       const SizedBox(height: 22),
                       Row(
@@ -161,12 +161,12 @@ class _ProductEappSuccessPageState extends State<ProductEappSuccessPage>
                       const Spacer(),
                       const _SuccessStepper(),
                       const SizedBox(height: 10),
-                      const Text(
+                      Text(
                         'Track underwriting on App tracker — not a live countdown.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 11,
-                          color: AppColors.lightTextHint,
+                          color: AppColors.hint(context),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -200,17 +200,21 @@ class _SuccessStepper extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _MiniStep(done: true, label: 'Proposal'),
-        _connector(active: true, dashed: false),
+        _connector(context, active: true, dashed: false),
         const _MiniStep(number: 2, current: true, label: 'Underwrite'),
-        _connector(active: false, dashed: true),
+        _connector(context, active: false, dashed: true),
         const _MiniStep(number: 3, label: 'Payment'),
-        _connector(active: false, dashed: false),
+        _connector(context, active: false, dashed: false),
         const _MiniStep(number: 4, label: 'Policy'),
       ],
     );
   }
 
-  static Widget _connector({required bool active, required bool dashed}) {
+  static Widget _connector(
+    BuildContext context, {
+    required bool active,
+    required bool dashed,
+  }) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(top: 12),
@@ -225,7 +229,7 @@ class _SuccessStepper extends StatelessWidget {
               : ColoredBox(
                   color: active
                       ? AppColors.lightPrimary
-                      : AppColors.lightBorder,
+                      : AppColors.border(context),
                 ),
         ),
       ),
@@ -305,7 +309,7 @@ class _MiniStep extends StatelessWidget {
                 ),
         ),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontSize: 10)),
+        Text(label, style: TextStyle(fontSize: 10)),
       ],
     );
   }

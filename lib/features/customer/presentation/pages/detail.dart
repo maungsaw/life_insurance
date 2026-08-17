@@ -92,7 +92,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -104,8 +104,8 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -114,7 +114,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -123,10 +123,10 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                 const SizedBox(height: 12),
                 Text(
                   _customer.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -187,7 +187,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
           const SizedBox(height: 16),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -196,32 +196,32 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                   padding: const EdgeInsets.fromLTRB(16, 14, 8, 8),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           'Policies List',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.lightTextPrimary,
+                            color: AppColors.onSurface(context),
                           ),
                         ),
                       ),
                       IconButton(
                         onPressed: _openPolicyFilter,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.tune_rounded,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     ],
                   ),
                 ),
                 if (policies.isEmpty)
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.fromLTRB(16, 8, 16, 24),
                     child: Text(
                       'No policies match this filter.',
-                      style: TextStyle(color: AppColors.lightTextSecondary),
+                      style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
                     ),
                   )
                 else
@@ -229,7 +229,7 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     if (i > 0)
                       Divider(
                         height: 1,
-                        color: Colors.grey.shade200,
+                        color: AppColors.border(context),
                         indent: 72,
                       ),
                     _PolicyTile(
@@ -290,10 +290,10 @@ class _ActionBubble extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
           ],
@@ -331,17 +331,17 @@ class _PolicyTile extends StatelessWidget {
       ),
       title: Text(
         policy.id,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w700,
-          color: AppColors.lightTextPrimary,
+          color: AppColors.onSurface(context),
         ),
       ),
       subtitle: Text(
         policy.productName,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
-          color: AppColors.lightTextSecondary,
+          color: AppColors.onSurfaceSecondary(context),
         ),
       ),
       trailing: Column(
@@ -356,7 +356,7 @@ class _PolicyTile extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   EappLaunch.renewalCta(policy),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w800,
                     color: AppColors.lightPrimary,

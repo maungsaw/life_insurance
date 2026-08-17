@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show PrototypeConfig, AppColors;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/profile/presentation/widgets/profile_sub_app_bar.dart';
 
@@ -75,7 +75,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProfileSubAppBar(title: 'Change Password'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),

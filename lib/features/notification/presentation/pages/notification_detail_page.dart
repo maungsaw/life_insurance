@@ -12,7 +12,7 @@ class NotificationDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -24,8 +24,8 @@ class NotificationDetailPage extends StatelessWidget {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
@@ -53,16 +53,16 @@ class NotificationDetailPage extends StatelessWidget {
                     children: [
                       Text(
                         item.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
                         item.timeLabel,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.lightTextHint,
+                          color: AppColors.hint(context),
                         ),
                       ),
                     ],
@@ -73,10 +73,10 @@ class NotificationDetailPage extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               item.body,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 height: 1.45,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const Spacer(),

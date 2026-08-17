@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
 
-const _kBorder = Color(0xFFE5E7EB);
-
 const taskFilterTypes = [
   TaskType.meeting,
   TaskType.call,
@@ -23,7 +21,7 @@ Future<TaskFilter?> showTaskFilterSheet(
   return showModalBottomSheet<TaskFilter>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.surface(context),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -47,18 +45,18 @@ Future<TaskFilter?> showTaskFilterSheet(
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: _kBorder,
+                          color: AppColors.border(context),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
                     ),
                     const SizedBox(height: 14),
-                    const Text(
+                    Text(
                       'Filter tasks',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -123,8 +121,8 @@ Future<TaskFilter?> showTaskFilterSheet(
                             onPressed: () => update(const TaskFilter()),
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 14),
-                              side: const BorderSide(color: _kBorder),
-                              foregroundColor: AppColors.lightTextSecondary,
+                              side: BorderSide(color: AppColors.border(context)),
+                              foregroundColor: AppColors.onSurfaceSecondary(context),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -150,7 +148,7 @@ Future<TaskFilter?> showTaskFilterSheet(
                             ),
                             child: Text(
                               'Show $shown task${shown == 1 ? '' : 's'}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
@@ -182,10 +180,10 @@ class _Group extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: AppColors.lightTextSecondary,
+            color: AppColors.onSurfaceSecondary(context),
           ),
         ),
         const SizedBox(height: 8),
@@ -221,7 +219,7 @@ class _Choice extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: selected ? AppColors.lightPrimary : _kBorder,
+              color: selected ? AppColors.lightPrimary : AppColors.border(context),
             ),
           ),
           child: Text(
@@ -231,7 +229,7 @@ class _Choice extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: selected
                   ? AppColors.lightPrimary
-                  : AppColors.lightTextSecondary,
+                  : AppColors.onSurfaceSecondary(context),
             ),
           ),
         ),
@@ -300,7 +298,7 @@ class _Removable extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppColors.lightPrimary,

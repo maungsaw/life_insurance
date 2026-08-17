@@ -10,11 +10,11 @@ class GuestProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -31,7 +31,7 @@ class GuestProfilePage extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(20, 28, 20, 24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -55,23 +55,23 @@ class GuestProfilePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
+                    Text(
                       'You’re not signed in',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Log in with your agent account to see profile, commission, and settings.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                     const SizedBox(height: 22),

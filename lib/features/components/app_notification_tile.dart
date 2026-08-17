@@ -21,7 +21,7 @@ class AppNotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -57,16 +57,16 @@ class AppNotificationTile extends StatelessWidget {
                               fontSize: 15,
                               fontWeight:
                                   unread ? FontWeight.w800 : FontWeight.w700,
-                              color: AppColors.lightTextPrimary,
+                              color: AppColors.onSurface(context),
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           timeLabel,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextHint,
+                            color: AppColors.hint(context),
                           ),
                         ),
                       ],
@@ -76,10 +76,10 @@ class AppNotificationTile extends StatelessWidget {
                       body,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         height: 1.35,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ],

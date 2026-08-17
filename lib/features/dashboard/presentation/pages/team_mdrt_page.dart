@@ -26,7 +26,7 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
     final ring = all.isEmpty ? 0.0 : qualified / all.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -38,8 +38,8 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: Column(
         children: [
@@ -49,7 +49,7 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.surface(context),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -58,9 +58,9 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
                   const SizedBox(height: 8),
                   Text(
                     '$qualified / ${all.length} FAs Qualified',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ],

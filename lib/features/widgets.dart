@@ -12,7 +12,7 @@ abstract class GlobalWidget {
         children: [
           Text(
             failure.toErrorMessage(context),
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.redAccent,
               fontWeight: FontWeight.bold,
             ),

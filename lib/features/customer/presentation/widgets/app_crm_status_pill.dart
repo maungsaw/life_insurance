@@ -64,7 +64,7 @@ class AppInitialAvatar extends StatelessWidget {
       child: Text(
         initials,
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.surface(context),
           fontSize: radius * 0.85,
           fontWeight: FontWeight.w700,
         ),

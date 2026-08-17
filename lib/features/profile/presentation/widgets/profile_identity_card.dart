@@ -11,7 +11,7 @@ class ProfileIdentityCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -28,8 +28,8 @@ class ProfileIdentityCard extends StatelessWidget {
             backgroundColor: AppColors.lightPrimary,
             child: Text(
               ProfileMockData.initials,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppColors.surface(context),
                 fontSize: 26,
                 fontWeight: FontWeight.w700,
               ),
@@ -42,24 +42,24 @@ class ProfileIdentityCard extends StatelessWidget {
               children: [
                 Text(
                   ProfileMockData.displayName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   ProfileMockData.agentCode,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   PrototypeRole.previewTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.lightPrimary,

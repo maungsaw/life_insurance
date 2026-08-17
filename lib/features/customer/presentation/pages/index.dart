@@ -96,19 +96,19 @@ class _CustomersPageState extends State<CustomersPage> {
     final controller = _showLeads ? _leadSearchCtrl : _clientSearchCtrl;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Text(
                 'Customer',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
+                  color: AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -135,15 +135,15 @@ class _CustomersPageState extends State<CustomersPage> {
                         hintText: _showLeads
                             ? 'Search leads..'
                             : 'Search clients..',
-                        hintStyle: const TextStyle(
-                          color: AppColors.lightTextHint,
+                        hintStyle: TextStyle(
+                          color: AppColors.hint(context),
                           fontSize: 14,
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFF8FAFC),
-                        suffixIcon: const Icon(
+                        fillColor: AppColors.background(context),
+                        suffixIcon: Icon(
                           Icons.search,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 14,
@@ -151,8 +151,8 @@ class _CustomersPageState extends State<CustomersPage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.lightBorder,
+                          borderSide: BorderSide(
+                            color: AppColors.border(context),
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -167,7 +167,7 @@ class _CustomersPageState extends State<CustomersPage> {
                   ),
                   const SizedBox(width: 10),
                   Material(
-                    color: const Color(0xFFF8FAFC),
+                    color: AppColors.background(context),
                     borderRadius: BorderRadius.circular(12),
                     child: InkWell(
                       onTap: _openFilter,
@@ -177,11 +177,11 @@ class _CustomersPageState extends State<CustomersPage> {
                         height: 48,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.lightBorder),
+                          border: Border.all(color: AppColors.border(context)),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.tune_rounded,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     ),
@@ -204,7 +204,7 @@ class _CustomersPageState extends State<CustomersPage> {
                                 : 'No clients match this filter',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.lightTextSecondary,
+                              color: AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -225,7 +225,7 @@ class _CustomersPageState extends State<CustomersPage> {
                       itemCount: itemCount,
                       separatorBuilder: (_, _) => Divider(
                         height: 1,
-                        color: Colors.grey.shade200,
+                        color: AppColors.border(context),
                         indent: 78,
                       ),
                       itemBuilder: (context, index) {
@@ -271,17 +271,17 @@ class _CustomersPageState extends State<CustomersPage> {
                           ),
                           title: Text(
                             customer.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.lightTextPrimary,
+                              color: AppColors.onSurface(context),
                             ),
                           ),
                           subtitle: Text(
                             customer.phone,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.lightTextSecondary,
+                              color: AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           trailing: AppCrmStatusPill(status: customer.status),
@@ -314,19 +314,19 @@ class _CrmTabs extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
+        color: AppColors.mutedFill(context),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          _tab('Leads', leadCount, 0),
-          _tab('Clients', clientCount, 1),
+          _tab(context, 'Leads', leadCount, 0),
+          _tab(context, 'Clients', clientCount, 1),
         ],
       ),
     );
   }
 
-  Widget _tab(String label, int count, int index) {
+  Widget _tab(BuildContext context, String label, int count, int index) {
     final selected = selectedIndex == index;
     return Expanded(
       child: Material(
@@ -343,7 +343,7 @@ class _CrmTabs extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: selected ? Colors.white : AppColors.lightTextSecondary,
+                color: selected ? Colors.white : AppColors.onSurfaceSecondary(context),
               ),
             ),
           ),
@@ -366,7 +366,7 @@ class _LeadRow extends StatelessWidget {
       'Contacted' => const Color(0xFFF59E0B),
       'Quoted' => const Color(0xFF7C3AED),
       'Applied' => AppColors.lightPrimary,
-      _ => AppColors.lightTextSecondary,
+      _ => AppColors.onSurfaceSecondary(context),
     };
     return ListTile(
       onTap: onTap,
@@ -374,17 +374,17 @@ class _LeadRow extends StatelessWidget {
       leading: AppInitialAvatar(initials: lead.initials),
       title: Text(
         lead.name,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w700,
-          color: AppColors.lightTextPrimary,
+          color: AppColors.onSurface(context),
         ),
       ),
       subtitle: Text(
         lead.phone,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 13,
-          color: AppColors.lightTextSecondary,
+          color: AppColors.onSurfaceSecondary(context),
         ),
       ),
       trailing: Container(

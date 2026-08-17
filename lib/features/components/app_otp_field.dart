@@ -71,10 +71,10 @@ class _AppOtpFieldState extends State<AppOtpField> {
             textInputAction: i == widget.length - 1
                 ? TextInputAction.done
                 : TextInputAction.next,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
@@ -83,15 +83,15 @@ class _AppOtpFieldState extends State<AppOtpField> {
             decoration: InputDecoration(
               counterText: '',
               filled: true,
-              fillColor: AppColors.lightSurface,
+              fillColor: AppColors.surface(context),
               contentPadding: EdgeInsets.zero,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightBorder),
+                borderSide: BorderSide(color: AppColors.border(context)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.6),
+                borderSide: BorderSide(color: AppColors.lightPrimary, width: 1.6),
               ),
             ),
             onChanged: (v) {

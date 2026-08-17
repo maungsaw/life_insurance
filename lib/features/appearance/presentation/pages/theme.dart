@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:life_insurance/core/core.dart'
-    show LocalizationContext, ThemeService, ThemesConsts;
+    show AppColors, ThemeService, ThemesConsts;
 import '../bloc/bloc.dart' show AppearanceBloc, ChangeThemeEvent;
 
 class ThemePage extends StatelessWidget {
@@ -13,15 +13,15 @@ class ThemePage extends StatelessWidget {
     final themes = ThemesConsts.supportedThemes;
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr.language)),
+      appBar: AppBar(title: const Text('Theme')),
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         itemCount: themes.length,
-        separatorBuilder: (context, index) => const Divider(
+        separatorBuilder: (context, index) => Divider(
           height: 1,
           indent: 20,
           endIndent: 20,
-          color: Colors.grey,
+          color: AppColors.border(context),
         ),
         itemBuilder: (context, index) {
           final theme = themes[index];
@@ -38,18 +38,16 @@ class ThemePage extends StatelessWidget {
               style: TextStyle(
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).listTileTheme.tileColor,
+                    ? AppColors.lightPrimary
+                    : AppColors.onSurface(context),
               ),
             ),
-
-            // Active vs Inactive Visual Indicator
             trailing: isSelected
-                ? Icon(
-                    Icons.check_circle,
-                    color: Theme.of(context).primaryColor,
-                  )
-                : const Icon(Icons.radio_button_unchecked, color: Colors.grey),
+                ? const Icon(Icons.check_circle, color: AppColors.lightPrimary)
+                : Icon(
+                    Icons.radio_button_unchecked,
+                    color: AppColors.hint(context),
+                  ),
             onTap: () {
               if (!isSelected) {
                 context.read<AppearanceBloc>().add(

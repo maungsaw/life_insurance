@@ -29,6 +29,7 @@ import 'package:flutter/material.dart'
         WidgetSpan,
         PlaceholderAlignment;
 import 'package:life_insurance/features/task/domain/entities/task.dart';
+import 'package:life_insurance/core/core.dart' show AppColors;
 
 class TaskItemView extends StatefulWidget {
   final TaskEntities task;
@@ -49,7 +50,7 @@ class _TaskItemState extends State<TaskItemView> {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 0,
-      color: Colors.white,
+      color: AppColors.surface(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: task.isHighPriorityBorder

@@ -13,7 +13,7 @@ class LanguagePage extends StatelessWidget {
     final current = context.watch<AppearanceBloc>().state.locale.languageCode;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -21,12 +21,12 @@ class LanguagePage extends StatelessWidget {
         ),
         title: Text(
           context.tr.language,
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -70,7 +70,7 @@ class _LanguageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
@@ -84,10 +84,10 @@ class _LanguageCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
               ),
@@ -193,8 +193,8 @@ class _MyanmarFlag extends StatelessWidget {
                 Expanded(child: ColoredBox(color: Color(0xFFEA2839))),
               ],
             ),
-            const Center(
-              child: Icon(Icons.star, color: Colors.white, size: 16),
+            Center(
+              child: Icon(Icons.star, color: AppColors.surface(context), size: 16),
             ),
           ],
         ),

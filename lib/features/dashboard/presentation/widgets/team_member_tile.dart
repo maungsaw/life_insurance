@@ -12,7 +12,7 @@ class TeamMemberTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap,
@@ -26,7 +26,7 @@ class TeamMemberTile extends StatelessWidget {
                 backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.15),
                 child: Text(
                   member.initials,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     color: AppColors.lightPrimary,
@@ -40,19 +40,19 @@ class TeamMemberTile extends StatelessWidget {
                   children: [
                     Text(
                       member.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                     Text(
                       member.actualCompact.isEmpty
                           ? member.code
                           : '${member.actualCompact} / ${member.targetCompact}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -75,7 +75,7 @@ class TeamMemberTile extends StatelessWidget {
                 children: [
                   Text(
                     member.achievementLabel,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: AppColors.lightPrimary,

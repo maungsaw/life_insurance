@@ -38,7 +38,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: AppBar(
         backgroundColor: AppColors.lightPrimary,
         foregroundColor: Colors.white,
@@ -51,37 +51,37 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
           controller: _ctrl,
           autofocus: true,
           onChanged: (_) => setState(() {}),
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: TextStyle(color: AppColors.surface(context), fontWeight: FontWeight.w600),
           cursorColor: Colors.white,
           decoration: InputDecoration(
             hintText: 'Search products',
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+            hintStyle: TextStyle(color: AppColors.surface(context).withValues(alpha: 0.7)),
             prefixIcon: const Icon(Icons.search, color: Colors.white),
             filled: true,
-            fillColor: Colors.white.withValues(alpha: 0.18),
+            fillColor: AppColors.surface(context).withValues(alpha: 0.18),
             contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.5)),
+              borderSide: BorderSide(color: AppColors.surface(context).withValues(alpha: 0.5)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.5)),
+              borderSide: BorderSide(color: AppColors.surface(context).withValues(alpha: 0.5)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(24),
-              borderSide: const BorderSide(color: Colors.white),
+              borderSide: BorderSide(color: AppColors.surface(context)),
             ),
           ),
         ),
       ),
       body: list.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 'No match',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             )
@@ -93,7 +93,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                     padding: const EdgeInsets.fromLTRB(4, 8, 4, 10),
                     child: Text(
                       entry.value.first.sectionTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: AppColors.lightPrimary,

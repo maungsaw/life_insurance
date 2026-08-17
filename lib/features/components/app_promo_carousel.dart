@@ -52,8 +52,8 @@ class AppPromoCarousel extends StatelessWidget {
                     item.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.surface(context),
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
                     ),
@@ -64,7 +64,7 @@ class AppPromoCarousel extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: AppColors.surface(context).withValues(alpha: 0.9),
                       fontSize: 12,
                     ),
                   ),
@@ -97,7 +97,7 @@ class AppSoftBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(16),
       elevation: 0,
       child: InkWell(
@@ -106,7 +106,7 @@ class AppSoftBanner extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -138,19 +138,19 @@ class AppSoftBanner extends StatelessWidget {
                         Expanded(
                           child: Text(
                             title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
-                              color: AppColors.lightTextPrimary,
+                              color: AppColors.onSurface(context),
                             ),
                           ),
                         ),
                         if (timeLabel != null)
                           Text(
                             timeLabel!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.lightTextHint,
+                              color: AppColors.hint(context),
                             ),
                           ),
                       ],
@@ -158,10 +158,10 @@ class AppSoftBanner extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         height: 1.35,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ],

@@ -36,7 +36,7 @@ class TeamRing extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: size > 80 ? 16 : 13,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
         ],
@@ -67,7 +67,7 @@ class TeamKpiBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -78,16 +78,16 @@ class TeamKpiBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ),
               Text(
                 pct,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: AppColors.lightPrimary,
@@ -98,15 +98,15 @@ class TeamKpiBar extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             actual,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w800,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           Text(
             'Target $target',
-            style: const TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+            style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
           ),
           const SizedBox(height: 8),
           ClipRRect(
@@ -155,12 +155,12 @@ class TeamMdrtBadge extends StatelessWidget {
       ),
       TeamBadgeKind.notYet => (
         const Color(0xFFF1F5F9),
-        AppColors.lightTextSecondary,
+        AppColors.onSurfaceSecondary(context),
         'Not Yet',
       ),
       TeamBadgeKind.onTrack => (
         const Color(0xFFF1F5F9),
-        AppColors.lightTextSecondary,
+        AppColors.onSurfaceSecondary(context),
         'On Track',
       ),
     };
@@ -202,7 +202,7 @@ class TeamCountChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -212,7 +212,7 @@ class TeamCountChip extends StatelessWidget {
           else
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: AppColors.lightPrimary,
@@ -222,7 +222,7 @@ class TeamCountChip extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: AppColors.lightPrimary,
@@ -233,17 +233,17 @@ class TeamCountChip extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           if (caption != null)
             Text(
               caption!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 9, color: AppColors.lightTextHint),
+              style: TextStyle(fontSize: 9, color: AppColors.hint(context)),
             ),
         ],
       ),

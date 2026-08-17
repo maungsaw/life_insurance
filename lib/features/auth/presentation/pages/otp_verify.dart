@@ -135,7 +135,7 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
               const SizedBox(height: 10),
               Text(
                 _error!,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.redAccent,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -147,10 +147,10 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
               alignment: Alignment.centerRight,
               child: Text(
                 _mmss,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ),
@@ -178,15 +178,15 @@ class _OtpVerifyPageState extends State<OtpVerifyPage> {
                     style: TextStyle(
                       fontSize: 13,
                       color: canResend
-                          ? AppColors.lightTextSecondary
-                          : AppColors.lightTextHint,
+                          ? AppColors.onSurfaceSecondary(context)
+                          : AppColors.hint(context),
                     ),
                   ),
                   TextButton(
                     onPressed: canResend ? _resend : null,
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.lightPrimary,
-                      disabledForegroundColor: AppColors.lightTextHint,
+                      disabledForegroundColor: AppColors.hint(context),
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

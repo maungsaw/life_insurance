@@ -13,7 +13,7 @@ class ProductQuoteSavedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProductSubAppBar(title: 'Quote saved'),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -29,22 +29,22 @@ class ProductQuoteSavedPage extends StatelessWidget {
             Text(
               quote.id,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 6),
             Text(
               'Linked to ${quote.party.name} · ${quote.party.kindLabel}',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
             ),
             const SizedBox(height: 20),
-            _row('Product', quote.productName),
-            _row('Sum insured', '${quote.sumInsured} MMK'),
-            _row('Premium', '${quote.monthlyPremium} MMK · ${quote.frequency}'),
-            _row('Term', quote.term),
+            _row(context, 'Product', quote.productName),
+            _row(context, 'Sum insured', '${quote.sumInsured} MMK'),
+            _row(context, 'Premium', '${quote.monthlyPremium} MMK · ${quote.frequency}'),
+            _row(context, 'Term', quote.term),
             if (quote.totalAmount != '0.00')
-              _row('Total', '${quote.totalAmount} MMK'),
-            _row('Saved', ProductFormat.dob(quote.savedAt)),
+              _row(context, 'Total', '${quote.totalAmount} MMK'),
+            _row(context, 'Saved', ProductFormat.dob(quote.savedAt)),
             const Spacer(),
             AppButton(
               label: 'Start e-App',
@@ -71,19 +71,19 @@ class ProductQuoteSavedPage extends StatelessWidget {
     );
   }
 
-  Widget _row(String k, String v) {
+  Widget _row(BuildContext context, String k, String v) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Expanded(
-            child: Text(k, style: const TextStyle(color: AppColors.lightTextSecondary)),
+            child: Text(k, style: TextStyle(color: AppColors.onSurfaceSecondary(context))),
           ),
           Flexible(
             child: Text(
               v,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700),
             ),
           ),
         ],

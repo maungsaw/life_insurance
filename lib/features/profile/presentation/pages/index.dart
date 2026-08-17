@@ -171,14 +171,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Text(
                   'For prototype review only. Logout returns to FA.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ),
@@ -223,11 +223,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
         elevation: 0,
         centerTitle: true,
         title: const Text(
@@ -263,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -276,14 +276,14 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     'Setting',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ),
@@ -312,7 +312,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 14),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -325,14 +325,14 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Text(
                     'Security',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ),
@@ -348,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 14),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(

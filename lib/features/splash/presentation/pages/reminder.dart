@@ -88,7 +88,7 @@ class _ReminderPageState extends State<ReminderPage> {
                     const SizedBox(height: 12),
                     Text(
                       'Selected: ${_selectedDateTime.toString().split('.')[0]}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ],

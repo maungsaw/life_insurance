@@ -37,7 +37,7 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProductSubAppBar(title: 'App tracker'),
       body: Column(
         children: [
@@ -50,7 +50,7 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
                 hintText: 'Search applications',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: const Color(0xFFF8FAFC),
+                fillColor: AppColors.background(context),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -98,10 +98,10 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
           ),
           Expanded(
             child: list.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
                       'No applications yet',
-                      style: TextStyle(color: AppColors.lightTextSecondary),
+                      style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
                     ),
                   )
                 : ListView.separated(
@@ -130,7 +130,7 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
                                       a.status == EappStatus.correction
                                   ? 'Continue'
                                   : a.statusLabel,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 color: AppColors.lightPrimary,
                               ),
@@ -201,7 +201,7 @@ class _ProductTrackerDetailPageState extends State<ProductTrackerDetailPage> {
       EappStatus.rejected,
     ];
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProductSubAppBar(title: 'Underwriting'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -215,27 +215,27 @@ class _ProductTrackerDetailPageState extends State<ProductTrackerDetailPage> {
           ],
           Text(
             '${draft.quote.productName} · ${draft.quote.party.name}',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           Text(
             draft.isRenewal
                 ? 'Renews ${draft.sourcePolicyId} · ${draft.appRef ?? draft.id}'
                 : '${draft.quote.productName} · ${draft.appRef ?? draft.id}',
-            style: const TextStyle(color: AppColors.lightTextSecondary),
+            style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
           ),
           const SizedBox(height: 12),
           Text(
             draft.statusLabel,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.lightPrimary,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'The proposal is being reviewed during working hours. You will get a notification when the status changes. No fake countdown.',
-            style: TextStyle(height: 1.4, color: AppColors.lightTextSecondary),
+            style: TextStyle(height: 1.4, color: AppColors.onSurfaceSecondary(context)),
           ),
           const SizedBox(height: 20),
           for (final s in pipeline)
@@ -248,7 +248,7 @@ class _ProductTrackerDetailPageState extends State<ProductTrackerDetailPage> {
                       : Icons.radio_button_unchecked,
                   color: _done(draft.status, s)
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextHint,
+                      : AppColors.hint(context),
                 ),
                 title: Text(_label(s)),
               ),

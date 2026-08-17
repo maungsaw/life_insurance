@@ -173,7 +173,7 @@ class _LifeInsurancePageState extends State<LifeInsurancePage> {
       openFabSheet: _openFabSheet,
       child: Scaffold(
         extendBody: true,
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: AppColors.background(context),
         body: Stack(
           children: [
             IndexedStack(index: _selectedIndex, children: _pages),

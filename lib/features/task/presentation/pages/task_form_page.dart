@@ -144,7 +144,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 title,
-                style: const TextStyle(fontWeight: FontWeight.w800),
+                style: TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
             for (final o in options)
@@ -226,7 +226,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -238,8 +238,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: Column(
         children: [
@@ -255,7 +255,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
                 if (_error != null) ...[
                   Text(
                     _error!,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.redAccent,
                       fontWeight: FontWeight.w600,
                     ),
@@ -368,12 +368,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
       const SizedBox(height: 14),
       _typeField(),
       const SizedBox(height: 14),
-      const Text(
+      Text(
         'Task Description *',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: AppColors.lightTextSecondary,
+          color: AppColors.onSurfaceSecondary(context),
         ),
       ),
       const SizedBox(height: 6),
@@ -384,7 +384,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
           hintText: 'Describe the task',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.lightPrimary),
+            borderSide: BorderSide(color: AppColors.lightPrimary),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -549,9 +549,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
           ],
         ),
         const SizedBox(height: 6),
-        const Text(
+        Text(
           'Attachment stub — prototype, no upload API.',
-          style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+          style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
         ),
       ],
     );

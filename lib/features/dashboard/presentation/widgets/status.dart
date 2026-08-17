@@ -1,3 +1,4 @@
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:flutter/material.dart'
     show
         StatelessWidget,
@@ -38,7 +39,7 @@ class StatusCard extends StatelessWidget {
     return Container(
       padding: const .all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: .circular(16),
         boxShadow: [
           BoxShadow(
@@ -62,7 +63,7 @@ class StatusCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: .bold,
               color: Color(0xFF0F172A),

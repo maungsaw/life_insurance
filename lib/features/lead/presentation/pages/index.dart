@@ -4,6 +4,7 @@ import 'package:life_insurance/features/components/components.dart'
 
 import '../../data/repository/repository.dart' show leadsData;
 import 'item.dart';
+import 'package:life_insurance/core/core.dart' show AppColors;
 
 class LeadsPage extends StatefulWidget {
   const LeadsPage({super.key});
@@ -59,7 +60,7 @@ class _LeadsPageState extends State<LeadsPage> {
         SliverList.separated(
           itemCount: leadsData.length,
           separatorBuilder: (context, index) =>
-              Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
+              Divider(height: 1, thickness: 1, color: AppColors.border(context)),
           itemBuilder: (context, index) {
             final lead = leadsData[index];
             return LeadItemPage(lead: lead);

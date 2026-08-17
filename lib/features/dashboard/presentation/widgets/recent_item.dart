@@ -58,7 +58,7 @@ class ActivityItem extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
                   color: Color(0xFF0F172A),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
 
-const _kBorder = Color(0xFFE5E7EB);
 const _kAmber = Color(0xFFF59E0B);
 const _kRed = Color(0xFFE11D48);
 
@@ -92,7 +91,7 @@ class TaskAgendaCard extends StatelessWidget {
     ].join(' · ');
 
     return Material(
-      color: done ? const Color(0xFFF9FAFB) : Colors.white,
+      color: done ? AppColors.background(context) : Colors.white,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -100,7 +99,7 @@ class TaskAgendaCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: _kBorder),
+            border: Border.all(color: AppColors.border(context)),
           ),
           clipBehavior: Clip.antiAlias,
           child: IntrinsicHeight(
@@ -119,10 +118,10 @@ class TaskAgendaCard extends StatelessWidget {
                             width: 44,
                             child: Text(
                               TaskFormat.timeOf(task.startAt),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
-                                color: AppColors.lightTextSecondary,
+                                color: AppColors.onSurfaceSecondary(context),
                               ),
                             ),
                           ),
@@ -141,8 +140,8 @@ class TaskAgendaCard extends StatelessWidget {
                                         fontWeight: FontWeight.w800,
                                         fontSize: 14,
                                         color: done
-                                            ? AppColors.lightTextSecondary
-                                            : AppColors.lightTextPrimary,
+                                            ? AppColors.onSurfaceSecondary(context)
+                                            : AppColors.onSurface(context),
                                       ),
                                     ),
                                   ),
@@ -160,9 +159,9 @@ class TaskAgendaCard extends StatelessWidget {
                                 meta,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.lightTextSecondary,
+                                  color: AppColors.onSurfaceSecondary(context),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -188,10 +187,10 @@ class TaskAgendaCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.chevron_right,
                           size: 20,
-                          color: AppColors.lightTextHint,
+                          color: AppColors.hint(context),
                         ),
                       ],
                     ),
@@ -235,10 +234,10 @@ class TaskDayDots extends StatelessWidget {
             padding: const EdgeInsets.only(left: 2),
             child: Text(
               '+$extra',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextHint,
+                color: AppColors.hint(context),
               ),
             ),
           ),
@@ -267,7 +266,7 @@ class _DateCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = selected ? Colors.white : AppColors.lightTextPrimary;
+    final fg = selected ? Colors.white : AppColors.onSurface(context);
     return Semantics(
       selected: selected,
       label:
@@ -296,7 +295,7 @@ class _DateCell extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: selected ? Colors.white70 : AppColors.lightTextHint,
+                  color: selected ? Colors.white70 : AppColors.hint(context),
                 ),
               ),
               const SizedBox(height: 2),
@@ -318,8 +317,8 @@ class _DateCell extends StatelessWidget {
                     color: selected
                         ? Colors.white
                         : (tasks.isEmpty
-                              ? AppColors.lightTextHint
-                              : AppColors.lightTextSecondary),
+                              ? AppColors.hint(context)
+                              : AppColors.onSurfaceSecondary(context)),
                   ),
                 )
               else if (selected)
@@ -351,9 +350,9 @@ class _CalendarSurface extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _kBorder),
+        border: Border.all(color: AppColors.border(context)),
       ),
       child: child,
     );
@@ -475,10 +474,10 @@ class TaskMonthGrid extends StatelessWidget {
                   child: Text(
                     label,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.lightTextHint,
+                      color: AppColors.hint(context),
                     ),
                   ),
                 ),
@@ -530,8 +529,8 @@ class _MonthCell extends StatelessWidget {
     final color = selected
         ? Colors.white
         : outside
-        ? AppColors.lightTextHint
-        : AppColors.lightTextPrimary;
+        ? AppColors.hint(context)
+        : AppColors.onSurface(context);
 
     return Semantics(
       selected: selected,
@@ -637,14 +636,14 @@ class TaskDayTimeline extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 52,
                 child: Text(
                   'All day',
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.lightTextHint,
+                    color: AppColors.hint(context),
                   ),
                 ),
               ),
@@ -706,10 +705,10 @@ class _HourRow extends StatelessWidget {
             padding: const EdgeInsets.only(top: 2),
             child: Text(
               '${hour.toString().padLeft(2, '0')}:00',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextHint,
+                color: AppColors.hint(context),
               ),
             ),
           ),
@@ -718,7 +717,7 @@ class _HourRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(height: 1, color: _kBorder),
+              Container(height: 1, color: AppColors.border(context)),
               if (tasks.isEmpty)
                 const SizedBox(height: 27)
               else
@@ -774,15 +773,15 @@ class TaskDayHeading extends StatelessWidget {
               fontWeight: FontWeight.w800,
               color: highlighted
                   ? AppColors.lightPrimary
-                  : AppColors.lightTextPrimary,
+                  : AppColors.onSurface(context),
             ),
           ),
           const SizedBox(width: 6),
           Text(
             '· $count task${count == 1 ? '' : 's'}',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
         ],

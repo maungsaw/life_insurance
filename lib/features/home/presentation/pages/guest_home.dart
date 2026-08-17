@@ -78,7 +78,7 @@ class GuestHomePage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -152,14 +152,14 @@ class _PartnerBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'To unlock more opportunities',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.surface(context),
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     height: 1.3,
@@ -169,7 +169,7 @@ class _PartnerBanner extends StatelessWidget {
                 Text(
                   'Partner With Us',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.surface(context),
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                     height: 1.2,
@@ -183,7 +183,7 @@ class _PartnerBanner extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 128),
             child: FilledButton(
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.surface(context),
                 foregroundColor: AppColors.lightPrimary,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 12,

@@ -37,7 +37,7 @@ class LeadItemPage extends StatelessWidget {
         backgroundColor: lead.avatarColor,
         child: Text(
           lead.initials,
-          style: const TextStyle(fontWeight: .bold, fontSize: 15),
+          style: TextStyle(fontWeight: .bold, fontSize: 15),
         ),
       ),
 

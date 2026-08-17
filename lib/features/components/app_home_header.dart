@@ -52,7 +52,7 @@ class AppHomeHeader extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'Welcome $name! ',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: AppColors.lightPrimary,
@@ -61,10 +61,10 @@ class AppHomeHeader extends StatelessWidget {
                   ),
                   TextSpan(
                     text: greeting,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                       height: 1.25,
                     ),
                   ),
@@ -84,7 +84,7 @@ class AppHomeHeader extends StatelessWidget {
             ),
             child: Text(
               roleLabel!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
                 color: AppColors.lightPrimary,

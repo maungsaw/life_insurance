@@ -73,10 +73,10 @@ class _AppTextFieldState extends State<AppTextField> {
         if (widget.label != null) ...[
           Text.rich(
             TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
               children: [
                 TextSpan(text: widget.label),
@@ -108,23 +108,23 @@ class _AppTextFieldState extends State<AppTextField> {
           inputFormatters: widget.inputFormatters,
           autofillHints: widget.autofillHints,
           textCapitalization: widget.textCapitalization,
-          style: const TextStyle(fontSize: 15, color: AppColors.lightTextPrimary),
+          style: TextStyle(fontSize: 15, color: AppColors.onSurface(context)),
           decoration: InputDecoration(
             counterText: '',
             hintText: widget.hintText,
-            hintStyle: const TextStyle(color: AppColors.lightTextHint, fontSize: 14),
+            hintStyle: TextStyle(color: AppColors.hint(context), fontSize: 14),
             filled: true,
-            fillColor: AppColors.lightSurface,
+            fillColor: AppColors.surface(context),
             prefixIcon: widget.prefixIcon == null
                 ? null
-                : Icon(widget.prefixIcon, color: AppColors.lightTextSecondary, size: 22),
+                : Icon(widget.prefixIcon, color: AppColors.onSurfaceSecondary(context), size: 22),
             suffixIcon: widget.obscureable
                 ? IconButton(
                     tooltip: _obscure ? 'Show password' : 'Hide password',
                     onPressed: () => setState(() => _obscure = !_obscure),
                     icon: Icon(
                       _obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   )
                 : widget.suffix,
@@ -132,7 +132,7 @@ class _AppTextFieldState extends State<AppTextField> {
             enabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
               borderSide: BorderSide(
-                color: hasError ? Colors.redAccent : AppColors.lightBorder,
+                color: hasError ? Colors.redAccent : AppColors.border(context),
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -152,7 +152,7 @@ class _AppTextFieldState extends State<AppTextField> {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: borderRadius,
-              borderSide: BorderSide(color: AppColors.lightBorder.withValues(alpha: 0.7)),
+              borderSide: BorderSide(color: AppColors.border(context).withValues(alpha: 0.7)),
             ),
           ),
         ),
@@ -160,7 +160,7 @@ class _AppTextFieldState extends State<AppTextField> {
           const SizedBox(height: 6),
           Text(
             widget.errorText!,
-            style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       ],

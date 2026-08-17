@@ -53,10 +53,7 @@ class IdPick {
   }
 
   /// Parse `12/KaMaNa(N)127487` · passport · No ID back into parts.
-  static IdPick parse({
-    required String idType,
-    required String raw,
-  }) {
+  static IdPick parse({required String idType, required String raw}) {
     final t = raw.trim();
     if (idType == 'No ID' || t == 'No ID' || t.isEmpty && idType == 'No ID') {
       return const IdPick(type: 'No ID');
@@ -79,7 +76,13 @@ class IdPick {
       );
     }
     // Fallback: treat whole string as serial if already on NRC type.
-    return IdPick(type: type, state: '12', township: 'KaMaNa', nrcType: 'N', number: t);
+    return IdPick(
+      type: type,
+      state: '12',
+      township: 'KaMaNa',
+      nrcType: 'N',
+      number: t,
+    );
   }
 }
 
@@ -91,7 +94,7 @@ Future<HeightPick?> showHeightPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.surface(context),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -107,7 +110,7 @@ Future<WeightPick?> showWeightPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.surface(context),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -123,7 +126,7 @@ Future<IdPick?> showIdentificationPickerSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.surface(context),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
@@ -151,7 +154,9 @@ class _HeightSheetState extends State<_HeightSheet> {
     super.initState();
     _feet = widget.initial?.feet ?? 5;
     _inches = widget.initial?.inches ?? 7;
-    _feetCtrl = FixedExtentScrollController(initialItem: (_feet - 2).clamp(0, 6));
+    _feetCtrl = FixedExtentScrollController(
+      initialItem: (_feet - 2).clamp(0, 6),
+    );
     _inchCtrl = FixedExtentScrollController(initialItem: _inches.clamp(0, 11));
   }
 
@@ -195,13 +200,13 @@ class _HeightSheetState extends State<_HeightSheet> {
                       onSelected: (i) => setState(() => _inches = i),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
                       'ft-in',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ),
@@ -290,13 +295,13 @@ class _WeightSheetState extends State<_WeightSheet> {
                       onSelected: (i) => setState(() => _tenth = i),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Text(
                       'lb-oz',
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ),
@@ -336,10 +341,28 @@ class _IdSheetState extends State<_IdSheet> {
 
   static const _types = ['NRC', 'Old NRC', 'Passport', 'No ID'];
   static const _states = [
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
   ];
   static const _townships = [
-    'KaMaNa', 'PaZaTa', 'LaMaNa', 'AhGaYa', 'SaKaNa', 'YaKaNa',
+    'KaMaNa',
+    'PaZaTa',
+    'LaMaNa',
+    'AhGaYa',
+    'SaKaNa',
+    'YaKaNa',
   ];
   static const _nrcTypes = ['N', 'P', 'E'];
 
@@ -361,19 +384,19 @@ class _IdSheetState extends State<_IdSheet> {
   }
 
   IdPick get _draft => IdPick(
-        type: _type,
-        state: _isNrc ? _state : null,
-        township: _isNrc ? _township : null,
-        nrcType: _isNrc ? _nrcType : null,
-        number: _type == 'No ID' ? null : _number.text.trim(),
-      );
+    type: _type,
+    state: _isNrc ? _state : null,
+    township: _isNrc ? _township : null,
+    nrcType: _isNrc ? _nrcType : null,
+    number: _type == 'No ID' ? null : _number.text.trim(),
+  );
 
   bool get _isNrc => _type == 'NRC' || _type == 'Old NRC';
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.fromLTRB(
@@ -442,9 +465,9 @@ class _IdSheetState extends State<_IdSheet> {
                   const SizedBox(height: 8),
                   Text(
                     _draft.display,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.lightTextHint,
+                      color: AppColors.hint(context),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -457,17 +480,14 @@ class _IdSheetState extends State<_IdSheet> {
                   ),
                 ] else if (_type == 'Passport') ...[
                   const SizedBox(height: 18),
-                  AppTextField(
-                    label: 'Passport Number',
-                    controller: _number,
-                  ),
+                  AppTextField(label: 'Passport Number', controller: _number),
                 ] else ...[
                   const SizedBox(height: 18),
-                  const Text(
+                  Text(
                     'No identification on file for this person.',
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                       height: 1.35,
                     ),
                   ),
@@ -500,7 +520,9 @@ class _IdTypeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? Colors.white : const Color(0xFFF1F5F9),
+      color: selected
+          ? AppColors.surface(context)
+          : AppColors.mutedFill(context),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -524,7 +546,7 @@ class _IdTypeTile extends StatelessWidget {
                   fontSize: 14,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextPrimary,
+                      : AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -568,7 +590,7 @@ class _OutlinedDrop extends StatelessWidget {
         final picked = await showModalBottomSheet<String>(
           context: context,
           showDragHandle: true,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface(context),
           builder: (ctx) => SafeArea(
             child: ListView(
               shrinkWrap: true,
@@ -591,7 +613,7 @@ class _OutlinedDrop extends StatelessWidget {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             color: AppColors.lightPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 12,
@@ -600,18 +622,18 @@ class _OutlinedDrop extends StatelessWidget {
           contentPadding: const EdgeInsets.fromLTRB(12, 14, 4, 14),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.lightPrimary),
+            borderSide: BorderSide(color: AppColors.lightPrimary),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppColors.lightPrimary),
+            borderSide: BorderSide(color: AppColors.lightPrimary),
           ),
         ),
         child: Text(
           value,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
         ),
       ),
     );
@@ -669,7 +691,7 @@ class CupertinoStylePicker extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                         color: on
                             ? Colors.white
-                            : AppColors.lightTextSecondary,
+                            : AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   );
@@ -685,11 +707,7 @@ class CupertinoStylePicker extends StatelessWidget {
 
 /// Simple signature pad — finger draw on white canvas.
 class SignaturePad extends StatefulWidget {
-  const SignaturePad({
-    super.key,
-    required this.label,
-    required this.onChanged,
-  });
+  const SignaturePad({super.key, required this.label, required this.onChanged});
 
   final String label;
   final ValueChanged<bool> onChanged;
@@ -720,7 +738,7 @@ class _SignaturePadState extends State<SignaturePad> {
             Expanded(
               child: Text(
                 widget.label,
-                style: const TextStyle(fontWeight: FontWeight.w700),
+                style: TextStyle(fontWeight: FontWeight.w700),
               ),
             ),
             TextButton(onPressed: _clear, child: const Text('Clear')),
@@ -729,9 +747,9 @@ class _SignaturePadState extends State<SignaturePad> {
         Container(
           height: 120,
           decoration: BoxDecoration(
-            color: const Color(0xFFF8FAFC),
+            color: AppColors.background(context),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.lightBorder),
+            border: Border.all(color: AppColors.border(context)),
           ),
           child: GestureDetector(
             onPanStart: (d) {
@@ -744,17 +762,17 @@ class _SignaturePadState extends State<SignaturePad> {
             onPanUpdate: (d) => setState(() => _points.add(d.localPosition)),
             onPanEnd: (_) => setState(() => _points.add(null)),
             child: CustomPaint(
-              painter: _SigPainter(_points),
+              painter: _SigPainter(_points, AppColors.onSurface(context)),
               size: Size.infinite,
             ),
           ),
         ),
         if (!_hasInk)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 4),
             child: Text(
               'Draw signature above',
-              style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+              style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
             ),
           ),
       ],
@@ -763,14 +781,15 @@ class _SignaturePadState extends State<SignaturePad> {
 }
 
 class _SigPainter extends CustomPainter {
-  _SigPainter(this.points);
+  _SigPainter(this.points, this.color);
 
   final List<Offset?> points;
+  final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.lightTextPrimary
+      ..color = color
       ..strokeWidth = 2.2
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;

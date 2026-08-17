@@ -20,7 +20,7 @@ class _TeamPulseCardState extends State<TeamPulseCard> {
     final showTotal = PrototypeRole.hasIndirect;
 
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: widget.onOpenTeam,
@@ -60,20 +60,20 @@ class _TeamPulseCardState extends State<TeamPulseCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Team performance',
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.lightTextPrimary,
+                            color: AppColors.onSurface(context),
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           snap.pulseSubtitle(scope),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.lightTextSecondary,
+                            color: AppColors.onSurfaceSecondary(context),
                           ),
                         ),
                       ],
@@ -119,9 +119,9 @@ class _TeamPulseCardState extends State<TeamPulseCard> {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Actual vs target · display only',
-                style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+                style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
               ),
             ],
           ),
@@ -141,18 +141,18 @@ class _ScopeChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _chip('Personal Team', scope == TeamScope.personal, () {
+        _chip(context, 'Personal Team', scope == TeamScope.personal, () {
           onChanged(TeamScope.personal);
         }),
         const SizedBox(width: 8),
-        _chip('Total Group', scope == TeamScope.total, () {
+        _chip(context, 'Total Group', scope == TeamScope.total, () {
           onChanged(TeamScope.total);
         }),
       ],
     );
   }
 
-  Widget _chip(String label, bool on, VoidCallback tap) {
+  Widget _chip(BuildContext context, String label, bool on, VoidCallback tap) {
     return ChoiceChip(
       label: Text(label),
       selected: on,
@@ -161,7 +161,7 @@ class _ScopeChips extends StatelessWidget {
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w600,
-        color: on ? AppColors.lightPrimary : AppColors.lightTextSecondary,
+        color: on ? AppColors.lightPrimary : AppColors.onSurfaceSecondary(context),
       ),
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -180,14 +180,14 @@ class _MiniKpi extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: AppColors.background(context),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           Text(
             pct,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: AppColors.lightPrimary,
@@ -196,9 +196,9 @@ class _MiniKpi extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
         ],

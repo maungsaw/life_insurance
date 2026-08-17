@@ -26,7 +26,7 @@ class NotificationsPage extends StatelessWidget {
     final grouped = NotificationMockData.grouped;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -38,14 +38,14 @@ class NotificationsPage extends StatelessWidget {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: grouped.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
                 'No notifications yet',
-                style: TextStyle(color: AppColors.lightTextSecondary),
+                style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
               ),
             )
           : ListView(
@@ -55,10 +55,10 @@ class NotificationsPage extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
                     child: Text(
                       entry.key,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                   ),

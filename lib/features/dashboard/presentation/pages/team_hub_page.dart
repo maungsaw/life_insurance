@@ -37,11 +37,11 @@ class _TeamHubPageState extends State<TeamHubPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Your personal figures — not the team roll-up.',
                   style: TextStyle(
                     fontSize: 13,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -70,7 +70,7 @@ class _TeamHubPageState extends State<TeamHubPage> {
     final momUp = snap.momDelta.startsWith('+');
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -82,8 +82,8 @@ class _TeamHubPageState extends State<TeamHubPage> {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -97,7 +97,7 @@ class _TeamHubPageState extends State<TeamHubPage> {
                   HomeMockData.agentName.isEmpty
                       ? 'A'
                       : HomeMockData.agentName[0],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     color: AppColors.lightPrimary,
                   ),
@@ -110,16 +110,16 @@ class _TeamHubPageState extends State<TeamHubPage> {
                   children: [
                     Text(
                       HomeMockData.agentName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     Text(
                       PrototypeRole.teamRoleLine,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ],
@@ -129,12 +129,12 @@ class _TeamHubPageState extends State<TeamHubPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   snap.periodLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
@@ -165,9 +165,9 @@ class _TeamHubPageState extends State<TeamHubPage> {
                   ),
                   Text(
                     '${(snap.ownOverallPct * 100).round()}% · FYP ${snap.ownFyp}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                   const Icon(Icons.chevron_right_rounded, size: 18),
@@ -201,7 +201,7 @@ class _TeamHubPageState extends State<TeamHubPage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -212,26 +212,26 @@ class _TeamHubPageState extends State<TeamHubPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Overall',
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Actual  ${snap.overallActual}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
                         'Target  ${snap.overallTarget}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -362,9 +362,9 @@ class _TeamHubPageState extends State<TeamHubPage> {
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Weighting is applied by Core. This app displays the result.',
-            style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+            style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
           ),
           const SizedBox(height: 16),
           _Shortcut(
@@ -403,10 +403,10 @@ class _TeamHubPageState extends State<TeamHubPage> {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
             ),
           ),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -440,7 +440,7 @@ class _Seg extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: selected ? Colors.white : AppColors.lightTextPrimary,
+              color: selected ? Colors.white : AppColors.onSurface(context),
             ),
           ),
         ),
@@ -465,7 +465,7 @@ class _Shortcut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap,
@@ -490,24 +490,24 @@ class _Shortcut extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.lightTextSecondary,
+                        color: AppColors.onSurfaceSecondary(context),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
-                color: AppColors.lightTextHint,
+                color: AppColors.hint(context),
               ),
             ],
           ),

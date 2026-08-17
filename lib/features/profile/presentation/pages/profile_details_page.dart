@@ -125,7 +125,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProfileSubAppBar(title: 'Profile Details'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -138,8 +138,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   backgroundColor: AppColors.lightPrimary,
                   child: Text(
                     ProfileMockData.initials,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.surface(context),
                       fontSize: 36,
                       fontWeight: FontWeight.w700,
                     ),
@@ -149,7 +149,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   right: 0,
                   bottom: 0,
                   child: Material(
-                    color: Colors.white,
+                    color: AppColors.surface(context),
                     shape: const CircleBorder(),
                     elevation: 1,
                     child: InkWell(
@@ -166,7 +166,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         height: 32,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.lightBorder),
+                          border: Border.all(color: AppColors.border(context)),
                         ),
                         child: const Icon(
                           Icons.photo_camera_outlined,
@@ -214,10 +214,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             errorText: _dobError,
             suffix: IconButton(
               onPressed: _pickDob,
-              icon: const Icon(
+              icon: Icon(
                 Icons.calendar_today_outlined,
                 size: 18,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
           ),
@@ -244,12 +244,12 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             },
           ),
           const SizedBox(height: 18),
-          const Text(
+          Text(
             'Gender',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           const SizedBox(height: 10),
@@ -298,7 +298,7 @@ class _GenderChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -309,7 +309,7 @@ class _GenderChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: selected ? AppColors.lightPrimary : AppColors.lightBorder,
+              color: selected ? AppColors.lightPrimary : AppColors.border(context),
               width: selected ? 1.6 : 1,
             ),
           ),
@@ -319,7 +319,7 @@ class _GenderChip extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: selected
                   ? AppColors.lightPrimary
-                  : AppColors.lightTextSecondary,
+                  : AppColors.onSurfaceSecondary(context),
             ),
           ),
         ),

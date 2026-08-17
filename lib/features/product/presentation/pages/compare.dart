@@ -70,7 +70,7 @@ class _ProductComparePageState extends State<ProductComparePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: const ProductSubAppBar(title: 'Compare Details'),
       body: Column(
         children: [
@@ -83,7 +83,7 @@ class _ProductComparePageState extends State<ProductComparePage> {
                   1: FlexColumnWidth(1.2),
                   2: FlexColumnWidth(1.2),
                 },
-                border: TableBorder.all(color: AppColors.lightBorder),
+                border: TableBorder.all(color: AppColors.border(context)),
                 children: [
                   TableRow(
                     decoration: const BoxDecoration(
@@ -96,6 +96,9 @@ class _ProductComparePageState extends State<ProductComparePage> {
                     ],
                   ),
                   TableRow(
+                    decoration: BoxDecoration(
+                      color: AppColors.surface(context),
+                    ),
                     children: [
                       const _BodyCell(''),
                       _PinCell(
@@ -112,8 +115,8 @@ class _ProductComparePageState extends State<ProductComparePage> {
                     TableRow(
                       decoration: BoxDecoration(
                         color: i.isOdd
-                            ? AppColors.lightPrimary.withValues(alpha: 0.06)
-                            : Colors.white,
+                            ? AppColors.mutedFill(context)
+                            : AppColors.surface(context),
                       ),
                       children: [
                         _BodyCell(_rows[i].feature, bold: true),
@@ -135,20 +138,16 @@ class _ProductComparePageState extends State<ProductComparePage> {
                     child: AppButton(
                       label: 'Use ${_left.name.split(' ').first}',
                       variant: AppButtonVariant.secondary,
-                      onPressed: () => context.push(
-                        AppRoute.productQuote,
-                        extra: _left,
-                      ),
+                      onPressed: () =>
+                          context.push(AppRoute.productQuote, extra: _left),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: AppButton(
                       label: 'Use ${_right.name.split(' ').first}',
-                      onPressed: () => context.push(
-                        AppRoute.productQuote,
-                        extra: _right,
-                      ),
+                      onPressed: () =>
+                          context.push(AppRoute.productQuote, extra: _right),
                     ),
                   ),
                 ],
@@ -187,7 +186,7 @@ class _HeadCell extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w800,
           fontSize: 12,
-          color: white ? Colors.white : AppColors.lightTextPrimary,
+          color: white ? Colors.white : AppColors.onSurface(context),
         ),
       ),
     );
@@ -210,6 +209,7 @@ class _BodyCell extends StatelessWidget {
         style: TextStyle(
           fontSize: 12,
           fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+          color: AppColors.onSurface(context),
         ),
       ),
     );

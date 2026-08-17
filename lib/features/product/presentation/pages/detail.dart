@@ -23,7 +23,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface(context),
       appBar: ProductSubAppBar(
         title: 'Product Details',
         actions: [
@@ -57,7 +57,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       Text(
                         p.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                         ),
@@ -65,10 +65,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       const SizedBox(height: 4),
                       Text(
                         p.tagline,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           height: 1.35,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     ],
@@ -101,7 +101,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   : FontWeight.w600,
                               color: _tab == i
                                   ? AppColors.lightPrimary
-                                  : AppColors.lightTextSecondary,
+                                  : AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -149,10 +149,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return [
       Text(
         p.about,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           height: 1.45,
-          color: AppColors.lightTextPrimary,
+          color: AppColors.onSurface(context),
         ),
       ),
       const SizedBox(height: 22),
@@ -172,7 +172,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 color: AppColors.lightPrimary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(row.icon, color: Colors.white, size: 18),
+              child: Icon(row.icon, color: AppColors.surface(context), size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -181,14 +181,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: [
                   Text(
                     row.title,
-                    style: const TextStyle(fontWeight: FontWeight.w800),
+                    style: TextStyle(fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     row.body,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                       height: 1.35,
                     ),
                   ),
@@ -217,13 +217,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   color: AppColors.lightPrimary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check, color: Colors.white, size: 14),
+                child: Icon(Icons.check, color: AppColors.surface(context), size: 14),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   why,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -243,16 +243,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
         child: Text(
           p.rateCallout,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w700,
             color: AppColors.lightPrimary,
           ),
         ),
       ),
       const SizedBox(height: 8),
-      const Text(
+      Text(
         'Indicative · final premium from the calculator.',
-        style: TextStyle(fontSize: 12, color: AppColors.lightTextHint),
+        style: TextStyle(fontSize: 12, color: AppColors.hint(context)),
       ),
       const SizedBox(height: 16),
       for (final line in p.coverage)
@@ -262,7 +262,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('•  ', style: TextStyle(fontWeight: FontWeight.w800)),
-              Expanded(child: Text(line, style: const TextStyle(height: 1.35))),
+              Expanded(child: Text(line, style: TextStyle(height: 1.35))),
             ],
           ),
         ),
@@ -283,7 +283,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 color: AppColors.lightPrimary,
               ),
               const SizedBox(width: 8),
-              Expanded(child: Text(line, style: const TextStyle(height: 1.35))),
+              Expanded(child: Text(line, style: TextStyle(height: 1.35))),
             ],
           ),
         ),

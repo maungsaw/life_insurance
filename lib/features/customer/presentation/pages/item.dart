@@ -61,7 +61,7 @@ class CustomerListTile extends StatelessWidget {
               return Center(
                 child: Text(
                   _getInitials(customer.name),
-                  style: const TextStyle(fontWeight: .bold, fontSize: 16),
+                  style: TextStyle(fontWeight: .bold, fontSize: 16),
                 ),
               );
             },
@@ -93,7 +93,7 @@ class CustomerListTile extends StatelessWidget {
             // Phone Number
             TextSpan(
               text: customer.phone,
-              style: const TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),

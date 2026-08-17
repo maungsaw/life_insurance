@@ -32,7 +32,7 @@ class CommissionReportBody extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -41,7 +41,7 @@ class CommissionReportBody extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.lightTextPrimary,
+                      color: AppColors.onSurface(context),
                     ),
                   ),
                   SizedBox(height: 4),
@@ -50,7 +50,7 @@ class CommissionReportBody extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13,
                       height: 1.35,
-                      color: AppColors.lightTextSecondary,
+                      color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                 ],
@@ -67,14 +67,14 @@ class CommissionReportBody extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         if (maxAmount <= 0)
-          const Padding(
+          Padding(
             padding: EdgeInsets.symmetric(vertical: 32),
             child: Center(
               child: Text(
                 'No commission this period',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ),
@@ -127,7 +127,7 @@ class CommissionReportBody extends StatelessWidget {
                     ? commissionPeriodLabel(period)
                     : CommissionFormat.compactMmK(vsAmount),
                 valueColor: vsPct == null
-                    ? AppColors.lightTextPrimary
+                    ? AppColors.onSurface(context)
                     : (vsPct >= 0
                           ? AppColors.successGreen
                           : const Color(0xFFE11D48)),
@@ -171,7 +171,7 @@ class _PeriodMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(20),
       child: PopupMenuButton<CommissionPeriodFilter>(
         initialValue: period,
@@ -190,14 +190,14 @@ class _PeriodMenu extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFE5E7EB)),
+            border: Border.all(color: AppColors.border(context)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 commissionPeriodLabel(period),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppColors.lightPrimary,
@@ -230,10 +230,10 @@ class _SectionTitle extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w800,
-            color: AppColors.lightTextPrimary,
+            color: AppColors.onSurface(context),
           ),
         ),
       ],
@@ -259,10 +259,10 @@ class _CategoryBar extends StatelessWidget {
             stat.amount <= 0 ? '—' : CommissionFormat.money(stat.amount),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 9,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 6),
@@ -283,8 +283,8 @@ class _CategoryBar extends StatelessWidget {
             ),
             child: Text(
               '${stat.count}',
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppColors.surface(context),
                 fontWeight: FontWeight.w800,
                 fontSize: 11,
               ),
@@ -305,10 +305,10 @@ class _CategoryBar extends StatelessWidget {
             stat.line.label,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
         ],
@@ -339,7 +339,7 @@ class _TopCategoryCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface(context),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -355,28 +355,28 @@ class _TopCategoryCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Top performing category',
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '${stat.line.label} Insurance',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
                 Text(
                   '${CommissionFormat.compactMmK(stat.amount)} · ${stat.count} commissions',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ],
@@ -398,23 +398,23 @@ class _SummaryTile extends StatelessWidget {
     required this.label,
     required this.value,
     required this.sub,
-    this.valueColor = AppColors.lightTextPrimary,
+    this.valueColor,
   });
 
   final IconData icon;
   final String label;
   final String value;
   final String sub;
-  final Color valueColor;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(color: AppColors.border(context)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -423,9 +423,9 @@ class _SummaryTile extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 4),
@@ -434,7 +434,7 @@ class _SummaryTile extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: valueColor,
+              color: valueColor ?? AppColors.onSurface(context),
             ),
           ),
           const SizedBox(height: 2),
@@ -442,9 +442,9 @@ class _SummaryTile extends StatelessWidget {
             sub,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
-              color: AppColors.lightTextHint,
+              color: AppColors.hint(context),
             ),
           ),
         ],

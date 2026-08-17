@@ -23,7 +23,7 @@ class AppPolicyStatCard extends StatelessWidget {
     final card = Container(
       padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -67,10 +67,10 @@ class AppPolicyStatCard extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
               ],
@@ -144,36 +144,36 @@ class AppKpiTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.border(context)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w800,
               letterSpacing: 0.4,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 6),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: AppColors.lightTextPrimary,
+              color: AppColors.onSurface(context),
             ),
           ),
           if (hint != null) ...[
             const SizedBox(height: 4),
             Text(
               hint!,
-              style: const TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+              style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
             ),
           ],
         ],
@@ -201,9 +201,9 @@ class AppMdrtBar extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.lightBorder),
+        border: Border.all(color: AppColors.border(context)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,16 +213,16 @@ class AppMdrtBar extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.lightTextPrimary,
+                    color: AppColors.onSurface(context),
                   ),
                 ),
               ),
               Text(
                 '${(p * 100).round()}%',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
                   color: AppColors.lightPrimary,
@@ -234,7 +234,7 @@ class AppMdrtBar extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               subtitle!,
-              style: const TextStyle(fontSize: 12, color: AppColors.lightTextSecondary),
+              style: TextStyle(fontSize: 12, color: AppColors.onSurfaceSecondary(context)),
             ),
           ],
           const SizedBox(height: 10),
@@ -243,7 +243,7 @@ class AppMdrtBar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: p,
               minHeight: 8,
-              backgroundColor: AppColors.lightBorder,
+              backgroundColor: AppColors.border(context),
               color: AppColors.lightPrimary,
             ),
           ),

@@ -63,24 +63,24 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
               children: [
                 Text(
                   entry.productName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _kv('Amount', '${entry.amountLabel} MMK'),
-                _kv('When', entry.whenLabel),
-                _kv('Category', entry.line.label),
-                if (entry.clientName != null) _kv('Client', entry.clientName!),
-                if (entry.policyRef != null) _kv('Policy', entry.policyRef!),
+                _kv(ctx, 'Amount', '${entry.amountLabel} MMK'),
+                _kv(ctx, 'When', entry.whenLabel),
+                _kv(ctx, 'Category', entry.line.label),
+                if (entry.clientName != null) _kv(ctx, 'Client', entry.clientName!),
+                if (entry.policyRef != null) _kv(ctx, 'Policy', entry.policyRef!),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'Display only · paid via company process outside this app. No withdraw in Phase 1.',
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.35,
-                    color: AppColors.lightTextSecondary,
+                    color: AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -102,7 +102,7 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
     final showReport = _tab == 1;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: const ProfileSubAppBar(title: 'Commission'),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,13 +131,13 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
               ),
             ),
             const SizedBox(height: 8),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'Product commission · display only',
                 style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.lightTextHint,
+                  color: AppColors.hint(context),
                 ),
               ),
             ),
@@ -171,7 +171,7 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
                       commissionPeriodLabel(_period),
                     if (_line != null) _line!.label,
                   ].join(' · '),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.lightPrimary,
@@ -184,11 +184,11 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text(
+                          Text(
                             'No commission in this period',
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.lightTextSecondary,
+                              color: AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           TextButton(
@@ -207,7 +207,7 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
                       separatorBuilder: (_, _) => Divider(
                         height: 1,
                         indent: 72,
-                        color: Colors.grey.shade200,
+                        color: AppColors.border(context),
                       ),
                       itemBuilder: (context, i) {
                         final e = list[i];
@@ -229,20 +229,20 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
                             ].join(' · '),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontWeight: FontWeight.w800),
+                            style: TextStyle(fontWeight: FontWeight.w800),
                           ),
                           subtitle: Text(
                             e.subtitle,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.lightTextSecondary,
+                              color: AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           trailing: Text(
                             e.amountLabel,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w800,
                               color: AppColors.lightPrimary,
                               fontSize: 15,
@@ -258,7 +258,7 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
     );
   }
 
-  static Widget _kv(String k, String v) {
+  static Widget _kv(BuildContext context, String k, String v) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -266,14 +266,14 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage> {
           Expanded(
             child: Text(
               k,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
             ),
           ),
           Flexible(
             child: Text(
               v,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -293,19 +293,19 @@ class _HubTabs extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
+        color: AppColors.mutedFill(context),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          _tab('History', 0),
-          _tab('Report', 1),
+          _tab(context, 'History', 0),
+          _tab(context, 'Report', 1),
         ],
       ),
     );
   }
 
-  Widget _tab(String label, int index) {
+  Widget _tab(BuildContext context, String label, int index) {
     final selected = selectedIndex == index;
     return Expanded(
       child: Material(
@@ -322,7 +322,7 @@ class _HubTabs extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: selected ? Colors.white : AppColors.lightTextSecondary,
+                color: selected ? Colors.white : AppColors.onSurfaceSecondary(context),
               ),
             ),
           ),
@@ -367,12 +367,12 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Period',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 8),
@@ -392,18 +392,18 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
                       fontSize: 12,
                       color: _period == p
                           ? AppColors.lightPrimary
-                          : AppColors.lightTextSecondary,
+                          : AppColors.onSurfaceSecondary(context),
                     ),
                   ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Product line',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 8),
@@ -422,7 +422,7 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
                     fontSize: 12,
                     color: _line == null
                         ? AppColors.lightPrimary
-                        : AppColors.lightTextSecondary,
+                        : AppColors.onSurfaceSecondary(context),
                   ),
                 ),
                 for (final line in CommissionLine.values)
@@ -437,7 +437,7 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
                       fontSize: 12,
                       color: _line == line
                           ? line.color
-                          : AppColors.lightTextSecondary,
+                          : AppColors.onSurfaceSecondary(context),
                     ),
                   ),
               ],

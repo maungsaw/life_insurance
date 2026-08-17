@@ -8,6 +8,7 @@ class ProductSelectChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+
     /// When true (default), fills parent — use inside [Expanded]/[Row].
     /// When false, sizes to label — use inside [Wrap] (Get A Quote type).
     this.expand = true,
@@ -21,7 +22,7 @@ class ProductSelectChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -38,7 +39,9 @@ class ProductSelectChip extends StatelessWidget {
                 border: Border.all(
                   color: selected
                       ? AppColors.lightPrimary
-                      : (expand ? AppColors.lightBorder : Colors.transparent),
+                      : (expand
+                            ? AppColors.border(context)
+                            : Colors.transparent),
                   width: selected ? 1.6 : (expand ? 1 : 0),
                 ),
               ),
@@ -52,7 +55,7 @@ class ProductSelectChip extends StatelessWidget {
                   fontSize: 13,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextPrimary,
+                      : AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -93,7 +96,9 @@ class QuoteTypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? Colors.white : const Color(0xFFF1F5F9),
+      color: selected
+          ? AppColors.surface(context)
+          : AppColors.mutedFill(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -117,7 +122,7 @@ class QuoteTypeChip extends StatelessWidget {
                   fontSize: 13,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextPrimary,
+                      : AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -157,7 +162,7 @@ class QuoteNameTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -188,7 +193,7 @@ class QuoteNameTile extends StatelessWidget {
                   height: 1.2,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextPrimary,
+                      : AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -221,10 +226,10 @@ class QuoteRequiredLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text.rich(
       TextSpan(
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 13,
-          color: AppColors.lightTextPrimary,
+          color: AppColors.onSurface(context),
         ),
         children: [
           TextSpan(text: text),
@@ -254,7 +259,7 @@ class ProductCatalogCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onTap,
@@ -280,7 +285,11 @@ class ProductCatalogCard extends StatelessWidget {
                   color: AppColors.lightPrimary.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(product.icon, color: AppColors.lightPrimary, size: 28),
+                child: Icon(
+                  product.icon,
+                  color: AppColors.lightPrimary,
+                  size: 28,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
@@ -288,10 +297,10 @@ class ProductCatalogCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.lightTextPrimary,
+                  color: AppColors.onSurface(context),
                   height: 1.2,
                 ),
               ),
@@ -301,10 +310,10 @@ class ProductCatalogCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   height: 1.35,
-                  color: AppColors.lightTextSecondary,
+                  color: AppColors.onSurfaceSecondary(context),
                 ),
               ),
             ],
@@ -316,11 +325,7 @@ class ProductCatalogCard extends StatelessWidget {
 }
 
 class ProductSubAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ProductSubAppBar({
-    super.key,
-    required this.title,
-    this.actions,
-  });
+  const ProductSubAppBar({super.key, required this.title, this.actions});
 
   final String title;
   final List<Widget>? actions;
@@ -337,12 +342,12 @@ class ProductSubAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
       ),
       centerTitle: false,
       elevation: 0,
-      backgroundColor: Colors.white,
-      foregroundColor: AppColors.lightTextPrimary,
+      backgroundColor: AppColors.surface(context),
+      foregroundColor: AppColors.onSurface(context),
       actions: actions,
     );
   }
@@ -403,10 +408,10 @@ class _PartySheetState extends State<_PartySheet> {
                 hintText: 'Search..',
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: const Color(0xFFF8FAFC),
+                fillColor: AppColors.background(context),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.lightBorder),
+                  borderSide: BorderSide(color: AppColors.border(context)),
                 ),
               ),
             ),

@@ -86,21 +86,21 @@ class _PolicyListFilterSheetState extends State<PolicyListFilterSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Filter',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: AppColors.lightTextPrimary,
+                color: AppColors.onSurface(context),
               ),
             ),
             const SizedBox(height: 18),
-            const Text(
+            Text(
               'Product',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 10),
@@ -134,12 +134,12 @@ class _PolicyListFilterSheetState extends State<PolicyListFilterSheet> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Status',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.lightTextSecondary,
+                color: AppColors.onSurfaceSecondary(context),
               ),
             ),
             const SizedBox(height: 10),
@@ -255,7 +255,7 @@ class _Chip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -271,7 +271,7 @@ class _Chip extends StatelessWidget {
                 border: Border.all(
                   color: selected
                       ? AppColors.lightPrimary
-                      : const Color(0xFFE5E7EB),
+                      : AppColors.border(context),
                   width: 1.4,
                 ),
               ),
@@ -282,7 +282,7 @@ class _Chip extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextPrimary,
+                      : AppColors.onSurface(context),
                 ),
               ),
             ),

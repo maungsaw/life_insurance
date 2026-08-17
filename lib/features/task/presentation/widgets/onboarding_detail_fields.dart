@@ -155,7 +155,7 @@ class OnboardingDetailFieldsState extends State<OnboardingDetailFields> {
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Text(
                 title,
-                style: const TextStyle(fontWeight: FontWeight.w800),
+                style: TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
             for (final o in options)
@@ -232,12 +232,12 @@ class OnboardingDetailFieldsState extends State<OnboardingDetailFields> {
         onChanged: (_) => _flushText(),
       ),
       const SizedBox(height: 14),
-      const Text(
+      Text(
         'Identification',
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: AppColors.lightTextSecondary,
+          color: AppColors.onSurfaceSecondary(context),
         ),
       ),
       const SizedBox(height: 8),
@@ -444,7 +444,7 @@ class _OnboardTab extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 13,
-              color: selected ? Colors.white : AppColors.lightTextPrimary,
+              color: selected ? Colors.white : AppColors.onSurface(context),
             ),
           ),
         ),

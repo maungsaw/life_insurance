@@ -362,7 +362,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
+                  style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
               for (final o in options)
@@ -391,7 +391,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
         .toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: AppColors.background(context),
       appBar: const ProductSubAppBar(title: 'Get A Quote'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
@@ -404,13 +404,13 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 color: AppColors.lightPrimary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
+              child: Text(
                 'You’re not signed in. Estimates aren’t saved until you log in.',
                 style: TextStyle(
                   fontSize: 12,
                   height: 1.35,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.lightTextPrimary,
+                  color: AppColors.onSurface(context),
                 ),
               ),
             ),
@@ -489,9 +489,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
           const SizedBox(height: 6),
           Text(
             'Age $_age',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.lightTextSecondary,
+              color: AppColors.onSurfaceSecondary(context),
             ),
           ),
           const SizedBox(height: 14),
@@ -580,10 +580,10 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             },
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Indicative · final premium from Core calculator',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+            style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
           ),
           const SizedBox(height: 20),
           Row(
@@ -748,7 +748,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
           activeColor: AppColors.lightPrimary,
           title: Text(
             field.label,
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: TextStyle(fontWeight: FontWeight.w600),
           ),
           controlAffinity: ListTileControlAffinity.leading,
           onChanged: (v) {
@@ -819,7 +819,7 @@ class QuotePremiumSummaryCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -837,7 +837,7 @@ class QuotePremiumSummaryCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   productName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                   ),
@@ -863,12 +863,12 @@ class QuotePremiumSummaryCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Premium ($frequency)',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
                 Text(
                   premium,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w800,
                     color: AppColors.lightPrimary,
                   ),
@@ -877,15 +877,15 @@ class QuotePremiumSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _kv('Product Name', productName),
-          if (variant != null) _kv('Variant', variant!),
-          _kv('Payment Frequency', frequency),
-          _kv('Your Age', '$age'),
-          _kv('Sum Insured', sumInsured),
-          if (topup != null && topup != '0.00') _kv('Top-Up Premium', topup!),
-          _kv('Policy Terms', term),
-          for (final e in extraRows.entries) _kv(e.key, e.value),
-          _kv('Stamp Fee', stampFee),
+          _kv(context, 'Product Name', productName),
+          if (variant != null) _kv(context, 'Variant', variant!),
+          _kv(context, 'Payment Frequency', frequency),
+          _kv(context, 'Your Age', '$age'),
+          _kv(context, 'Sum Insured', sumInsured),
+          if (topup != null && topup != '0.00') _kv(context, 'Top-Up Premium', topup!),
+          _kv(context, 'Policy Terms', term),
+          for (final e in extraRows.entries) _kv(context, e.key, e.value),
+          _kv(context, 'Stamp Fee', stampFee),
           const Divider(height: 20),
           Row(
             children: [
@@ -895,7 +895,7 @@ class QuotePremiumSummaryCard extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
-              Text(total, style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(total, style: TextStyle(fontWeight: FontWeight.w800)),
             ],
           ),
         ],
@@ -903,7 +903,7 @@ class QuotePremiumSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _kv(String k, String v) {
+  Widget _kv(BuildContext context, String k, String v) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
@@ -911,14 +911,14 @@ class QuotePremiumSummaryCard extends StatelessWidget {
           Expanded(
             child: Text(
               k,
-              style: const TextStyle(color: AppColors.lightTextSecondary),
+              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
             ),
           ),
           Flexible(
             child: Text(
               v,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700),
             ),
           ),
         ],

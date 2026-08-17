@@ -20,7 +20,7 @@ class TeamFaPage extends StatelessWidget {
         : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -28,12 +28,12 @@ class TeamFaPage extends StatelessWidget {
         ),
         title: Text(
           member?.name ?? 'FA Performance Detail',
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: const Color(0xFFF8FAFC),
-        foregroundColor: AppColors.lightTextPrimary,
+        backgroundColor: AppColors.background(context),
+        foregroundColor: AppColors.onSurface(context),
       ),
       body: member == null
           ? const Center(child: Text('Agent not found'))
@@ -48,7 +48,7 @@ class TeamFaPage extends StatelessWidget {
                           AppColors.lightPrimary.withValues(alpha: 0.15),
                       child: Text(
                         member.initials,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w800,
                           color: AppColors.lightPrimary,
                         ),
@@ -61,16 +61,16 @@ class TeamFaPage extends StatelessWidget {
                         children: [
                           Text(
                             member.name,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                           Text(
                             '${member.roleLabel} · ${member.code}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.lightTextSecondary,
+                              color: AppColors.onSurfaceSecondary(context),
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -81,15 +81,15 @@ class TeamFaPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                Text(
                   'Individual performance · not their login',
-                  style: TextStyle(fontSize: 11, color: AppColors.lightTextHint),
+                  style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
                 ),
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.surface(context),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -103,25 +103,25 @@ class TeamFaPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Achievement',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.lightTextSecondary,
+                                color: AppColors.onSurfaceSecondary(context),
                               ),
                             ),
                             Text(
                               member.actualCompact.isEmpty
                                   ? member.ape
                                   : '${member.actualCompact} / ${member.targetCompact}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
                               'MoM ${member.momDelta}',
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 12),
                             ),
                           ],
                         ),
@@ -186,7 +186,7 @@ class TeamFaPage extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                           color: member.qualified
                               ? const Color(0xFFB45309)
-                              : AppColors.lightTextPrimary,
+                              : AppColors.onSurface(context),
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -194,7 +194,7 @@ class TeamFaPage extends StatelessWidget {
                         member.mdrtOfTarget.isEmpty
                             ? '${(member.mdrtPct * 100).round()}% of target'
                             : 'Achieved ${member.mdrtOfTarget} of target',
-                        style: const TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 13),
                       ),
                       const SizedBox(height: 8),
                       ClipRRect(
@@ -228,7 +228,7 @@ class TeamFaPage extends StatelessWidget {
                     label: const Text('Assign task'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.lightPrimary,
-                      side: const BorderSide(color: AppColors.lightPrimary),
+                      side: BorderSide(color: AppColors.lightPrimary),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

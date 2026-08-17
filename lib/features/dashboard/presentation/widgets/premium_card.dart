@@ -15,7 +15,6 @@ import 'package:flutter/material.dart'
         BoxShadow,
         BoxDecoration,
         CrossAxisAlignment,
-        Colors,
         TextStyle,
         MainAxisAlignment,
         FontWeight,
@@ -23,6 +22,7 @@ import 'package:flutter/material.dart'
         Icon,
         Container,
         Column;
+import 'package:life_insurance/core/core.dart' show AppColors;
 
 class TotalPremiumCard extends StatelessWidget {
   const TotalPremiumCard({super.key});
@@ -53,7 +53,7 @@ class TotalPremiumCard extends StatelessWidget {
           Text(
             'Total Premium',
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: AppColors.surface(context).withValues(alpha: 0.8),
               fontSize: 14,
             ),
           ),
@@ -61,10 +61,10 @@ class TotalPremiumCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 '\$ 24,780.00',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
@@ -75,7 +75,7 @@ class TotalPremiumCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: AppColors.surface(context).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(

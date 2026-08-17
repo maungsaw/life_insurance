@@ -93,6 +93,13 @@
 - [x] Commission History \| Report hub · identity rows · dashboard shipped (`80`)
 - [x] e-App start points · Renewal & repurchase brainstorm (`81`)
 - [x] e-App start points · Policy Renew · Client/Lead Start e-App shipped (`81`)
+- [x] Dark theme · every screen readable brainstorm (`82`)
+- [x] Dark theme semantic tokens · screen pass shipped (`82`)
+- [x] Get A Quote Product Type chips in Dark brainstorm (`83`)
+- [x] Get A Quote Product Type chips Dark token pass shipped (`83`)
+- [x] Bottom nav Dark contrast brainstorm (`84`)
+- [x] Bottom nav Dark inactive + pill contrast shipped (`84`)
+- [x] Compare Details dark zebra rows readable (`82` follow-up)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

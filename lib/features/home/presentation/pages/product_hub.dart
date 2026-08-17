@@ -30,7 +30,7 @@ class _ProductHubPageState extends State<ProductHubPage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: AppColors.background(context),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,13 +39,13 @@ class _ProductHubPageState extends State<ProductHubPage> {
               padding: const EdgeInsets.fromLTRB(20, 16, 8, 8),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       'Product',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: AppColors.onSurface(context),
                       ),
                     ),
                   ),
@@ -99,12 +99,12 @@ class _ProductHubPageState extends State<ProductHubPage> {
             const SizedBox(height: 8),
             Expanded(
               child: list.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
                         'No match',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
-                          color: AppColors.lightTextSecondary,
+                          color: AppColors.onSurfaceSecondary(context),
                         ),
                       ),
                     )
@@ -121,10 +121,10 @@ class _ProductHubPageState extends State<ProductHubPage> {
                             padding: const EdgeInsets.fromLTRB(4, 10, 4, 10),
                             child: Text(
                               entry.value.first.sectionTitle,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.lightTextPrimary,
+                                color: AppColors.onSurface(context),
                               ),
                             ),
                           ),
@@ -176,7 +176,7 @@ class _Chip extends StatelessWidget {
                   fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
                   color: selected
                       ? AppColors.lightPrimary
-                      : AppColors.lightTextSecondary,
+                      : AppColors.onSurfaceSecondary(context),
                 ),
               ),
               const SizedBox(height: 4),

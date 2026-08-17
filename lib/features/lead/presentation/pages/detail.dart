@@ -37,7 +37,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       case 'Applied':
         return const Color(0xE8E8F5E9);
       default:
-        return const Color(0xFFF5F5F5);
+        return AppColors.mutedFill(context);
     }
   }
 
@@ -52,7 +52,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       case 'Applied':
         return const Color(0xFF388E3C);
       default:
-        return Colors.black87;
+        return AppColors.onSurface(context);
     }
   }
 
@@ -74,22 +74,22 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: AppColors.background(context),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface(context),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new,
-            color: Colors.black87,
+            color: AppColors.onSurface(context),
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Lead Details',
           style: TextStyle(
-            color: Colors.black,
+            color: AppColors.onSurface(context),
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -97,7 +97,10 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined, color: Colors.black87),
+            icon: Icon(
+              Icons.edit_outlined,
+              color: AppColors.onSurface(context),
+            ),
             onPressed: () {},
           ),
         ],
@@ -107,7 +110,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
           children: [
             // --- Header Profile Section ---
             Container(
-              color: Colors.white,
+              color: AppColors.surface(context),
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
@@ -116,8 +119,8 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                     backgroundColor: widget.lead.avatarColor,
                     child: Text(
                       widget.lead.initials,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.onPrimary,
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
@@ -126,16 +129,19 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                   const SizedBox(height: 12),
                   Text(
                     widget.lead.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: AppColors.onSurface(context),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     widget.lead.email,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.onSurfaceSecondary(context),
+                    ),
                   ),
                   const SizedBox(height: 10),
 
@@ -186,9 +192,9 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border(context)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +225,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? _getStatusTextColor(status)
-                                    : Colors.grey.shade100,
+                                    : AppColors.border(context),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -228,7 +234,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                                 style: TextStyle(
                                   color: isSelected
                                       ? Colors.white
-                                      : Colors.grey[700],
+                                      : AppColors.onSurfaceSecondary(context),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
                                 ),
@@ -257,7 +263,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.lightPrimary,
-                        side: const BorderSide(color: AppColors.lightPrimary),
+                        side: BorderSide(color: AppColors.lightPrimary),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       child: const Text(
@@ -315,9 +321,9 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface(context),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border(context)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,14 +374,14 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.surface(context),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: AppColors.border(context)),
                     ),
                     child: Text(
                       'Interested in comprehensive auto insurance plans. Requested a call back around 3 PM.',
                       style: TextStyle(
-                        color: Colors.grey[800],
+                        color: AppColors.onSurface(context),
                         fontSize: 13,
                         height: 1.4,
                       ),
@@ -397,13 +403,13 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       children: [
         CircleAvatar(
           radius: 22,
-          backgroundColor: const Color(0xFFE0F7FA),
-          child: Icon(icon, color: const Color(0xFF00B4D8), size: 20),
+          backgroundColor: AppColors.primarySoftTint(context),
+          child: Icon(icon, color: AppColors.lightPrimary, size: 20),
         ),
         const SizedBox(height: 6),
         Text(
           label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -415,16 +421,22 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: Colors.grey[600]),
+          Icon(icon, size: 18, color: AppColors.onSurfaceSecondary(context)),
           const SizedBox(width: 12),
-          Text(title, style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.onSurfaceSecondary(context),
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               value,
               textAlign: TextAlign.end,
               maxLines: 2,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],

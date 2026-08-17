@@ -1,3 +1,4 @@
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:flutter/material.dart'
     show
         StatelessWidget,
@@ -43,7 +44,7 @@ class AppStatusBadge extends StatelessWidget {
         break;
       default:
         textColor = Colors.grey;
-        bgColor = Colors.grey.shade100;
+        bgColor = AppColors.border(context);
         borderColor = Colors.grey.shade300;
     }
 
