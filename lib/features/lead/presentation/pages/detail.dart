@@ -1,44 +1,11 @@
-import 'package:flutter/material.dart'
-    show
-        StatefulWidget,
-        State,
-        Color,
-        Widget,
-        BuildContext,
-        Icon,
-        Text,
-        EdgeInsets,
-        TextStyle,
-        SizedBox,
-        Divider,
-        IconData,
-        Colors,
-        Icons,
-        Navigator,
-        IconButton,
-        FontWeight,
-        AppBar,
-        CircleAvatar,
-        BorderRadius,
-        BoxDecoration,
-        Container,
-        MainAxisAlignment,
-        Row,
-        Column,
-        Border,
-        CrossAxisAlignment,
-        TextAlign,
-        GestureDetector,
-        FilledButton,
-        Expanded,
-        Padding,
-        SingleChildScrollView,
-        Scaffold;
+import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/lead/domain/domain.dart'
     show LeadEntity;
 import 'package:life_insurance/features/components/components.dart'
     show AppStatusDialog, AppStatusType;
 import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
 class LeadDetailPage extends StatefulWidget {
   final LeadEntity lead;
@@ -235,7 +202,9 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                     ),
                     const SizedBox(height: 12),
                     Row(
-                      children: ['New', 'Contacted', 'Quoted', 'Applied'].map((status) {
+                      children: ['New', 'Contacted', 'Quoted', 'Applied'].map((
+                        status,
+                      ) {
                         final isSelected = _currentStatus == status;
                         return Expanded(
                           child: GestureDetector(
@@ -275,6 +244,50 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
             ),
 
             const SizedBox(height: 16),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => EappLaunch.startQuoteForParty(
+                        context,
+                        EappLaunch.partyFromLead(widget.lead),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.lightPrimary,
+                        side: const BorderSide(color: AppColors.lightPrimary),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: const Text(
+                        'Get a quote',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => EappLaunch.startEappForParty(
+                        context,
+                        EappLaunch.partyFromLead(widget.lead),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.lightPrimary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: const Text(
+                        'Start e-App',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -5,6 +5,7 @@ import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/policy_list_filter_sheet.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
 /// Agent-wide Policy List — search · chart · filter (docs/66 · FR-06).
 class PolicyListPage extends StatefulWidget {
@@ -33,15 +34,12 @@ class _PolicyListPageState extends State<PolicyListPage> {
   }
 
   List<PolicyMock> get _rows => CustomerMockData.filterAgentPolicies(
-        query: _search.text,
-        filter: _filter,
-      );
+    query: _search.text,
+    filter: _filter,
+  );
 
   Future<void> _openFilter() async {
-    final next = await showPolicyListFilterSheet(
-      context,
-      initial: _filter,
-    );
+    final next = await showPolicyListFilterSheet(context, initial: _filter);
     if (next == null) return;
     setState(() => _filter = next);
   }
@@ -124,7 +122,8 @@ class _PolicyListPageState extends State<PolicyListPage> {
                       ),
                       child: Icon(
                         Icons.tune_rounded,
-                        color: _filter.status != null ||
+                        color:
+                            _filter.status != null ||
                                 _filter.product != null ||
                                 _filter.hasDate
                             ? AppColors.lightPrimary
@@ -156,10 +155,11 @@ class _PolicyListPageState extends State<PolicyListPage> {
                   for (final p in rows) ...[
                     _PolicyListTile(
                       policy: p,
-                      onTap: () => context.push(
-                        AppRoute.policyDetail,
-                        extra: p,
-                      ),
+                      onTap: () =>
+                          context.push(AppRoute.policyDetail, extra: p),
+                      onRenew: p.isRenewalEligible
+                          ? () => EappLaunch.startRenewalEapp(context, p)
+                          : null,
                     ),
                     const SizedBox(height: 10),
                   ],
@@ -186,6 +186,7 @@ class _PolicyTrendChart extends StatelessWidget {
     return Container(
       height: 210,
       padding: const EdgeInsets.fromLTRB(12, 14, 16, 10),
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
@@ -200,50 +201,51 @@ class _PolicyTrendChart extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: LineChart(
-              LineChartData(
-                minY: 0,
-                maxY: 40,
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 10,
-                  getDrawingHorizontalLine: (v) => FlLine(
-                    color: Colors.grey.shade200,
-                    strokeWidth: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: LineChart(
+                LineChartData(
+                  minY: 0,
+                  maxY: 40,
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: 10,
+                    getDrawingHorizontalLine: (v) =>
+                        FlLine(color: Colors.grey.shade200, strokeWidth: 1),
                   ),
-                ),
-                borderData: FlBorderData(show: false),
-                titlesData: FlTitlesData(
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  bottomTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 28,
-                      interval: 10,
-                      getTitlesWidget: (v, _) => Text(
-                        v.toInt().toString(),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade500,
+                  borderData: FlBorderData(show: false),
+                  titlesData: FlTitlesData(
+                    topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    bottomTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 28,
+                        interval: 10,
+                        getTitlesWidget: (v, _) => Text(
+                          v.toInt().toString(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey.shade500,
+                          ),
                         ),
                       ),
                     ),
                   ),
+                  lineBarsData: [
+                    _area(series, (m) => m.active.toDouble(), _active),
+                    _area(series, (m) => m.pending.toDouble(), _pending),
+                    _area(series, (m) => m.expired.toDouble(), _expired),
+                  ],
                 ),
-                lineBarsData: [
-                  _area(series, (m) => m.active.toDouble(), _active),
-                  _area(series, (m) => m.pending.toDouble(), _pending),
-                  _area(series, (m) => m.expired.toDouble(), _expired),
-                ],
               ),
             ),
           ),
@@ -318,66 +320,105 @@ class _Legend extends StatelessWidget {
 }
 
 class _PolicyListTile extends StatelessWidget {
-  const _PolicyListTile({required this.policy, required this.onTap});
+  const _PolicyListTile({
+    required this.policy,
+    required this.onTap,
+    this.onRenew,
+  });
 
   final PolicyMock policy;
   final VoidCallback onTap;
+  final VoidCallback? onRenew;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFEEF0F3)),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  policy.listIcon,
-                  color: AppColors.lightPrimary,
-                  size: 22,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: const Color(0xFFEEF0F3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(12),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      policy.listIcon,
+                      color: AppColors.lightPrimary,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          policy.id,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          policy.productName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.lightTextSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${policy.clientName} · expires ${policy.expiryLabel}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.lightTextHint,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  AppCrmStatusPill(status: policy.status),
+                ],
+              ),
+            ),
+            if (onRenew != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: onRenew,
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    foregroundColor: AppColors.lightPrimary,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(EappLaunch.renewalCta(policy)),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      policy.id,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      policy.productName,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.lightTextSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              AppCrmStatusPill(status: policy.status),
-            ],
-          ),
+          ],
         ),
       ),
     );

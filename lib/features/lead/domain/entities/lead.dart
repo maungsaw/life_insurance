@@ -19,6 +19,18 @@ class LeadEntity {
     required this.avatarColor,
   });
 
+  LeadEntity copyWith({String? status}) {
+    return LeadEntity(
+      id: id,
+      name: name,
+      email: email,
+      phone: phone,
+      status: status ?? this.status,
+      timeAgo: timeAgo,
+      avatarColor: avatarColor,
+    );
+  }
+
   // Initials generator for the avatar circle (e.g. "Michael Clark" -> "MC")
   String get initials {
     List<String> parts = name.trim().split(' ');

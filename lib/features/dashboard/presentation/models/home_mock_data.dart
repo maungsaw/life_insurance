@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show Color;
 import 'package:life_insurance/features/components/components.dart'
     show AppPromoItem;
+import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/profile/presentation/models/commission_mock_data.dart';
 
 /// Static demo data for Home until FR-02 APIs are wired (docs/36 · 46).
@@ -16,8 +17,11 @@ abstract final class HomeMockData {
   static const policyExpired = '5';
 
   static const renewalTitle = 'Policy Renewal';
-  static const renewalBody =
-      'Your policy no 23471239074138 is expiring soon. Renew now to stay covered.';
+  static String get renewalBody {
+    final id = CustomerMockData.firstRenewalPolicy?.id ?? '23487532096712';
+    return 'Your policy no $id is expiring soon. Renew now to stay covered.';
+  }
+
   static const renewalTime = '1d';
 
   static const promos = <AppPromoItem>[

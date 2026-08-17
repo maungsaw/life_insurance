@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
 
 class ProductTrackerPage extends StatefulWidget {
@@ -26,7 +28,8 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
     final q = _search.text.trim().toLowerCase();
     final list = ProductSession.applications.where((a) {
       final statusOk = _filter == null || a.status == _filter;
-      final textOk = q.isEmpty ||
+      final textOk =
+          q.isEmpty ||
           a.quote.party.name.toLowerCase().contains(q) ||
           a.id.toLowerCase().contains(q) ||
           a.quote.productName.toLowerCase().contains(q);
@@ -60,17 +63,36 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
-                _chip('All', _filter == null, () => setState(() => _filter = null)),
-                _chip('Draft', _filter == EappStatus.draft,
-                    () => setState(() => _filter = EappStatus.draft)),
-                _chip('Submitted', _filter == EappStatus.submitted,
-                    () => setState(() => _filter = EappStatus.submitted)),
-                _chip('Correction', _filter == EappStatus.correction,
-                    () => setState(() => _filter = EappStatus.correction)),
-                _chip('Approved', _filter == EappStatus.approved,
-                    () => setState(() => _filter = EappStatus.approved)),
-                _chip('Rejected', _filter == EappStatus.rejected,
-                    () => setState(() => _filter = EappStatus.rejected)),
+                _chip(
+                  'All',
+                  _filter == null,
+                  () => setState(() => _filter = null),
+                ),
+                _chip(
+                  'Draft',
+                  _filter == EappStatus.draft,
+                  () => setState(() => _filter = EappStatus.draft),
+                ),
+                _chip(
+                  'Submitted',
+                  _filter == EappStatus.submitted,
+                  () => setState(() => _filter = EappStatus.submitted),
+                ),
+                _chip(
+                  'Correction',
+                  _filter == EappStatus.correction,
+                  () => setState(() => _filter = EappStatus.correction),
+                ),
+                _chip(
+                  'Approved',
+                  _filter == EappStatus.approved,
+                  () => setState(() => _filter = EappStatus.approved),
+                ),
+                _chip(
+                  'Rejected',
+                  _filter == EappStatus.rejected,
+                  () => setState(() => _filter = EappStatus.rejected),
+                ),
               ],
             ),
           ),
@@ -88,21 +110,42 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
                     itemBuilder: (context, i) {
                       final a = list[i];
                       return ListTile(
-                        title: Text(a.quote.party.name),
-                        subtitle: Text('${a.id} · ${a.nextHint}'),
-                        trailing: Text(
-                          a.statusLabel,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.lightPrimary,
-                          ),
+                        title: Text(
+                          '${a.quote.productName} · ${a.quote.party.name}',
+                        ),
+                        subtitle: Text(
+                          a.isRenewal
+                              ? 'Renews ${a.sourcePolicyId} · ${a.statusLabel}'
+                              : '${a.id} · ${a.nextHint}',
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (a.isRenewal) ...[
+                              const EappRenewalPill(),
+                              const SizedBox(width: 8),
+                            ],
+                            Text(
+                              a.status == EappStatus.draft ||
+                                      a.status == EappStatus.correction
+                                  ? 'Continue'
+                                  : a.statusLabel,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.lightPrimary,
+                              ),
+                            ),
+                          ],
                         ),
                         onTap: () {
                           if (a.status == EappStatus.draft ||
                               a.status == EappStatus.correction) {
                             context.push(AppRoute.productEapp, extra: a);
                           } else {
-                            context.push(AppRoute.productTrackerDetail, extra: a);
+                            context.push(
+                              AppRoute.productTrackerDetail,
+                              extra: a,
+                            );
                           }
                         },
                       );
@@ -127,10 +170,26 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
   }
 }
 
-class ProductTrackerDetailPage extends StatelessWidget {
+class ProductTrackerDetailPage extends StatefulWidget {
   const ProductTrackerDetailPage({super.key, required this.draft});
 
   final EappDraft draft;
+
+  @override
+  State<ProductTrackerDetailPage> createState() =>
+      _ProductTrackerDetailPageState();
+}
+
+class _ProductTrackerDetailPageState extends State<ProductTrackerDetailPage> {
+  EappDraft get draft => widget.draft;
+
+  void _markApproved() {
+    draft.status = EappStatus.approved;
+    if (draft.quote.party.kind == QuotePartyKind.lead) {
+      CustomerHubSession.convertLeadFromPartyId(draft.quote.party.id);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,12 +206,21 @@ class ProductTrackerDetailPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
         children: [
+          if (draft.isRenewal) ...[
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: EappRenewalPill(),
+            ),
+            const SizedBox(height: 8),
+          ],
           Text(
-            draft.quote.party.name,
+            '${draft.quote.productName} · ${draft.quote.party.name}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           Text(
-            '${draft.quote.productName} · ${draft.appRef ?? draft.id}',
+            draft.isRenewal
+                ? 'Renews ${draft.sourcePolicyId} · ${draft.appRef ?? draft.id}'
+                : '${draft.quote.productName} · ${draft.appRef ?? draft.id}',
             style: const TextStyle(color: AppColors.lightTextSecondary),
           ),
           const SizedBox(height: 12),
@@ -171,7 +239,8 @@ class ProductTrackerDetailPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           for (final s in pipeline)
-            if (s != EappStatus.correction || draft.status == EappStatus.correction)
+            if (s != EappStatus.correction ||
+                draft.status == EappStatus.correction)
               ListTile(
                 leading: Icon(
                   _done(draft.status, s)
@@ -183,6 +252,20 @@ class ProductTrackerDetailPage extends StatelessWidget {
                 ),
                 title: Text(_label(s)),
               ),
+          if (draft.status == EappStatus.submitted) ...[
+            const SizedBox(height: 12),
+            FilledButton(
+              onPressed: _markApproved,
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.lightPrimary,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text(
+                'Mark approved',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -200,10 +283,10 @@ class ProductTrackerDetailPage extends StatelessWidget {
   }
 
   static String _label(EappStatus s) => switch (s) {
-        EappStatus.draft => 'Proposal',
-        EappStatus.submitted => 'Underwrite',
-        EappStatus.correction => 'Correction',
-        EappStatus.approved => 'Approved',
-        EappStatus.rejected => 'Rejected',
-      };
+    EappStatus.draft => 'Proposal',
+    EappStatus.submitted => 'Underwrite',
+    EappStatus.correction => 'Correction',
+    EappStatus.approved => 'Approved',
+    EappStatus.rejected => 'Rejected',
+  };
 }

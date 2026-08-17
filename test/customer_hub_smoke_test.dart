@@ -70,6 +70,8 @@ void main() {
     expect(find.text('Quoted'), findsOneWidget);
     expect(find.text('Applied'), findsOneWidget);
     expect(find.text('Submit condition · Move to Clients'), findsOneWidget);
+    expect(find.text('Get a quote'), findsOneWidget);
+    expect(find.text('Start e-App'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

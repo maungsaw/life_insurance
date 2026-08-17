@@ -4,7 +4,7 @@ import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeConfig, PrototypeRole;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart'
-    show CrmStatus;
+    show CrmStatus, CustomerMockData;
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
 import 'package:life_insurance/features/dashboard/presentation/widgets/team_pulse_card.dart';
 import 'package:life_insurance/features/home/presentation/main_tab_scope.dart';
@@ -87,11 +87,8 @@ class DashboardPage extends StatelessWidget {
       AppServiceItem(
         label: 'Online',
         icon: Icons.language_outlined,
-        onTap: () => _stub(
-          context,
-          'Online',
-          'Resources / portal stub — later pass.',
-        ),
+        onTap: () =>
+            _stub(context, 'Online', 'Resources / portal stub — later pass.'),
       ),
     ];
 
@@ -119,8 +116,7 @@ class DashboardPage extends StatelessWidget {
                   AppCommissionCard(
                     amountLabel: CommissionMockData.totalLabel,
                     deltaLabel: CommissionMockData.deltaLabel,
-                    onDetails: () =>
-                        context.push(AppRoute.commissionHistory),
+                    onDetails: () => context.push(AppRoute.commissionHistory),
                   ),
                   const SizedBox(height: 14),
                   const AppSectionHeader(title: 'Promotion & Campaign'),
@@ -192,7 +188,11 @@ class DashboardPage extends StatelessWidget {
                     subtitle: HomeMockData.renewalBody,
                     icon: Icons.notifications_none_rounded,
                     timeLabel: HomeMockData.renewalTime,
-                    onTap: () => _openNotifications(context),
+                    onTap: () {
+                      final policy = CustomerMockData.firstRenewalPolicy;
+                      if (policy == null) return;
+                      context.push(AppRoute.policyDetail, extra: policy);
+                    },
                   ),
                   if (PrototypeRole.canViewTeam) ...[
                     const SizedBox(height: 16),

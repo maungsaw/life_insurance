@@ -65,6 +65,8 @@ import 'package:life_insurance/features/features.dart'
         ProductSearchPage,
         ProductComparePage,
         ProductSession,
+        QuoteLaunchArgs,
+        QuoteParty,
         TeamHubPage,
         TeamMembersPage,
         TeamFaPage,
@@ -401,11 +403,20 @@ class AppNavigator {
         path: AppRoute.productQuote,
         name: AppRoute.productQuote,
         pageBuilder: (context, state) {
-          final product =
-              state.extra as CatalogProduct? ?? ProductMockData.products.first;
+          CatalogProduct product = ProductMockData.products.first;
+          QuoteParty? party;
+          final extra = state.extra;
+          if (extra is QuoteLaunchArgs) {
+            product = extra.product ?? ProductSession.lastOrDefaultProduct;
+            party = extra.party;
+          } else if (extra is CatalogProduct) {
+            product = extra;
+          } else {
+            product = ProductSession.lastOrDefaultProduct;
+          }
           return AppTransition.slide(
             key: state.pageKey,
-            child: ProductQuotePage(product: product),
+            child: ProductQuotePage(product: product, initialParty: party),
           );
         },
       ),

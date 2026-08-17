@@ -4,6 +4,8 @@ import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
 /// Policy Details — accordion + signature display (docs/51 · 66). Read-only.
 class PolicyDetailsPage extends StatefulWidget {
@@ -50,8 +52,38 @@ class _PolicyDetailsPageState extends State<PolicyDetailsPage> {
         backgroundColor: AppColors.lightPrimary,
         child: const Icon(Icons.description_outlined, color: Colors.white),
       ),
+      bottomNavigationBar: p.isRenewalEligible
+          ? SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppButton(
+                      label: ProductSession.openDraftForPolicy(p.id) == null
+                          ? 'Renew policy'
+                          : 'Continue e-App',
+                      onPressed: () => EappLaunch.startRenewalEapp(context, p),
+                    ),
+                    AppButton(
+                      label: 'Buy additional policy',
+                      variant: AppButtonVariant.text,
+                      onPressed: () {
+                        final client = CustomerMockData.byId(p.clientId);
+                        EappLaunch.startEappForParty(
+                          context,
+                          EappLaunch.partyFromCustomer(client),
+                          intent: EappLaunchIntent.repurchase,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
+        padding: EdgeInsets.fromLTRB(16, 8, 16, p.isRenewalEligible ? 24 : 88),
         children: [
           _ExpandCard(
             title: 'Policyholder Information',
@@ -142,8 +174,9 @@ class _SignatureCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 36,
                             fontStyle: FontStyle.italic,
-                            color: AppColors.lightTextPrimary
-                                .withValues(alpha: 0.75),
+                            color: AppColors.lightTextPrimary.withValues(
+                              alpha: 0.75,
+                            ),
                             fontFamily: 'serif',
                           ),
                         )
@@ -261,8 +294,7 @@ class _PartyRows extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        for (final e in info.rows.entries)
-          _KvRow(label: e.key, value: e.value),
+        for (final e in info.rows.entries) _KvRow(label: e.key, value: e.value),
       ],
     );
   }

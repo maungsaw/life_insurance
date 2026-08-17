@@ -33,18 +33,13 @@ abstract final class CustomerHubSession {
       term: 'Pending',
       frequency: '—',
       premium: '—',
-      insured: PolicyPartyInfo(rows: {
-        'Name': lead.name,
-        'Status': 'Condition submitted',
-      }),
-      policyholder: PolicyPartyInfo(rows: {
-        'Name': lead.name,
-        'Mobile': lead.phone,
-        'Email': lead.email,
-      }),
-      beneficiary: const PolicyPartyInfo(rows: {
-        'Status': 'To be completed',
-      }),
+      insured: PolicyPartyInfo(
+        rows: {'Name': lead.name, 'Status': 'Condition submitted'},
+      ),
+      policyholder: PolicyPartyInfo(
+        rows: {'Name': lead.name, 'Mobile': lead.phone, 'Email': lead.email},
+      ),
+      beneficiary: const PolicyPartyInfo(rows: {'Status': 'To be completed'}),
       clientId: clientId,
       clientName: lead.name,
       effectiveDate: DateTime(2026, 8, 17),
@@ -67,5 +62,26 @@ abstract final class CustomerHubSession {
     openClients();
     return client;
   }
-}
 
+  /// e-App submit (FR-03 still pending Core issue) → Lead stage Applied.
+  static void markLeadApplied(String partyId) {
+    final id = partyId.startsWith('lead-') ? partyId.substring(5) : partyId;
+    final index = leadsData.indexWhere((item) => item.id == id);
+    if (index < 0) return;
+    leadsData[index] = leadsData[index].copyWith(status: 'Applied');
+  }
+
+  /// Tracker Approved / Core issue → person becomes a Client.
+  static CustomerMock? convertLeadFromPartyId(String partyId) {
+    final id = partyId.startsWith('lead-') ? partyId.substring(5) : partyId;
+    LeadEntity? lead;
+    for (final item in leadsData) {
+      if (item.id == id) {
+        lead = item;
+        break;
+      }
+    }
+    if (lead == null) return null;
+    return convertLead(lead);
+  }
+}

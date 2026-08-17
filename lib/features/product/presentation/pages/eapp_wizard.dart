@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
+import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_pickers.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
 
@@ -156,6 +158,9 @@ class _ProductEappPageState extends State<ProductEappPage> {
       if (!mounted) return;
       d.status = EappStatus.submitted;
       d.appRef = d.id.replaceFirst('EA', 'APP');
+      if (d.quote.party.kind == QuotePartyKind.lead) {
+        CustomerHubSession.markLeadApplied(d.quote.party.id);
+      }
       setState(() => _busy = false);
       context.push(AppRoute.productEappSuccess, extra: d);
       return;
@@ -212,12 +217,22 @@ class _ProductEappPageState extends State<ProductEappPage> {
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                '${d.quote.party.name} · ${d.quote.productName} · ${d.quote.monthlyPremium} MMK',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.lightTextSecondary,
-                ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  if (d.isRenewal) const EappRenewalPill(),
+                  Text(
+                    d.isRenewal
+                        ? 'Renewal · ${d.sourcePolicyId} · ${d.quote.party.name}'
+                        : '${d.quote.party.name} · ${d.quote.productName} · ${d.quote.monthlyPremium} MMK',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -226,7 +241,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Text(
                 _error!,
-                style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           Expanded(
@@ -322,7 +340,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
         keyboardType: TextInputType.phone,
       ),
       const SizedBox(height: 12),
-      const Text('Gender *', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+      const Text(
+        'Gender *',
+        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+      ),
       const SizedBox(height: 8),
       Row(
         children: [
@@ -354,9 +375,17 @@ class _ProductEappPageState extends State<ProductEappPage> {
         suffix: const Icon(Icons.unfold_more, size: 18),
       ),
       const SizedBox(height: 12),
-      AppTextField(label: 'Email', controller: _phEmail, keyboardType: TextInputType.emailAddress),
+      AppTextField(
+        label: 'Email',
+        controller: _phEmail,
+        keyboardType: TextInputType.emailAddress,
+      ),
       const SizedBox(height: 12),
-      AppTextField(label: 'Father Name', isRequired: true, controller: _phFather),
+      AppTextField(
+        label: 'Father Name',
+        isRequired: true,
+        controller: _phFather,
+      ),
       const SizedBox(height: 12),
       AppTextField(
         label: 'Date of Birth',
@@ -408,9 +437,17 @@ class _ProductEappPageState extends State<ProductEappPage> {
       const SizedBox(height: 12),
       AppTextField(label: 'Town', isRequired: true, controller: _phTown),
       const SizedBox(height: 12),
-      AppTextField(label: 'Township', isRequired: true, controller: _phTownship),
+      AppTextField(
+        label: 'Township',
+        isRequired: true,
+        controller: _phTownship,
+      ),
       const SizedBox(height: 12),
-      AppTextField(label: 'State/Region', isRequired: true, controller: _phState),
+      AppTextField(
+        label: 'State/Region',
+        isRequired: true,
+        controller: _phState,
+      ),
       const SizedBox(height: 12),
       AppTextField(label: 'Address', isRequired: true, controller: _phAddress),
       const SizedBox(height: 8),
@@ -432,7 +469,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
         style: TextStyle(height: 1.4, color: AppColors.lightTextSecondary),
       ),
       const SizedBox(height: 12),
-      Text(_la.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+      Text(
+        _la.name,
+        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+      ),
       Text(_la.identification),
     ];
   }
@@ -497,7 +537,11 @@ class _ProductEappPageState extends State<ProductEappPage> {
         child: CustomPaint(
           painter: _ScanFramePainter(),
           child: const Center(
-            child: Icon(Icons.photo_camera_outlined, size: 48, color: AppColors.lightPrimary),
+            child: Icon(
+              Icons.photo_camera_outlined,
+              size: 48,
+              color: AppColors.lightPrimary,
+            ),
           ),
         ),
       ),
@@ -598,9 +642,17 @@ class _ProductEappPageState extends State<ProductEappPage> {
                       label: const Text('Edit'),
                     ),
                     TextButton.icon(
-                      onPressed: () => setState(() => d.beneficiaries.removeAt(i)),
-                      icon: const Icon(Icons.delete_outline, size: 16, color: Colors.redAccent),
-                      label: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+                      onPressed: () =>
+                          setState(() => d.beneficiaries.removeAt(i)),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        size: 16,
+                        color: Colors.redAccent,
+                      ),
+                      label: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.redAccent),
+                      ),
                     ),
                   ],
                 ),
@@ -645,7 +697,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
   List<Widget> _premium() {
     final q = d.quote;
     return [
-      Text(q.productName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+      Text(
+        q.productName,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+      ),
       const SizedBox(height: 12),
       Container(
         width: double.infinity,
@@ -656,7 +711,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
         ),
         child: Text(
           'Premium (${q.frequency})  ${q.monthlyPremium}',
-          style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.lightPrimary),
+          style: const TextStyle(
+            fontWeight: FontWeight.w800,
+            color: AppColors.lightPrimary,
+          ),
         ),
       ),
       const SizedBox(height: 12),
@@ -689,7 +747,11 @@ class _ProductEappPageState extends State<ProductEappPage> {
     return [
       const Text(
         'Review only — expand a section for details. Edit jumps back to that step.',
-        style: TextStyle(fontSize: 12, color: AppColors.lightTextHint, height: 1.35),
+        style: TextStyle(
+          fontSize: 12,
+          color: AppColors.lightTextHint,
+          height: 1.35,
+        ),
       ),
       const SizedBox(height: 12),
       _ConfirmProductCard(
@@ -728,9 +790,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       const SizedBox(height: 10),
       _ConfirmReviewTile(
         title: 'Insured Information',
-        subtitle: d.sameAsLifeAssured
-            ? 'Same as policyholder'
-            : insuredName,
+        subtitle: d.sameAsLifeAssured ? 'Same as policyholder' : insuredName,
         onEdit: () => _jumpToStep(d.sameAsLifeAssured ? 0 : 1),
         rows: {
           'Same as policyholder': d.sameAsLifeAssured ? 'Yes' : 'No',
@@ -781,14 +841,24 @@ class _ProductEappPageState extends State<ProductEappPage> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          Expanded(child: Text(k, style: const TextStyle(color: AppColors.lightTextSecondary))),
+          Expanded(
+            child: Text(
+              k,
+              style: const TextStyle(color: AppColors.lightTextSecondary),
+            ),
+          ),
           Flexible(
-            child: Text(v, textAlign: TextAlign.right, style: const TextStyle(fontWeight: FontWeight.w700)),
+            child: Text(
+              v,
+              textAlign: TextAlign.right,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),
     );
   }
+
   Future<void> _pickHeight() async {
     final parts = RegExp(r"(\d+)'\s*(\d+)").firstMatch(_phHeight.text);
     final initial = HeightPick(
@@ -820,10 +890,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
   Future<void> _pickId() async {
     final picked = await showIdentificationPickerSheet(
       context,
-      initial: IdPick.parse(
-        idType: _ph.idType,
-        raw: _ph.identification,
-      ),
+      initial: IdPick.parse(idType: _ph.idType, raw: _ph.identification),
     );
     if (picked == null) return;
     setState(() {
@@ -863,7 +930,11 @@ class _ProductEappPageState extends State<ProductEappPage> {
               children: [
                 AppTextField(label: 'Name', isRequired: true, controller: name),
                 const SizedBox(height: 10),
-                AppTextField(label: 'Relationship', isRequired: true, controller: rel),
+                AppTextField(
+                  label: 'Relationship',
+                  isRequired: true,
+                  controller: rel,
+                ),
                 const SizedBox(height: 10),
                 AppTextField(label: 'Father Name', controller: father),
                 const SizedBox(height: 10),

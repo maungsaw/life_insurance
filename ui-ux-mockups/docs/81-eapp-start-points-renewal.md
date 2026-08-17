@@ -1,7 +1,7 @@
 # 81 — e-App start points · Renewal & repurchase
 
 **Source:** Stakeholder start-point list · BRD §5.4 FR-04 · §5.5 FR-05 · §5.6 FR-06 · FR-08 renewal reminders · `02` `04` `24` `59` `66` `79`  
-**Flutter today:** e-App wizard exists, but **only Quote saved → Start e-App** is a first-class entry. Catalog stops at GET A QUOTE. Client/Lead profiles have no Start e-App. Policy List / Details have no **Renew**. Home renewal banner opens Notifications, not e-App.  
+**Flutter today:** One e-App wizard · **Renew** on Policy List/Details (expiry window or Expired) · Client/Lead Start e-App (quote-gated) · Home banner → Policy Details · tracker Renewal pill.  
 **Date:** 2026-08-17
 
 **Ask:** e-App ကို အောက်ပါ start points တွေကနေ မြင်ရ၊ ဝင်ရ။ Policy ကုန်ခါနီး / expired မှာ **Renewal** ခလုတ်ပေါ်။ Renewal က **wizard အသစ်မဟုတ်** — ရှိပြီးသား e-App flow · **data ပဲ ပြောင်း**။
@@ -265,7 +265,7 @@ Filter chips stay status-based (`59` H). Optional P1 filter **Renewals**.
 - [x] Prefill / data-change rules (not a new form)  
 - [x] Lead convert = Core submit  
 - [x] Flutter map + phasing  
-- [ ] Flutter start-point + Renew (await implement)  
+- [x] Flutter start-point + Renew shipped  
 - [x] Inventory updated  
 
 ---

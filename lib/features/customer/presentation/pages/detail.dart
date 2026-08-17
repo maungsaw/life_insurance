@@ -6,6 +6,8 @@ import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/customer_filter_sheet.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
+import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
 /// Customer Details — identity · actions · policies (docs/51).
 class CustomerDetailPage extends StatefulWidget {
@@ -52,7 +54,9 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
     await AppStatusDialog.show(
       context,
       type: AppStatusType.info,
-      title: result == ExternalLaunchResult.empty ? 'No phone on file' : 'Couldn’t open Phone',
+      title: result == ExternalLaunchResult.empty
+          ? 'No phone on file'
+          : 'Couldn’t open Phone',
       message: result == ExternalLaunchResult.empty
           ? 'This customer has no mobile number.'
           : _customer.phone,
@@ -151,6 +155,32 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () {
+                      final hasBook = _customer.policies.any(
+                        (p) => p.status != CrmStatus.pending,
+                      );
+                      EappLaunch.startEappForParty(
+                        context,
+                        EappLaunch.partyFromCustomer(_customer),
+                        intent: hasBook
+                            ? EappLaunchIntent.repurchase
+                            : EappLaunchIntent.newSale,
+                      );
+                    },
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.lightPrimary,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text(
+                      'Start e-App',
+                      style: TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -197,13 +227,23 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                 else
                   for (var i = 0; i < policies.length; i++) ...[
                     if (i > 0)
-                      Divider(height: 1, color: Colors.grey.shade200, indent: 72),
+                      Divider(
+                        height: 1,
+                        color: Colors.grey.shade200,
+                        indent: 72,
+                      ),
                     _PolicyTile(
                       policy: policies[i],
                       onTap: () => context.push(
                         AppRoute.policyDetail,
                         extra: policies[i],
                       ),
+                      onRenew: policies[i].isRenewalEligible
+                          ? () => EappLaunch.startRenewalEapp(
+                              context,
+                              policies[i],
+                            )
+                          : null,
                     ),
                   ],
                 const SizedBox(height: 8),
@@ -264,15 +304,17 @@ class _ActionBubble extends StatelessWidget {
 }
 
 class _PolicyTile extends StatelessWidget {
-  const _PolicyTile({required this.policy, required this.onTap});
+  const _PolicyTile({required this.policy, required this.onTap, this.onRenew});
 
   final PolicyMock policy;
   final VoidCallback onTap;
+  final VoidCallback? onRenew;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
+      isThreeLine: onRenew != null,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       leading: Container(
         width: 44,
@@ -302,7 +344,28 @@ class _PolicyTile extends StatelessWidget {
           color: AppColors.lightTextSecondary,
         ),
       ),
-      trailing: AppCrmStatusPill(status: policy.status),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          AppCrmStatusPill(status: policy.status),
+          if (onRenew != null)
+            GestureDetector(
+              onTap: onRenew,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  EappLaunch.renewalCta(policy),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightPrimary,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

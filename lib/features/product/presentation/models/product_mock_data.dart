@@ -15,7 +15,11 @@ enum EappStatus { draft, submitted, correction, approved, rejected }
 enum EappLaunchIntent { newSale, renewal, repurchase }
 
 class WhoShouldRow {
-  const WhoShouldRow({required this.icon, required this.title, required this.body});
+  const WhoShouldRow({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
 
   final IconData icon;
   final String title;
@@ -62,12 +66,12 @@ class CatalogProduct {
   final int defaultTopup;
 
   String get lineLabel => switch (line) {
-        ProductLine.protection => 'Protection',
-        ProductLine.saving => 'Saving',
-        ProductLine.travel => 'Travel',
-        ProductLine.health => 'Health',
-        ProductLine.bundled => 'Bundled',
-      };
+    ProductLine.protection => 'Protection',
+    ProductLine.saving => 'Saving',
+    ProductLine.travel => 'Travel',
+    ProductLine.health => 'Health',
+    ProductLine.bundled => 'Bundled',
+  };
 
   String get sectionTitle => '$lineLabel Product';
 }
@@ -143,6 +147,7 @@ class SavedQuote {
   final DateTime savedAt;
   final String stampFee;
   final String totalAmount;
+
   /// Schema extras for e-App snapshot (lock-up, travel, risk, rider, …).
   final Map<String, String> extras;
 }
@@ -240,26 +245,26 @@ class EappDraft {
   bool get isRenewal => intent == EappLaunchIntent.renewal;
 
   String get statusLabel => switch (status) {
-        EappStatus.draft => 'Draft',
-        EappStatus.submitted => 'Submitted',
-        EappStatus.correction => 'Correction',
-        EappStatus.approved => 'Approved',
-        EappStatus.rejected => 'Rejected',
-      };
+    EappStatus.draft => 'Draft',
+    EappStatus.submitted => 'Submitted',
+    EappStatus.correction => 'Correction',
+    EappStatus.approved => 'Approved',
+    EappStatus.rejected => 'Rejected',
+  };
 
   String get nextHint => switch (status) {
-        EappStatus.draft => 'At step ${_stepName(step)}',
-        EappStatus.submitted => 'Underwriting will update this row',
-        EappStatus.correction => 'Fix the flagged step and re-submit',
-        EappStatus.approved => 'Ready to view as policy (stub)',
-        EappStatus.rejected => 'Closed — start a new quote if needed',
-      };
+    EappStatus.draft => 'At step ${_stepName(step)}',
+    EappStatus.submitted => 'Underwriting will update this row',
+    EappStatus.correction => 'Fix the flagged step and re-submit',
+    EappStatus.approved => 'Ready to view as policy (stub)',
+    EappStatus.rejected => 'Closed — start a new quote if needed',
+  };
 
   String get intentLabel => switch (intent) {
-        EappLaunchIntent.newSale => 'New sale',
-        EappLaunchIntent.renewal => 'Renewal',
-        EappLaunchIntent.repurchase => 'Additional',
-      };
+    EappLaunchIntent.newSale => 'New sale',
+    EappLaunchIntent.renewal => 'Renewal',
+    EappLaunchIntent.repurchase => 'Additional',
+  };
 
   static String _stepName(int step) {
     const names = [
@@ -278,8 +283,18 @@ class EappDraft {
 
 abstract final class ProductFormat {
   static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   static String dob(DateTime d) {
@@ -335,12 +350,14 @@ abstract final class ProductMockData {
         WhoShouldRow(
           icon: Icons.groups_outlined,
           title: 'Families',
-          body: 'Spouse, children, or dependents can be named as beneficiaries.',
+          body:
+              'Spouse, children, or dependents can be named as beneficiaries.',
         ),
         WhoShouldRow(
           icon: Icons.apartment_outlined,
           title: 'Employers',
-          body: 'Useful as a staff benefit conversation — not a group/entity proposal.',
+          body:
+              'Useful as a staff benefit conversation — not a group/entity proposal.',
         ),
       ],
       whyBuy: [
@@ -363,7 +380,12 @@ abstract final class ProductMockData {
         'Insurable interest on the life assured',
         'Final eligibility is confirmed at e-App / underwriting',
       ],
-      variants: ['2 years Saving Plus', '5 Plus 100', '10 Plus 100', '300 DIET'],
+      variants: [
+        '2 years Saving Plus',
+        '5 Plus 100',
+        '10 Plus 100',
+        '300 DIET',
+      ],
       frequencies: ['Monthly', 'Quarterly', 'Annual'],
       terms: ['5 years', '10 years', '15 years', '20 years'],
       defaultTopup: 10000000,
@@ -434,12 +456,14 @@ abstract final class ProductMockData {
         WhoShouldRow(
           icon: Icons.groups_outlined,
           title: 'Families',
-          body: 'Spouse, children, or dependents can also be insured under this policy.',
+          body:
+              'Spouse, children, or dependents can also be insured under this policy.',
         ),
         WhoShouldRow(
           icon: Icons.apartment_outlined,
           title: 'Employers',
-          body: 'Companies can buy group personal accident insurance for their employees.',
+          body:
+              'Companies can buy group personal accident insurance for their employees.',
         ),
       ],
       whyBuy: [
@@ -501,10 +525,7 @@ abstract final class ProductMockData {
         'Term matches the selected policy term',
       ],
       rateCallout: 'SI 10,000,000.00 · indicative annual premium',
-      eligible: [
-        'Age 18–60',
-        'Insurable interest / loan evidence at e-App',
-      ],
+      eligible: ['Age 18–60', 'Insurable interest / loan evidence at e-App'],
       variants: [
         'Decreasing',
         'Level',
@@ -551,10 +572,7 @@ abstract final class ProductMockData {
         'Accident medical (illustrative)',
       ],
       rateCallout: 'Age 30 · plan Silver → indicative annual premium',
-      eligible: [
-        'Age 18–60',
-        'Health questions at e-App',
-      ],
+      eligible: ['Age 18–60', 'Health questions at e-App'],
       variants: ['Silver', 'Gold', 'Basic Cover', 'Default Variant'],
       frequencies: ['Lumpsum', 'Annual'],
       terms: ['1 year'],
@@ -596,10 +614,7 @@ abstract final class ProductMockData {
         'Accidental death while travelling',
       ],
       rateCallout: '15-day trip · SI 5,000,000.00 (indicative)',
-      eligible: [
-        'Age 16–70',
-        'Trip term selected on the quote',
-      ],
+      eligible: ['Age 16–70', 'Trip term selected on the quote'],
       variants: ['Domestic', 'Overseas', 'Default Variant'],
       frequencies: ['Lumpsum', 'Single'],
       terms: ['3 Days', '15 days', '30 days', '1 year'],
@@ -636,15 +651,9 @@ abstract final class ProductMockData {
         'One e-App',
         'Clearer than two separate quotes',
       ],
-      coverage: [
-        'Life sum insured',
-        'Accident rider (illustrative)',
-      ],
+      coverage: ['Life sum insured', 'Accident rider (illustrative)'],
       rateCallout: 'SI 20,000,000.00 · indicative monthly premium',
-      eligible: [
-        'Age 18–60',
-        'Single life — no multi-product cart',
-      ],
+      eligible: ['Age 18–60', 'Single life — no multi-product cart'],
       variants: ['Pack A', 'Pack B', 'Grand Plan 1'],
       frequencies: ['Monthly', 'Semi-Annually', 'Annual'],
       terms: ['1 year', '5 years', '10 years'],
@@ -661,7 +670,8 @@ abstract final class ProductMockData {
       if (p.name.toLowerCase() == n) return p;
     }
     for (final p in products) {
-      if (n.contains(p.name.toLowerCase()) || p.name.toLowerCase().contains(n)) {
+      if (n.contains(p.name.toLowerCase()) ||
+          p.name.toLowerCase().contains(n)) {
         return p;
       }
     }
@@ -687,7 +697,8 @@ abstract final class ProductMockData {
     final q = query.trim().toLowerCase();
     return products.where((p) {
       final lineOk = line == null || p.line == line;
-      final textOk = q.isEmpty ||
+      final textOk =
+          q.isEmpty ||
           p.name.toLowerCase().contains(q) ||
           p.tagline.toLowerCase().contains(q) ||
           p.code.toLowerCase().contains(q);
@@ -704,7 +715,10 @@ abstract final class ProductMockData {
     return out;
   }
 
-  static int monthlyPremiumFor({required CatalogProduct product, required int si}) {
+  static int monthlyPremiumFor({
+    required CatalogProduct product,
+    required int si,
+  }) {
     if (si <= 0) return 0;
     switch (product.line) {
       case ProductLine.saving:
@@ -738,6 +752,7 @@ abstract final class ProductMockData {
         id: 'lead-${l.id}',
         name: l.name,
         kind: QuotePartyKind.lead,
+        phone: l.phone,
         email: l.email,
       ),
     );
@@ -814,7 +829,8 @@ abstract final class ProductSession {
       if (plateNumber.isNotEmpty) 'Plate Number': plateNumber,
       if (optionalBundle) ...{
         if (riderPlan.isNotEmpty) 'Rider Plan': riderPlan,
-        if (riderFrequency.isNotEmpty) 'Rider Payment Frequency': riderFrequency,
+        if (riderFrequency.isNotEmpty)
+          'Rider Payment Frequency': riderFrequency,
         'Rider Premium': ProductFormat.money(calc.riderPremium),
       },
       if (discountName.isNotEmpty) 'Discount Name': discountName,
@@ -862,7 +878,8 @@ abstract final class ProductSession {
       sameAsLifeAssured: true,
       lifeAssured: _copyPerson(ph),
       nrcCaptured: false,
-      beneficiaries: beneficiaries ??
+      beneficiaries:
+          beneficiaries ??
           [
             BeneficiaryDraft(
               name: 'Zaw Min Thu',
@@ -905,6 +922,8 @@ abstract final class ProductSession {
       gender: policy.insured.rows['Gender'],
     );
     _q += 1;
+    final si = _parseSi(policy.sumInsured);
+    final prem = _parseSi(policy.premium);
     final quote = SavedQuote(
       id: 'QT-REN-${_q.toString().padLeft(3, '0')}',
       productId: product.id,
@@ -913,9 +932,9 @@ abstract final class ProductSession {
       lineLabel: product.lineLabel,
       variant: product.variants.first,
       frequency: policy.frequency,
-      sumInsured: _parseSi(policy.sumInsured),
-      monthlyPremium: _parseSi(policy.premium),
-      topup: 0,
+      sumInsured: ProductFormat.money(si),
+      monthlyPremium: ProductFormat.money(prem),
+      topup: ProductFormat.money(0),
       term: policy.term,
       dob: DateTime(1999, 6, 4),
       age: policy.ageAtIssue,
@@ -924,7 +943,7 @@ abstract final class ProductSession {
     );
     quotes.insert(0, quote);
     final benName = policy.beneficiary.rows['Name'] ?? 'Beneficiary';
-    return startEapp(
+    final draft = startEapp(
       quote,
       intent: EappLaunchIntent.renewal,
       sourcePolicyId: policy.id,
@@ -940,6 +959,40 @@ abstract final class ProductSession {
         ),
       ],
     );
+    final phRows = policy.policyholder.rows;
+    final laRows = policy.insured.rows;
+    final phName = phRows['Name'] ?? policy.clientName;
+    draft.policyholder
+      ..name = phName
+      ..mobile = phRows['Mobile'] ?? draft.policyholder.mobile
+      ..altMobile = phRows['Mobile'] ?? draft.policyholder.altMobile
+      ..email = phRows['Email'] ?? draft.policyholder.email
+      ..address = phRows['Address'] ?? draft.policyholder.address
+      ..identification =
+          laRows['Identification'] ?? draft.policyholder.identification
+      ..gender = laRows['Gender'] ?? draft.policyholder.gender;
+    final laName = laRows['Name'] ?? phName;
+    draft.sameAsLifeAssured = laName == phName;
+    if (draft.sameAsLifeAssured) {
+      draft.lifeAssured = _copyPerson(draft.policyholder);
+    } else {
+      draft.lifeAssured
+        ..name = laName
+        ..identification =
+            laRows['Identification'] ?? draft.lifeAssured.identification
+        ..gender = laRows['Gender'] ?? draft.lifeAssured.gender;
+    }
+    return draft;
+  }
+
+  static EappDraft? openDraftForPolicy(String policyId) {
+    for (final a in applications) {
+      if (a.sourcePolicyId == policyId &&
+          (a.status == EappStatus.draft || a.status == EappStatus.correction)) {
+        return a;
+      }
+    }
+    return null;
   }
 
   static EappDraft? appById(String id) {
@@ -959,7 +1012,10 @@ abstract final class ProductSession {
   static int beneficiaryTotal(EappDraft draft) =>
       draft.beneficiaries.fold<int>(0, (sum, b) => sum + b.percent);
 
-  static PersonDraft _personFrom(QuoteParty party, {required DateTime fallbackDob}) {
+  static PersonDraft _personFrom(
+    QuoteParty party, {
+    required DateTime fallbackDob,
+  }) {
     return PersonDraft(
       name: party.name,
       mobile: party.phone ?? '09 750337968',

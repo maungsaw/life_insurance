@@ -9,9 +9,10 @@ import 'package:life_insurance/features/product/presentation/pages/compare.dart'
 import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
 
 class ProductQuotePage extends StatefulWidget {
-  const ProductQuotePage({super.key, required this.product});
+  const ProductQuotePage({super.key, required this.product, this.initialParty});
 
   final CatalogProduct product;
+  final QuoteParty? initialParty;
 
   @override
   State<ProductQuotePage> createState() => _ProductQuotePageState();
@@ -90,6 +91,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _riderFreqCtrl = TextEditingController();
     _discountName = '';
     _resetForProduct(_product, keepParty: false);
+    if (widget.initialParty != null) {
+      _applyParty(widget.initialParty!);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _hydrateGuestDraft();
@@ -278,18 +282,20 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _recalc();
   }
 
+  void _applyParty(QuoteParty party) {
+    _party = party;
+    _partyError = null;
+    _partyCtrl.text = '${party.name} (${party.kindLabel})';
+    if (party.dob != null) {
+      _dob = party.dob!;
+      _dobCtrl.text = ProductFormat.dob(_dob);
+    }
+  }
+
   Future<void> _pickParty() async {
     final party = await showQuotePartySheet(context);
     if (party == null) return;
-    setState(() {
-      _party = party;
-      _partyError = null;
-      _partyCtrl.text = '${party.name} (${party.kindLabel})';
-      if (party.dob != null) {
-        _dob = party.dob!;
-        _dobCtrl.text = ProductFormat.dob(_dob);
-      }
-    });
+    setState(() => _applyParty(party));
     _recalc();
   }
 

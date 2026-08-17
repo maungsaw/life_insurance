@@ -92,6 +92,7 @@
 - [x] Commission hub · History + Report clarity brainstorm (`80`)
 - [x] Commission History \| Report hub · identity rows · dashboard shipped (`80`)
 - [x] e-App start points · Renewal & repurchase brainstorm (`81`)
+- [x] e-App start points · Policy Renew · Client/Lead Start e-App shipped (`81`)
 
 ## Web (`agent-web-portal` React)
 - [x] Left menu + header logo/profile

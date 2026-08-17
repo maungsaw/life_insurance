@@ -34,8 +34,15 @@ class ProductQuotesPage extends StatelessWidget {
                   subtitle: Text(
                     '${q.party.name} · ${q.monthlyPremium} MMK · ${q.id}',
                   ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.push(AppRoute.productQuoteSaved, extra: q),
+                  trailing: TextButton(
+                    onPressed: () {
+                      final draft = ProductSession.startEapp(q);
+                      context.push(AppRoute.productEapp, extra: draft);
+                    },
+                    child: const Text('Start e-App'),
+                  ),
+                  onTap: () =>
+                      context.push(AppRoute.productQuoteSaved, extra: q),
                 );
               },
             ),
