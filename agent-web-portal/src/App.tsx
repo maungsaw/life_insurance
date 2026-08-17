@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import { AuthProvider, useAuth } from '@/auth/AuthContext'
-import { HomeRedirect, RequireAdmin, RequireWipe } from '@/auth/RequireCap'
+import { HomeRedirect, RequireAdmin, RequireBook, RequireUsers, RequireWipe } from '@/auth/RequireCap'
 import { LoginPage } from '@/pages/LoginPage'
 import { OtpPage } from '@/pages/OtpPage'
 import { ForgotPage } from '@/pages/ForgotPage'
@@ -19,6 +19,13 @@ import { AuditPage } from '@/pages/AuditPage'
 import { NotificationsPage } from '@/pages/NotificationsPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { ChangePasswordPage } from '@/pages/ChangePasswordPage'
+import { CrmCustomersPage } from '@/pages/CrmCustomersPage'
+import { CrmCustomerDetailPage } from '@/pages/CrmCustomerDetailPage'
+import { EappsPage } from '@/pages/EappsPage'
+import { EappDetailPage } from '@/pages/EappDetailPage'
+import { UsersPage } from '@/pages/UsersPage'
+import { UserDetailPage } from '@/pages/UserDetailPage'
+import { RolesPage } from '@/pages/RolesPage'
 
 function Private({ children }: { children: ReactNode }) {
   const { authed } = useAuth()
@@ -48,8 +55,40 @@ export default function App() {
             <Route path="team-performance" element={<DashTeamPerformancePage />} />
           </Route>
           <Route path="performance" element={<Navigate to="/dashboard/team-performance" replace />} />
-          <Route path="crm" element={<Navigate to="/dashboard/overview" replace />} />
-          <Route path="policies" element={<Navigate to="/dashboard/overview" replace />} />
+          <Route path="crm" element={<Navigate to="/crm/customers" replace />} />
+          <Route
+            path="crm/customers"
+            element={
+              <RequireBook>
+                <CrmCustomersPage />
+              </RequireBook>
+            }
+          />
+          <Route
+            path="crm/customers/:id"
+            element={
+              <RequireBook>
+                <CrmCustomerDetailPage />
+              </RequireBook>
+            }
+          />
+          <Route
+            path="eapps"
+            element={
+              <RequireBook>
+                <EappsPage />
+              </RequireBook>
+            }
+          />
+          <Route
+            path="eapps/:id"
+            element={
+              <RequireBook>
+                <EappDetailPage />
+              </RequireBook>
+            }
+          />
+          <Route path="policies" element={<Navigate to="/crm/customers" replace />} />
           <Route path="tasks" element={<TasksPage />} />
           <Route path="recruit" element={<Navigate to="/tasks" replace />} />
           <Route path="management" element={<Navigate to="/management/resources" replace />} />
@@ -104,6 +143,33 @@ export default function App() {
             }
           />
           <Route path="agents" element={<Navigate to="/audit" replace />} />
+          <Route path="audit/lookup" element={<Navigate to="/crm/customers" replace />} />
+          <Route path="audit/queue" element={<Navigate to="/eapps" replace />} />
+          <Route path="users" element={<Navigate to="/users/people" replace />} />
+          <Route
+            path="users/people"
+            element={
+              <RequireUsers>
+                <UsersPage />
+              </RequireUsers>
+            }
+          />
+          <Route
+            path="users/roles"
+            element={
+              <RequireUsers>
+                <RolesPage />
+              </RequireUsers>
+            }
+          />
+          <Route
+            path="users/:id"
+            element={
+              <RequireUsers>
+                <UserDetailPage />
+              </RequireUsers>
+            }
+          />
           <Route path="notifications" element={<NotificationsPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/password" element={<ChangePasswordPage />} />

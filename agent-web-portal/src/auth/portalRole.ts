@@ -7,6 +7,9 @@ export type Caps = {
   canExport: boolean
   canAdmin: boolean
   canWipe: boolean
+  canViewBook: boolean
+  canViewAllBooks: boolean
+  canManageUsers: boolean
 }
 
 export type HatProfile = {
@@ -61,6 +64,9 @@ export function capsFor(hat: PortalHat): Caps {
       canExport: true,
       canAdmin: true,
       canWipe: true,
+      canViewBook: true,
+      canViewAllBooks: true,
+      canManageUsers: true,
     }
   }
   if (hat === 'fte') {
@@ -70,6 +76,9 @@ export function capsFor(hat: PortalHat): Caps {
       canExport: true,
       canAdmin: false,
       canWipe: false,
+      canViewBook: true,
+      canViewAllBooks: true,
+      canManageUsers: false,
     }
   }
   return {
@@ -78,6 +87,9 @@ export function capsFor(hat: PortalHat): Caps {
     canExport: true,
     canAdmin: false,
     canWipe: false,
+    canViewBook: true,
+    canViewAllBooks: false,
+    canManageUsers: false,
   }
 }
 

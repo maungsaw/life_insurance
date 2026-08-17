@@ -111,3 +111,5 @@
 - [x] Web admin view · mobile-referenced UX map brainstorm (`86`)
 - [x] Web admin view · role hats · Products · Audit HQ shipped (`86`)
 - [x] Web admin P2 polish · empty states · FA drill · confirms (`86`)
+- [x] Web HQ CRM · e-Apps · Users/Roles brainstorm (`87`)
+- [x] Web HQ CRM · e-Apps · Users/Roles shipped (`87`)

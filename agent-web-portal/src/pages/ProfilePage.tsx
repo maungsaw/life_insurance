@@ -33,14 +33,17 @@ export function ProfilePage() {
             {caps.canViewDistrict ? <Pill tone="ok">District view</Pill> : null}
             {caps.canViewPortfolio ? <Pill tone="ok">Portfolio</Pill> : null}
             {caps.canExport ? <Pill>Export</Pill> : null}
+            {caps.canViewBook ? <Pill tone="ok">CRM book</Pill> : null}
+            {caps.canViewAllBooks ? <Pill>All books</Pill> : null}
+            {caps.canManageUsers ? <Pill tone="ok">Users</Pill> : null}
             {caps.canAdmin ? <Pill tone="ok">Admin setup</Pill> : <Pill>No admin write</Pill>}
             {caps.canWipe ? <Pill tone="warn">Remote wipe</Pill> : null}
           </div>
           <p className="mt-3 text-xs text-muted">
             Prototype: use <b className="text-deep">View as</b> in the header to switch Manager / FTE / Admin.
             {hat === 'admin'
-              ? ' Admin lands on Management — not an MDRT dashboard.'
-              : ' Field selling (quote, e-App, CRM) stays on the Agent App.'}
+              ? ' Admin lands on Management — CRM / e-Apps / Users are extra HQ desks.'
+              : ' Field selling stays on the Agent App. This portal CRM is the book, not the wizard.'}
           </p>
         </Card>
       </div>

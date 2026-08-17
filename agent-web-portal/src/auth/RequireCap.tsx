@@ -16,6 +16,20 @@ export function RequireWipe({ children }: { children: ReactNode }) {
   return children
 }
 
+export function RequireUsers({ children }: { children: ReactNode }) {
+  const { authed, caps, landing } = useAuth()
+  if (!authed) return <Navigate to="/login" replace />
+  if (!caps.canManageUsers) return <Navigate to={landing} replace />
+  return children
+}
+
+export function RequireBook({ children }: { children: ReactNode }) {
+  const { authed, caps, landing } = useAuth()
+  if (!authed) return <Navigate to="/login" replace />
+  if (!caps.canViewBook) return <Navigate to={landing} replace />
+  return children
+}
+
 export function HomeRedirect() {
   const { landing } = useAuth()
   return <Navigate to={landing} replace />

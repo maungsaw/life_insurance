@@ -14,6 +14,10 @@ import {
   PieChart,
   UsersRound,
   Package,
+  ContactRound,
+  ClipboardList,
+  UserCog,
+  KeyRound,
 } from 'lucide-react'
 import { HeaderActions } from '@/layout/HeaderActions'
 import { BrandLogo } from '@/components/BrandLogo'
@@ -24,6 +28,11 @@ import { useAuth } from '@/auth/AuthContext'
 const DASH_CHILDREN = [
   { to: 'overview', labelEn: 'Overview', labelMm: 'အနှစ်ချုပ်', icon: PieChart },
   { to: 'team-performance', labelEn: 'Team Performance', labelMm: 'အဖွဲ့စွမ်းဆောင်ရည်', icon: UsersRound },
+] as const
+
+const USER_CHILDREN = [
+  { to: 'people', labelEn: 'People', labelMm: 'ဝန်ထမ်း', icon: UsersRound },
+  { to: 'roles', labelEn: 'Roles & permissions', labelMm: 'အခွင့်အရေး', icon: KeyRound },
 ] as const
 
 const MGMT_CHILDREN = [
@@ -88,8 +97,12 @@ export function AppShell() {
   const mm = lang === 'mm'
   const onDashboard = pathname.startsWith('/dashboard')
   const onManagement = pathname.startsWith('/management')
+  const onCrm = pathname.startsWith('/crm')
+  const onUsers = pathname.startsWith('/users')
   const [dashOpen, setDashOpen] = useState(hat !== 'admin' || onDashboard)
   const [mgmtOpen, setMgmtOpen] = useState(onManagement || hat === 'admin')
+  const [crmOpen, setCrmOpen] = useState(onCrm)
+  const [usersOpen, setUsersOpen] = useState(onUsers)
 
   useEffect(() => {
     if (onDashboard) setDashOpen(true)
@@ -98,6 +111,14 @@ export function AppShell() {
   useEffect(() => {
     if (onManagement) setMgmtOpen(true)
   }, [onManagement])
+
+  useEffect(() => {
+    if (onCrm) setCrmOpen(true)
+  }, [onCrm])
+
+  useEffect(() => {
+    if (onUsers) setUsersOpen(true)
+  }, [onUsers])
 
   useEffect(() => {
     if (hat === 'admin' && !onDashboard) setDashOpen(false)
@@ -147,6 +168,28 @@ export function AppShell() {
           <span className="max-lg:hidden">{mm ? 'အလုပ်များ' : 'Tasks'}</span>
         </NavLink>
 
+        {caps.canViewBook ? (
+          <NavGroup
+            label={mm ? 'CRM' : 'CRM'}
+            icon={ContactRound}
+            active={onCrm}
+            open={crmOpen}
+            onToggle={() => setCrmOpen((v) => !v)}
+          >
+            <NavLink to="/crm/customers" title="Customers" className={({ isActive }) => linkClass(isActive, true)}>
+              <ContactRound className="size-3.5 shrink-0" />
+              <span className="max-lg:hidden">{mm ? 'ဖောက်သည်' : 'Customers'}</span>
+            </NavLink>
+          </NavGroup>
+        ) : null}
+
+        {caps.canViewBook ? (
+          <NavLink to="/eapps" title="e-Apps" className={({ isActive }) => linkClass(isActive)}>
+            <ClipboardList className="size-4 shrink-0" />
+            <span className="max-lg:hidden">{mm ? 'e-App' : 'e-Apps'}</span>
+          </NavLink>
+        ) : null}
+
         {caps.canAdmin ? (
           <NavGroup
             label={mm ? 'စီမံခန့်ခွဲမှု' : 'Management'}
@@ -159,6 +202,28 @@ export function AppShell() {
               <NavLink
                 key={to}
                 to={`/management/${to}`}
+                title={mm ? labelMm : labelEn}
+                className={({ isActive }) => linkClass(isActive, true)}
+              >
+                <ChildIcon className="size-3.5 shrink-0" />
+                <span className="max-lg:hidden">{mm ? labelMm : labelEn}</span>
+              </NavLink>
+            ))}
+          </NavGroup>
+        ) : null}
+
+        {caps.canManageUsers ? (
+          <NavGroup
+            label={mm ? 'အသုံးပြုသူ' : 'Users'}
+            icon={UserCog}
+            active={onUsers}
+            open={usersOpen}
+            onToggle={() => setUsersOpen((v) => !v)}
+          >
+            {USER_CHILDREN.map(({ to, labelEn, labelMm, icon: ChildIcon }) => (
+              <NavLink
+                key={to}
+                to={`/users/${to}`}
                 title={mm ? labelMm : labelEn}
                 className={({ isActive }) => linkClass(isActive, true)}
               >

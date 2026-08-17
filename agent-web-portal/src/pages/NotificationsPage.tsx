@@ -39,7 +39,7 @@ const ITEMS: Item[] = [
     unread: true,
     tone: 'danger',
     pill: 'Fix',
-    to: '/tasks',
+    to: '/eapps/e1',
   },
   {
     id: '3',
@@ -50,7 +50,7 @@ const ITEMS: Item[] = [
     unread: true,
     tone: 'warn',
     pill: 'Due',
-    to: '/dashboard/overview',
+    to: '/crm/customers/c-may',
   },
   {
     id: '4',
@@ -80,6 +80,15 @@ const ITEMS: Item[] = [
     pill: 'Done',
     to: '/tasks',
   },
+  {
+    id: '7',
+    type: 'system',
+    title: 'Role changed',
+    meta: 'Zaw Ko · FA stays FA · next session menus',
+    time: '4d ago',
+    pill: 'Users',
+    to: '/users/u-zaw',
+  },
 ]
 
 export function NotificationsPage() {
@@ -94,6 +103,10 @@ export function NotificationsPage() {
   const openItem = (item: Item) => {
     setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, unread: false } : i)))
     if (item.to.startsWith('/management') && !caps.canAdmin) {
+      nav('/notifications')
+      return
+    }
+    if (item.to.startsWith('/users') && !caps.canManageUsers) {
       nav('/notifications')
       return
     }

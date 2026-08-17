@@ -1,4 +1,5 @@
 import { useMemo, useState, type DragEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -112,6 +113,16 @@ const SEED: Task[] = [
     nrc: '12/YGN(N)123456',
     trainingModule: 'LC Training · Module 2',
   },
+  {
+    id: 't8',
+    title: 'NRC correction · Daw Hla',
+    assignee: 'Aye Chan',
+    type: 'e-App',
+    due: '17-Aug-2026',
+    dueIso: '2026-08-17',
+    status: 'pending',
+    notes: 'APP-2026-0814 · re-scan NRC front + back.',
+  },
 ]
 
 const TODAY = '2026-08-05'
@@ -135,10 +146,12 @@ function statusPill(s: Status) {
 }
 
 export function TasksPage() {
+  const [params] = useSearchParams()
+  const typeFromUrl = params.get('type')
   const [tasks, setTasks] = useState(SEED)
   const [view, setView] = useState<'board' | 'list'>('board')
   const [q, setQ] = useState('')
-  const [typeFilter, setTypeFilter] = useState('all')
+  const [typeFilter, setTypeFilter] = useState(typeFromUrl === 'e-App' ? 'e-App' : 'all')
   const [assigneeFilter, setAssigneeFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)

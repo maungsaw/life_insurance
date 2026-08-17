@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button, Card, DataTable, Dialog, Field, Input, PageHeader, Pill, Td } from '@/components/ui'
 import { cn } from '@/lib/cn'
 
-type Tab = 'directory' | 'pending' | 'applications' | 'queue' | 'lookup' | 'log'
+type Tab = 'directory' | 'pending' | 'applications' | 'log'
 
 type PendingRow = {
   id: string
@@ -22,23 +22,6 @@ type AppRow = {
   status: 'Pending invite' | 'CORE unknown' | 'Activated'
   district: string
   when: string
-}
-
-type QueueRow = {
-  id: string
-  ref: string
-  client: string
-  fa: string
-  status: string
-  product: string
-  when: string
-}
-
-type LookupHit = {
-  kind: 'client' | 'policy'
-  title: string
-  owner: string
-  meta: string
 }
 
 const PENDING_SEED: PendingRow[] = [
@@ -81,51 +64,18 @@ const APP_SEED: AppRow[] = [
   },
 ]
 
-const QUEUE_SEED: QueueRow[] = [
-  {
-    id: 'q1',
-    ref: 'APP-2026-0814',
-    client: 'Daw Hla',
-    fa: 'Aye Chan',
-    status: 'Mark for Correction',
-    product: 'Family Health',
-    when: '17-Aug-2026 13:10',
-  },
-  {
-    id: 'q2',
-    ref: 'APP-2026-0812',
-    client: 'U Min',
-    fa: 'Nwe Nwe',
-    status: 'Submitted',
-    product: 'Universal Life',
-    when: '16-Aug-2026 11:02',
-  },
-]
-
-const LOOKUP_SEED: LookupHit[] = [
-  { kind: 'client', title: 'May Chan Myae', owner: 'Aye Chan', meta: 'Client · 2 policies · Yangon A' },
-  { kind: 'policy', title: 'POL-2026-0814', owner: 'Aye Chan', meta: 'Universal Life · Active · MMK 2,300,000' },
-  { kind: 'client', title: 'Daw Hla', owner: 'Aye Chan', meta: 'Lead · Applied · correction open' },
-]
-
 export function AuditPage() {
-  const [tab, setTab] = useState<Tab>('directory')
+  const [params] = useSearchParams()
+  const tabFromUrl = params.get('tab')
+  const initialTab: Tab =
+    tabFromUrl === 'pending' || tabFromUrl === 'applications' || tabFromUrl === 'log'
+      ? tabFromUrl
+      : 'directory'
+  const [tab, setTab] = useState<Tab>(initialTab)
   const [pending, setPending] = useState(PENDING_SEED)
   const [apps, setApps] = useState(APP_SEED)
   const [rejectId, setRejectId] = useState<string | null>(null)
   const [rejectNote, setRejectNote] = useState('')
-  const [lookupQ, setLookupQ] = useState('')
-
-  const hits = useMemo(() => {
-    const n = lookupQ.trim().toLowerCase()
-    if (!n) return LOOKUP_SEED
-    return LOOKUP_SEED.filter(
-      (h) =>
-        h.title.toLowerCase().includes(n) ||
-        h.owner.toLowerCase().includes(n) ||
-        h.meta.toLowerCase().includes(n),
-    )
-  }, [lookupQ])
 
   const approve = (id: string) => setPending((prev) => prev.filter((r) => r.id !== id))
   const reject = () => {
@@ -142,8 +92,6 @@ export function AuditPage() {
     { id: 'directory', label: 'Directory' },
     { id: 'pending', label: `Pending (${pending.length})` },
     { id: 'applications', label: 'Application List' },
-    { id: 'queue', label: 'Applications' },
-    { id: 'lookup', label: 'Lookup' },
     { id: 'log', label: 'Log' },
   ]
 
@@ -151,8 +99,26 @@ export function AuditPage() {
     <div>
       <PageHeader
         title="Audit"
-        subtitle="FR-12 · approved directory · pending changes · Application List · e-App queue · read-only lookup"
+        subtitle="FR-12 · agent directory · pending identity · FR-01 Application List (register) · log"
       />
+
+      <p className="mb-3 text-sm text-muted">
+        Policy e-Apps moved to{' '}
+        <Link to="/eapps" className="font-bold text-steel">
+          e-Apps
+        </Link>
+        . Customer search is{' '}
+        <Link to="/crm/customers" className="font-bold text-steel">
+          CRM
+        </Link>
+        {' '}
+        (old Audit lookup redirects there)
+        . Login accounts are{' '}
+        <Link to="/users/people" className="font-bold text-steel">
+          Users
+        </Link>
+        .
+      </p>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {tabs.map((t) => (
@@ -173,11 +139,7 @@ export function AuditPage() {
       {tab === 'directory' ? (
         <Card title="Agent directory">
           <p className="mb-3 text-xs text-muted">
-            Onboarding statuses live here. Leave appointments and On-Boarding follow-ups are under{' '}
-            <Link to="/tasks" className="font-bold text-steel">
-              Tasks
-            </Link>
-            .
+            Approved agent master. On-Boarding follow-ups are under Tasks. Role assignment is under Users.
           </p>
           <DataTable headers={['Code', 'Name', 'Role', 'Mobile', 'Status', 'District']}>
             <tr>
@@ -207,8 +169,7 @@ export function AuditPage() {
       {tab === 'pending' ? (
         <Card title="Pending changes">
           <p className="mb-3 text-xs text-muted">
-            Agents cannot freely change approved identity. Approve writes the new value; Reject needs a
-            reason.
+            Agents cannot freely change approved identity. Approve writes the new value; Reject needs a reason.
           </p>
           {pending.length === 0 ? (
             <p className="py-8 text-center text-sm font-semibold text-muted">No pending change requests.</p>
@@ -227,12 +188,7 @@ export function AuditPage() {
                       <Button size="sm" type="button" onClick={() => approve(r.id)}>
                         Approve
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="danger"
-                        type="button"
-                        onClick={() => setRejectId(r.id)}
-                      >
+                      <Button size="sm" variant="danger" type="button" onClick={() => setRejectId(r.id)}>
                         Reject
                       </Button>
                     </div>
@@ -245,9 +201,10 @@ export function AuditPage() {
       ) : null}
 
       {tab === 'applications' ? (
-        <Card title="Application List">
+        <Card title="Application List · agent register">
           <p className="mb-3 text-xs text-muted">
-            CORE-unknown and pending register from the Agent App. Portal login stays closed until Activated.
+            CORE-unknown and pending invite from the Agent App. This is <b className="text-deep">not</b> the
+            policy e-App queue. Portal login stays closed until Activated.
           </p>
           <DataTable headers={['Name', 'Mobile', 'Status', 'District', 'When', '']}>
             {apps.map((a) => (
@@ -280,72 +237,6 @@ export function AuditPage() {
         </Card>
       ) : null}
 
-      {tab === 'queue' ? (
-        <Card title="e-App queue (read-only)">
-          <p className="mb-3 text-xs text-muted">
-            Not a second stepper. Correction work opens a{' '}
-            <Link to="/tasks" className="font-bold text-steel">
-              Task
-            </Link>
-            . Sell / Renew stays on mobile.
-          </p>
-          <DataTable headers={['Ref', 'Client', 'FA', 'Product', 'Status', 'When', '']}>
-            {QUEUE_SEED.map((r) => (
-              <tr key={r.id}>
-                <Td className="font-bold">{r.ref}</Td>
-                <Td>{r.client}</Td>
-                <Td>{r.fa}</Td>
-                <Td>{r.product}</Td>
-                <Td>
-                  {r.status.includes('Correction') ? (
-                    <Pill tone="danger">{r.status}</Pill>
-                  ) : (
-                    <Pill>{r.status}</Pill>
-                  )}
-                </Td>
-                <Td className="text-xs text-muted">{r.when}</Td>
-                <Td>
-                  <Link to="/tasks" className="text-xs font-bold text-steel">
-                    Open task
-                  </Link>
-                </Td>
-              </tr>
-            ))}
-          </DataTable>
-        </Card>
-      ) : null}
-
-      {tab === 'lookup' ? (
-        <Card title="Support lookup">
-          <p className="mb-3 text-xs text-muted">
-            Read-only search for HQ support. No convert, no KYC edit, no Start e-App, no policy admin.
-          </p>
-          <Field label="Search client or policy">
-            <Input
-              value={lookupQ}
-              onChange={(e) => setLookupQ(e.target.value)}
-              placeholder="Name, POL-…, FA"
-            />
-          </Field>
-          {hits.length === 0 ? (
-            <p className="py-8 text-center text-sm font-semibold text-muted">No rows in this filter.</p>
-          ) : (
-            <DataTable headers={['Kind', 'Record', 'Owner FA', 'Detail']}>
-              {hits.map((h) => (
-                <tr key={h.title}>
-                  <Td>
-                    <Pill>{h.kind === 'client' ? 'Client / lead' : 'Policy'}</Pill>
-                  </Td>
-                  <Td className="font-bold">{h.title}</Td>
-                  <Td>{h.owner}</Td>
-                  <Td className="text-muted">{h.meta}</Td>
-                </tr>
-              ))}
-            </DataTable>
-          )}
-        </Card>
-      ) : null}
-
       {tab === 'log' ? (
         <Card title="Audit log">
           <DataTable headers={['Action', 'Previous', 'New', 'User', 'When']}>
@@ -364,11 +255,11 @@ export function AuditPage() {
               <Td>02-Aug-2026 16:40</Td>
             </tr>
             <tr>
-              <Td>Product turned off</Td>
-              <Td>TL On</Td>
-              <Td>TL Off</Td>
+              <Td>Reassign CRM owner</Td>
+              <Td>Aye Chan</Td>
+              <Td>Nwe Nwe</Td>
               <Td>Ops May</Td>
-              <Td>02-Aug-2026 10:14</Td>
+              <Td>17-Aug-2026 15:40</Td>
             </tr>
           </DataTable>
         </Card>
