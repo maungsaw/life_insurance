@@ -18,6 +18,22 @@ import { cn } from '@/lib/cn'
 
 type Status = 'pending' | 'progress' | 'completed'
 type TaskType = 'Leave appointment' | 'Servicing' | 'e-App' | 'On-Boarding' | 'Other'
+type TaskSubstatus =
+  | 'New'
+  | 'Assigned'
+  | 'In Progress'
+  | 'Follow-up Required'
+  | 'Scheduled'
+  | 'Waiting for Customer'
+  | 'Waiting for Payment'
+  | 'Waiting for Internal Team'
+  | 'Submitted'
+  | 'Completed'
+  | 'Issued'
+  | 'Delivered'
+  | 'Closed'
+  | 'Cancelled'
+  | 'Re-opened'
 
 type Task = {
   id: string
@@ -27,7 +43,9 @@ type Task = {
   due: string
   dueIso: string
   status: Status
+  substatus: TaskSubstatus
   notes: string
+  lastTransitionReason?: string
   agentName?: string
   nrc?: string
   trainingModule?: string
@@ -39,6 +57,46 @@ const COLUMNS: { id: Status; label: string; hint: string }[] = [
   { id: 'completed', label: 'Completed', hint: 'Done' },
 ]
 
+const SUBSTATUS_META: Record<TaskSubstatus, { stage: Status; tone: 'default' | 'ok' | 'warn' | 'danger' | 'sky' }> = {
+  New: { stage: 'pending', tone: 'warn' },
+  Assigned: { stage: 'pending', tone: 'sky' },
+  'In Progress': { stage: 'progress', tone: 'default' },
+  'Follow-up Required': { stage: 'progress', tone: 'warn' },
+  Scheduled: { stage: 'progress', tone: 'sky' },
+  'Waiting for Customer': { stage: 'progress', tone: 'warn' },
+  'Waiting for Payment': { stage: 'progress', tone: 'warn' },
+  'Waiting for Internal Team': { stage: 'progress', tone: 'sky' },
+  Submitted: { stage: 'progress', tone: 'sky' },
+  Completed: { stage: 'completed', tone: 'ok' },
+  Issued: { stage: 'completed', tone: 'ok' },
+  Delivered: { stage: 'completed', tone: 'ok' },
+  Closed: { stage: 'completed', tone: 'default' },
+  Cancelled: { stage: 'completed', tone: 'danger' },
+  'Re-opened': { stage: 'pending', tone: 'danger' },
+}
+
+const SUBSTATUSES_BY_TYPE: Record<TaskType, TaskSubstatus[]> = {
+  'Leave appointment': ['New', 'Assigned', 'In Progress', 'Follow-up Required', 'Scheduled', 'Completed', 'Closed'],
+  Servicing: ['Assigned', 'In Progress', 'Follow-up Required', 'Waiting for Customer', 'Completed', 'Closed'],
+  'e-App': ['Assigned', 'In Progress', 'Waiting for Customer', 'Submitted', 'Completed', 'Closed', 'Re-opened'],
+  'On-Boarding': ['New', 'Assigned', 'In Progress', 'Waiting for Internal Team', 'Completed', 'Closed'],
+  Other: ['New', 'Assigned', 'In Progress', 'Follow-up Required', 'Completed', 'Closed', 'Cancelled', 'Re-opened'],
+}
+
+const DEFAULT_SUBSTATUS_BY_STAGE: Record<Status, TaskSubstatus> = {
+  pending: 'Assigned',
+  progress: 'In Progress',
+  completed: 'Completed',
+}
+
+function allowedSubstatuses(type: TaskType, stage: Status) {
+  return SUBSTATUSES_BY_TYPE[type].filter((s) => SUBSTATUS_META[s].stage === stage)
+}
+
+function firstAllowedSubstatus(type: TaskType, stage: Status) {
+  return allowedSubstatuses(type, stage)[0] ?? DEFAULT_SUBSTATUS_BY_STAGE[stage]
+}
+
 const SEED: Task[] = [
   {
     id: 't1',
@@ -48,6 +106,7 @@ const SEED: Task[] = [
     due: '06-Aug-2026',
     dueIso: '2026-08-06',
     status: 'progress',
+    substatus: 'In Progress',
     notes: 'Home visit confirmed · bring brochure pack.',
   },
   {
@@ -58,6 +117,7 @@ const SEED: Task[] = [
     due: '10-Aug-2026',
     dueIso: '2026-08-10',
     status: 'pending',
+    substatus: 'Assigned',
     notes: 'Due in 7 days reminder follow-up.',
   },
   {
@@ -68,6 +128,7 @@ const SEED: Task[] = [
     due: '08-Aug-2026',
     dueIso: '2026-08-08',
     status: 'pending',
+    substatus: 'Scheduled',
     notes: 'Confirm afternoon slot at branch.',
   },
   {
@@ -78,6 +139,7 @@ const SEED: Task[] = [
     due: '02-Aug-2026',
     dueIso: '2026-08-02',
     status: 'completed',
+    substatus: 'Completed',
     notes: 'Client resubmitted clear scan.',
   },
   {
@@ -88,6 +150,7 @@ const SEED: Task[] = [
     due: '04-Aug-2026',
     dueIso: '2026-08-04',
     status: 'progress',
+    substatus: 'In Progress',
     notes: 'Prep for district huddle.',
   },
   {
@@ -98,6 +161,7 @@ const SEED: Task[] = [
     due: '01-Aug-2026',
     dueIso: '2026-08-01',
     status: 'pending',
+    substatus: 'Follow-up Required',
     notes: 'Overdue — reschedule if no reply.',
   },
   {
@@ -108,6 +172,7 @@ const SEED: Task[] = [
     due: '20-Aug-2026',
     dueIso: '2026-08-20',
     status: 'progress',
+    substatus: 'Waiting for Internal Team',
     notes: 'LC training pack issued.',
     agentName: 'Zaw Ko',
     nrc: '12/YGN(N)123456',
@@ -121,14 +186,30 @@ const SEED: Task[] = [
     due: '17-Aug-2026',
     dueIso: '2026-08-17',
     status: 'pending',
+    substatus: 'Re-opened',
     notes: 'APP-2026-0814 · re-scan NRC front + back.',
   },
 ]
 
 const TODAY = '2026-08-05'
+const REASON_REQUIRED_SUBSTATUSES: TaskSubstatus[] = ['Cancelled', 'Re-opened']
 
 function isOverdue(t: Task) {
   return t.status !== 'completed' && t.dueIso < TODAY
+}
+
+function overdueDays(iso: string) {
+  const due = new Date(`${iso}T00:00:00Z`).getTime()
+  const today = new Date(`${TODAY}T00:00:00Z`).getTime()
+  return Math.floor((today - due) / (1000 * 60 * 60 * 24))
+}
+
+function agingLabel(t: Task) {
+  if (!isOverdue(t)) return null
+  const days = overdueDays(t.dueIso)
+  if (days >= 3) return 'SLA 72h+'
+  if (days >= 2) return 'SLA 48h'
+  return 'SLA 24h'
 }
 
 function typeTone(type: TaskType): 'default' | 'sky' | 'warn' | 'ok' {
@@ -145,6 +226,26 @@ function statusPill(s: Status) {
   return <Pill tone="warn">Pending</Pill>
 }
 
+function substatusPill(s: TaskSubstatus) {
+  return <Pill tone={SUBSTATUS_META[s].tone}>{s}</Pill>
+}
+
+function canMoveStage(task: Task, next: Status) {
+  if (task.status === next) return true
+  if (task.status === 'pending' && next === 'completed') return false
+  if (task.substatus === 'Cancelled' && next !== 'completed') return false
+  return true
+}
+
+function canApplySubstatus(task: Task, next: TaskSubstatus) {
+  if (!SUBSTATUSES_BY_TYPE[task.type].includes(next)) return false
+  if (next === 'Re-opened' && task.status !== 'completed') return false
+  if ((next === 'Closed' || next === 'Cancelled') && (task.substatus === 'New' || task.substatus === 'Assigned')) {
+    return false
+  }
+  return true
+}
+
 export function TasksPage() {
   const [params] = useSearchParams()
   const typeFromUrl = params.get('type')
@@ -153,16 +254,22 @@ export function TasksPage() {
   const [q, setQ] = useState('')
   const [typeFilter, setTypeFilter] = useState(typeFromUrl === 'e-App' ? 'e-App' : 'all')
   const [assigneeFilter, setAssigneeFilter] = useState('all')
+  const [substatusFilter, setSubstatusFilter] = useState<'all' | TaskSubstatus>('all')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [dragId, setDragId] = useState<string | null>(null)
+  const [guardMsg, setGuardMsg] = useState('')
+  const [reasonDialog, setReasonDialog] = useState<{ taskId: string; next: TaskSubstatus } | null>(null)
+  const [transitionReason, setTransitionReason] = useState('')
   const [draft, setDraft] = useState({
     title: '',
     assignee: 'Aye Chan',
     type: 'Leave appointment' as TaskType,
     dueIso: '2026-08-06',
     notes: '',
+    substatus: 'Assigned' as TaskSubstatus,
+    transitionReason: '',
     agentName: '',
     nrc: '',
     trainingModule: 'LC Training · Module 1',
@@ -182,9 +289,10 @@ export function TasksPage() {
         t.assignee.toLowerCase().includes(needle)
       const matchType = typeFilter === 'all' || t.type === typeFilter
       const matchA = assigneeFilter === 'all' || t.assignee === assigneeFilter
-      return matchQ && matchType && matchA
+      const matchSubstatus = substatusFilter === 'all' || t.substatus === substatusFilter
+      return matchQ && matchType && matchA && matchSubstatus
     })
-  }, [tasks, q, typeFilter, assigneeFilter])
+  }, [tasks, q, typeFilter, assigneeFilter, substatusFilter])
 
   const byStatus = (s: Status) => filtered.filter((t) => t.status === s)
 
@@ -199,6 +307,8 @@ export function TasksPage() {
       type: 'Leave appointment',
       dueIso: '2026-08-06',
       notes: '',
+      substatus: firstAllowedSubstatus('Leave appointment', status),
+      transitionReason: '',
       agentName: '',
       nrc: '',
       trainingModule: 'LC Training · Module 1',
@@ -215,6 +325,8 @@ export function TasksPage() {
       type: t.type,
       dueIso: t.dueIso,
       notes: t.notes,
+      substatus: t.substatus,
+      transitionReason: t.lastTransitionReason ?? '',
       agentName: t.agentName ?? '',
       nrc: t.nrc ?? '',
       trainingModule: t.trainingModule ?? 'LC Training · Module 1',
@@ -231,6 +343,7 @@ export function TasksPage() {
   const saveTask = () => {
     const title = draft.title.trim()
     if (!title) return
+    if (REASON_REQUIRED_SUBSTATUSES.includes(draft.substatus) && !draft.transitionReason.trim()) return
     const onboarding =
       draft.type === 'On-Boarding'
         ? {
@@ -252,6 +365,8 @@ export function TasksPage() {
                 due: formatDue(draft.dueIso),
                 notes: draft.notes,
                 status: createStatus,
+                substatus: draft.substatus,
+                lastTransitionReason: draft.transitionReason.trim() || undefined,
                 ...onboarding,
               }
             : t,
@@ -267,6 +382,8 @@ export function TasksPage() {
           dueIso: draft.dueIso,
           due: formatDue(draft.dueIso),
           status: createStatus,
+          substatus: draft.substatus,
+          lastTransitionReason: draft.transitionReason.trim() || undefined,
           notes: draft.notes,
           ...onboarding,
         },
@@ -287,7 +404,55 @@ export function TasksPage() {
   }
 
   const moveTask = (id: string, status: Status) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status } : t)))
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? canMoveStage(t, status)
+            ? {
+                ...t,
+                status,
+                substatus:
+                  SUBSTATUS_META[t.substatus].stage === status ? t.substatus : firstAllowedSubstatus(t.type, status),
+              }
+            : t
+          : t,
+      ),
+    )
+    const current = tasks.find((t) => t.id === id)
+    if (current && !canMoveStage(current, status)) {
+      setGuardMsg('Transition blocked: move to In Progress first before Completed.')
+    } else {
+      setGuardMsg('')
+    }
+  }
+
+  const applySubstatus = (id: string, next: TaskSubstatus, reason?: string) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id !== id) return t
+        if (!canApplySubstatus(t, next)) return t
+        return {
+          ...t,
+          status: SUBSTATUS_META[next].stage,
+          substatus: next,
+          lastTransitionReason: reason?.trim() || t.lastTransitionReason,
+        }
+      }),
+    )
+  }
+
+  const requestSubstatus = (task: Task, next: TaskSubstatus) => {
+    if (!canApplySubstatus(task, next)) {
+      setGuardMsg('Invalid transition for current task state.')
+      return
+    }
+    if (REASON_REQUIRED_SUBSTATUSES.includes(next)) {
+      setReasonDialog({ taskId: task.id, next })
+      setTransitionReason('')
+      return
+    }
+    applySubstatus(task.id, next)
+    setGuardMsg('')
   }
 
   const onDragStart = (e: DragEvent, id: string) => {
@@ -364,7 +529,18 @@ export function TasksPage() {
             <option key={a}>{a}</option>
           ))}
         </Select>
+        <Select
+          className="max-w-[220px]"
+          value={substatusFilter}
+          onChange={(e) => setSubstatusFilter(e.target.value as 'all' | TaskSubstatus)}
+        >
+          <option value="all">All substatus</option>
+          {Object.keys(SUBSTATUS_META).map((s) => (
+            <option key={s}>{s}</option>
+          ))}
+        </Select>
       </div>
+      {guardMsg ? <p className="mb-3 text-xs font-semibold text-danger">{guardMsg}</p> : null}
 
       <div>
           {view === 'board' ? (
@@ -428,7 +604,9 @@ export function TasksPage() {
                             </div>
                             <div className="mb-2.5 flex flex-wrap gap-1.5">
                               <Pill tone={typeTone(t.type)}>{t.type}</Pill>
+                              {substatusPill(t.substatus)}
                               {isOverdue(t) ? <Pill tone="danger">Overdue</Pill> : null}
+                              {agingLabel(t) ? <Pill tone="danger">{agingLabel(t)}</Pill> : null}
                             </div>
                             <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-muted">
                               <span>Due {t.due}</span>
@@ -439,6 +617,9 @@ export function TasksPage() {
                                 {t.assignee}
                               </span>
                             </div>
+                            {t.lastTransitionReason ? (
+                              <p className="mt-2 text-[11px] text-muted">Reason: {t.lastTransitionReason}</p>
+                            ) : null}
                             <div className="mt-2.5 flex flex-wrap gap-1">
                               {COLUMNS.filter((c) => c.id !== t.status).map((c) => (
                                 <button
@@ -450,6 +631,31 @@ export function TasksPage() {
                                   → {c.label}
                                 </button>
                               ))}
+                              {SUBSTATUSES_BY_TYPE[t.type].includes('Waiting for Customer') ? (
+                                <button
+                                  type="button"
+                                  onClick={() => requestSubstatus(t, 'Waiting for Customer')}
+                                  className="rounded-lg bg-soft px-2 py-1 text-[10px] font-bold text-baltic hover:bg-sky/15"
+                                >
+                                  Waiting
+                                </button>
+                              ) : null}
+                              <button
+                                type="button"
+                                onClick={() => requestSubstatus(t, 'Completed')}
+                                className="rounded-lg bg-soft px-2 py-1 text-[10px] font-bold text-baltic hover:bg-sky/15"
+                              >
+                                Done
+                              </button>
+                              {t.status === 'completed' && SUBSTATUSES_BY_TYPE[t.type].includes('Re-opened') ? (
+                                <button
+                                  type="button"
+                                  onClick={() => requestSubstatus(t, 'Re-opened')}
+                                  className="rounded-lg bg-soft px-2 py-1 text-[10px] font-bold text-baltic hover:bg-sky/15"
+                                >
+                                  Re-open
+                                </button>
+                              ) : null}
                             </div>
                           </article>
                         ))
@@ -480,7 +686,7 @@ export function TasksPage() {
                   }
                 />
               ) : (
-                <DataTable headers={['Task', 'Assignee', 'Type', 'Due', 'Status', '']}>
+                <DataTable headers={['Task', 'Assignee', 'Type', 'Due', 'Stage', 'Substatus', '']}>
                 {filtered.map((t) => (
                   <tr key={t.id}>
                     <Td>
@@ -503,6 +709,7 @@ export function TasksPage() {
                     </Td>
                     <Td>{t.due}</Td>
                     <Td>{statusPill(t.status)}</Td>
+                    <Td>{substatusPill(t.substatus)}</Td>
                     <Td>
                       <div className="flex gap-1">
                         <Button variant="ghost" size="sm" type="button" onClick={() => startEdit(t)}>
@@ -534,7 +741,7 @@ export function TasksPage() {
           setEditingId(null)
         }}
         title={editingId ? 'Edit task' : 'Add task'}
-        subtitle="FR-07 · assign FA · type · due · status"
+        subtitle="FR-07 · global stage + type substatus · transition-ready"
         footer={
           <>
             <Button
@@ -552,7 +759,14 @@ export function TasksPage() {
                 Delete
               </Button>
             ) : null}
-            <Button type="button" onClick={saveTask} disabled={!draft.title.trim()}>
+            <Button
+              type="button"
+              onClick={saveTask}
+              disabled={
+                !draft.title.trim() ||
+                (REASON_REQUIRED_SUBSTATUSES.includes(draft.substatus) && !draft.transitionReason.trim())
+              }
+            >
               {editingId ? 'Save changes' : 'Create task'}
             </Button>
           </>
@@ -580,7 +794,15 @@ export function TasksPage() {
           <Field label="Type">
             <Select
               value={draft.type}
-              onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as TaskType }))}
+              onChange={(e) =>
+                setDraft((d) => {
+                  const nextType = e.target.value as TaskType
+                  const nextSubstatus = allowedSubstatuses(nextType, createStatus).includes(d.substatus)
+                    ? d.substatus
+                    : firstAllowedSubstatus(nextType, createStatus)
+                  return { ...d, type: nextType, substatus: nextSubstatus }
+                })
+              }
             >
               <option>Leave appointment</option>
               <option>Servicing</option>
@@ -596,16 +818,44 @@ export function TasksPage() {
               onChange={(e) => setDraft((d) => ({ ...d, dueIso: e.target.value }))}
             />
           </Field>
-          <Field label="Status">
+          <Field label="Global stage">
             <Select
               value={createStatus}
-              onChange={(e) => setCreateStatus(e.target.value as Status)}
+              onChange={(e) => {
+                const nextStage = e.target.value as Status
+                setCreateStatus(nextStage)
+                setDraft((d) => ({
+                  ...d,
+                  substatus: allowedSubstatuses(d.type, nextStage).includes(d.substatus)
+                    ? d.substatus
+                    : firstAllowedSubstatus(d.type, nextStage),
+                }))
+              }}
             >
               <option value="pending">Pending</option>
               <option value="progress">In Progress</option>
               <option value="completed">Completed</option>
             </Select>
           </Field>
+          <Field label="Substatus">
+            <Select
+              value={draft.substatus}
+              onChange={(e) => setDraft((d) => ({ ...d, substatus: e.target.value as TaskSubstatus }))}
+            >
+              {allowedSubstatuses(draft.type, createStatus).map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </Select>
+          </Field>
+          {REASON_REQUIRED_SUBSTATUSES.includes(draft.substatus) ? (
+            <Field label="Transition reason *" className="sm:col-span-2">
+              <Input
+                value={draft.transitionReason}
+                onChange={(e) => setDraft((d) => ({ ...d, transitionReason: e.target.value }))}
+                placeholder="Required for Cancelled / Re-opened"
+              />
+            </Field>
+          ) : null}
         </div>
         {draft.type === 'On-Boarding' ? (
           <div className="mb-3 rounded-xl border border-line bg-soft/50 p-3">
@@ -643,6 +893,50 @@ export function TasksPage() {
             value={draft.notes}
             onChange={(e) => setDraft((d) => ({ ...d, notes: e.target.value }))}
             placeholder="Optional context for the FA"
+          />
+        </Field>
+      </Dialog>
+
+      <Dialog
+        open={reasonDialog !== null}
+        onClose={() => {
+          setReasonDialog(null)
+          setTransitionReason('')
+        }}
+        title={reasonDialog ? `${reasonDialog.next} reason` : 'Transition reason'}
+        subtitle="Reason is required for auditability"
+        footer={
+          <>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={() => {
+                setReasonDialog(null)
+                setTransitionReason('')
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              disabled={!transitionReason.trim() || !reasonDialog}
+              onClick={() => {
+                if (!reasonDialog) return
+                applySubstatus(reasonDialog.taskId, reasonDialog.next, transitionReason)
+                setReasonDialog(null)
+                setTransitionReason('')
+              }}
+            >
+              Confirm
+            </Button>
+          </>
+        }
+      >
+        <Field label="Reason *" className="mb-0">
+          <Input
+            value={transitionReason}
+            onChange={(e) => setTransitionReason(e.target.value)}
+            placeholder="e.g. Customer asked to restart documents"
           />
         </Field>
       </Dialog>

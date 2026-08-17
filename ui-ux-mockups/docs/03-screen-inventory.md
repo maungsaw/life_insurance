@@ -113,3 +113,5 @@
 - [x] Web admin P2 polish · empty states · FA drill · confirms (`86`)
 - [x] Web HQ CRM · e-Apps · Users/Roles brainstorm (`87`)
 - [x] Web HQ CRM · e-Apps · Users/Roles shipped (`87`)
+- [x] Web Tasks global stage + substatus brainstorm (`88`)
+- [x] Web Tasks global stage + substatus shipped (`88`)
