@@ -148,7 +148,6 @@ export function MgmtResourcesPage() {
     <div>
       <PageHeader
         title="Resource"
-        subtitle="FR-10 · Configure library sections · brochures · training · forms"
         actions={
           <>
             <Button variant="secondary" type="button" onClick={() => setShowSectionEditor((v) => !v)}>
@@ -163,10 +162,6 @@ export function MgmtResourcesPage() {
 
       <div className="grid gap-3.5 lg:grid-cols-[240px_1fr]">
         <Card title="Sections" className="h-fit">
-          <p className="mb-3 text-xs text-muted">
-            Mobile chips follow <b className="text-deep">visible</b> order.
-            {/* Offline default seeds new uploads. — hidden with Offline column (docs/33) */}
-          </p>
           <ul className="space-y-1">
             {sections.map((s) => (
               <li key={s.id}>

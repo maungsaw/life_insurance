@@ -19,12 +19,8 @@ export function LoginPage() {
     <AuthLayout
       showBrand
       title="Sign in"
-      subtitle="Same account as the Agent App · mobile + password + SMS OTP"
+      subtitle="Use your mobile number and password."
     >
-      <p className="mb-3.5 rounded-xl border border-line bg-soft/70 px-3 py-2.5 text-xs text-muted">
-        Session times out after inactivity (same policy as the app). HQ desk has no biometric and no guest
-        calculator.
-      </p>
       <Field label="Mobile number">
         <Input
           value={mobile}
@@ -41,20 +37,18 @@ export function LoginPage() {
 
       {gate === 'unknown' ? (
         <p className="mb-3 rounded-xl border border-danger/30 bg-red-50 px-3 py-2.5 text-sm font-semibold text-danger">
-          This mobile is not active in CORE. Registration is handled on the HQ{' '}
-          <b>Application List</b> — it cannot self-register here.
+          This mobile isn’t active in CORE yet. Registration is handled by HQ on the{' '}
+          <b>Application List</b>.
         </p>
       ) : null}
       {gate === 'pending' ? (
         <p className="mb-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm font-semibold text-deep">
-          Your request is already on the <b>Application List</b>. The portal stays closed until HQ
-          activates the account.
+          Your request is already on the <b>Application List</b>. The portal will open once HQ activates your account.
         </p>
       ) : null}
       {gate === 'field' ? (
         <p className="mb-3 rounded-xl border border-line bg-soft px-3 py-2.5 text-sm font-semibold text-deep">
-          Field producers use the <b>Agent App</b> to sell. This portal is for managers, FTE, and HQ
-          admin.
+          This portal is for managers, FTE, and HQ admin. For selling, use the <b>Agent App</b>.
         </p>
       ) : null}
 
@@ -66,11 +60,6 @@ export function LoginPage() {
           Forgot password?
         </Link>
       </div>
-      <p className="mt-4 text-[11px] leading-relaxed text-muted">
-        Demo CORE gates: <code className="font-bold">09 000 000 000</code> unknown ·{' '}
-        <code className="font-bold">09 111 111 111</code> pending ·{' '}
-        <code className="font-bold">09 555 555 555</code> field FA.
-      </p>
     </AuthLayout>
   )
 }

@@ -14,7 +14,7 @@ export function OtpPage() {
     <AuthLayout
       backTo="/login"
       title="Enter OTP"
-      subtitle={`We sent a 6-digit code to ${mobile}`}
+      subtitle={`Enter the 6-digit code sent to ${mobile}.`}
     >
       <div className="mb-4 grid grid-cols-6 gap-2">
         {['4', '8', '2', '1', '9', '0'].map((d, i) => (
@@ -35,9 +35,9 @@ export function OtpPage() {
           nav(landing, { replace: true })
         }}
       >
-        Verify & open portal
+        Continue to portal
       </Button>
-      <p className="mt-3 text-center text-xs text-muted">Resend available in 0:28 · same SMS OTP as the Agent App</p>
+      <p className="mt-3 text-center text-xs text-muted">Resend in 0:28. Same OTP as the Agent App.</p>
     </AuthLayout>
   )
 }

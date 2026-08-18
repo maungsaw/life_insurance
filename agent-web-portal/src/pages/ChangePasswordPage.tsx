@@ -15,7 +15,7 @@ export function ChangePasswordPage() {
     <div>
       <PageHeader
         title="Change password"
-        subtitle="Same OTP story as the Agent App · no biometric on web"
+        subtitle="SMS OTP required. No biometric sign-in on web."
       />
       <Card className="max-w-lg">
         {step === 'form' ? (
@@ -30,7 +30,7 @@ export function ChangePasswordPage() {
               <Input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
             </Field>
             {next && confirm && next !== confirm ? (
-              <p className="mb-3 text-sm font-semibold text-danger">Passwords do not match.</p>
+              <p className="mb-3 text-sm font-semibold text-danger">Passwords don’t match.</p>
             ) : null}
             <div className="flex gap-2">
               <Button variant="secondary" type="button" onClick={() => nav('/profile')}>
@@ -43,7 +43,7 @@ export function ChangePasswordPage() {
           </>
         ) : (
           <>
-            <p className="mb-3 text-sm text-muted">Enter the 6-digit SMS code to confirm the password change.</p>
+            <p className="mb-3 text-sm text-muted">Enter the 6-digit SMS code to confirm.</p>
             <div className="mb-4 grid grid-cols-6 gap-2">
               {['3', '1', '9', '0', '4', '6'].map((d, i) => (
                 <Input
@@ -60,7 +60,7 @@ export function ChangePasswordPage() {
                 Back
               </Button>
               <Button type="button" onClick={() => nav('/profile')}>
-                Update password
+                Save password
               </Button>
             </div>
           </>

@@ -197,7 +197,6 @@ export function MgmtDevicesPage() {
     <div>
       <PageHeader
         title="Remote data wipe"
-        subtitle="NFR §6 · registered devices · remote data wipe (loss · theft · compromise · deactivation)"
         actions={
           <Button
             variant="danger"
@@ -209,12 +208,6 @@ export function MgmtDevicesPage() {
           </Button>
         }
       />
-
-      <p className="mb-3.5 text-sm text-muted">
-        Wipe removes <b className="text-deep">local app data</b> on the device (encrypted SQLite + cached docs).
-        Core / server records stay. Offline devices stay <b className="text-deep">Wipe pending</b> until they
-        connect.
-      </p>
 
       <Card className="mb-3.5">
         <div className="flex flex-wrap items-end gap-2.5">

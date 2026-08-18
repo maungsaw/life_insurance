@@ -31,7 +31,7 @@ export function useDashboardFilters() {
 }
 
 /** Shared weighting + hierarchy — same slice on Overview and Team Performance */
-export function DashboardFilterBar({ scopeNote }: { scopeNote: string }) {
+export function DashboardFilterBar({ scopeNote }: { scopeNote?: string }) {
   const { mode, setMode } = useDashboardFilters()
 
   return (
@@ -44,11 +44,6 @@ export function DashboardFilterBar({ scopeNote }: { scopeNote: string }) {
           { value: 'internal', label: 'Internal FYP (weighted)' },
         ]}
       />
-      <p className="mb-3 text-xs text-muted">
-        Weighting from Core · applies across Overview and Team Performance. Persistency K1/K2 uses Core
-        grace-period rules — the portal does not invent the ratio.
-      </p>
-
       <div className="mb-5 flex flex-wrap items-end gap-2.5 rounded-2xl border border-line bg-card p-3.5">
         {[
           ['Region', ['Yangon', 'Mandalay']],
@@ -65,7 +60,7 @@ export function DashboardFilterBar({ scopeNote }: { scopeNote: string }) {
             </select>
           </label>
         ))}
-        <p className="w-full text-[11px] text-muted md:w-auto md:flex-1 md:pl-2">{scopeNote}</p>
+        {scopeNote ? <p className="w-full text-[11px] text-muted md:w-auto md:flex-1 md:pl-2">{scopeNote}</p> : null}
       </div>
     </>
   )

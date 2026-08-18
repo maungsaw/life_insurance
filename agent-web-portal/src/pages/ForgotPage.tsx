@@ -49,14 +49,14 @@ export function ForgotPage() {
       <AuthLayout
         backTo="/login"
         title="Reset password"
-        subtitle="Mandatory remark for the security log · then set a new password"
+        subtitle="Add a short remark, then set a new password."
       >
-        <Field label="Why are you resetting? *">
+        <Field label="Why are you changing your password? *">
           <Textarea
             rows={2}
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
-            placeholder="e.g. Forgot password after device change"
+            placeholder="e.g. I forgot it after switching phones"
           />
         </Field>
         <Field label="New password *">
@@ -75,10 +75,10 @@ export function ForgotPage() {
           />
         </Field>
         {password && confirm && password !== confirm ? (
-          <p className="mb-3 text-sm font-semibold text-danger">Passwords do not match.</p>
+          <p className="mb-3 text-sm font-semibold text-danger">Passwords don’t match.</p>
         ) : null}
         <Button className="w-full" type="button" disabled={!canReset} onClick={() => nav('/login')}>
-          Update & return to sign in
+          Save & go to sign in
         </Button>
       </AuthLayout>
     )
@@ -88,15 +88,14 @@ export function ForgotPage() {
     <AuthLayout
       backTo="/login"
       title="Forgot password"
-      subtitle="We’ll verify with SMS OTP, then ask for a security remark."
+      subtitle="We’ll verify with SMS OTP, then ask for a short remark."
     >
       <Field label="Mobile number">
         <Input value={mobile} onChange={(e) => { setMobile(e.target.value); setGate(null) }} inputMode="tel" />
       </Field>
       {gate === 'unknown' || gate === 'pending' || gate === 'field' ? (
         <p className="mb-3 rounded-xl border border-danger/30 bg-red-50 px-3 py-2.5 text-sm font-semibold text-danger">
-          This number cannot reset from the portal. HQ handles unknown / pending accounts on the Application
-          List.
+          This number can’t be reset from the portal. HQ will review unknown/pending requests.
         </p>
       ) : null}
       <Button className="w-full" type="button" onClick={onMobile}>

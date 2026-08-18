@@ -90,7 +90,6 @@ export function DashTeamPerformancePage() {
     <div>
       <PageHeader
         title="Team Performance"
-        subtitle="FA production · persistency · flags for the filtered hierarchy"
         actions={
           caps.canExport ? (
             <Button type="button" onClick={() => setExported(true)}>
@@ -100,13 +99,7 @@ export function DashTeamPerformancePage() {
         }
       />
 
-      <DashboardFilterBar scopeNote="Hierarchy filters scope this Team Performance table. Same slice as Overview." />
-
-      <p className="mb-3 rounded-xl border border-line bg-card px-3.5 py-2.5 text-xs text-muted">
-        <b className="text-deep">K1 / K2 persistency</b> is API-supplied (grace period applied in Core). This
-        grid displays the slice — it does not recalculate. Click an FA for district · MDRT · flags. CRM and
-        e-App stay on the Agent App.
-      </p>
+      <DashboardFilterBar />
 
       <label className="mb-3 flex max-w-xs flex-col gap-1 text-[11px] font-bold text-muted">
         District (this table)

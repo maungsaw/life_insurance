@@ -46,7 +46,7 @@ export function CrmCustomerDetailPage() {
             {found.convertedFrom ? <Row label="Convert history" value={found.convertedFrom} /> : null}
           </dl>
           <p className="mt-3 text-xs text-muted">
-            KYC edits go through Audit pending changes. This desk does not overwrite CORE.
+            KYC edits go to pending audit changes. This portal won’t overwrite CORE.
           </p>
           {canReassign ? (
             <Button className="mt-3" size="sm" type="button" onClick={() => setReassignOpen(true)}>

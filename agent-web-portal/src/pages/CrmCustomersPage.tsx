@@ -69,7 +69,6 @@ export function CrmCustomersPage() {
     <div>
       <PageHeader
         title="Customers"
-        subtitle="FR-03 · HQ book · Leads vs Clients · owner FA · no sell wizard"
         actions={
           caps.canExport ? (
             <Button type="button" variant="secondary" onClick={() => setExported(true)}>
@@ -78,11 +77,6 @@ export function CrmCustomersPage() {
           ) : null
         }
       />
-
-      <p className="mb-3 text-sm text-muted">
-        Same split as the Agent App. Convert happens when Core issues a policy — this desk does not “Make
-        client”. Quote / Start e-App stay on mobile.
-      </p>
 
       <div className="mb-3 inline-flex rounded-xl border border-line bg-soft p-1">
         {(

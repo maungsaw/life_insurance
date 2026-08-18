@@ -495,10 +495,7 @@ export function DashOverviewPage() {
   if (hat === 'admin') {
     return (
       <div>
-        <PageHeader
-          title="Overview"
-          subtitle="HQ admin · production BI is optional — setup lives under Management"
-        />
+        <PageHeader title="Overview" />
         <Card>
           <p className="mb-3 text-sm text-muted">
             Super Admin does not use an MDRT war-room as home. Open{' '}
@@ -534,11 +531,6 @@ export function DashOverviewPage() {
     <div>
       <PageHeader
         title="Overview"
-        subtitle={
-          view === 'manager'
-            ? 'Manager View · hierarchy pulse · proposals · FA production · MDRT'
-            : 'FTE Employees View (5.2.4.2) · full portfolio · persistency · variance alerts'
-        }
         actions={
           caps.canExport ? (
             <Button

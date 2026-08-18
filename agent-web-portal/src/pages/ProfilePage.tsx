@@ -9,7 +9,7 @@ export function ProfilePage() {
     <div>
       <PageHeader
         title="Profile"
-        subtitle="Account on this portal · biometric stays on the Agent App"
+        subtitle="Your portal profile · biometric is only on the Agent App"
         actions={
           <Link to="/profile/password">
             <Button type="button">Change password</Button>
@@ -40,10 +40,10 @@ export function ProfilePage() {
             {caps.canWipe ? <Pill tone="warn">Remote wipe</Pill> : null}
           </div>
           <p className="mt-3 text-xs text-muted">
-            Prototype: use <b className="text-deep">View as</b> in the header to switch Manager / FTE / Admin.
+            Use <b className="text-deep">View as</b> in the header to switch Manager / FTE / Admin.
             {hat === 'admin'
-              ? ' Admin lands on Management — CRM / e-Apps / Users are extra HQ desks.'
-              : ' Field selling stays on the Agent App. This portal CRM is the book, not the wizard.'}
+              ? 'Admin starts on Management (CRM, e-Apps, Users).'
+              : 'Sales work stays on the Agent App. This portal is for CRM and setup.'}
           </p>
         </Card>
       </div>

@@ -472,7 +472,6 @@ export function TasksPage() {
     <div>
       <PageHeader
         title="Tasks"
-        subtitle="FR-07 · Board for Add / Move / Delete · Pending · In Progress · Completed"
         actions={
           <Button type="button" onClick={() => startCreate('pending')}>
             + Add task

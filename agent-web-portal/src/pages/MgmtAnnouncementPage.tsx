@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -102,18 +101,7 @@ export function MgmtAnnouncementPage() {
     <div>
       <PageHeader
         title="Announcement setup"
-        subtitle="FR-09 · publish company messages · mobile feed is read-only (FR-10)"
       />
-
-      <p className="mb-3.5 text-sm text-muted">
-        Create lasting <b className="text-deep">feed cards</b> FAs browse under Announcements. Optional push
-        sends a <b className="text-deep">notification announcement</b> with image + URL. For automatic premium
-        / renewal timing, use{' '}
-        <Link to="/management/notifications" className="font-bold text-steel underline-offset-2 hover:underline">
-          Notification setup
-        </Link>{' '}
-        (FR-08).
-      </p>
 
       <div className="grid gap-3.5 lg:grid-cols-2">
         <Card title="Create announcement" action={<Pill tone="ok">Authorized web</Pill>}>

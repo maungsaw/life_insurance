@@ -30,7 +30,6 @@ export function UsersPage() {
     <div>
       <PageHeader
         title="People"
-        subtitle="Who can sign in · role from the catalog · CORE-unknown stays on Audit Application List"
         actions={
           <div className="flex gap-2">
             <Link to="/users/people/new">

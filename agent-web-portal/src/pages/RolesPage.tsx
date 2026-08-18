@@ -28,7 +28,6 @@ export function RolesPage() {
     <div>
       <PageHeader
         title="Roles"
-        subtitle="Named packs · clone to create · not ten dashboards"
         actions={
           <div className="flex flex-wrap gap-2">
             <Link to="/users/permissions">
@@ -53,11 +52,6 @@ export function RolesPage() {
           </div>
         }
       />
-
-      <p className="mb-3 text-sm text-muted">
-        Changing a pack updates menus on the <b className="text-deep">next session</b>. Header View as stays a demo
-        switcher. Custom permissions can only alias a system cap — no payout or policy-edit.
-      </p>
       {guard ? <p className="mb-3 text-xs font-semibold text-danger">{guard}</p> : null}
       {saved ? <p className="mb-3 text-xs font-semibold text-ok">Packs saved (in this session).</p> : null}
 

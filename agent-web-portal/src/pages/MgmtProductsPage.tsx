@@ -102,7 +102,6 @@ export function MgmtProductsPage() {
     <div>
       <PageHeader
         title="Products"
-        subtitle="Agency Sales catalog · CRUD setup · On/Off gate · Core codes"
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Pill tone="ok">
@@ -114,16 +113,6 @@ export function MgmtProductsPage() {
           </div>
         }
       />
-
-      <p className="mb-3.5 text-sm text-muted">
-        Setup writes the <b className="text-deep">Agency Sales SKU</b> (copy, schema pack, brochure link). Pricing stays
-        in Core. Off hides <b className="text-deep">new</b> quotes on mobile Sell after sync; in-flight e-Apps still
-        submit. Archive is soft-delete — not the Off switch. Brochures live in{' '}
-        <Link to="/management/resources" className="font-bold text-steel underline-offset-2 hover:underline">
-          Resource
-        </Link>
-        . No quote calculator on this desk.
-      </p>
 
       {guard ? <p className="mb-3 text-xs font-semibold text-danger">{guard}</p> : null}
 

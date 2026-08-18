@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { Button, Card, DataTable, Dialog, Field, Input, PageHeader, Pill, Td } from '@/components/ui'
 import { cn } from '@/lib/cn'
 
@@ -99,26 +99,7 @@ export function AuditPage() {
     <div>
       <PageHeader
         title="Audit"
-        subtitle="FR-12 · agent directory · pending identity · FR-01 Application List (register) · log"
       />
-
-      <p className="mb-3 text-sm text-muted">
-        Policy e-Apps moved to{' '}
-        <Link to="/eapps" className="font-bold text-steel">
-          e-Apps
-        </Link>
-        . Customer search is{' '}
-        <Link to="/crm/customers" className="font-bold text-steel">
-          CRM
-        </Link>
-        {' '}
-        (old Audit lookup redirects there)
-        . Login accounts are{' '}
-        <Link to="/users/people" className="font-bold text-steel">
-          Users
-        </Link>
-        .
-      </p>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {tabs.map((t) => (

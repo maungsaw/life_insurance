@@ -161,7 +161,7 @@ export function HeaderActions({ unread = 3 }: { unread?: number }) {
         open={signOutOpen}
         onClose={() => setSignOutOpen(false)}
         title={lang === 'mm' ? 'ထွက်မည်လား။' : 'Sign out?'}
-        subtitle={lang === 'mm' ? 'ဤစက်တွင် session ပိတ်မည်' : 'Ends this desk session on this browser'}
+        subtitle={lang === 'mm' ? 'ဤစက်တွင် session ပိတ်မည်' : 'Ends your session on this browser'}
         footer={
           <>
             <Button variant="secondary" type="button" onClick={() => setSignOutOpen(false)}>

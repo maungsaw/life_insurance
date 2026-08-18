@@ -56,7 +56,7 @@ export function EappDetailPage() {
               </Link>
             ) : null}
           </div>
-          <p className="mt-3 text-xs text-muted">The wizard is not on this portal. Drafts stay on the Agent App.</p>
+          <p className="mt-3 text-xs text-muted">This setup isn’t on this portal. Drafts stay on the Agent App.</p>
         </Card>
 
         <Card title="Timeline">

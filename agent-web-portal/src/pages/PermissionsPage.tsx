@@ -31,7 +31,6 @@ export function PermissionsPage() {
     <div>
       <PageHeader
         title="Permissions"
-        subtitle="Registry of caps · custom = alias of a system cap · no new powers"
         actions={
           <div className="flex gap-2">
             <Link to="/users/roles">

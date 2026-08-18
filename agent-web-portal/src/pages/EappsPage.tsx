@@ -48,7 +48,6 @@ export function EappsPage() {
     <div>
       <PageHeader
         title="e-Apps"
-        subtitle="FR-05 · application queue · not the Agent App wizard · not FR-01 Application List"
         actions={
           caps.canExport ? (
             <Button variant="secondary" type="button" onClick={() => setExported(true)}>
@@ -57,15 +56,6 @@ export function EappsPage() {
           ) : null
         }
       />
-
-      <p className="mb-3 text-sm text-muted">
-        Correction opens a <Link to="/tasks" className="font-bold text-steel">Task</Link>. Agent register /
-        CORE invite stays under{' '}
-        <Link to="/audit" className="font-bold text-steel">
-          Audit → Application List
-        </Link>
-        .
-      </p>
 
       <div className="mb-3 flex flex-wrap gap-2">
         <Input

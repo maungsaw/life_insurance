@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Button,
   Card,
@@ -181,29 +180,12 @@ export function MgmtNotificationPage() {
     <div>
       <PageHeader
         title="Notification setup"
-        subtitle="FR-08 · configure when automatic alerts fire · Core + Tasks triggers"
         actions={
           <Button type="button" onClick={openAdd}>
             + Add rule
           </Button>
         }
       />
-
-      <p className="mb-3.5 text-sm text-muted">
-        This screen is <b className="text-deep">rule setup</b> (backend). Each rule = trigger + lead time.
-        Audience and channel follow Core defaults. Turn rules on/off from the table. Personal inbox →{' '}
-        <Link to="/notifications" className="font-bold text-steel underline-offset-2 hover:underline">
-          open inbox
-        </Link>
-        . Company messages →{' '}
-        <Link
-          to="/management/announcements"
-          className="font-bold text-steel underline-offset-2 hover:underline"
-        >
-          Announcement setup
-        </Link>
-        .
-      </p>
 
       <Card
         title="Notification rules"
