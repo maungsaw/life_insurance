@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:life_insurance/features/components/app_button.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/pages/index.dart';
@@ -53,7 +54,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Lead detail shows pipeline and condition submit action', (
+  testWidgets('Lead detail sells quote/e-App and does not convert or set stage', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1080, 2340);
@@ -65,13 +66,19 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('New'), findsWidgets);
-    expect(find.text('Contacted'), findsOneWidget);
-    expect(find.text('Quoted'), findsOneWidget);
-    expect(find.text('Applied'), findsOneWidget);
-    expect(find.text('Submit condition · Move to Clients'), findsOneWidget);
+    expect(find.text('Michael Clark'), findsOneWidget);
+    expect(find.text('New'), findsOneWidget);
+    expect(find.text('Update Stage'), findsNothing);
+    expect(find.text('Contacted'), findsNothing);
+    expect(find.text('Quoted'), findsNothing);
+    expect(find.text('Applied'), findsNothing);
+    expect(find.text('Submit condition · Move to Clients'), findsNothing);
     expect(find.text('Get a quote'), findsOneWidget);
     expect(find.text('Start e-App'), findsOneWidget);
+
+    final quoteBox = tester.getRect(find.widgetWithText(AppButton, 'Get a quote'));
+    final eappBox = tester.getRect(find.widgetWithText(AppButton, 'Start e-App'));
+    expect(quoteBox.width, eappBox.width);
     expect(tester.takeException(), isNull);
   });
 }

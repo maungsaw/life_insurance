@@ -278,7 +278,7 @@ Home Policy trio stays **client-policy** metrics — not lead counts.
 | `lead_filter_sheet.dart` | Lead stage filters: All · New · Contacted · Quoted · Applied |
 | `customer_hub_session.dart` | Last selected tab · `openLeads/openClients` · condition-submit conversion |
 | `lead.dart` + repository | Phone data · BRD-aligned pipeline stages |
-| `lead/pages/detail.dart` | Four pipeline stages · **Submit condition · Move to Clients** confirmation |
+| `lead/pages/detail.dart` | Contact + **Get a quote** / **Start e-App**. Stage + convert are web (`101`) |
 | `home/pages/index.dart` | Home/FAB `openLeads` now opens Customer hub on Leads, not the orphan stack |
 
 Conversion removes the lead, creates one Pending policy/client record, switches to Clients, and shows “is now a Client”. A person is never rendered in both lists.

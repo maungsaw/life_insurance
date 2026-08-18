@@ -46,24 +46,31 @@ class ProductQuoteSavedPage extends StatelessWidget {
               _row(context, 'Total', '${quote.totalAmount} MMK'),
             _row(context, 'Saved', ProductFormat.dob(quote.savedAt)),
             const Spacer(),
-            AppButton(
-              label: 'Start e-App',
-              onPressed: () {
-                final draft = ProductSession.startEapp(quote);
-                context.push(AppRoute.productEapp, extra: draft);
-              },
-            ),
-            const SizedBox(height: 10),
-            AppButton(
-              label: 'View saved quotes',
-              variant: AppButtonVariant.secondary,
-              onPressed: () => context.push(AppRoute.productQuotes),
-            ),
-            const SizedBox(height: 10),
-            AppButton(
-              label: 'Back to Products',
-              variant: AppButtonVariant.text,
-              onPressed: () => popToShell(context),
+            SafeArea(
+              top: false,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      label: 'View saved quotes',
+                      variant: AppButtonVariant.secondary,
+                      fontSize: 14,
+                      onPressed: () => context.push(AppRoute.productQuotes),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AppButton(
+                      label: 'Start e-App',
+                      fontSize: 14,
+                      onPressed: () {
+                        final draft = ProductSession.startEapp(quote);
+                        context.push(AppRoute.productEapp, extra: draft);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -3,31 +3,17 @@ import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/lead/domain/domain.dart'
     show LeadEntity;
 import 'package:life_insurance/features/components/components.dart'
-    show AppStatusDialog, AppStatusType;
-import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
+    show AppButton, AppButtonVariant;
 import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
-class LeadDetailPage extends StatefulWidget {
-  final LeadEntity lead;
-
+/// Field CRM card — stage + convert live on web (`101`).
+class LeadDetailPage extends StatelessWidget {
   const LeadDetailPage({super.key, required this.lead});
 
-  @override
-  State<LeadDetailPage> createState() => _LeadDetailPageState();
-}
+  final LeadEntity lead;
 
-class _LeadDetailPageState extends State<LeadDetailPage> {
-  late String _currentStatus;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentStatus = widget.lead.status;
-  }
-
-  // Color helper based on status badge from design
-  Color _getStatusBgColor(String status) {
-    switch (status) {
+  Color _statusBg(BuildContext context) {
+    switch (lead.status) {
       case 'New':
         return const Color(0xFFE3F2FD);
       case 'Contacted':
@@ -41,8 +27,8 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
     }
   }
 
-  Color _getStatusTextColor(String status) {
-    switch (status) {
+  Color _statusFg() {
+    switch (lead.status) {
       case 'New':
         return const Color(0xFF1976D2);
       case 'Contacted':
@@ -52,23 +38,8 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       case 'Applied':
         return const Color(0xFF388E3C);
       default:
-        return AppColors.onSurface(context);
+        return AppColors.lightPrimary;
     }
-  }
-
-  Future<void> _submitCondition() async {
-    final confirmed = await AppStatusDialog.show(
-      context,
-      type: AppStatusType.warning,
-      title: 'Submit condition?',
-      message:
-          'This creates a Pending policy and moves ${widget.lead.name} from Leads to Clients.',
-      actionLabel: 'SUBMIT',
-      secondaryLabel: 'CANCEL',
-    );
-    if (confirmed != true || !mounted) return;
-    CustomerHubSession.convertLead(widget.lead);
-    Navigator.pop(context, true);
   }
 
   @override
@@ -108,7 +79,6 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // --- Header Profile Section ---
             Container(
               color: AppColors.surface(context),
               padding: const EdgeInsets.all(20.0),
@@ -116,9 +86,9 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundColor: widget.lead.avatarColor,
+                    backgroundColor: lead.avatarColor,
                     child: Text(
-                      widget.lead.initials,
+                      lead.initials,
                       style: TextStyle(
                         color: AppColors.onPrimary,
                         fontSize: 26,
@@ -128,7 +98,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    widget.lead.name,
+                    lead.name,
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -137,44 +107,44 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    widget.lead.email,
+                    lead.email,
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.onSurfaceSecondary(context),
                     ),
                   ),
                   const SizedBox(height: 10),
-
-                  // Dynamic Status Tag
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 14,
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: _getStatusBgColor(_currentStatus),
+                      color: _statusBg(context),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      _currentStatus,
+                      lead.status,
                       style: TextStyle(
-                        color: _getStatusTextColor(_currentStatus),
+                        color: _statusFg(),
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Quick Action Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildActionButton(Icons.phone_outlined, 'Call'),
-                      _buildActionButton(Icons.email_outlined, 'Email'),
-                      _buildActionButton(Icons.chat_bubble_outline, 'Message'),
+                      _buildActionButton(context, Icons.phone_outlined, 'Call'),
+                      _buildActionButton(context, Icons.email_outlined, 'Email'),
                       _buildActionButton(
+                        context,
+                        Icons.chat_bubble_outline,
+                        'Message',
+                      ),
+                      _buildActionButton(
+                        context,
                         Icons.calendar_today_outlined,
                         'Schedule',
                       ),
@@ -183,139 +153,37 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // --- Status Changer / Pipeline Stepper ---
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.surface(context),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.border(context)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Update Stage',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: ['New', 'Contacted', 'Quoted', 'Applied'].map((
-                        status,
-                      ) {
-                        final isSelected = _currentStatus == status;
-                        return Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _currentStatus = status;
-                              });
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              padding: const EdgeInsets.symmetric(vertical: 8),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? _getStatusTextColor(status)
-                                    : AppColors.border(context),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                status,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : AppColors.onSurfaceSecondary(context),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: AppButton(
+                      label: 'Get a quote',
+                      variant: AppButtonVariant.secondary,
+                      fontSize: 14,
                       onPressed: () => EappLaunch.startQuoteForParty(
                         context,
-                        EappLaunch.partyFromLead(widget.lead),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.lightPrimary,
-                        side: BorderSide(color: AppColors.lightPrimary),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text(
-                        'Get a quote',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        EappLaunch.partyFromLead(lead),
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: FilledButton(
+                    child: AppButton(
+                      label: 'Start e-App',
+                      fontSize: 14,
                       onPressed: () => EappLaunch.startEappForParty(
                         context,
-                        EappLaunch.partyFromLead(widget.lead),
-                      ),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.lightPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text(
-                        'Start e-App',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        EappLaunch.partyFromLead(lead),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 12),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _submitCondition,
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF00A6C8),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child: const Text(
-                    'Submit condition · Move to Clients',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-
             const SizedBox(height: 16),
-
-            // --- Details Card ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Container(
@@ -336,18 +204,26 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                       ),
                     ),
                     const Divider(height: 24),
-                    _buildInfoRow(Icons.source, 'Lead Source', 'Website Form'),
                     _buildInfoRow(
-                      Icons.access_time,
-                      'Added',
-                      widget.lead.timeAgo,
+                      context,
+                      Icons.source,
+                      'Lead Source',
+                      'Website Form',
                     ),
                     _buildInfoRow(
+                      context,
+                      Icons.access_time,
+                      'Added',
+                      lead.timeAgo,
+                    ),
+                    _buildInfoRow(
+                      context,
                       Icons.monetization_on_outlined,
                       'Estimated Value',
                       '\$2,500',
                     ),
                     _buildInfoRow(
+                      context,
                       Icons.person_outline,
                       'Assigned Agent',
                       'You',
@@ -356,10 +232,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // --- Lead Notes / Log ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -397,8 +270,11 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
     );
   }
 
-  // Helper Widget for Quick Action Circle Buttons
-  Widget _buildActionButton(IconData icon, String label) {
+  Widget _buildActionButton(
+    BuildContext context,
+    IconData icon,
+    String label,
+  ) {
     return Column(
       children: [
         CircleAvatar(
@@ -409,14 +285,18 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
         const SizedBox(height: 6),
         Text(
           label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         ),
       ],
     );
   }
 
-  // Helper Widget for Info Key-Value Rows
-  Widget _buildInfoRow(IconData icon, String title, String value) {
+  Widget _buildInfoRow(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String value,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
@@ -436,7 +316,7 @@ class _LeadDetailPageState extends State<LeadDetailPage> {
               value,
               textAlign: TextAlign.end,
               maxLines: 2,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],
