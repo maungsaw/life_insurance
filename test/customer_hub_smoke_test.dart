@@ -75,6 +75,10 @@ void main() {
     expect(find.text('Submit condition · Move to Clients'), findsNothing);
     expect(find.text('Get a quote'), findsOneWidget);
     expect(find.text('Start e-App'), findsOneWidget);
+    expect(find.text('Call'), findsOneWidget);
+    expect(find.text('Email'), findsOneWidget);
+    expect(find.text('Schedule'), findsOneWidget);
+    expect(find.text('Message'), findsNothing);
 
     final quoteBox = tester.getRect(find.widgetWithText(AppButton, 'Get a quote'));
     final eappBox = tester.getRect(find.widgetWithText(AppButton, 'Start e-App'));

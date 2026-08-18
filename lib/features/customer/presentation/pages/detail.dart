@@ -244,6 +244,13 @@ class _CustomerDetailPageState extends State<CustomerDetailPage> {
                               policies[i],
                             )
                           : null,
+                      onBuyAdditional: policies[i].status != CrmStatus.pending
+                          ? () => EappLaunch.startEappForParty(
+                              context,
+                              EappLaunch.partyFromCustomer(_customer),
+                              intent: EappLaunchIntent.repurchase,
+                            )
+                          : null,
                     ),
                   ],
                 const SizedBox(height: 8),
@@ -304,68 +311,137 @@ class _ActionBubble extends StatelessWidget {
 }
 
 class _PolicyTile extends StatelessWidget {
-  const _PolicyTile({required this.policy, required this.onTap, this.onRenew});
+  const _PolicyTile({
+    required this.policy,
+    required this.onTap,
+    this.onRenew,
+    this.onBuyAdditional,
+  });
 
   final PolicyMock policy;
   final VoidCallback onTap;
   final VoidCallback? onRenew;
+  final VoidCallback? onBuyAdditional;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      isThreeLine: onRenew != null,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: AppColors.lightPrimary.withValues(alpha: 0.12),
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(
-          Icons.medical_services_outlined,
-          color: AppColors.lightPrimary,
-          size: 22,
-        ),
-      ),
-      title: Text(
-        policy.id,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w700,
-          color: AppColors.onSurface(context),
-        ),
-      ),
-      subtitle: Text(
-        policy.productName,
-        style: TextStyle(
-          fontSize: 12,
-          color: AppColors.onSurfaceSecondary(context),
-        ),
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          AppCrmStatusPill(status: policy.status),
-          if (onRenew != null)
-            GestureDetector(
-              onTap: onRenew,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  EappLaunch.renewalCta(policy),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.lightPrimary,
-                  ),
-                ),
+    final hasActions = onRenew != null || onBuyAdditional != null;
+    return Column(
+      children: [
+        Material(
+          type: MaterialType.transparency,
+          child: ListTile(
+            onTap: onTap,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            leading: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.medical_services_outlined,
+                color: AppColors.lightPrimary,
+                size: 22,
               ),
             ),
-        ],
-      ),
+            title: Text(
+              policy.id,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColors.onSurface(context),
+              ),
+            ),
+            subtitle: Text(
+              policy.productName,
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.onSurfaceSecondary(context),
+              ),
+            ),
+            trailing: AppCrmStatusPill(status: policy.status),
+          ),
+        ),
+        if (hasActions)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  if (onRenew != null)
+                    _PolicyActionButton(
+                      label: EappLaunch.renewalCta(policy),
+                      onPressed: onRenew!,
+                      filled: true,
+                    ),
+                  if (onBuyAdditional != null)
+                    _PolicyActionButton(
+                      label: 'Buy additional',
+                      onPressed: onBuyAdditional!,
+                    ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _PolicyActionButton extends StatelessWidget {
+  const _PolicyActionButton({
+    required this.label,
+    required this.onPressed,
+    this.filled = false,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: filled
+          ? ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.lightPrimary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: const Size(0, 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.lightPrimary,
+                side: const BorderSide(color: AppColors.lightPrimary, width: 1.2),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: const Size(0, 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+            ),
     );
   }
 }

@@ -13,7 +13,7 @@
 
 | Job | Where |
 |-----|--------|
-| Call · Email · Message · Schedule | Mobile Lead detail |
+| Call · Email · Schedule | Mobile Lead detail (`103` dropped Message) |
 | **Get a quote** · **Start e-App** | Mobile (sell spine) |
 | Stage New / Contacted / Quoted / Applied | **Web CRM** (`87`) · display-only pill on mobile |
 | Convert Lead → Client | **Web** / Core (Approved · policy issued). Tracker mock convert stays (`81`) — not a FA button |
@@ -24,7 +24,7 @@ List **filter** by stage stays. FA still *sees* the current stage. FA does **not
 
 ## 1. Lead Details after this pass
 
-1. Identity · **read-only** stage pill · Call / Email / Message / Schedule  
+1. Identity · **read-only** stage pill · Call / Email / Schedule (`103`)  
 2. Equal-width row: **Get a quote** (outline) · **Start e-App** (filled)  
 3. Lead Information · Notes  
 

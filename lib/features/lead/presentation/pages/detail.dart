@@ -140,11 +140,6 @@ class LeadDetailPage extends StatelessWidget {
                       _buildActionButton(context, Icons.email_outlined, 'Email'),
                       _buildActionButton(
                         context,
-                        Icons.chat_bubble_outline,
-                        'Message',
-                      ),
-                      _buildActionButton(
-                        context,
                         Icons.calendar_today_outlined,
                         'Schedule',
                       ),

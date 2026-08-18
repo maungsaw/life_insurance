@@ -5,6 +5,7 @@ import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/policy_list_filter_sheet.dart';
+import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 
 /// Agent-wide Policy List — search · chart · filter (docs/66 · FR-06).
@@ -159,6 +160,15 @@ class _PolicyListPageState extends State<PolicyListPage> {
                           context.push(AppRoute.policyDetail, extra: p),
                       onRenew: p.isRenewalEligible
                           ? () => EappLaunch.startRenewalEapp(context, p)
+                          : null,
+                      onBuyAdditional: p.status != CrmStatus.pending
+                          ? () => EappLaunch.startEappForParty(
+                              context,
+                              EappLaunch.partyFromCustomer(
+                                CustomerMockData.byId(p.clientId),
+                              ),
+                              intent: EappLaunchIntent.repurchase,
+                            )
                           : null,
                     ),
                     const SizedBox(height: 10),
@@ -324,14 +334,17 @@ class _PolicyListTile extends StatelessWidget {
     required this.policy,
     required this.onTap,
     this.onRenew,
+    this.onBuyAdditional,
   });
 
   final PolicyMock policy;
   final VoidCallback onTap;
   final VoidCallback? onRenew;
+  final VoidCallback? onBuyAdditional;
 
   @override
   Widget build(BuildContext context) {
+    final hasActions = onRenew != null || onBuyAdditional != null;
     return Material(
       color: AppColors.surface(context),
       borderRadius: BorderRadius.circular(14),
@@ -399,28 +412,91 @@ class _PolicyListTile extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   AppCrmStatusPill(status: policy.status),
                 ],
               ),
             ),
-            if (onRenew != null)
+            if (hasActions)
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: onRenew,
-                  style: TextButton.styleFrom(
-                    visualDensity: VisualDensity.compact,
-                    foregroundColor: AppColors.lightPrimary,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      if (onRenew != null)
+                        _PolicyActionButton(
+                          label: EappLaunch.renewalCta(policy),
+                          onPressed: onRenew!,
+                          filled: true,
+                        ),
+                      if (onBuyAdditional != null)
+                        _PolicyActionButton(
+                          label: 'Buy additional',
+                          onPressed: onBuyAdditional!,
+                        ),
+                    ],
                   ),
-                  child: Text(EappLaunch.renewalCta(policy)),
                 ),
               ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PolicyActionButton extends StatelessWidget {
+  const _PolicyActionButton({
+    required this.label,
+    required this.onPressed,
+    this.filled = false,
+  });
+
+  final String label;
+  final VoidCallback onPressed;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: filled
+          ? ElevatedButton(
+              onPressed: onPressed,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.lightPrimary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: const Size(0, 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.lightPrimary,
+                side: const BorderSide(color: AppColors.lightPrimary, width: 1.2),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: const Size(0, 30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+            ),
     );
   }
 }

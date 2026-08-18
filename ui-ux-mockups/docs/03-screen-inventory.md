@@ -144,3 +144,8 @@
 - [x] Quote saved CTA row equal width (`100`)
 - [x] Lead detail drop stage + convert (web owns) brainstorm (`101`)
 - [x] Lead detail drop stage + convert shipped (`101`)
+- [x] Customer policy row Renew vs Buy additional brainstorm (`102`)
+- [x] Customer policy row Renew + Buy additional shipped (`102`)
+- [x] Lead detail drop Message bubble brainstorm (`103`)
+- [x] Lead detail drop Message bubble shipped (`103`)
+- [x] Pill nav one shadow (no stacked bands) brainstorm (`104`)
