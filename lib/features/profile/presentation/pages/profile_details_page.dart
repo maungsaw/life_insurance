@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show AppColors, AppDate, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/profile/presentation/models/profile_mock_data.dart';
 import 'package:life_insurance/features/profile/presentation/widgets/profile_sub_app_bar.dart';
@@ -35,16 +35,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     _nameCtrl = TextEditingController(text: ProfileMockData.displayName);
     _mobileCtrl = TextEditingController(text: ProfileMockData.mobile);
     _dob = ProfileMockData.dob;
-    _dobCtrl = TextEditingController(text: _dobLabel(_dob));
+    _dobCtrl = TextEditingController(text: AppDate.dMy(_dob));
     _idCtrl = TextEditingController(text: ProfileMockData.identification);
     _emailCtrl = TextEditingController(text: ProfileMockData.email);
     _gender = ProfileMockData.gender;
-  }
-
-  String _dobLabel(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    final month = d.month.toString().padLeft(2, '0');
-    return '$day.$month.${d.year}';
   }
 
   @override
@@ -67,7 +61,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     if (picked == null) return;
     setState(() {
       _dob = picked;
-      _dobCtrl.text = _dobLabel(picked);
+      _dobCtrl.text = AppDate.dMy(picked);
       _dobError = null;
     });
   }

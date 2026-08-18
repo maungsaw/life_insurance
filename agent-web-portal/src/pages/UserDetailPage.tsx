@@ -1,18 +1,34 @@
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Button, Card, Dialog, Field, PageHeader, Select } from '@/components/ui'
-import { personById, type Channel, type OrgRole, type PersonStatus } from '@/data/hqBook'
+import { useAccess } from '@/data/AccessContext'
+import { activeRoles } from '@/data/hqAccess'
+import type { Channel, PersonStatus } from '@/data/hqBook'
 
 export function UserDetailPage() {
   const { id } = useParams()
+  const { personById, roles, updatePerson, disablePerson } = useAccess()
   const found = id ? personById(id) : undefined
-  const [role, setRole] = useState<OrgRole>(found?.orgRole ?? 'FA')
+  const live = activeRoles(roles)
+  const [roleId, setRoleId] = useState(found?.roleId ?? live[0]?.id ?? '')
   const [channel, setChannel] = useState<Channel>(found?.channel ?? 'App')
   const [status, setStatus] = useState<PersonStatus>(found?.status ?? 'Active')
   const [disableOpen, setDisableOpen] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [err, setErr] = useState('')
 
-  if (!found) return <Navigate to="/users" replace />
+  if (!found) return <Navigate to="/users/people" replace />
+
+  const save = () => {
+    const res = updatePerson(found.id, { roleId, channel, status })
+    if (res.error) {
+      setErr(res.error)
+      return
+    }
+    setErr('')
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2500)
+  }
 
   return (
     <div>
@@ -27,6 +43,7 @@ export function UserDetailPage() {
           </Link>
         }
       />
+      {err ? <p className="mb-3 text-xs font-semibold text-danger">{err}</p> : null}
 
       <div className="grid gap-3.5 lg:grid-cols-2">
         <Card title="Identity (CORE)">
@@ -54,12 +71,12 @@ export function UserDetailPage() {
 
         <Card title="Access">
           <Field label="Role *">
-            <Select value={role} onChange={(e) => setRole(e.target.value as OrgRole)}>
-              <option>FA</option>
-              <option>TL</option>
-              <option>DM</option>
-              <option>HOA</option>
-              <option>Super Admin</option>
+            <Select value={roleId} onChange={(e) => setRoleId(e.target.value)}>
+              {live.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
             </Select>
           </Field>
           <Field label="Channel">
@@ -77,20 +94,14 @@ export function UserDetailPage() {
             </Select>
           </Field>
           <p className="mb-3 text-xs text-muted">
-            Pack of permissions for this role is on{' '}
-            <Link to="/users/roles" className="font-bold text-steel">
-              Roles & permissions
+            Pack lives on{' '}
+            <Link to={`/users/roles/${roleId}`} className="font-bold text-steel">
+              role setup
             </Link>
             . Per-user overrides are not in this prototype.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              onClick={() => {
-                setSaved(true)
-                setTimeout(() => setSaved(false), 2500)
-              }}
-            >
+            <Button type="button" onClick={save}>
               Save
             </Button>
             {status !== 'Disabled' ? (
@@ -100,7 +111,7 @@ export function UserDetailPage() {
             ) : null}
           </div>
           {saved ? (
-            <p className="mt-2 text-xs font-semibold text-ok">Saved · audit log would record previous → new role.</p>
+            <p className="mt-2 text-xs font-semibold text-ok">Saved · audit log recorded previous → new role.</p>
           ) : null}
         </Card>
       </div>
@@ -119,6 +130,12 @@ export function UserDetailPage() {
               variant="danger"
               type="button"
               onClick={() => {
+                const res = disablePerson(found.id)
+                if (!res.ok) {
+                  setErr(res.message ?? '')
+                  setDisableOpen(false)
+                  return
+                }
                 setStatus('Disabled')
                 setDisableOpen(false)
               }}
@@ -129,7 +146,8 @@ export function UserDetailPage() {
         }
       >
         <p className="text-sm text-muted">
-          Devices are not wiped from here. Use Management → Devices if you need an app-data wipe.
+          Devices are not wiped from here. Use Management → Devices if you need an app-data wipe. The last Users admin
+          cannot be disabled.
         </p>
       </Dialog>
     </div>

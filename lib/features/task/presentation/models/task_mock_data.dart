@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppDate;
 
 /// FR-07 task mock (docs/68). In-memory session — no API.
 
@@ -227,20 +228,6 @@ class TaskMock {
 }
 
 abstract final class TaskFormat {
-  static const _months = [
-    'JAN',
-    'FEB',
-    'MAR',
-    'APR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AUG',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DEC',
-  ];
   static const _monthsShort = [
     'Jan',
     'Feb',
@@ -257,21 +244,14 @@ abstract final class TaskFormat {
   ];
   static const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  static String dob(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    return '$day-${_months[d.month - 1]}-${d.year}';
-  }
+  static String dob(DateTime d) => AppDate.dMy(d);
 
   static String dayHero(DateTime d) {
     final wd = _weekdays[(d.weekday - 1) % 7];
     return '$wd, ${d.day} ${_monthsShort[d.month - 1]} ${d.year}';
   }
 
-  static String timeOf(DateTime d) {
-    final h = d.hour.toString().padLeft(2, '0');
-    final m = d.minute.toString().padLeft(2, '0');
-    return '$h:$m';
-  }
+  static String timeOf(DateTime d) => AppDate.h12(d);
 
   static DateTime dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
@@ -283,32 +263,11 @@ abstract final class TaskFormat {
   static String dayHeading(DateTime d) =>
       '${weekdayShort(d)}, ${d.day} ${monthShort(d)}';
 
-  /// `August 2026` — Month scope title.
-  static String monthTitle(DateTime d) => '${_monthNames[d.month - 1]} ${d.year}';
+  /// `Aug-2026` — Month scope title (`95`).
+  static String monthTitle(DateTime d) => AppDate.monthYear(d);
 
-  /// `10 – 16 Aug 2026`, or `28 Aug – 3 Sep 2026` across months.
-  static String weekRangeTitle(DateTime start) {
-    final end = start.add(const Duration(days: 6));
-    if (start.month == end.month) {
-      return '${start.day} – ${end.day} ${monthShort(end)} ${end.year}';
-    }
-    return '${start.day} ${monthShort(start)} – ${end.day} ${monthShort(end)} ${end.year}';
-  }
-
-  static const _monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  /// `10–16-Aug-2026`, or `28-Aug – 03-Sep-2026` across months.
+  static String weekRangeTitle(DateTime start) => AppDate.weekRange(start);
 }
 
 /// Assignment lens on My work (docs/77).

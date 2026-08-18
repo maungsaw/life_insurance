@@ -89,7 +89,7 @@ Inbox stays Home/Profile **bell** → `/notifications`. Prefs never open the lis
 | Gender | Choice | Female selected in PNG mock |
 | Photo | Camera badge | Stub dialog — no gallery API required |
 
-Pre-fill mock: May Chan Myae · 09 8800 8834 · 04.06.1999 · 12/KaMaNa(N)127645 · may@gmail.com · Female.  
+Pre-fill mock: May Chan Myae · 09 8800 8834 · 04-Jun-1999 · 12/KaMaNa(N)127645 · may@gmail.com · Female.  (`94`) 
 ID on hub `YGN/IA/(O)/2021/0009` is **agent code** — not the same as NRC; show on hub only.
 
 ---

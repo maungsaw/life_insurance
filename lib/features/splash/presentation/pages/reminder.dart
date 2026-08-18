@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppDate;
 import 'package:life_insurance/core/reminder/notifier.dart';
 
 class ReminderPage extends StatefulWidget {
@@ -87,7 +88,7 @@ class _ReminderPageState extends State<ReminderPage> {
                   if (_selectedDateTime != null) ...[
                     const SizedBox(height: 12),
                     Text(
-                      'Selected: ${_selectedDateTime.toString().split('.')[0]}',
+                      'Selected: ${AppDate.dMyHm(_selectedDateTime!)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],

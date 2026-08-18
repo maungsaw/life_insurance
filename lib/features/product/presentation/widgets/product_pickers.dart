@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/components/components.dart';
 
-/// Height · Weight · Identification bottom sheets (docs/59 · docs/62).
+/// Height · Weight · Identification bottom sheets (docs/59 · docs/62 · docs/93).
 
 class HeightPick {
   const HeightPick({required this.feet, required this.inches});
@@ -19,7 +19,10 @@ class WeightPick {
   final int whole;
   final int tenth;
 
+  /// Stored on Policyholder / Confirm — decimal pounds, not ounces.
   String get label => '$whole.$tenth';
+
+  String get sheetPreview => '$label lb';
 }
 
 class IdPick {
@@ -134,6 +137,90 @@ Future<IdPick?> showIdentificationPickerSheet(
   );
 }
 
+class _MeasureSheetChrome extends StatelessWidget {
+  const _MeasureSheetChrome({
+    required this.title,
+    required this.preview,
+    required this.leftHeader,
+    required this.rightHeader,
+    required this.leftWheel,
+    required this.rightWheel,
+    required this.onDone,
+  });
+
+  final String title;
+  final String preview;
+  final String leftHeader;
+  final String rightHeader;
+  final Widget leftWheel;
+  final Widget rightWheel;
+  final VoidCallback onDone;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget header(String text) {
+      return Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+          color: AppColors.onSurfaceSecondary(context),
+        ),
+      );
+    }
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: AppColors.onSurface(context),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              preview,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: AppColors.lightPrimary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(child: header(leftHeader)),
+                const SizedBox(width: 16),
+                Expanded(child: header(rightHeader)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            SizedBox(
+              height: 220,
+              child: Row(
+                children: [
+                  Expanded(child: leftWheel),
+                  const SizedBox(width: 16),
+                  Expanded(child: rightWheel),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            AppButton(label: 'Done', onPressed: onDone),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _HeightSheet extends StatefulWidget {
   const _HeightSheet({this.initial});
 
@@ -169,61 +256,25 @@ class _HeightSheetState extends State<_HeightSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Select Your Height',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 180,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CupertinoStylePicker(
-                      controller: _feetCtrl,
-                      itemCount: 7,
-                      labelAt: (i) => "${i + 2}'",
-                      onSelected: (i) => setState(() => _feet = i + 2),
-                    ),
-                  ),
-                  Expanded(
-                    child: CupertinoStylePicker(
-                      controller: _inchCtrl,
-                      itemCount: 12,
-                      labelAt: (i) => '$i"',
-                      onSelected: (i) => setState(() => _inches = i),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      'ft-in',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.onSurfaceSecondary(context),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            AppButton(
-              label: 'Done',
-              onPressed: () => Navigator.pop(
-                context,
-                HeightPick(feet: _feet, inches: _inches),
-              ),
-            ),
-          ],
-        ),
+    final pick = HeightPick(feet: _feet, inches: _inches);
+    return _MeasureSheetChrome(
+      title: 'Select Your Height',
+      preview: pick.label,
+      leftHeader: 'ft',
+      rightHeader: 'in',
+      leftWheel: CupertinoStylePicker(
+        controller: _feetCtrl,
+        itemCount: 7,
+        labelAt: (i) => "${i + 2}'",
+        onSelected: (i) => setState(() => _feet = i + 2),
       ),
+      rightWheel: CupertinoStylePicker(
+        controller: _inchCtrl,
+        itemCount: 12,
+        labelAt: (i) => '$i"',
+        onSelected: (i) => setState(() => _inches = i),
+      ),
+      onDone: () => Navigator.pop(context, pick),
     );
   }
 }
@@ -264,61 +315,25 @@ class _WeightSheetState extends State<_WeightSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Select Your Weight',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 180,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CupertinoStylePicker(
-                      controller: _wholeCtrl,
-                      itemCount: _max - _min + 1,
-                      labelAt: (i) => '${_min + i}',
-                      onSelected: (i) => setState(() => _whole = _min + i),
-                    ),
-                  ),
-                  Expanded(
-                    child: CupertinoStylePicker(
-                      controller: _tenthCtrl,
-                      itemCount: 10,
-                      labelAt: (i) => '.$i',
-                      onSelected: (i) => setState(() => _tenth = i),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Text(
-                      'lb-oz',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.onSurfaceSecondary(context),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            AppButton(
-              label: 'Done',
-              onPressed: () => Navigator.pop(
-                context,
-                WeightPick(whole: _whole, tenth: _tenth),
-              ),
-            ),
-          ],
-        ),
+    final pick = WeightPick(whole: _whole, tenth: _tenth);
+    return _MeasureSheetChrome(
+      title: 'Select Your Weight',
+      preview: pick.sheetPreview,
+      leftHeader: 'lb',
+      rightHeader: '.0',
+      leftWheel: CupertinoStylePicker(
+        controller: _wholeCtrl,
+        itemCount: _max - _min + 1,
+        labelAt: (i) => '${_min + i}',
+        onSelected: (i) => setState(() => _whole = _min + i),
       ),
+      rightWheel: CupertinoStylePicker(
+        controller: _tenthCtrl,
+        itemCount: 10,
+        labelAt: (i) => '.$i',
+        onSelected: (i) => setState(() => _tenth = i),
+      ),
+      onDone: () => Navigator.pop(context, pick),
     );
   }
 }
@@ -640,7 +655,7 @@ class _OutlinedDrop extends StatelessWidget {
   }
 }
 
-/// Dual-column wheel with primary highlight band (wireframe picker look).
+/// Dual-column wheel with an inset primary pill so neighbour columns do not fuse (docs/93).
 class CupertinoStylePicker extends StatelessWidget {
   const CupertinoStylePicker({
     super.key,
@@ -649,6 +664,9 @@ class CupertinoStylePicker extends StatelessWidget {
     required this.labelAt,
     required this.onSelected,
   });
+
+  static const itemExtent = 48.0;
+  static const highlightInset = 8.0;
 
   final FixedExtentScrollController controller;
   final int itemCount;
@@ -667,15 +685,16 @@ class CupertinoStylePicker extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Container(
-              height: 40,
+              height: itemExtent,
+              margin: const EdgeInsets.symmetric(horizontal: highlightInset),
               decoration: BoxDecoration(
                 color: AppColors.lightPrimary,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
             ListWheelScrollView.useDelegate(
               controller: controller,
-              itemExtent: 40,
+              itemExtent: itemExtent,
               perspective: 0.002,
               physics: const FixedExtentScrollPhysics(),
               onSelectedItemChanged: onSelected,
@@ -705,20 +724,62 @@ class CupertinoStylePicker extends StatelessWidget {
   }
 }
 
-/// Simple signature pad — finger draw on white canvas.
+/// Isolated signature pad — clip to box · sequential lock (docs/91).
 class SignaturePad extends StatefulWidget {
-  const SignaturePad({super.key, required this.label, required this.onChanged});
+  const SignaturePad({
+    super.key,
+    required this.label,
+    required this.onChanged,
+    this.enabled = true,
+    this.lockedHint = 'Sign the previous box first',
+  });
 
   final String label;
   final ValueChanged<bool> onChanged;
+  final bool enabled;
+  final String lockedHint;
 
   @override
   State<SignaturePad> createState() => _SignaturePadState();
 }
 
 class _SignaturePadState extends State<SignaturePad> {
+  static const _padHeight = 120.0;
+  static const _minPoints = 8;
+  static const _minPath = 40.0;
+
   final _points = <Offset?>[];
   bool _hasInk = false;
+  Size _size = const Size(1, _padHeight);
+
+  bool _inside(Offset p) {
+    return p.dx >= 0 &&
+        p.dy >= 0 &&
+        p.dx <= _size.width &&
+        p.dy <= _size.height;
+  }
+
+  double _pathLength() {
+    var len = 0.0;
+    for (var i = 0; i < _points.length - 1; i++) {
+      final a = _points[i];
+      final b = _points[i + 1];
+      if (a != null && b != null) len += (b - a).distance;
+    }
+    return len;
+  }
+
+  bool _isValidInk() {
+    final n = _points.whereType<Offset>().length;
+    return n >= _minPoints || _pathLength() >= _minPath;
+  }
+
+  void _emitInk() {
+    final next = _isValidInk();
+    if (next == _hasInk) return;
+    _hasInk = next;
+    widget.onChanged(next);
+  }
 
   void _clear() {
     setState(() {
@@ -728,8 +789,44 @@ class _SignaturePadState extends State<SignaturePad> {
     widget.onChanged(false);
   }
 
+  void _start(Offset p) {
+    if (!widget.enabled || !_inside(p)) return;
+    setState(() => _points.add(p));
+  }
+
+  void _move(Offset p) {
+    if (!widget.enabled) return;
+    setState(() {
+      if (!_inside(p)) {
+        if (_points.isNotEmpty && _points.last != null) _points.add(null);
+        return;
+      }
+      _points.add(p);
+    });
+    _emitInk();
+  }
+
+  void _end() {
+    if (!widget.enabled) return;
+    setState(() => _points.add(null));
+    _emitInk();
+  }
+
+  @override
+  void didUpdateWidget(covariant SignaturePad oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.enabled && !widget.enabled && _points.isNotEmpty) {
+      _clear();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final locked = !widget.enabled;
+    final border = locked
+        ? AppColors.border(context)
+        : (_hasInk ? AppColors.success(context) : AppColors.border(context));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -738,43 +835,64 @@ class _SignaturePadState extends State<SignaturePad> {
             Expanded(
               child: Text(
                 widget.label,
-                style: TextStyle(fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: locked ? AppColors.hint(context) : null,
+                ),
               ),
             ),
-            TextButton(onPressed: _clear, child: const Text('Clear')),
+            TextButton(
+              onPressed: locked ? null : _clear,
+              child: const Text('Clear'),
+            ),
           ],
         ),
-        Container(
-          height: 120,
-          decoration: BoxDecoration(
-            color: AppColors.background(context),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border(context)),
-          ),
-          child: GestureDetector(
-            onPanStart: (d) {
-              setState(() {
-                _points.add(d.localPosition);
-                _hasInk = true;
-              });
-              widget.onChanged(true);
-            },
-            onPanUpdate: (d) => setState(() => _points.add(d.localPosition)),
-            onPanEnd: (_) => setState(() => _points.add(null)),
-            child: CustomPaint(
-              painter: _SigPainter(_points, AppColors.onSurface(context)),
-              size: Size.infinite,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          clipBehavior: Clip.hardEdge,
+          child: Container(
+            height: _padHeight,
+            decoration: BoxDecoration(
+              color: locked
+                  ? AppColors.mutedFill(context)
+                  : AppColors.background(context),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: border),
+            ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                _size = Size(constraints.maxWidth, constraints.maxHeight);
+                return AbsorbPointer(
+                  absorbing: locked,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onPanStart: (d) => _start(d.localPosition),
+                    onPanUpdate: (d) => _move(d.localPosition),
+                    onPanEnd: (_) => _end(),
+                    child: CustomPaint(
+                      painter: _SigPainter(
+                        _points,
+                        locked
+                            ? AppColors.hint(context)
+                            : AppColors.onSurface(context),
+                      ),
+                      size: _size,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),
-        if (!_hasInk)
-          Padding(
-            padding: EdgeInsets.only(top: 4),
-            child: Text(
-              'Draw signature above',
-              style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            locked
+                ? widget.lockedHint
+                : (_hasInk ? 'Signed in this box' : 'Draw inside this box'),
+            style: TextStyle(fontSize: 11, color: AppColors.hint(context)),
           ),
+        ),
       ],
     );
   }
@@ -788,6 +906,7 @@ class _SigPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.clipRect(Offset.zero & size);
     final paint = Paint()
       ..color = color
       ..strokeWidth = 2.2

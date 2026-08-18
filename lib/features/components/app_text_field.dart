@@ -91,7 +91,7 @@ class _AppTextFieldState extends State<AppTextField> {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
         ],
         TextField(
           controller: widget.controller,

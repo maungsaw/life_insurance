@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/core/core.dart' show AppColors, AppDate;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
 
 const _kAmber = Color(0xFFF59E0B);
@@ -86,12 +86,12 @@ class TaskAgendaCard extends StatelessWidget {
     final meta = [
       task.type.label,
       if (!showTime)
-        '${TaskFormat.timeOf(task.startAt)}–${TaskFormat.timeOf(task.endAt)}',
+        '${TaskFormat.timeOf(task.startAt)} – ${TaskFormat.timeOf(task.endAt)}',
       if (task.linkLabel.isNotEmpty) task.linkLabel,
     ].join(' · ');
 
     return Material(
-      color: done ? AppColors.background(context) : Colors.white,
+      color: done ? AppColors.background(context) : AppColors.surface(context),
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -115,12 +115,12 @@ class TaskAgendaCard extends StatelessWidget {
                       children: [
                         if (showTime)
                           SizedBox(
-                            width: 44,
+                            width: 72,
                             child: Text(
                               TaskFormat.timeOf(task.startAt),
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
-                                fontSize: 13,
+                                fontSize: 11,
                                 color: AppColors.onSurfaceSecondary(context),
                               ),
                             ),
@@ -637,7 +637,7 @@ class TaskDayTimeline extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: 52,
+                width: 72,
                 child: Text(
                   'All day',
                   style: TextStyle(
@@ -700,11 +700,11 @@ class _HourRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 52,
+          width: 72,
           child: Padding(
             padding: const EdgeInsets.only(top: 2),
             child: Text(
-              '${hour.toString().padLeft(2, '0')}:00',
+              AppDate.h12Hour(hour),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,

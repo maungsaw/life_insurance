@@ -16,7 +16,7 @@ class NotificationItem {
   final String title;
   final String body;
   final String timeLabel;
-  /// Today | Yesterday | date label e.g. 20 Sep 2024
+  /// Today | Yesterday | date label e.g. 20-Sep-2024
   final String group;
   final NotificationKind kind;
   final bool unread;
@@ -65,7 +65,7 @@ abstract final class NotificationMockData {
       title: 'New Product Launching',
       body: 'Check the latest product brochure for Universal Life.',
       timeLabel: '3d',
-      group: '20 Sep 2024',
+      group: '20-Sep-2024',
       kind: NotificationKind.productLaunch,
       unread: false,
     ),
@@ -74,7 +74,7 @@ abstract final class NotificationMockData {
       title: 'Claim Status Update',
       body: 'Additional documents were requested for claim CL-7702.',
       timeLabel: '4d',
-      group: '20 Sep 2024',
+      group: '20-Sep-2024',
       kind: NotificationKind.claimStatus,
       unread: false,
     ),

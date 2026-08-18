@@ -19,6 +19,8 @@ class ProductEappPage extends StatefulWidget {
 }
 
 class _ProductEappPageState extends State<ProductEappPage> {
+  static const _fieldGap = SizedBox(height: 16);
+
   static const _titles = [
     'Policyholder',
     'Life Assured',
@@ -34,6 +36,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
   bool _busy = false;
   bool _clientSign = false;
   bool _agentSign = false;
+  int _agentPadEpoch = 0;
   String? _error;
 
   late final TextEditingController _phName;
@@ -249,7 +252,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
             ),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               children: [
                 if (step == 0) ..._policyholder(),
                 if (step == 1) ..._lifeAssuredNote(),
@@ -326,25 +329,25 @@ class _ProductEappPageState extends State<ProductEappPage> {
   List<Widget> _policyholder() {
     return [
       AppTextField(label: 'Name', isRequired: true, controller: _phName),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Mobile Number',
         isRequired: true,
         controller: _phMobile,
         keyboardType: TextInputType.phone,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Alternative Mobile Number',
         controller: _phAlt,
         keyboardType: TextInputType.phone,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       const Text(
         'Gender *',
         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
       ),
-      const SizedBox(height: 8),
+      const SizedBox(height: 10),
       Row(
         children: [
           Expanded(
@@ -364,7 +367,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
           ),
         ],
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       // Identification type lives only in the Identification sheet (docs/62).
       AppTextField(
         label: 'Identification',
@@ -374,19 +377,19 @@ class _ProductEappPageState extends State<ProductEappPage> {
         onTap: _pickId,
         suffix: const Icon(Icons.unfold_more, size: 18),
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Email',
         controller: _phEmail,
         keyboardType: TextInputType.emailAddress,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Father Name',
         isRequired: true,
         controller: _phFather,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Date of Birth',
         isRequired: true,
@@ -407,14 +410,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
           });
         },
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Age',
         isRequired: true,
         controller: _phAge,
         enabled: false,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Height',
         isRequired: true,
@@ -423,7 +426,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
         onTap: _pickHeight,
         suffix: const Icon(Icons.unfold_more, size: 18),
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Weight',
         isRequired: true,
@@ -432,25 +435,25 @@ class _ProductEappPageState extends State<ProductEappPage> {
         onTap: _pickWeight,
         suffix: const Icon(Icons.unfold_more, size: 18),
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(label: 'Occupation', isRequired: true, controller: _phJob),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(label: 'Town', isRequired: true, controller: _phTown),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'Township',
         isRequired: true,
         controller: _phTownship,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(
         label: 'State/Region',
         isRequired: true,
         controller: _phState,
       ),
-      const SizedBox(height: 12),
+      _fieldGap,
       AppTextField(label: 'Address', isRequired: true, controller: _phAddress),
-      const SizedBox(height: 8),
+      const SizedBox(height: 12),
       CheckboxListTile(
         contentPadding: EdgeInsets.zero,
         value: d.sameAsLifeAssured,
@@ -826,11 +829,20 @@ class _ProductEappPageState extends State<ProductEappPage> {
       const SizedBox(height: 8),
       SignaturePad(
         label: 'Client signature *',
-        onChanged: (has) => setState(() => _clientSign = has),
+        onChanged: (has) => setState(() {
+          _clientSign = has;
+          if (!has) {
+            _agentSign = false;
+            _agentPadEpoch++;
+          }
+        }),
       ),
       const SizedBox(height: 12),
       SignaturePad(
+        key: ValueKey(_agentPadEpoch),
         label: 'Agent signature *',
+        enabled: _clientSign,
+        lockedHint: 'Sign client first',
         onChanged: (has) => setState(() => _agentSign = has),
       ),
     ];

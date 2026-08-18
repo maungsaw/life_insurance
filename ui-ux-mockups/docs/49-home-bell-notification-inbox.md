@@ -34,7 +34,7 @@ Back on list → Home (shell + pill still underneath).
 | Piece | Spec |
 |-------|------|
 | AppBar | Back · title **Notification** |
-| Groups | **Today** · **Yesterday** · **dd MMM yyyy** (e.g. 20 Sep 2024) |
+| Groups | **Today** · **Yesterday** · **dd-MMM-yyyy** (e.g. 20-Sep-2024) (`94`) |
 | Row | Pale-blue circle + bell · **title** · relative time (`2 hr` · `1d`) · 2-line body |
 | Unread | Slightly stronger title weight; optional unread dot. Badge on Home = unread count (cap `9+`) |
 | Empty | “No notifications yet” |

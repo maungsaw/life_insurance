@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppDate;
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/lead/data/repository/repository.dart'
     show leadsData;
@@ -282,25 +283,7 @@ class EappDraft {
 }
 
 abstract final class ProductFormat {
-  static const _months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  static String dob(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    return '$day-${_months[d.month - 1]}-${d.year}';
-  }
+  static String dob(DateTime d) => AppDate.dMy(d);
 
   static int ageOn(DateTime dob, [DateTime? asOf]) {
     final now = asOf ?? DateTime(2026, 8, 14);

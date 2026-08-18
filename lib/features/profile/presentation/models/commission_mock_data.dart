@@ -1,5 +1,6 @@
 // Commission ledger mock — display only, no payout (docs/61 · 80).
 import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppDate;
 
 enum CommissionLine { protection, saving, health, travel }
 
@@ -78,11 +79,6 @@ class CommissionLineStat {
 }
 
 abstract final class CommissionFormat {
-  static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
-
   static String money(num value) {
     final fixed = value.toStringAsFixed(2);
     final parts = fixed.split('.');
@@ -102,14 +98,7 @@ abstract final class CommissionFormat {
     return 'MMK ${money(value)}';
   }
 
-  static String dateTime(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    final h = d.hour % 12 == 0 ? 12 : d.hour % 12;
-    final hh = h.toString().padLeft(2, '0');
-    final mm = d.minute.toString().padLeft(2, '0');
-    final ap = d.hour >= 12 ? 'PM' : 'AM';
-    return '$day-${_months[d.month - 1]}-${d.year} $hh:$mm $ap';
-  }
+  static String dateTime(DateTime d) => AppDate.dMyHm(d);
 }
 
 abstract final class CommissionMockData {

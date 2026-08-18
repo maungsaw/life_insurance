@@ -1,6 +1,7 @@
 // Customer CRM + agent Policy List mock (docs/51 · 66). Session-mutable contact fields.
 
 import 'package:flutter/material.dart';
+import 'package:life_insurance/core/core.dart' show AppDate;
 
 enum CrmStatus { active, pending, expired }
 
@@ -114,30 +115,9 @@ abstract final class PolicyRenewalRules {
 }
 
 abstract final class PolicyFormat {
-  static const _months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
+  static String dob(DateTime d) => AppDate.dMy(d);
 
-  static String dob(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    return '$day-${_months[d.month - 1]}-${d.year}';
-  }
-
-  static String range(DateTime? from, DateTime? to) {
-    if (from == null && to == null) return '';
-    if (from != null && to != null) {
-      return '${_dot(from)} - ${_dot(to)}';
-    }
-    if (from != null) return _dot(from);
-    return _dot(to!);
-  }
-
-  static String _dot(DateTime d) {
-    final day = d.day.toString().padLeft(2, '0');
-    final m = d.month.toString().padLeft(2, '0');
-    return '$day.$m.${d.year}';
-  }
+  static String range(DateTime? from, DateTime? to) => AppDate.range(from, to);
 }
 
 class PolicyChartMonth {
@@ -200,14 +180,7 @@ class CustomerMock {
 
   int get policyCount => policies.length;
 
-  String get dobLabel {
-    const months = [
-      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-    ];
-    final d = dob.day.toString().padLeft(2, '0');
-    return '$d-${months[dob.month - 1]}-${dob.year}';
-  }
+  String get dobLabel => AppDate.dMy(dob);
 
   bool matchesProduct(ProductCategory? category) {
     if (category == null) return true;
@@ -292,7 +265,7 @@ abstract final class CustomerMockData {
           hasSignature: true,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'May Chan Myae',
-            'Date of Birth': '04-JUN-1999',
+            'Date of Birth': '04-Jun-1999',
             'Identification': '12/KaMaNa(N)127645',
             'Gender': 'Female',
             'Relationship': 'Self',
@@ -327,7 +300,7 @@ abstract final class CustomerMockData {
           hasSignature: true,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'May Chan Myae',
-            'Date of Birth': '04-JUN-1999',
+            'Date of Birth': '04-Jun-1999',
             'Identification': '12/KaMaNa(N)127645',
             'Gender': 'Female',
             'Relationship': 'Self',
@@ -362,7 +335,7 @@ abstract final class CustomerMockData {
           hasSignature: false,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'May Chan Myae',
-            'Date of Birth': '04-JUN-1999',
+            'Date of Birth': '04-Jun-1999',
             'Identification': '12/KaMaNa(N)127645',
             'Gender': 'Female',
             'Relationship': 'Self',
@@ -408,7 +381,7 @@ abstract final class CustomerMockData {
           hasSignature: true,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'Su Su',
-            'Date of Birth': '01-JAN-2015',
+            'Date of Birth': '01-Jan-2015',
             'Identification': '12/PaZaTa(N)112233',
             'Gender': 'Female',
             'Relationship': 'Child',
@@ -443,7 +416,7 @@ abstract final class CustomerMockData {
           hasSignature: false,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'Chan Myae',
-            'Date of Birth': '12-MAR-1995',
+            'Date of Birth': '12-Mar-1995',
             'Identification': '12/PaZaTa(N)998877',
             'Gender': 'Male',
             'Relationship': 'Self',
@@ -489,7 +462,7 @@ abstract final class CustomerMockData {
           hasSignature: true,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'Thiri Aung',
-            'Date of Birth': '20-NOV-1988',
+            'Date of Birth': '20-Nov-1988',
             'Identification': '9/MaNaMa(N)445566',
             'Gender': 'Female',
             'Relationship': 'Self',
@@ -524,7 +497,7 @@ abstract final class CustomerMockData {
           hasSignature: false,
           insured: const PolicyPartyInfo(rows: {
             'Name': 'Thiri Aung',
-            'Date of Birth': '20-NOV-1988',
+            'Date of Birth': '20-Nov-1988',
             'Identification': '9/MaNaMa(N)445566',
             'Gender': 'Female',
             'Relationship': 'Self',

@@ -15,6 +15,7 @@ import {
   type ProductLine,
   type SchemaPack,
 } from '@/data/hqCatalog'
+import { fromDateInput, toDateInput } from '@/lib/formatDate'
 
 export function MgmtProductSetupPage() {
   const { id } = useParams()
@@ -375,34 +376,4 @@ export function MgmtProductSetupPage() {
       </Dialog>
     </div>
   )
-}
-
-function toDateInput(display: string) {
-  if (!display) return ''
-  const m = display.match(/^(\d{2})-([A-Za-z]{3})-(\d{4})$/)
-  if (!m) return ''
-  const months: Record<string, string> = {
-    Jan: '01',
-    Feb: '02',
-    Mar: '03',
-    Apr: '04',
-    May: '05',
-    Jun: '06',
-    Jul: '07',
-    Aug: '08',
-    Sep: '09',
-    Oct: '10',
-    Nov: '11',
-    Dec: '12',
-  }
-  const mm = months[m[2]]
-  if (!mm) return ''
-  return `${m[3]}-${mm}-${m[1]}`
-}
-
-function fromDateInput(iso: string) {
-  if (!iso) return ''
-  const [y, m, d] = iso.split('-')
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  return `${d}-${months[Number(m) - 1]}-${y}`
 }

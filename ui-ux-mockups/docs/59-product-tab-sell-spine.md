@@ -198,8 +198,8 @@ Reuse: outlined `AppTextField` · gender/ID segmented control with blue corner d
 
 | Sheet | Columns |
 |-------|---------|
-| Height | ft · in · unit `ft-in` |
-| Weight | whole · decimal · unit `lb-oz` (or kg if product later says so — mock follows PNG) |
+| Height | ft · in · live preview (`93`) — no side `ft-in` |
+| Weight | whole · tenth · preview `105.0 lb` (`93`) — decimal lb, not ounces |
 | Identification | NRC / Old NRC / Passport / No ID · then NRC State · Township · Type · number |
 
 ### G. Success
@@ -223,7 +223,7 @@ Underwriting Stage PNG = this **status detail**, copy about “review in working
 
 ### I. Compare Details — P1 only
 
-Side-by-side Feature table · Pin · **no** dual BUY. Optional “Use this product” → Get A Quote for **one** code.
+Side-by-side Feature table · Pin · **no** dual BUY. Optional “Use this product” → Get A Quote for **one** code. Per-column **Change** picks any other On SKU (`92`).
 
 ### J. Search screen — P1
 

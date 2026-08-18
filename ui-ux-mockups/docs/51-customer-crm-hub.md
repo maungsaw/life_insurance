@@ -116,7 +116,7 @@ Same field set as agent edit (`50`), **different object** (client, not FA).
 |-------|----------|-------|
 | Name | Yes | PNG shows chevron — treat as **text** first; optional title picker (Daw/U/…) P1. Not a customer picker |
 | Mobile* | Yes | MM `09…` feel |
-| DOB* | Yes | Calendar · display `dd-MMM-yyyy` or `dd.MM.yyyy` — pick one; prefer wireframe `04-JUN-1999` on this screen |
+| DOB* | Yes | Calendar · display `04-Jun-1999` (`94`) |
 | Identification* | Yes | NRC string |
 | Email | No | Soft validate if filled |
 | Gender | Choice | Male / Female chips |

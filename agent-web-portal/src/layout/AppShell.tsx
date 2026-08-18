@@ -18,6 +18,7 @@ import {
   ClipboardList,
   UserCog,
   KeyRound,
+  ShieldCheck,
 } from 'lucide-react'
 import { HeaderActions } from '@/layout/HeaderActions'
 import { BrandLogo } from '@/components/BrandLogo'
@@ -32,7 +33,8 @@ const DASH_CHILDREN = [
 
 const USER_CHILDREN = [
   { to: 'people', labelEn: 'People', labelMm: 'ဝန်ထမ်း', icon: UsersRound },
-  { to: 'roles', labelEn: 'Roles & permissions', labelMm: 'အခွင့်အရေး', icon: KeyRound },
+  { to: 'roles', labelEn: 'Roles', labelMm: 'အခန်းကဏ္ဍ', icon: KeyRound },
+  { to: 'permissions', labelEn: 'Permissions', labelMm: 'ခွင့်ပြုချက်', icon: ShieldCheck },
 ] as const
 
 const MGMT_CHILDREN = [

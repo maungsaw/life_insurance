@@ -1,3 +1,5 @@
+import 'package:life_insurance/core/core.dart' show AppDate;
+
 /// Session-only agent profile mock (docs/50). Lost on restart.
 class ProfileMockData {
   ProfileMockData._();
@@ -20,11 +22,7 @@ class ProfileMockData {
     return parts.first[0].toUpperCase();
   }
 
-  static String get dobLabel {
-    final d = dob.day.toString().padLeft(2, '0');
-    final m = dob.month.toString().padLeft(2, '0');
-    return '$d.$m.${dob.year}';
-  }
+  static String get dobLabel => AppDate.dMy(dob);
 
   static bool pushNotification = true;
   static bool messageNotification = false;

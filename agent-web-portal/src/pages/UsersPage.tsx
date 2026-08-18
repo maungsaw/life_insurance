@@ -1,17 +1,22 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Card, DataTable, Dialog, EmptyState, Input, PageHeader, Pill, Select, Td } from '@/components/ui'
-import { PEOPLE, type OrgRole, type PersonStatus } from '@/data/hqBook'
+import { Link, useSearchParams } from 'react-router-dom'
+import { Button, Card, DataTable, EmptyState, Input, PageHeader, Pill, Select, Td } from '@/components/ui'
+import { useAccess } from '@/data/AccessContext'
+import { activeRoles, roleName } from '@/data/hqAccess'
+import type { PersonStatus } from '@/data/hqBook'
 
 export function UsersPage() {
+  const { people, roles } = useAccess()
+  const [params] = useSearchParams()
+  const roleFromUrl = params.get('role') ?? 'all'
   const [q, setQ] = useState('')
-  const [role, setRole] = useState<'all' | OrgRole>('all')
-  const [inviteOpen, setInviteOpen] = useState(false)
+  const [role, setRole] = useState(roleFromUrl)
 
+  const live = activeRoles(roles)
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase()
-    return PEOPLE.filter((p) => {
-      if (role !== 'all' && p.orgRole !== role) return false
+    return people.filter((p) => {
+      if (role !== 'all' && p.roleId !== role) return false
       if (!needle) return true
       return (
         p.name.toLowerCase().includes(needle) ||
@@ -19,21 +24,21 @@ export function UsersPage() {
         p.mobile.includes(needle)
       )
     })
-  }, [q, role])
+  }, [people, q, role])
 
   return (
     <div>
       <PageHeader
         title="People"
-        subtitle="Who can sign in · assign role here · CORE-unknown stays on Audit Application List"
+        subtitle="Who can sign in · role from the catalog · CORE-unknown stays on Audit Application List"
         actions={
           <div className="flex gap-2">
-            <Button type="button" onClick={() => setInviteOpen(true)}>
-              Invite
-            </Button>
+            <Link to="/users/people/new">
+              <Button type="button">+ Add person</Button>
+            </Link>
             <Link to="/users/roles">
               <Button variant="secondary" type="button">
-                Roles & permissions
+                Roles
               </Button>
             </Link>
           </div>
@@ -42,13 +47,13 @@ export function UsersPage() {
 
       <div className="mb-3 flex flex-wrap gap-2">
         <Input className="max-w-xs" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, code, mobile…" />
-        <Select className="max-w-[180px]" value={role} onChange={(e) => setRole(e.target.value as 'all' | OrgRole)}>
+        <Select className="max-w-[200px]" value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="all">All roles</option>
-          <option>FA</option>
-          <option>TL</option>
-          <option>DM</option>
-          <option>HOA</option>
-          <option>Super Admin</option>
+          {live.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.name}
+            </option>
+          ))}
         </Select>
       </div>
 
@@ -65,7 +70,7 @@ export function UsersPage() {
                     {p.name}
                   </Link>
                 </Td>
-                <Td>{p.orgRole}</Td>
+                <Td>{roleName(roles, p.roleId)}</Td>
                 <Td className="text-xs text-muted">{p.channel}</Td>
                 <Td>
                   <Pill tone={personTone(p.status)}>{p.status}</Pill>
@@ -86,28 +91,6 @@ export function UsersPage() {
           </DataTable>
         )}
       </Card>
-
-      <Dialog
-        open={inviteOpen}
-        onClose={() => setInviteOpen(false)}
-        title="Invite a login"
-        subtitle="Only CORE-active identities. Unknown / pending stay on Application List."
-        footer={
-          <>
-            <Button variant="secondary" type="button" onClick={() => setInviteOpen(false)}>
-              Close
-            </Button>
-            <Link to="/audit?tab=applications">
-              <Button type="button">Open Application List</Button>
-            </Link>
-          </>
-        }
-      >
-        <p className="text-sm text-muted">
-          People here are already activated or Disabled. If the mobile is not in CORE, do not invite from this
-          desk — activate from Audit → Application List first.
-        </p>
-      </Dialog>
     </div>
   )
 }

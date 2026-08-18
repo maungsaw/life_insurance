@@ -15,6 +15,10 @@ import { MgmtNotificationPage } from '@/pages/MgmtNotificationPage'
 import { MgmtAnnouncementPage } from '@/pages/MgmtAnnouncementPage'
 import { MgmtDevicesPage } from '@/pages/MgmtDevicesPage'
 import { CatalogProvider } from '@/data/CatalogContext'
+import { AccessProvider } from '@/data/AccessContext'
+import { RoleSetupPage } from '@/pages/RoleSetupPage'
+import { PermissionsPage } from '@/pages/PermissionsPage'
+import { PeopleNewPage } from '@/pages/PeopleNewPage'
 import { MgmtProductsPage } from '@/pages/MgmtProductsPage'
 import { MgmtProductSetupPage } from '@/pages/MgmtProductSetupPage'
 import { AuditPage } from '@/pages/AuditPage'
@@ -39,6 +43,7 @@ export default function App() {
   return (
     <AuthProvider>
       <CatalogProvider>
+      <AccessProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/otp" element={<OtpPage />} />
@@ -174,10 +179,42 @@ export default function App() {
             }
           />
           <Route
+            path="users/people/new"
+            element={
+              <RequireUsers>
+                <PeopleNewPage />
+              </RequireUsers>
+            }
+          />
+          <Route
+            path="users/roles/new"
+            element={
+              <RequireUsers>
+                <RoleSetupPage />
+              </RequireUsers>
+            }
+          />
+          <Route
+            path="users/roles/:id"
+            element={
+              <RequireUsers>
+                <RoleSetupPage />
+              </RequireUsers>
+            }
+          />
+          <Route
             path="users/roles"
             element={
               <RequireUsers>
                 <RolesPage />
+              </RequireUsers>
+            }
+          />
+          <Route
+            path="users/permissions"
+            element={
+              <RequireUsers>
+                <PermissionsPage />
               </RequireUsers>
             }
           />
@@ -195,6 +232,7 @@ export default function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </AccessProvider>
       </CatalogProvider>
     </AuthProvider>
   )

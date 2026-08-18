@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, PrototypeConfig;
+import 'package:life_insurance/core/core.dart' show AppColors, AppDate, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_mock_data.dart';
 import 'package:life_insurance/features/customer/presentation/widgets/app_crm_status_pill.dart';
@@ -56,15 +56,6 @@ class _CustomerProfileDetailsPageState
     super.dispose();
   }
 
-  String _dobLabel(DateTime d) {
-    const months = [
-      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-    ];
-    final day = d.day.toString().padLeft(2, '0');
-    return '$day-${months[d.month - 1]}-${d.year}';
-  }
-
   Future<void> _pickDob() async {
     final picked = await showDatePicker(
       context: context,
@@ -75,7 +66,7 @@ class _CustomerProfileDetailsPageState
     if (picked == null) return;
     setState(() {
       _dob = picked;
-      _dobCtrl.text = _dobLabel(picked);
+      _dobCtrl.text = AppDate.dMy(picked);
       _dobError = null;
     });
   }

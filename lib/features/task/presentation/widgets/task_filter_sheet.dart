@@ -209,7 +209,7 @@ class _Choice extends StatelessWidget {
     return Material(
       color: selected
           ? AppColors.lightPrimary.withValues(alpha: 0.12)
-          : Colors.white,
+          : AppColors.surface(context),
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,

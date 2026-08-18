@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/core/core.dart' show AppColors, AppDate, AppRoute;
 import 'package:life_insurance/features/components/components.dart'
     show AppBottomNavBar;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
@@ -54,9 +54,9 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
   List<TaskMock> get _scopeTasks => _tasksFor(_filter);
 
   String get _title => switch (_scope) {
-    _Scope.day => TaskFormat.dayHero(_selected),
-    _Scope.week => TaskFormat.weekRangeTitle(_weekStart),
-    _Scope.month => TaskFormat.monthTitle(_selected),
+    _Scope.day => AppDate.dMy(_selected),
+    _Scope.week => AppDate.weekRange(_weekStart),
+    _Scope.month => AppDate.monthYear(_selected),
   };
 
   bool get _showsToday => switch (_scope) {
@@ -136,35 +136,35 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             floating: true,
             snap: true,
             centerTitle: false,
-            title: Text(
-              'My work',
-              style: TextStyle(
-                color: AppColors.onSurface(context),
-                fontWeight: FontWeight.w800,
-                fontSize: 18,
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: Material(
-                  color: AppColors.lightPrimary,
-                  shape: const CircleBorder(),
-                  clipBehavior: Clip.antiAlias,
-                  child: IconButton(
-                    tooltip: 'Create task',
-                    onPressed: () => _openForm(),
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    iconSize: 22,
-                    padding: const EdgeInsets.all(8),
-                    constraints: const BoxConstraints(
-                      minWidth: 40,
-                      minHeight: 40,
+            automaticallyImplyLeading: false,
+            titleSpacing: 0,
+            title: Padding(
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+              child: Row(
+                children: [
+                  Text(
+                    'My work',
+                    style: TextStyle(
+                      color: AppColors.onSurface(context),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
                     ),
                   ),
-                ),
+                  Expanded(
+                    child: _AppBarDate(
+                      title: _title,
+                      jumpToToday: !_showsToday,
+                      onPrev: () => _shift(-1),
+                      onNext: () => _shift(1),
+                      onToday: () =>
+                          setState(() => _selected = TaskSession.today),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _CreateTaskButton(onPressed: () => _openForm()),
+                ],
               ),
-            ],
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -177,15 +177,6 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
                     onChanged: (s) => setState(() => _scope = s),
                   ),
                   const SizedBox(height: 10),
-                  _DateNav(
-                    title: _title,
-                    showToday: !_showsToday,
-                    onPrev: () => _shift(-1),
-                    onNext: () => _shift(1),
-                    onToday: () =>
-                        setState(() => _selected = TaskSession.today),
-                  ),
-                  const SizedBox(height: 8),
                   _calendarHeader(),
                   const SizedBox(height: 12),
                   _summaryRow(rows),
@@ -400,7 +391,7 @@ class _TaskBoardPageState extends State<TaskBoardPage> {
             _Scope.day => 'No tasks on ${TaskFormat.dayHeading(_selected)}',
             _Scope.week => 'No tasks this week',
             _Scope.month =>
-              'No tasks in ${TaskFormat.monthTitle(_selected).split(' ').first}',
+              'No tasks in ${TaskFormat.monthTitle(_selected)}',
           };
 
     return Padding(
@@ -507,17 +498,17 @@ class _ScopeBar extends StatelessWidget {
   }
 }
 
-class _DateNav extends StatelessWidget {
-  const _DateNav({
+class _AppBarDate extends StatelessWidget {
+  const _AppBarDate({
     required this.title,
-    required this.showToday,
+    required this.jumpToToday,
     required this.onPrev,
     required this.onNext,
     required this.onToday,
   });
 
   final String title;
-  final bool showToday;
+  final bool jumpToToday;
   final VoidCallback onPrev;
   final VoidCallback onNext;
   final VoidCallback onToday;
@@ -528,38 +519,55 @@ class _DateNav extends StatelessWidget {
       children: [
         _NavArrow(icon: Icons.chevron_left, onTap: onPrev, tooltip: 'Previous'),
         Expanded(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 15,
-              color: AppColors.onSurface(context),
+          child: InkWell(
+            onTap: jumpToToday ? onToday : null,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: jumpToToday
+                        ? AppColors.lightPrimary
+                        : AppColors.onSurface(context),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
         _NavArrow(icon: Icons.chevron_right, onTap: onNext, tooltip: 'Next'),
-        SizedBox(
-          width: 56,
-          child: showToday
-              ? TextButton(
-                  onPressed: onToday,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    foregroundColor: AppColors.lightPrimary,
-                    minimumSize: const Size(44, 44),
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 13,
-                    ),
-                  ),
-                  child: const Text('Today'),
-                )
-              : null,
-        ),
       ],
+    );
+  }
+}
+
+class _CreateTaskButton extends StatelessWidget {
+  const _CreateTaskButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.lightPrimary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        minimumSize: const Size(0, 36),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        visualDensity: VisualDensity.compact,
+        textStyle: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+      ),
+      child: const Text('Create'),
     );
   }
 }
@@ -580,8 +588,8 @@ class _NavArrow extends StatelessWidget {
     return IconButton(
       tooltip: tooltip,
       onPressed: onTap,
-      icon: Icon(icon, color: AppColors.onSurface(context)),
-      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+      icon: Icon(icon, color: AppColors.onSurface(context), size: 22),
+      constraints: const BoxConstraints(minWidth: 32, minHeight: 40),
       padding: EdgeInsets.zero,
     );
   }
@@ -599,7 +607,7 @@ class _FilterButton extends StatelessWidget {
     return Material(
       color: active
           ? AppColors.lightPrimary.withValues(alpha: 0.12)
-          : Colors.white,
+          : AppColors.surface(context),
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
