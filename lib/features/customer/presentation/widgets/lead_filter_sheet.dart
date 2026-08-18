@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 
 const leadStages = ['New', 'Contacted', 'Quoted', 'Applied'];
 
@@ -99,22 +101,12 @@ class _StageChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
+    return AppSelectChip(
+      label: label,
       selected: selected,
-      onSelected: (_) => onTap(),
-      showCheckmark: false,
-      selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
-      side: BorderSide(
-        color: selected ? AppColors.lightPrimary : AppColors.border(context),
-      ),
-      labelStyle: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        color: selected
-            ? AppColors.lightPrimary
-            : AppColors.onSurfaceSecondary(context),
-      ),
+      onTap: onTap,
+      outlinedWhenIdle: true,
+      fontSize: 12,
     );
   }
 }

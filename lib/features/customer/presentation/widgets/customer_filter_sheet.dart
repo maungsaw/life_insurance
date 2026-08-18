@@ -197,55 +197,11 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected
-          ? AppColors.lightPrimary.withValues(alpha: 0.06)
-          : AppColors.mutedFill(context),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : Colors.transparent,
-                  width: 1.4,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurfaceSecondary(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 14,
-                  height: 14,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      mutedWhenIdle: true,
     );
   }
 }

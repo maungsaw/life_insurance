@@ -534,53 +534,12 @@ class _IdTypeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected
-          ? AppColors.surface(context)
-          : AppColors.mutedFill(context),
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: selected ? AppColors.lightPrimary : Colors.transparent,
-                  width: selected ? 1.6 : 0,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurface(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 14,
-                  height: 14,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      expand: true,
+      mutedWhenIdle: true,
     );
   }
 }

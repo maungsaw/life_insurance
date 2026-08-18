@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeRole;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/dashboard/presentation/models/home_mock_data.dart';
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 import 'package:life_insurance/features/dashboard/presentation/widgets/team_visuals.dart';
@@ -23,37 +25,45 @@ class _TeamHubPageState extends State<TeamHubPage> {
     final snap = TeamMockData.current;
     showModalBottomSheet<void>(
       context: context,
+      isScrollControlled: true,
       showDragHandle: true,
+      backgroundColor: AppColors.background(context),
       builder: (ctx) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'My performance',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Your personal figures — not the team roll-up.',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.onSurfaceSecondary(context),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              8,
+              20,
+              20 + MediaQuery.viewInsetsOf(ctx).bottom,
+            ),
+            child: SizedBox(
+              height: MediaQuery.sizeOf(ctx).height * 0.88,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'My performance',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                   ),
-                ),
-                const SizedBox(height: 16),
-                _selfRow('Overall', '${(snap.ownOverallPct * 100).round()}%'),
-                _selfRow('APE', snap.ownApe),
-                _selfRow('FYP', snap.ownFyp),
-                _selfRow('Road to MDRT', snap.ownMdrt),
-                _selfRow(
-                  'Policies',
-                  'New ${snap.ownNewPolicies} · Active ${snap.ownActivePolicies}',
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    'Your personal figures — not the team roll-up.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.onSurfaceSecondary(context),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        TeamOwnPerformanceBody(snap: snap),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -180,18 +190,22 @@ class _TeamHubPageState extends State<TeamHubPage> {
             Row(
               children: [
                 Expanded(
-                  child: _Seg(
+                  child: AppSelectChip(
                     label: 'Personal Team',
                     selected: effective == TeamScope.personal,
                     onTap: () => _setScope(TeamScope.personal),
+                    expand: true,
+                    outlinedWhenIdle: true,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _Seg(
+                  child: AppSelectChip(
                     label: 'Total Group',
                     selected: effective == TeamScope.total,
                     onTap: () => _setScope(TeamScope.total),
+                    expand: true,
+                    outlinedWhenIdle: true,
                   ),
                 ),
               ],
@@ -391,59 +405,6 @@ class _TeamHubPageState extends State<TeamHubPage> {
             onTap: () => context.push(AppRoute.teamMdrt),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _selfRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(color: AppColors.onSurfaceSecondary(context)),
-            ),
-          ),
-          Text(value, style: TextStyle(fontWeight: FontWeight.w700)),
-        ],
-      ),
-    );
-  }
-}
-
-class _Seg extends StatelessWidget {
-  const _Seg({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: selected ? AppColors.lightPrimary : Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              color: selected ? Colors.white : AppColors.onSurface(context),
-            ),
-          ),
-        ),
       ),
     );
   }

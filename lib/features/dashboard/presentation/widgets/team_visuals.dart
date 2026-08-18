@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
@@ -19,30 +21,77 @@ class TeamRing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = value.clamp(0.0, 1.0);
+    final stroke = size > 80 ? 10.0 : 7.0;
+    final pct = '${(v * 100).round()}%';
     return SizedBox(
       width: size,
       height: size,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(
-            value: v,
-            strokeWidth: size > 80 ? 8 : 6,
-            color: color,
-            backgroundColor: color.withValues(alpha: 0.12),
-          ),
-          Text(
-            label ?? '${(v * 100).round()}%',
+      child: CustomPaint(
+        painter: _TeamRingPainter(
+          value: v,
+          color: color,
+          trackColor: color.withValues(alpha: 0.14),
+          stroke: stroke,
+        ),
+        child: Center(
+          child: Text(
+            label ?? pct,
             style: TextStyle(
               fontWeight: FontWeight.w800,
-              fontSize: size > 80 ? 16 : 13,
-              color: AppColors.onSurface(context),
+              fontSize: size > 80 ? 22 : 14,
+              color: color,
             ),
           ),
-        ],
+        ),
       ),
     );
   }
+}
+
+class _TeamRingPainter extends CustomPainter {
+  const _TeamRingPainter({
+    required this.value,
+    required this.color,
+    required this.trackColor,
+    required this.stroke,
+  });
+
+  final double value;
+  final Color color;
+  final Color trackColor;
+  final double stroke;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final r = (math.min(size.width, size.height) - stroke) / 2;
+    final track = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(c, r, track);
+    if (value <= 0) return;
+    final arc = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawArc(
+      Rect.fromCircle(center: c, radius: r),
+      -math.pi / 2,
+      2 * math.pi * value,
+      false,
+      arc,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _TeamRingPainter old) =>
+      old.value != value ||
+      old.color != color ||
+      old.trackColor != trackColor ||
+      old.stroke != stroke;
 }
 
 class TeamKpiBar extends StatelessWidget {
@@ -247,6 +296,159 @@ class TeamCountChip extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Self-only figures in the FA-detail language (docs/99).
+class TeamOwnPerformanceBody extends StatelessWidget {
+  const TeamOwnPerformanceBody({super.key, required this.snap});
+
+  final TeamSnapshot snap;
+
+  @override
+  Widget build(BuildContext context) {
+    final ringColor = snap.ownOverallPct >= 0.9
+        ? AppColors.successGreen
+        : AppColors.lightPrimary;
+    final momUp = snap.ownMomDelta.startsWith('+');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface(context),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              TeamRing(
+                value: snap.ownOverallPct,
+                color: ringColor,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Achievement',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.onSurfaceSecondary(context),
+                      ),
+                    ),
+                    Text(
+                      '${snap.ownActualCompact} / ${snap.ownTargetCompact}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      'MoM ${snap.ownMomDelta}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: momUp
+                            ? AppColors.successGreen
+                            : const Color(0xFFE11D48),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 14),
+        const Text(
+          'Performance breakdown',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 8),
+        TeamKpiBar(
+          label: 'APE',
+          actual: snap.ownApe,
+          target: snap.ownApeTarget,
+          pct: snap.ownApePct,
+        ),
+        const SizedBox(height: 8),
+        TeamKpiBar(
+          label: 'FYP',
+          actual: snap.ownFyp,
+          target: snap.ownFypTarget,
+          pct: snap.ownFypPct,
+        ),
+        const SizedBox(height: 8),
+        TeamKpiBar(
+          label: 'Subsequent FYP',
+          actual: snap.ownSfyp,
+          target: snap.ownSfypTarget,
+          pct: snap.ownSfypPct,
+        ),
+        const SizedBox(height: 8),
+        TeamKpiBar(
+          label: 'Weighted Freelance FYP',
+          actual: snap.ownWtd,
+          target: snap.ownWtdTarget,
+          pct: snap.ownWtdPct,
+        ),
+        const SizedBox(height: 14),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: snap.ownMdrtQualified
+                ? const Color(0xFFFFF7ED).withValues(alpha: 0.16)
+                : AppColors.surface(context),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                snap.ownMdrtQualified ? 'MDRT Qualified' : 'Road to MDRT',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: snap.ownMdrtQualified
+                      ? const Color(0xFFB45309)
+                      : AppColors.onSurface(context),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '${(snap.ownMdrtPct * 100).round()}% of target',
+                style: const TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: snap.ownMdrtPct.clamp(0.0, 1.0),
+                  minHeight: 8,
+                  color: snap.ownMdrtQualified
+                      ? AppColors.gold
+                      : AppColors.lightPrimary,
+                  backgroundColor:
+                      AppColors.lightPrimary.withValues(alpha: 0.12),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'Policies · New ${snap.ownNewPolicies} · Active ${snap.ownActivePolicies}',
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColors.onSurfaceSecondary(context),
+          ),
+        ),
+      ],
     );
   }
 }

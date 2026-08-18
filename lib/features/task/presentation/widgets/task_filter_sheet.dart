@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/task/presentation/models/task_mock_data.dart';
 
 const taskFilterTypes = [
@@ -206,34 +208,12 @@ class _Choice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected
-          ? AppColors.lightPrimary.withValues(alpha: 0.12)
-          : AppColors.surface(context),
-      borderRadius: BorderRadius.circular(20),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: selected ? AppColors.lightPrimary : AppColors.border(context),
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: selected
-                  ? AppColors.lightPrimary
-                  : AppColors.onSurfaceSecondary(context),
-            ),
-          ),
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      outlinedWhenIdle: true,
+      fontSize: 12,
     );
   }
 }

@@ -381,19 +381,12 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
               runSpacing: 8,
               children: [
                 for (final p in CommissionPeriodFilter.values)
-                  ChoiceChip(
-                    label: Text(commissionPeriodLabel(p)),
+                  AppSelectChip(
+                    label: commissionPeriodLabel(p),
                     selected: _period == p,
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _period = p),
-                    selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                      color: _period == p
-                          ? AppColors.lightPrimary
-                          : AppColors.onSurfaceSecondary(context),
-                    ),
+                    onTap: () => setState(() => _period = p),
+                    outlinedWhenIdle: true,
+                    fontSize: 12,
                   ),
               ],
             ),
@@ -411,34 +404,20 @@ class _HistoryFilterSheetState extends State<_HistoryFilterSheet> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                ChoiceChip(
-                  label: const Text('All'),
+                AppSelectChip(
+                  label: 'All',
                   selected: _line == null,
-                  showCheckmark: false,
-                  onSelected: (_) => setState(() => _line = null),
-                  selectedColor: AppColors.lightPrimary.withValues(alpha: 0.12),
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    color: _line == null
-                        ? AppColors.lightPrimary
-                        : AppColors.onSurfaceSecondary(context),
-                  ),
+                  onTap: () => setState(() => _line = null),
+                  outlinedWhenIdle: true,
+                  fontSize: 12,
                 ),
                 for (final line in CommissionLine.values)
-                  ChoiceChip(
-                    label: Text(line.label),
+                  AppSelectChip(
+                    label: line.label,
                     selected: _line == line,
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _line = line),
-                    selectedColor: line.color.withValues(alpha: 0.12),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                      color: _line == line
-                          ? line.color
-                          : AppColors.onSurfaceSecondary(context),
-                    ),
+                    onTap: () => setState(() => _line = line),
+                    outlinedWhenIdle: true,
+                    fontSize: 12,
                   ),
               ],
             ),

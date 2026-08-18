@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 
 class ProductSelectChip extends StatelessWidget {
@@ -8,9 +10,6 @@ class ProductSelectChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
-
-    /// When true (default), fills parent — use inside [Expanded]/[Row].
-    /// When false, sizes to label — use inside [Wrap] (Get A Quote type).
     this.expand = true,
   });
 
@@ -21,62 +20,13 @@ class ProductSelectChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = Material(
-      color: AppColors.surface(context),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              width: expand ? double.infinity : null,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : (expand
-                            ? AppColors.border(context)
-                            : Colors.transparent),
-                  width: selected ? 1.6 : (expand ? 1 : 0),
-                ),
-              ),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: expand ? 2 : 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurface(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      expand: expand,
+      outlinedWhenIdle: expand,
     );
-    return child;
   }
 }
 
@@ -95,53 +45,11 @@ class QuoteTypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: selected
-          ? AppColors.surface(context)
-          : AppColors.mutedFill(context),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected ? AppColors.lightPrimary : Colors.transparent,
-                  width: selected ? 1.6 : 0,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurface(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      mutedWhenIdle: true,
     );
   }
 }
@@ -161,58 +69,12 @@ class QuoteNameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surface(context),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(minHeight: 48),
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected ? AppColors.lightPrimary : Colors.transparent,
-                  width: selected ? 1.6 : 0,
-                ),
-              ),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13,
-                  height: 1.2,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurface(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      expand: true,
+      minHeight: 48,
     );
   }
 }

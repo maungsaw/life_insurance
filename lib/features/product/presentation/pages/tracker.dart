@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
@@ -160,11 +162,11 @@ class _ProductTrackerPageState extends State<ProductTrackerPage> {
   Widget _chip(String label, bool on, VoidCallback tap) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        label: Text(label),
+      child: AppSelectChip(
+        label: label,
         selected: on,
-        onSelected: (_) => tap(),
-        selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
+        onTap: tap,
+        outlinedWhenIdle: true,
       ),
     );
   }

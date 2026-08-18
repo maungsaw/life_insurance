@@ -254,53 +254,11 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surface(context),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.border(context),
-                  width: 1.4,
-                ),
-              ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: selected
-                      ? AppColors.lightPrimary
-                      : AppColors.onSurface(context),
-                ),
-              ),
-            ),
-            if (selected)
-              Positioned(
-                top: -5,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: const BoxDecoration(
-                    color: AppColors.lightPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSelectChip(
+      label: label,
+      selected: selected,
+      onTap: onTap,
+      outlinedWhenIdle: true,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 import 'package:life_insurance/features/dashboard/presentation/widgets/team_member_tile.dart';
 import 'package:life_insurance/features/dashboard/presentation/widgets/team_visuals.dart';
@@ -54,7 +56,7 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
               ),
               child: Column(
                 children: [
-                  TeamRing(value: ring),
+                  TeamRing(value: ring, size: 128),
                   const SizedBox(height: 8),
                   Text(
                     '$qualified / ${all.length} FAs Qualified',
@@ -165,12 +167,11 @@ class _TeamMdrtPageState extends State<TeamMdrtPage> {
   }
 
   Widget _chip(String label, MdrtLane lane) {
-    final on = _lane == lane;
-    return ChoiceChip(
-      label: Text(label),
-      selected: on,
-      onSelected: (_) => setState(() => _lane = lane),
-      selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
+    return AppSelectChip(
+      label: label,
+      selected: _lane == lane,
+      onTap: () => setState(() => _lane = lane),
+      outlinedWhenIdle: true,
     );
   }
 }

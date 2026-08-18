@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppColors, PrototypeRole;
+import 'package:life_insurance/features/components/components.dart'
+    show AppSelectChip;
 import 'package:life_insurance/features/dashboard/presentation/models/team_mock_data.dart';
 
 /// Home overlay for coach+ roles (docs/71 · FR-02.3).
@@ -80,7 +82,7 @@ class _TeamPulseCardState extends State<TeamPulseCard> {
                     ),
                   ),
                   const Text(
-                    'See team >',
+                    'See more',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -141,30 +143,29 @@ class _ScopeChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _chip(context, 'Personal Team', scope == TeamScope.personal, () {
-          onChanged(TeamScope.personal);
-        }),
+        Expanded(
+          child: _chip(context, 'Personal Team', scope == TeamScope.personal, () {
+            onChanged(TeamScope.personal);
+          }),
+        ),
         const SizedBox(width: 8),
-        _chip(context, 'Total Group', scope == TeamScope.total, () {
-          onChanged(TeamScope.total);
-        }),
+        Expanded(
+          child: _chip(context, 'Total Group', scope == TeamScope.total, () {
+            onChanged(TeamScope.total);
+          }),
+        ),
       ],
     );
   }
 
   Widget _chip(BuildContext context, String label, bool on, VoidCallback tap) {
-    return ChoiceChip(
-      label: Text(label),
+    return AppSelectChip(
+      label: label,
       selected: on,
-      onSelected: (_) => tap(),
-      selectedColor: AppColors.lightPrimary.withValues(alpha: 0.18),
-      labelStyle: TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: on ? AppColors.lightPrimary : AppColors.onSurfaceSecondary(context),
-      ),
-      visualDensity: VisualDensity.compact,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      onTap: tap,
+      expand: true,
+      outlinedWhenIdle: true,
+      fontSize: 12,
     );
   }
 }

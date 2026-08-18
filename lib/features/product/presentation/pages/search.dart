@@ -4,7 +4,7 @@ import 'package:life_insurance/core/core.dart' show AppColors, AppRoute;
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_widgets.dart';
 
-/// Full-screen product search — blue AppBar + pill field (docs/59 P1).
+/// Full-screen product search — surface AppBar + pill field (docs/59 · 96 · 97).
 class ProductSearchPage extends StatefulWidget {
   const ProductSearchPage({super.key, this.initialQuery = ''});
 
@@ -40,38 +40,26 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     return Scaffold(
       backgroundColor: AppColors.surface(context),
       appBar: AppBar(
-        backgroundColor: AppColors.lightPrimary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.surface(context),
+        foregroundColor: AppColors.onSurface(context),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+        scrolledUnderElevation: 0,
+        toolbarHeight: 64,
+        leadingWidth: 64,
+        titleSpacing: 0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8),
+          child: IconButton(
+            tooltip: 'Back',
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => context.pop(),
+          ),
         ),
-        title: TextField(
-          controller: _ctrl,
-          autofocus: true,
-          onChanged: (_) => setState(() {}),
-          style: TextStyle(color: AppColors.surface(context), fontWeight: FontWeight.w600),
-          cursorColor: Colors.white,
-          decoration: InputDecoration(
-            hintText: 'Search products',
-            hintStyle: TextStyle(color: AppColors.surface(context).withValues(alpha: 0.7)),
-            prefixIcon: const Icon(Icons.search, color: Colors.white),
-            filled: true,
-            fillColor: AppColors.surface(context).withValues(alpha: 0.18),
-            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide(color: AppColors.surface(context).withValues(alpha: 0.5)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide(color: AppColors.surface(context).withValues(alpha: 0.5)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(24),
-              borderSide: BorderSide(color: AppColors.surface(context)),
-            ),
+        title: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 10, 16, 10),
+          child: _SearchField(
+            controller: _ctrl,
+            onChanged: () => setState(() {}),
           ),
         ),
       ),
@@ -121,6 +109,79 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 ],
               ],
             ),
+    );
+  }
+}
+
+class _SearchField extends StatelessWidget {
+  const _SearchField({required this.controller, required this.onChanged});
+
+  final TextEditingController controller;
+  final VoidCallback onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final pillFill = AppColors.mutedFill(context);
+    final iconColor = AppColors.lightPrimary;
+    final textColor = AppColors.onSurface(context);
+    final hintColor = AppColors.hint(context);
+    final radius = BorderRadius.circular(24);
+    final restBorder = BorderSide(color: AppColors.border(context));
+    final focusBorder = const BorderSide(
+      color: AppColors.lightPrimary,
+      width: 1.6,
+    );
+
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        final hasQuery = controller.text.isNotEmpty;
+        return TextField(
+          controller: controller,
+          autofocus: true,
+          onChanged: (_) => onChanged(),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+          cursorColor: iconColor,
+          decoration: InputDecoration(
+            hintText: 'Search products',
+            hintStyle: TextStyle(color: hintColor, fontWeight: FontWeight.w500),
+            prefixIcon: Icon(Icons.search, color: iconColor, size: 22),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 40,
+              minHeight: 40,
+            ),
+            suffixIcon: hasQuery
+                ? IconButton(
+                    tooltip: 'Clear',
+                    icon: Icon(Icons.close, color: iconColor, size: 20),
+                    onPressed: () {
+                      controller.clear();
+                      onChanged();
+                    },
+                  )
+                : null,
+            isDense: true,
+            filled: true,
+            fillColor: pillFill,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 8,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: radius,
+              borderSide: restBorder,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: radius,
+              borderSide: restBorder,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: radius,
+              borderSide: focusBorder,
+            ),
+          ),
+        );
+      },
     );
   }
 }

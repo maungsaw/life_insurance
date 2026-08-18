@@ -23,4 +23,5 @@ export 'app_promo_carousel.dart';
 export 'app_galaxy_member_banner.dart';
 export 'app_notification_tile.dart';
 export 'auth_gate.dart';
+export 'app_select_chip.dart';
 

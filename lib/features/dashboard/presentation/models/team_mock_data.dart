@@ -154,6 +154,21 @@ class TeamSnapshot {
     this.ownMdrt = '64%',
     this.ownNewPolicies = '4',
     this.ownActivePolicies = '20',
+    this.ownApeTarget = '8,700,000.00',
+    this.ownFypTarget = '11,800,000.00',
+    this.ownSfyp = '1,680,000.00',
+    this.ownSfypTarget = '2,400,000.00',
+    this.ownWtd = '7,980,000.00',
+    this.ownWtdTarget = '11,200,000.00',
+    this.ownApePct = '71%',
+    this.ownFypPct = '71%',
+    this.ownSfypPct = '70%',
+    this.ownWtdPct = '71%',
+    this.ownActualCompact = '8.4M',
+    this.ownTargetCompact = '11.8M',
+    this.ownMomDelta = '+4.2%',
+    this.ownMdrtPct = 0.64,
+    this.ownMdrtQualified = false,
     this.periodLabel = '14 Aug 2026',
   });
 
@@ -190,6 +205,21 @@ class TeamSnapshot {
   final String ownMdrt;
   final String ownNewPolicies;
   final String ownActivePolicies;
+  final String ownApeTarget;
+  final String ownFypTarget;
+  final String ownSfyp;
+  final String ownSfypTarget;
+  final String ownWtd;
+  final String ownWtdTarget;
+  final String ownApePct;
+  final String ownFypPct;
+  final String ownSfypPct;
+  final String ownWtdPct;
+  final String ownActualCompact;
+  final String ownTargetCompact;
+  final String ownMomDelta;
+  final double ownMdrtPct;
+  final bool ownMdrtQualified;
   final String periodLabel;
 
   String pulseSubtitle(TeamScope scope) {

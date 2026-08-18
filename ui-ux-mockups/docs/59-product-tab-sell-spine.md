@@ -227,7 +227,7 @@ Side-by-side Feature table · Pin · **no** dual BUY. Optional “Use this produ
 
 ### J. Search screen — P1
 
-Blue AppBar · pill search · results grouped by line. P0 can filter the in-tab catalog instead.
+Surface AppBar (same chrome as Detail / Quote — `97`) · inset pill search (`96`) · results grouped by line. P0 can filter the in-tab catalog instead.
 
 ---
 
