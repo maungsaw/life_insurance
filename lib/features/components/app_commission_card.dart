@@ -131,6 +131,7 @@ class _AppCommissionCardState extends State<AppCommissionCard> {
       child: InkWell(
         onTap: widget.onDetails,
         borderRadius: BorderRadius.circular(20),
+        splashFactory: InkRipple.splashFactory,
         child: card,
       ),
     );

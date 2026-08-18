@@ -35,9 +35,24 @@ abstract class AppTheme {
     required Color border,
   }) {
     final isDark = brightness == Brightness.dark;
+    final pressTint = primary.withValues(alpha: isDark ? 0.16 : 0.10);
+    final softTint = primary.withValues(alpha: isDark ? 0.12 : 0.08);
+    WidgetStateProperty<Color?> actionOverlay() =>
+        WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.pressed)) return pressTint;
+          if (states.contains(WidgetState.focused)) return softTint;
+          // Keep hover/long-press feel "motion first": no sticky tint slab.
+          if (states.contains(WidgetState.hovered)) return Colors.transparent;
+          return Colors.transparent;
+        });
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
+      splashFactory: InkRipple.splashFactory,
+      splashColor: pressTint,
+      highlightColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      focusColor: primary.withValues(alpha: 0.10),
       primaryColor: primary,
       scaffoldBackgroundColor: background,
       canvasColor: background,
@@ -103,25 +118,42 @@ abstract class AppTheme {
         }),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
-          foregroundColor: AppColors.onPrimary,
-          elevation: 0,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(primary),
+          foregroundColor: const WidgetStatePropertyAll(AppColors.onPrimary),
+          elevation: const WidgetStatePropertyAll(0),
+          overlayColor: actionOverlay(),
+          splashFactory: InkRipple.splashFactory,
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          backgroundColor: primary,
-          foregroundColor: AppColors.onPrimary,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(primary),
+          foregroundColor: const WidgetStatePropertyAll(AppColors.onPrimary),
+          overlayColor: actionOverlay(),
+          splashFactory: InkRipple.splashFactory,
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: primary),
+        style: ButtonStyle(
+          foregroundColor: WidgetStatePropertyAll(primary),
+          overlayColor: actionOverlay(),
+          splashFactory: InkRipple.splashFactory,
+        ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: primary,
-          side: BorderSide(color: primary),
+        style: ButtonStyle(
+          foregroundColor: WidgetStatePropertyAll(primary),
+          side: WidgetStatePropertyAll(BorderSide(color: primary)),
+          overlayColor: actionOverlay(),
+          splashFactory: InkRipple.splashFactory,
+        ),
+      ),
+      iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStatePropertyAll(onSurface),
+          overlayColor: actionOverlay(),
+          splashFactory: InkRipple.splashFactory,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -165,6 +197,7 @@ abstract class AppTheme {
         backgroundColor: surface,
         indicatorColor: primary.withValues(alpha: 0.2),
         iconTheme: WidgetStateProperty.all(IconThemeData(color: onSurface)),
+        overlayColor: actionOverlay(),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.lightPrimary,
@@ -180,6 +213,7 @@ abstract class AppTheme {
         selectedColor: primary.withValues(alpha: 0.18),
         labelStyle: TextStyle(color: onSurface),
         side: BorderSide(color: border),
+        surfaceTintColor: Colors.transparent,
       ),
       popupMenuTheme: PopupMenuThemeData(
         color: surface,

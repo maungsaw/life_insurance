@@ -23,6 +23,7 @@ class AppServiceTile extends StatelessWidget {
     return InkWell(
       onTap: item.onTap,
       borderRadius: BorderRadius.circular(16),
+      splashFactory: InkRipple.splashFactory,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

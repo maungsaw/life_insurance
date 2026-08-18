@@ -85,6 +85,7 @@ class AppPolicyStatCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(14),
+        splashFactory: InkRipple.splashFactory,
         child: card,
       ),
     );

@@ -14,6 +14,7 @@ class AppGalaxyMemberBanner extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
+        splashFactory: InkRipple.splashFactory,
         child: Ink(
           height: 96,
           decoration: BoxDecoration(

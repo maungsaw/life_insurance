@@ -153,3 +153,8 @@
 - [x] Product tab inline search (same screen) brainstorm (`105`)
 - [x] Product tab inline search (same screen) shipped (`105`)
 - [x] Product inline search drop-in under header (`106`)
+- [x] Action press motion + no sticky hover brainstorm (`107`)
+- [x] Action press motion + no sticky hover shipped (`107`)
+- [x] Action press motion intensity tuned (`108`)
+- [x] Action overlay unified on all button/icon actions (`109`)
+- [x] AppButton/AppSelectChip feedback consistency (`110`)

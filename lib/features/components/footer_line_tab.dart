@@ -23,6 +23,7 @@ class AppFooterLineTab extends StatelessWidget {
           final isSelected = selectedIndex == index;
           return InkWell(
             onTap: () => onTabSelected(index),
+            splashFactory: InkRipple.splashFactory,
             child: Container(
               padding: const .symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(

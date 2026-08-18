@@ -138,6 +138,7 @@ class _NavCenterFab extends StatelessWidget {
       color: AppColors.navPill(context),
       child: InkWell(
         customBorder: const CircleBorder(),
+        splashFactory: InkRipple.splashFactory,
         onTap: onPressed,
         child: SizedBox(
           width: AppBottomNavBar.fabSize,
@@ -196,6 +197,7 @@ class _NavItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
+      splashFactory: InkRipple.splashFactory,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

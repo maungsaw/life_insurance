@@ -103,6 +103,7 @@ class AppSoftBanner extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
+        splashFactory: InkRipple.splashFactory,
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(

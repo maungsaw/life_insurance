@@ -24,6 +24,7 @@ class AppNotificationTile extends StatelessWidget {
       color: AppColors.surface(context),
       child: InkWell(
         onTap: onTap,
+        splashFactory: InkRipple.splashFactory,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(

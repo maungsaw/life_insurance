@@ -34,6 +34,15 @@ class AppSelectChip extends StatelessWidget {
         : Colors.transparent;
     final borderColor = selected ? AppColors.lightPrimary : idleBorder;
     final borderWidth = selected ? 1.6 : (outlinedWhenIdle ? 1.0 : 0.0);
+    final isDark = AppColors.isDark(context);
+    final pressTint = AppColors.lightPrimary.withValues(alpha: isDark ? 0.16 : 0.10);
+    final softTint = AppColors.lightPrimary.withValues(alpha: isDark ? 0.12 : 0.08);
+    final overlay = WidgetStateProperty.resolveWith<Color?>((states) {
+      if (states.contains(WidgetState.pressed)) return pressTint;
+      if (states.contains(WidgetState.focused)) return softTint;
+      if (states.contains(WidgetState.hovered)) return Colors.transparent;
+      return Colors.transparent;
+    });
 
     final chip = Material(
       color: idleFill,
@@ -41,6 +50,8 @@ class AppSelectChip extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(10),
+        overlayColor: overlay,
+        splashFactory: InkRipple.splashFactory,
         child: Stack(
           children: [
             Container(

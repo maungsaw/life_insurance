@@ -29,6 +29,15 @@ class AppButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null && !isLoading;
+    final isDark = AppColors.isDark(context);
+    final pressTint = AppColors.lightPrimary.withValues(alpha: isDark ? 0.16 : 0.10);
+    final softTint = AppColors.lightPrimary.withValues(alpha: isDark ? 0.12 : 0.08);
+    final overlay = WidgetStateProperty.resolveWith<Color?>((states) {
+      if (states.contains(WidgetState.pressed)) return pressTint;
+      if (states.contains(WidgetState.focused)) return softTint;
+      if (states.contains(WidgetState.hovered)) return Colors.transparent;
+      return Colors.transparent;
+    });
     final labelStyle = TextStyle(fontSize: fontSize, fontWeight: FontWeight.w700);
     final labelChild = FittedBox(
       fit: BoxFit.scaleDown,
@@ -72,6 +81,9 @@ class AppButton extends StatelessWidget {
               minimumSize: Size(0, height),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ).copyWith(
+              overlayColor: overlay,
+              splashFactory: InkRipple.splashFactory,
             ),
             child: child,
           ),
@@ -88,6 +100,9 @@ class AppButton extends StatelessWidget {
               padding: padding,
               minimumSize: Size(0, height),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ).copyWith(
+              overlayColor: overlay,
+              splashFactory: InkRipple.splashFactory,
             ),
             child: isLoading
                 ? const SizedBox(
@@ -104,6 +119,10 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.text:
         return TextButton(
           onPressed: enabled ? onPressed : null,
+          style: TextButton.styleFrom().copyWith(
+            overlayColor: overlay,
+            splashFactory: InkRipple.splashFactory,
+          ),
           child: Text(
             label,
             style: TextStyle(
