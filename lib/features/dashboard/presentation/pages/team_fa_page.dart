@@ -15,6 +15,7 @@ class TeamFaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final member = TeamMockData.memberById(memberId);
+    final isDark = AppColors.isDark(context);
     final ringColor = member != null && member.ringValue >= 0.9
         ? AppColors.successGreen
         : AppColors.lightPrimary;
@@ -91,6 +92,11 @@ class TeamFaPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.surface(context),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppColors.border(context).withValues(
+                        alpha: isDark ? 0.55 : 0.85,
+                      ),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -121,7 +127,13 @@ class TeamFaPage extends StatelessWidget {
                             ),
                             Text(
                               'MoM ${member.momDelta}',
-                              style: TextStyle(fontSize: 12),
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: member.momDelta.startsWith('+')
+                                    ? AppColors.success(context)
+                                    : const Color(0xFFE11D48),
+                              ),
                             ),
                           ],
                         ),
@@ -172,9 +184,16 @@ class TeamFaPage extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: member.qualified
-                        ? const Color(0xFFFFF7ED)
-                        : Colors.white,
+                        ? const Color(0xFFFFF7ED).withValues(
+                            alpha: isDark ? 0.18 : 1,
+                          )
+                        : AppColors.surface(context),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppColors.border(context).withValues(
+                        alpha: isDark ? 0.55 : 0.85,
+                      ),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

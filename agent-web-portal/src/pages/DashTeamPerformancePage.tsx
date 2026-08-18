@@ -19,6 +19,22 @@ type FaRow = {
   flag: Flag
 }
 
+type OwnPerformance = {
+  name: string
+  code: string
+  roleLine: string
+  district: string
+  ape: string
+  fyp: string
+  sfyp: string
+  mdrt: string
+  k1: string
+  k2: string
+  weightedFreelance: string
+  weightedInternal: string
+  flag: Flag
+}
+
 const ROWS: FaRow[] = [
   {
     name: 'Thura Htun',
@@ -58,6 +74,54 @@ const ROWS: FaRow[] = [
   },
 ]
 
+const OWN_BY_HAT: Record<'manager' | 'fte' | 'admin', OwnPerformance> = {
+  manager: {
+    name: 'Aye Chan',
+    code: 'AGT-10284',
+    roleLine: 'DM · Yangon',
+    district: 'Yangon',
+    ape: '2,100,000.00',
+    fyp: '2,450,000.00',
+    sfyp: '410,000.00',
+    mdrt: '22.4M',
+    k1: '88%',
+    k2: '84%',
+    weightedFreelance: '1,820,000.00',
+    weightedInternal: '1,650,000.00',
+    flag: 'ok',
+  },
+  fte: {
+    name: 'Khin Htet',
+    code: 'HQ-2201',
+    roleLine: 'HOA · Portfolio',
+    district: 'All districts',
+    ape: '6,300,000.00',
+    fyp: '7,480,000.00',
+    sfyp: '1,230,000.00',
+    mdrt: '48.0M',
+    k1: '91%',
+    k2: '87%',
+    weightedFreelance: '5,100,000.00',
+    weightedInternal: '4,650,000.00',
+    flag: 'ok',
+  },
+  admin: {
+    name: 'Ops May',
+    code: 'HQ-0001',
+    roleLine: 'Super Admin · HQ',
+    district: 'HQ',
+    ape: '5,800,000.00',
+    fyp: '6,900,000.00',
+    sfyp: '1,020,000.00',
+    mdrt: '44.0M',
+    k1: '89%',
+    k2: '86%',
+    weightedFreelance: '4,400,000.00',
+    weightedInternal: '4,000,000.00',
+    flag: 'warn',
+  },
+}
+
 function flagPill(f: Flag) {
   if (f === 'ok') return <Pill tone="ok">OK</Pill>
   if (f === 'warn') return <Pill tone="warn">Watch</Pill>
@@ -66,12 +130,14 @@ function flagPill(f: Flag) {
 
 export function DashTeamPerformancePage() {
   const { mode, wtdLabel } = useDashboardFilters()
-  const { caps } = useAuth()
+  const { caps, hat, profile } = useAuth()
   const [open, setOpen] = useState<FaRow | null>(null)
   const [exported, setExported] = useState(false)
   const [district, setDistrict] = useState('all')
+  const [panel, setPanel] = useState<'team' | 'own'>('team')
 
   const visible = ROWS.filter((r) => district === 'all' || r.district === district)
+  const own = OWN_BY_HAT[hat]
 
   const wtd = (row: FaRow) =>
     mode === 'freelance'
@@ -85,6 +151,9 @@ export function DashTeamPerformancePage() {
         : row.name === 'Aye Chan'
           ? '1,650,000.00'
           : '3,120,000.00'
+
+  const ownWtd =
+    mode === 'freelance' ? own.weightedFreelance : own.weightedInternal
 
   return (
     <div>
@@ -100,6 +169,26 @@ export function DashTeamPerformancePage() {
       />
 
       <DashboardFilterBar />
+      <div className="mb-3 inline-flex rounded-full bg-soft p-1">
+        <button
+          type="button"
+          onClick={() => setPanel('team')}
+          className={`rounded-full px-3.5 py-1.5 text-xs font-extrabold transition ${
+            panel === 'team' ? 'bg-steel text-white' : 'text-muted hover:text-deep'
+          }`}
+        >
+          Team performance
+        </button>
+        <button
+          type="button"
+          onClick={() => setPanel('own')}
+          className={`rounded-full px-3.5 py-1.5 text-xs font-extrabold transition ${
+            panel === 'own' ? 'bg-steel text-white' : 'text-muted hover:text-deep'
+          }`}
+        >
+          Own performance
+        </button>
+      </div>
 
       <label className="mb-3 flex max-w-xs flex-col gap-1 text-[11px] font-bold text-muted">
         District (this table)
@@ -116,7 +205,35 @@ export function DashTeamPerformancePage() {
         </select>
       </label>
 
+      {panel === 'own' ? (
+        <Card className="mb-3.5">
+          <div className="grid gap-3 md:grid-cols-2">
+            <div>
+              <h3 className="text-base font-extrabold text-deep">Own performance</h3>
+              <p className="text-xs text-muted">
+                {profile.label} · {own.roleLine}
+              </p>
+              <div className="mt-2 text-sm text-muted">
+                {own.name} · {own.code} · {own.district}
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <Metric label="APE" value={own.ape} />
+              <Metric label="FYP" value={own.fyp} />
+              <Metric label="SFYP" value={own.sfyp} />
+              <Metric label={wtdLabel} value={ownWtd} />
+              <Metric label="MDRT" value={own.mdrt} />
+              <Metric label="K1 / K2" value={`${own.k1} / ${own.k2}`} />
+            </div>
+          </div>
+          <div className="mt-3">{flagPill(own.flag)}</div>
+        </Card>
+      ) : null}
+
       <Card>
+        {panel === 'own' ? (
+          <p className="mb-3 text-xs font-bold text-muted uppercase">Team under you</p>
+        ) : null}
         {visible.length === 0 ? (
           <EmptyState
             title="No FAs in this filter"
@@ -194,6 +311,15 @@ export function DashTeamPerformancePage() {
           Dates are DD-MMM-YYYY. Amounts use 2 decimals and commas. Commission payout is not included.
         </p>
       </Dialog>
+    </div>
+  )
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-line bg-soft/40 px-3 py-2">
+      <div className="text-[11px] font-bold text-muted">{label}</div>
+      <div className="text-sm font-extrabold text-deep">{value}</div>
     </div>
   )
 }

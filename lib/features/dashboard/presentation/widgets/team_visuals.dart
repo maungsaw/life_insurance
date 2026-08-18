@@ -23,6 +23,9 @@ class TeamRing extends StatelessWidget {
     final v = value.clamp(0.0, 1.0);
     final stroke = size > 80 ? 10.0 : 7.0;
     final pct = '${(v * 100).round()}%';
+    final track = AppColors.isDark(context)
+        ? AppColors.mutedFill(context)
+        : color.withValues(alpha: 0.14);
     return SizedBox(
       width: size,
       height: size,
@@ -30,7 +33,7 @@ class TeamRing extends StatelessWidget {
         painter: _TeamRingPainter(
           value: v,
           color: color,
-          trackColor: color.withValues(alpha: 0.14),
+          trackColor: track,
           stroke: stroke,
         ),
         child: Center(
@@ -113,11 +116,17 @@ class TeamKpiBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final v = (pctValue ?? _parsePct(pct)).clamp(0.0, 1.0);
+    final isDark = AppColors.isDark(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.border(context).withValues(
+            alpha: isDark ? 0.55 : 0.85,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +173,9 @@ class TeamKpiBar extends StatelessWidget {
               value: v,
               minHeight: 6,
               color: AppColors.lightPrimary,
-              backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.12),
+              backgroundColor: isDark
+                  ? AppColors.mutedFill(context)
+                  : AppColors.lightPrimary.withValues(alpha: 0.12),
             ),
           ),
         ],
@@ -186,9 +197,10 @@ class TeamMdrtBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = AppColors.isDark(context);
     final (bg, fg, text) = switch (member.badgeKind) {
       TeamBadgeKind.qualified => (
-        const Color(0xFFFFF7ED),
+        const Color(0xFFFFF7ED).withValues(alpha: isDark ? 0.18 : 1),
         const Color(0xFFB45309),
         'MDRT Qualified',
       ),
@@ -203,12 +215,12 @@ class TeamMdrtBadge extends StatelessWidget {
         'Below target',
       ),
       TeamBadgeKind.notYet => (
-        const Color(0xFFF1F5F9),
+        isDark ? AppColors.mutedFill(context) : const Color(0xFFF1F5F9),
         AppColors.onSurfaceSecondary(context),
         'Not Yet',
       ),
       TeamBadgeKind.onTrack => (
-        const Color(0xFFF1F5F9),
+        isDark ? AppColors.mutedFill(context) : const Color(0xFFF1F5F9),
         AppColors.onSurfaceSecondary(context),
         'On Track',
       ),
@@ -248,11 +260,17 @@ class TeamCountChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = AppColors.isDark(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: AppColors.surface(context),
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.border(context).withValues(
+            alpha: isDark ? 0.55 : 0.85,
+          ),
+        ),
       ),
       child: Column(
         children: [
@@ -312,6 +330,7 @@ class TeamOwnPerformanceBody extends StatelessWidget {
         ? AppColors.successGreen
         : AppColors.lightPrimary;
     final momUp = snap.ownMomDelta.startsWith('+');
+    final isDark = AppColors.isDark(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,6 +340,11 @@ class TeamOwnPerformanceBody extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.surface(context),
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.border(context).withValues(
+                alpha: isDark ? 0.55 : 0.85,
+              ),
+            ),
           ),
           child: Row(
             children: [
@@ -405,6 +429,11 @@ class TeamOwnPerformanceBody extends StatelessWidget {
                 ? const Color(0xFFFFF7ED).withValues(alpha: 0.16)
                 : AppColors.surface(context),
             borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.border(context).withValues(
+                alpha: isDark ? 0.55 : 0.85,
+              ),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,8 +462,9 @@ class TeamOwnPerformanceBody extends StatelessWidget {
                   color: snap.ownMdrtQualified
                       ? AppColors.gold
                       : AppColors.lightPrimary,
-                  backgroundColor:
-                      AppColors.lightPrimary.withValues(alpha: 0.12),
+                  backgroundColor: isDark
+                      ? AppColors.mutedFill(context)
+                      : AppColors.lightPrimary.withValues(alpha: 0.12),
                 ),
               ),
             ],

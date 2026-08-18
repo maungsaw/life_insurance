@@ -79,7 +79,7 @@ export function UsersPage() {
                 <Td>
                   {p.devices > 0 ? (
                     <Link to="/management/devices" className="text-xs font-bold text-steel">
-                      {p.devices} device{p.devices === 1 ? '' : 's'}
+                      1 device
                     </Link>
                   ) : (
                     <span className="text-xs text-muted">—</span>
