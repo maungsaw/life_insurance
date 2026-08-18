@@ -82,7 +82,6 @@ class AppBottomNavBar extends StatelessWidget {
                   outline: AppColors.isDark(context)
                       ? AppColors.border(context)
                       : null,
-                  darkHalo: AppColors.isDark(context),
                   horizontalInset: horizontalInset,
                   topInset: shadowSpread,
                 ),
@@ -226,13 +225,11 @@ class _PillNotchPainter extends CustomPainter {
     required this.horizontalInset,
     required this.topInset,
     this.outline,
-    this.darkHalo = false,
   });
 
   final double notchRadius;
   final Color color;
   final Color? outline;
-  final bool darkHalo;
   final double horizontalInset;
   final double topInset;
 
@@ -258,11 +255,9 @@ class _PillNotchPainter extends CustomPainter {
 
     final path = Path.combine(PathOperation.difference, pill, notch);
 
-    if (darkHalo) {
-      canvas.drawShadow(path, Colors.white.withValues(alpha: 0.10), 14, false);
-    } else {
-      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.12), 16, false);
-      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.20), 8, false);
+    // Light: one contact shadow. Dark: hairline only — no white glow rings (docs/104).
+    if (outline == null) {
+      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.16), 10, false);
     }
     canvas.drawPath(path, Paint()..color = color);
     if (outline != null) {
@@ -281,7 +276,6 @@ class _PillNotchPainter extends CustomPainter {
       oldDelegate.notchRadius != notchRadius ||
       oldDelegate.color != color ||
       oldDelegate.outline != outline ||
-      oldDelegate.darkHalo != darkHalo ||
       oldDelegate.horizontalInset != horizontalInset ||
       oldDelegate.topInset != topInset;
 }

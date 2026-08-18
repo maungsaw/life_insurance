@@ -94,7 +94,7 @@ void main() {
       );
     }
 
-    expect(materialOf('Saving').color, AppColors.darkSurface);
+    expect(materialOf('Saving').color, const Color(0xFF2A2A2A));
     expect(materialOf('Travel').color, const Color(0xFF2A2A2A));
     expect(materialOf('Travel').color, isNot(const Color(0xFFF1F5F9)));
     expect(materialOf('Saving').color, isNot(Colors.white));
@@ -132,6 +132,34 @@ void main() {
     expect(home.style?.color, AppColors.lightPrimary);
     expect(customer.style?.color, const Color(0xFFC8C8C8));
     expect(customer.style?.color, isNot(const Color(0xFF2D2D2D)));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('dark pill nav paints without a stacked halo exception', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.dark,
+        home: Scaffold(
+          backgroundColor: AppColors.darkBackground,
+          bottomNavigationBar: AppBottomNavBar(
+            selectedIndex: 1,
+            onTap: (_) {},
+            onFabPressed: () {},
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(CustomPaint), findsWidgets);
+    expect(find.text('Customer'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

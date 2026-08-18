@@ -149,3 +149,4 @@
 - [x] Lead detail drop Message bubble brainstorm (`103`)
 - [x] Lead detail drop Message bubble shipped (`103`)
 - [x] Pill nav one shadow (no stacked bands) brainstorm (`104`)
+- [x] Pill nav one shadow (no stacked bands) shipped (`104`)
