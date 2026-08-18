@@ -18,16 +18,29 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
   final _passwordCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
   String _password = '';
+  String _confirm = '';
   String? _passwordError;
   String? _confirmError;
+  String? _reasonError;
   bool _submitting = false;
 
   bool get _isUpdate => widget.args.mode == AuthPasswordMode.update;
+
+  static const _reasons = [
+    'Forgot current password',
+    'Account security concern',
+    'Password expired',
+    'Other',
+  ];
+
+  String? _updateReason;
+  final _otherReasonCtrl = TextEditingController();
 
   @override
   void dispose() {
     _passwordCtrl.dispose();
     _confirmCtrl.dispose();
+    _otherReasonCtrl.dispose();
     super.dispose();
   }
 
@@ -41,6 +54,26 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
       _confirmError = !match ? 'Passwords do not match' : null;
     });
     if (_passwordError != null || _confirmError != null) return;
+
+    if (_isUpdate) {
+      final hasSelected = _updateReason != null;
+      final otherOk = _updateReason != 'Other' ||
+          _otherReasonCtrl.text.trim().isNotEmpty;
+      if (!hasSelected || !otherOk) {
+        setState(() {
+          if (_updateReason == null) {
+            _reasonError = 'Remark reason is required';
+          } else if (_updateReason == 'Other' &&
+              _otherReasonCtrl.text.trim().isEmpty) {
+            _reasonError = 'Please enter your reason';
+          } else {
+            _reasonError = 'Remark reason is required';
+          }
+        });
+        return;
+      }
+      _reasonError = null;
+    }
 
     setState(() => _submitting = true);
     await Future<void>.delayed(PrototypeConfig.mediumDelay);
@@ -103,9 +136,16 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              _isUpdate ? 'Update Password' : 'Create Password',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    _isUpdate ? 'Update Password' : 'Create Password',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             AppTextField(
@@ -131,12 +171,104 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
               errorText: _confirmError,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _submit(),
-              onChanged: (_) {
-                if (_confirmError != null) setState(() => _confirmError = null);
+              onChanged: (v) {
+                setState(() {
+                  _confirm = v;
+                  if (_confirmError != null) _confirmError = null;
+                  if (_reasonError != null) _reasonError = null;
+                });
               },
             ),
             const SizedBox(height: 20),
             AppPasswordRules(password: _password),
+            if (_isUpdate) ...[
+              const SizedBox(height: 16),
+              Builder(
+                builder: (_) {
+                  final showReason = _password.isNotEmpty &&
+                          _confirm.isNotEmpty ||
+                      _reasonError != null;
+                  if (!showReason) return const SizedBox.shrink();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Remark reason',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (final r in _reasons)
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              _updateReason = r;
+                              if (r != 'Other') {
+                                _otherReasonCtrl.clear();
+                              }
+                              _reasonError = null;
+                            });
+                          },
+                          splashFactory: InkRipple.splashFactory,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  _updateReason == r
+                                      ? Icons.radio_button_checked
+                                      : Icons.radio_button_unchecked,
+                                  size: 20,
+                                  color: _updateReason == r
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    r,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (_updateReason == 'Other') ...[
+                        const SizedBox(height: 4),
+                        AppTextField(
+                          label: 'Reason',
+                          hintText: 'Enter your reason',
+                          controller: _otherReasonCtrl,
+                          errorText: _reasonError,
+                          onChanged: (_) {
+                            if (_reasonError != null) {
+                              setState(() => _reasonError = null);
+                            }
+                          },
+                        ),
+                      ] else if (_reasonError != null) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          _reasonError!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ],
+                    ],
+                  );
+                },
+              ),
+            ],
             const SizedBox(height: 28),
             AppButton(
               label: 'SAVE',
@@ -149,3 +281,4 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     );
   }
 }
+
