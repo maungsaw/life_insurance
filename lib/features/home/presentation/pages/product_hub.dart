@@ -17,11 +17,19 @@ class ProductHubPage extends StatefulWidget {
 
 class _ProductHubPageState extends State<ProductHubPage> {
   ProductLine? _line;
+  bool _searching = false;
+  final _search = TextEditingController();
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final list = ProductMockData.filtered(
-      query: '',
+      query: _search.text,
       line: _line,
     );
     final grouped = <ProductLine, List<CatalogProduct>>{};
@@ -62,40 +70,59 @@ class _ProductHubPageState extends State<ProductHubPage> {
                     ),
                   ],
                   IconButton(
-                    tooltip: 'Search',
-                    onPressed: () => context.push(AppRoute.productSearch),
-                    icon: const Icon(Icons.search),
+                    tooltip: _searching ? 'Close search' : 'Search',
+                    onPressed: () {
+                      setState(() {
+                        if (_searching) _search.clear();
+                        _searching = !_searching;
+                      });
+                    },
+                    icon: Icon(_searching ? Icons.close : Icons.search),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              height: 44,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  _Chip(
-                    label: 'All',
-                    selected: _line == null,
-                    onTap: () => setState(() => _line = null),
-                  ),
-                  ...ProductMockData.linesInCatalog.map(
-                    (line) => _Chip(
-                      label: switch (line) {
-                        ProductLine.protection => 'Protection',
-                        ProductLine.saving => 'Saving',
-                        ProductLine.travel => 'Travel',
-                        ProductLine.health => 'Health',
-                        ProductLine.bundled => 'Bundled',
-                      },
-                      selected: _line == line,
-                      onTap: () => setState(() => _line = line),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              child: _searching
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+                      child: _InlineSearchField(
+                        controller: _search,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            if (!_searching)
+              SizedBox(
+                height: 44,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    _Chip(
+                      label: 'All',
+                      selected: _line == null,
+                      onTap: () => setState(() => _line = null),
                     ),
-                  ),
-                ],
+                    ...ProductMockData.linesInCatalog.map(
+                      (line) => _Chip(
+                        label: switch (line) {
+                          ProductLine.protection => 'Protection',
+                          ProductLine.saving => 'Saving',
+                          ProductLine.travel => 'Travel',
+                          ProductLine.health => 'Health',
+                          ProductLine.bundled => 'Bundled',
+                        },
+                        selected: _line == line,
+                        onTap: () => setState(() => _line = line),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
             const SizedBox(height: 8),
             Expanded(
               child: list.isEmpty
@@ -190,6 +217,52 @@ class _Chip extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InlineSearchField extends StatelessWidget {
+  const _InlineSearchField({
+    required this.controller,
+    required this.onChanged,
+  });
+
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = BorderRadius.circular(24);
+    return TextField(
+      controller: controller,
+      autofocus: true,
+      onChanged: onChanged,
+      style: TextStyle(
+        color: AppColors.onSurface(context),
+        fontWeight: FontWeight.w600,
+      ),
+      cursorColor: AppColors.lightPrimary,
+      decoration: InputDecoration(
+        hintText: 'Search products',
+        hintStyle: TextStyle(color: AppColors.hint(context)),
+        isDense: true,
+        filled: true,
+        fillColor: AppColors.mutedFill(context),
+        prefixIcon: const Icon(Icons.search, color: AppColors.lightPrimary, size: 22),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        border: OutlineInputBorder(
+          borderRadius: radius,
+          borderSide: BorderSide(color: AppColors.border(context)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: radius,
+          borderSide: BorderSide(color: AppColors.border(context)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: radius,
+          borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.6),
         ),
       ),
     );

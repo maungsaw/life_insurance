@@ -150,3 +150,6 @@
 - [x] Lead detail drop Message bubble shipped (`103`)
 - [x] Pill nav one shadow (no stacked bands) brainstorm (`104`)
 - [x] Pill nav one shadow (no stacked bands) shipped (`104`)
+- [x] Product tab inline search (same screen) brainstorm (`105`)
+- [x] Product tab inline search (same screen) shipped (`105`)
+- [x] Product inline search drop-in under header (`106`)
