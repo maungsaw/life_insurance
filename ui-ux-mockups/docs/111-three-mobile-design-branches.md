@@ -168,5 +168,5 @@ cd ui-ux-mockups && python3 -m http.server 8080
 - [x] Brainstorm + branch naming  
 - [x] P0 HTML wireframes (guest · auth · home · customer · tasks)  
 - [x] Git branches from `origin/main`  
-- [ ] Stakeholder review session  
+- [x] Stakeholder review session (deck `stakeholder-meeting/index.html` · doc `112`)  
 - [ ] Flutter theme + shell on selected branch  

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KBZ LIFE · Mobile UI Stakeholder Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --card: #fff;
+  --brand: #003554;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--ink);
+  background: #0b1220;
+}
+.deck { height: 100vh; display: flex; flex-direction: column; }
+.toolbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 20px; background: rgba(15,23,42,.95); color: #94a3b8;
+  font-size: 12px; border-bottom: 1px solid #1e293b; flex-shrink: 0;
+}
+.toolbar strong { color: #f8fafc; font-size: 13px; }
+.toolbar nav { display: flex; gap: 8px; align-items: center; }
+.toolbar button, .toolbar a {
+  border: 1px solid #334155; background: #1e293b; color: #e2e8f0;
+  padding: 6px 12px; border-radius: 8px; font-family: inherit; font-size: 12px;
+  font-weight: 600; cursor: pointer; text-decoration: none;
+}
+.toolbar button:hover, .toolbar a:hover { background: #334155; }
+.toolbar button:disabled { opacity: .4; cursor: default; }
+.stage {
+  flex: 1; display: grid; place-items: center; padding: 24px;
+  background: radial-gradient(900px 500px at 50% 0%, #1e3a5f 0%, #0b1220 55%);
+  overflow: auto;
+}
+.slide {
+  display: none; width: min(960px, 100%); animation: fade .35s ease;
+}
+.slide.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.slide-inner {
+  background: var(--card); border-radius: 24px; padding: clamp(28px, 5vw, 48px);
+  box-shadow: 0 32px 80px rgba(0,0,0,.45); min-height: min(520px, 70vh);
+  display: flex; flex-direction: column;
+}
+.eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #0582CA; font-weight: 800; margin-bottom: 10px; }
+.slide h1 {
+  font-family: Fraunces, serif; font-size: clamp(28px, 4.5vw, 42px);
+  line-height: 1.12; margin-bottom: 16px; color: var(--brand);
+}
+.slide h2 { font-family: Fraunces, serif; font-size: 22px; margin: 20px 0 10px; color: var(--brand); }
+.slide p, .slide li { color: var(--muted); line-height: 1.65; font-size: 15px; }
+.slide ul { margin: 12px 0 0 20px; }
+.slide li { margin-bottom: 8px; }
+.lede { font-size: 17px !important; max-width: 52ch; }
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+.tag { background: #f1f5f9; border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--ink); }
+.compare { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+.compare th, .compare td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+.compare th { background: #f8fafc; font-weight: 700; color: var(--ink); }
+.compare td:first-child { font-weight: 600; color: var(--ink); background: #fafafa; width: 22%; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+@media (max-width: 800px) { .cards { grid-template-columns: 1fr; } }
+.card {
+  border-radius: 18px; padding: 20px; color: #fff; min-height: 200px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.card h3 { font-family: Fraunces, serif; font-size: 22px; margin-bottom: 8px; }
+.card p { color: rgba(255,255,255,.88); font-size: 13px; line-height: 1.5; }
+.card a {
+  display: inline-block; margin-top: 14px; background: rgba(255,255,255,.95);
+  color: #111; padding: 10px 14px; border-radius: 12px; font-weight: 700;
+  font-size: 12px; text-decoration: none;
+}
+.card-a { background: linear-gradient(145deg, #1B4332, #E07A5F); }
+.card-b { background: linear-gradient(145deg, #0D1117, #2DD4BF); }
+.card-c { background: linear-gradient(145deg, #4A3267, #C9A227); }
+.ref-box {
+  background: linear-gradient(135deg, #00A6FB, #003554); color: #fff;
+  border-radius: 16px; padding: 20px; margin-top: 16px;
+}
+.ref-box p { color: rgba(255,255,255,.9); }
+.decision {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
+}
+@media (max-width: 600px) { .decision { grid-template-columns: 1fr; } }
+.decision label {
+  display: flex; gap: 10px; align-items: start; padding: 14px; border: 2px solid var(--line);
+  border-radius: 14px; cursor: pointer; font-size: 14px; font-weight: 600;
+}
+.decision label:hover { border-color: #0582CA; }
+.decision input { margin-top: 3px; }
+.footer-note { margin-top: auto; padding-top: 24px; font-size: 12px; color: #94a3b8; }
+.progress { color: #64748b; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="toolbar">
+    <strong>KBZ LIFE · Mobile UI Stakeholder Review</strong>
+    <nav>
+      <span class="progress" id="progress">1 / 10</span>
+      <button type="button" id="prev" disabled>← Prev</button>
+      <button type="button" id="next">Next →</button>
+      <a href="../index.html">Gallery</a>
+      <a href="../docs/112-stakeholder-meeting-pack.md">Meeting doc</a>
+    </nav>
+  </div>
+  <div class="stage">
+
+    <!-- Slide 1 -->
+    <div class="slide active" data-i="1">
+      <div class="slide-inner">
+        <div class="eyebrow">Stakeholder meeting · Aug 2026</div>
+        <h1>Three new mobile designs — pick a direction</h1>
+        <p class="lede">Feedback: the current app looks too similar to Wireframe1 and Wireframe2. We prepared three <strong>distinct</strong> modern directions — same BRD features, different UI/UX.</p>
+        <div class="tag-row">
+          <span class="tag">Mobile only</span>
+          <span class="tag">HTML backup wireframes</span>
+          <span class="tag">45–60 min review</span>
+          <span class="tag">BRD v2.3 unchanged</span>
+        </div>
+        <p class="footer-note">Use ← → arrow keys · Today’s goal: choose Branch 1, 2, 3, or hybrid</p>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide" data-i="2">
+      <div class="slide-inner">
+        <div class="eyebrow">Problem</div>
+        <h1>Why this review?</h1>
+        <ul>
+          <li>Wireframe1/2 patterns: blue hero · 4×2 service grid · bottom nav + center FAB · promo carousel</li>
+          <li>First Flutter build followed these patterns closely</li>
+          <li>Stakeholder feedback: <strong>“Still looks like the wireframes”</strong> — not a fresh product identity</li>
+        </ul>
+        <h2>What we are NOT changing</h2>
+        <ul>
+          <li>Agent workflows: auth · CRM · quote · e-App · tasks · commission display</li>
+          <li>BRD scope · hierarchy rules · ENG/MM · security</li>
+          <li>Web portal (separate React app)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide" data-i="3">
+      <div class="slide-inner">
+        <div class="eyebrow">Reference</div>
+        <h1>Baseline for comparison</h1>
+        <div class="ref-box">
+          <h2 style="color:#fff;margin:0 0 8px;font-family:Fraunces,serif">Concept A · Wireframe-aligned</h2>
+          <p>Coolors blues · pill bottom nav · FAB · balance card · 4×2 grid — use only to compare, not as the forward direction.</p>
+        </div>
+        <p style="margin-top:16px"><a href="../concept-a-field-momentum/index.html" style="color:#0582CA;font-weight:700">Open Concept A mockup →</a></p>
+        <p class="footer-note">Reference PNGs: <code>KBZ_UI&UX/Wireframe1/</code> · <code>Wireframe2/</code></p>
+      </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide" data-i="4">
+      <div class="slide-inner">
+        <div class="eyebrow">Option A</div>
+        <h1>Branch 1 · Atelier</h1>
+        <p class="lede">Editorial daily planner — warm stone, forest green, terracotta accent.</p>
+        <ul>
+          <li><strong>Nav:</strong> Top chips (Today · People · Sell · Me) — no bottom bar, no FAB</li>
+          <li><strong>Home:</strong> Timeline “Today · N items need you”</li>
+          <li><strong>Guest:</strong> Editorial band + horizontal service scroll</li>
+          <li><strong>Best for:</strong> Field FA adoption, human feel</li>
+        </ul>
+        <p style="margin-top:12px"><a href="../branch-1-atelier/index.html" style="color:#1B4332;font-weight:700">Live demo → branch-1-atelier</a></p>
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide" data-i="5">
+      <div class="slide-inner">
+        <div class="eyebrow">Option B</div>
+        <h1>Branch 2 · Signal</h1>
+        <p class="lede">Dark performance HUD — cockpit for KPI-driven agents and managers.</p>
+        <ul>
+          <li><strong>Nav:</strong> Left icon rail + command search</li>
+          <li><strong>Home:</strong> Bento KPI tiles · sparklines · red-flag strip</li>
+          <li><strong>Guest:</strong> Calculator live · glass blur lock on partner tools</li>
+          <li><strong>Best for:</strong> Team leads, managers, power users</li>
+        </ul>
+        <p style="margin-top:12px"><a href="../branch-2-signal/index.html" style="color:#2DD4BF;font-weight:700">Live demo → branch-2-signal</a></p>
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide" data-i="6">
+      <div class="slide-inner">
+        <div class="eyebrow">Option C</div>
+        <h1>Branch 3 · Grove</h1>
+        <p class="lede">Guided trust — soft lilac, wizard auth, next-best-step home.</p>
+        <ul>
+          <li><strong>Nav:</strong> 3 bottom tabs (Home · Work · Account)</li>
+          <li><strong>Home:</strong> “Next best step” hero + 2-col service tiles with subtitles</li>
+          <li><strong>CRM:</strong> Qualify checklist on lead detail</li>
+          <li><strong>Best for:</strong> Brand trust, new agents, HOA audience</li>
+        </ul>
+        <p style="margin-top:12px"><a href="../branch-3-grove/index.html" style="color:#4A3267;font-weight:700">Live demo → branch-3-grove</a></p>
+      </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide" data-i="7">
+      <div class="slide-inner">
+        <div class="eyebrow">Comparison</div>
+        <h1>At a glance</h1>
+        <table class="compare">
+          <tr><th></th><th>Atelier</th><th>Signal</th><th>Grove</th></tr>
+          <tr><td>Navigation</td><td>Top chips</td><td>Left rail</td><td>3 tabs</td></tr>
+          <tr><td>Home hero</td><td>Timeline</td><td>Bento KPIs</td><td>Next step card</td></tr>
+          <tr><td>Guest entry</td><td>Editorial CTA</td><td>Dark + lock</td><td>Onboarding story</td></tr>
+          <tr><td>Tasks</td><td>Week + timeline</td><td>Kanban lanes</td><td>Month grid</td></tr>
+          <tr><td>Theme</td><td>Warm light</td><td>Dark HUD</td><td>Soft light</td></tr>
+          <tr><td>vs Wireframe</td><td>✓ Different</td><td>✓ Different</td><td>✓ Different</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide" data-i="8">
+      <div class="slide-inner">
+        <div class="eyebrow">Live demo</div>
+        <h1>P0 screens (each branch)</h1>
+        <p>Walk through in this order — ~2 min per branch:</p>
+        <ol style="margin:12px 0 0 20px;color:var(--muted);line-height:1.8;font-size:15px">
+          <li>Guest Home</li>
+          <li>Login + OTP</li>
+          <li>Home (logged-in FA)</li>
+          <li>Customer list + detail</li>
+          <li>Task Management</li>
+        </ol>
+        <div class="cards">
+          <div class="card card-a"><div><h3>Atelier</h3><p>Planner · timeline · no FAB</p></div><a href="../branch-1-atelier/index.html">Open →</a></div>
+          <div class="card card-b"><div><h3>Signal</h3><p>HUD · bento · kanban</p></div><a href="../branch-2-signal/index.html">Open →</a></div>
+          <div class="card card-c"><div><h3>Grove</h3><p>Guided · wizard · checklist</p></div><a href="../branch-3-grove/index.html">Open →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide" data-i="9">
+      <div class="slide-inner">
+        <div class="eyebrow">Discussion</div>
+        <h1>Questions for the room</h1>
+        <ul>
+          <li>Which direction fits <strong>KBZ LIFE</strong> brand for agents?</li>
+          <li>Dark default (Signal) — OK for outdoor / field use?</li>
+          <li>Top nav (Atelier) vs bottom nav — adoption for all FA ages?</li>
+          <li>Remove center FAB — acceptable?</li>
+          <li>Hybrid OK? (e.g. Grove home + Signal tasks)</li>
+          <li>Burmese labels — which layout handles 2-line MM best?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide" data-i="10">
+      <div class="slide-inner">
+        <div class="eyebrow">Decision</div>
+        <h1>Pick a direction</h1>
+        <p>Record in meeting notes · Flutter work starts on chosen <code>design/branch-N-*</code> — not on <code>main</code> until approved.</p>
+        <div class="decision">
+          <label><input type="radio" name="pick" /> Branch 1 · Atelier</label>
+          <label><input type="radio" name="pick" /> Branch 2 · Signal</label>
+          <label><input type="radio" name="pick" /> Branch 3 · Grove</label>
+          <label><input type="radio" name="pick" /> Hybrid (specify in doc 112)</label>
+        </div>
+        <h2>Next steps</h2>
+        <ul>
+          <li>Theme tokens + app shell on chosen branch</li>
+          <li>P0 Flutter: guest · auth · home · customer · tasks</li>
+          <li>P1: product · e-App · profile</li>
+          <li>Merge to main after second review</li>
+        </ul>
+        <p class="footer-note">Git: design/baseline-wireframe-aligned · branch-1-atelier · branch-2-signal · branch-3-grove</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let i = 0;
+const prev = document.getElementById('prev');
+const next = document.getElementById('next');
+const progress = document.getElementById('progress');
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, j) => s.classList.toggle('active', j === i));
+  progress.textContent = (i + 1) + ' / ' + slides.length;
+  prev.disabled = i === 0;
+  next.disabled = i === slides.length - 1;
+  next.textContent = i === slides.length - 1 ? 'Done' : 'Next →';
+}
+prev.onclick = () => show(i - 1);
+next.onclick = () => { if (i < slides.length - 1) show(i + 1); };
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if (i < slides.length - 1) show(i + 1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
+});
+show(0);
+</script>
+</body>
+</html>
