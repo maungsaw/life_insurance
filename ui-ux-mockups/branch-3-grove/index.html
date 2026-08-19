@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Branch 3 · Grove — KBZ LIFE Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #E8E4F3;
+  --card: #FFFEFF;
+  --ink: #4A3267;
+  --muted: #7A6B8F;
+  --line: #D4CCE8;
+  --primary: #4A3267;
+  --gold: #C9A227;
+  --gold-soft: #F5EFD8;
+  --ok: #3D7A5F;
+  --phone-w: 390px;
+  --phone-h: 844px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: linear-gradient(180deg, #DDD6F0 0%, #E8E4F3 40%, #F0ECF8 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.layout { display: flex; gap: 32px; max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; flex-wrap: wrap; }
+.sidebar { flex: 1; min-width: 260px; max-width: 340px; }
+.sidebar h1 { font-size: 28px; line-height: 1.15; margin: 8px 0 10px; color: var(--primary); }
+.sidebar .eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+.sidebar p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-bottom: 20px; }
+.picker { display: flex; flex-direction: column; gap: 6px; }
+.picker button {
+  text-align: left; border: 1px solid var(--line); background: var(--card);
+  padding: 12px 14px; border-radius: 16px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 600; color: var(--ink);
+}
+.picker button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.picker button span { display: block; font-size: 11px; font-weight: 500; opacity: .75; margin-top: 2px; }
+.palette { display: flex; gap: 8px; margin-top: 20px; }
+.palette div { width: 48px; height: 48px; border-radius: 14px; font-size: 9px; font-weight: 700; color: #fff; display: flex; align-items: end; padding: 4px; }
+.phone-shell {
+  width: var(--phone-w); height: var(--phone-h); border-radius: 42px;
+  background: var(--primary); padding: 12px;
+  box-shadow: 0 24px 60px rgba(74,50,103,.2);
+}
+.phone {
+  width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+  background: var(--bg); position: relative; display: flex; flex-direction: column;
+}
+.notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 110px; height: 26px; background: var(--primary); border-radius: 18px; z-index: 5; }
+.screen { display: none; flex: 1; overflow: auto; flex-direction: column; }
+.screen.active { display: flex; }
+.pad { padding: 52px 20px 90px; flex: 1; }
+.onboard { padding: 60px 24px 24px; text-align: center; flex: 1; display: flex; flex-direction: column; }
+.onboard-card {
+  background: var(--card); border-radius: 24px; padding: 28px 20px; margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(74,50,103,.08); flex: 1; display: flex; flex-direction: column; justify-content: center;
+}
+.onboard-card .num { font-size: 48px; margin-bottom: 12px; }
+.onboard-card h2 { font-size: 20px; margin-bottom: 8px; }
+.onboard-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.dots { display: flex; gap: 6px; justify-content: center; margin: 16px 0; }
+.dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--primary); width: 20px; border-radius: 99px; }
+.btn-primary {
+  width: 100%; padding: 16px; border: 0; border-radius: 18px; background: var(--primary);
+  color: #fff; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
+}
+.btn-secondary {
+  width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: transparent;
+  color: var(--primary); font-family: inherit; font-weight: 600; font-size: 14px; cursor: pointer; margin-top: 10px;
+}
+.next-step {
+  background: linear-gradient(135deg, var(--primary), #6B4F8A);
+  color: #fff; border-radius: 22px; padding: 20px; margin-bottom: 18px;
+  box-shadow: 0 12px 28px rgba(74,50,103,.25);
+}
+.next-step small { opacity: .85; font-size: 11px; display: block; margin-bottom: 6px; }
+.next-step h3 { font-size: 17px; line-height: 1.35; margin-bottom: 14px; }
+.next-step button {
+  background: #fff; color: var(--primary); border: 0; padding: 12px 18px; border-radius: 14px;
+  font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer;
+}
+.svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.svc-tile {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px 14px;
+  min-height: 100px; cursor: pointer;
+}
+.svc-tile .ico { font-size: 24px; margin-bottom: 8px; }
+.svc-tile strong { display: block; font-size: 13px; margin-bottom: 4px; }
+.svc-tile span { font-size: 11px; color: var(--muted); line-height: 1.35; }
+.step-header { display: flex; gap: 6px; margin-bottom: 20px; }
+.step-dot { flex: 1; height: 4px; border-radius: 99px; background: var(--line); }
+.step-dot.done { background: var(--gold); }
+.step-dot.cur { background: var(--primary); }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.field .why { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.field input {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 16px;
+  font-family: inherit; font-size: 15px; background: var(--card);
+}
+.otp-boxes { display: flex; gap: 8px; justify-content: center; margin: 20px 0; }
+.otp-box {
+  width: 44px; height: 52px; border: 2px solid var(--line); border-radius: 12px;
+  background: var(--card); display: grid; place-items: center; font-size: 20px; font-weight: 700;
+}
+.otp-box.f { border-color: var(--primary); background: var(--gold-soft); }
+.tabbar {
+  position: absolute; left: 16px; right: 16px; bottom: 16px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 24px;
+  display: grid; grid-template-columns: repeat(3, 1fr); padding: 8px; z-index: 4;
+  box-shadow: 0 8px 24px rgba(74,50,103,.1);
+}
+.tab {
+  border: 0; background: transparent; font-family: inherit; padding: 10px 4px;
+  font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; border-radius: 16px;
+}
+.tab.active { background: var(--gold-soft); color: var(--primary); }
+.greet { font-size: 14px; color: var(--muted); }
+.greet strong { display: block; font-size: 24px; color: var(--ink); margin-top: 4px; }
+.policy-stepper {
+  display: flex; justify-content: space-between; margin: 16px 0; padding: 0 4px;
+}
+.ps-item { text-align: center; flex: 1; font-size: 10px; color: var(--muted); }
+.ps-item b { display: block; font-size: 18px; color: var(--ink); margin-bottom: 2px; }
+.ps-item.on b { color: var(--gold); }
+.tabs { display: flex; background: var(--card); border-radius: 14px; padding: 4px; margin-bottom: 14px; border: 1px solid var(--line); }
+.tabs button { flex: 1; border: 0; background: none; padding: 10px; font-family: inherit; font-weight: 700; font-size: 12px; color: var(--muted); border-radius: 10px; cursor: pointer; }
+.tabs button.active { background: var(--primary); color: #fff; }
+.list-item {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: 16px; margin-bottom: 8px; cursor: pointer;
+}
+.list-item strong { display: block; font-size: 14px; }
+.list-item span { font-size: 12px; color: var(--muted); }
+.checklist { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px; margin-top: 12px; }
+.checklist li { font-size: 13px; margin-bottom: 10px; list-style: none; display: flex; gap: 10px; align-items: start; }
+.checklist li::before { content: '○'; color: var(--gold); font-weight: 700; }
+.checklist li.done::before { content: '●'; color: var(--ok); }
+.back { border: 0; background: none; font-family: inherit; font-weight: 600; color: var(--primary); cursor: pointer; margin-bottom: 12px; }
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 14px; font-size: 11px; text-align: center; }
+.month-grid .d { padding: 8px 2px; border-radius: 10px; }
+.month-grid .d.today { background: var(--primary); color: #fff; font-weight: 700; }
+.month-grid .hd { color: var(--muted); font-weight: 600; padding: 4px; }
+.fab-help {
+  position: absolute; right: 20px; bottom: 88px; background: var(--gold); color: var(--primary);
+  border: 0; padding: 12px 16px; border-radius: 999px; font-family: inherit; font-weight: 700;
+  font-size: 12px; cursor: pointer; box-shadow: 0 6px 20px rgba(201,162,39,.4); z-index: 4;
+}
+@media (max-width: 900px) { .layout { flex-direction: column; align-items: center; } .sidebar { max-width: 100%; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="eyebrow">Branch 3 · Design backup</div>
+    <h1>Grove</h1>
+    <p>Guided trust — 3 tabs, next-best-step hero, wizard auth. Soft lilac; not corporate blue grid.</p>
+    <div class="picker" id="picker">
+      <button type="button" class="active" data-screen="guest"><span>P0</span>Guest Home</button>
+      <button type="button" data-screen="login"><span>P0</span>Login</button>
+      <button type="button" data-screen="otp"><span>P0</span>OTP</button>
+      <button type="button" data-screen="home"><span>P0</span>Home (FA)</button>
+      <button type="button" data-screen="customer"><span>P0</span>Customer</button>
+      <button type="button" data-screen="customer-detail"><span>P0</span>Customer detail</button>
+      <button type="button" data-screen="tasks"><span>P0</span>Tasks</button>
+    </div>
+    <div class="palette">
+      <div style="background:#E8E4F3;color:#4A3267">lilac</div>
+      <div style="background:#4A3267">plum</div>
+      <div style="background:#C9A227">gold</div>
+    </div>
+  </aside>
+  <div class="phone-wrap">
+    <div class="phone-shell">
+      <div class="phone">
+        <div class="notch"></div>
+
+        <!-- Guest onboarding story -->
+        <div class="screen active" id="guest">
+          <div class="onboard">
+            <div class="onboard-card">
+              <div class="num">🌱</div>
+              <h2>Sell with confidence</h2>
+              <p>Quotes, clients, and tasks — built for KBZ LIFE agents in the field.</p>
+            </div>
+            <div class="dots"><i class="on"></i><i></i><i></i></div>
+            <button class="btn-primary" onclick="go('login')">Login or Register</button>
+            <button class="btn-secondary">Explore as guest →</button>
+          </div>
+        </div>
+
+        <!-- Login wizard step 1 -->
+        <div class="screen" id="login">
+          <div class="pad">
+            <div class="step-header">
+              <div class="step-dot cur"></div><div class="step-dot"></div><div class="step-dot"></div>
+            </div>
+            <div class="greet"><span>Step 1 of 3</span><strong>Your agent ID</strong></div>
+            <div class="field" style="margin-top:20px">
+              <label>Agent ID / Email</label>
+              <p class="why">We use this to match your hierarchy and commission display.</p>
+              <input value="FA-2841" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <p class="why">Never share your password. KBZ LIFE staff will never ask for it.</p>
+              <input type="password" value="••••••••" />
+            </div>
+            <button class="btn-primary" onclick="go('otp')">Continue</button>
+          </div>
+        </div>
+
+        <!-- OTP step 2 -->
+        <div class="screen" id="otp">
+          <div class="pad">
+            <div class="step-header">
+              <div class="step-dot done"></div><div class="step-dot cur"></div><div class="step-dot"></div>
+            </div>
+            <button class="back" onclick="go('login')">← Back</button>
+            <div class="greet"><span>Step 2 of 3</span><strong>Verify your phone</strong></div>
+            <p style="font-size:13px;color:var(--muted);margin:12px 0">Code sent to 09••••••42</p>
+            <div class="otp-boxes">
+              <div class="otp-box f">4</div><div class="otp-box f">8</div><div class="otp-box f">2</div>
+              <div class="otp-box">·</div><div class="otp-box">·</div><div class="otp-box">·</div>
+            </div>
+            <button class="btn-primary" onclick="go('home')">Verify &amp; continue</button>
+          </div>
+        </div>
+
+        <!-- Home -->
+        <div class="screen" id="home">
+          <div class="pad" style="padding-bottom:100px">
+            <div class="greet"><span>Wednesday, 19 Aug</span><strong>Hello, Mg Htet</strong></div>
+            <div class="next-step">
+              <small>Next best step</small>
+              <h3>Finish e-Application for U Aung — Step 3 of 7</h3>
+              <button>Continue application</button>
+            </div>
+            <p style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">OUR SERVICES</p>
+            <div class="svc-grid">
+              <div class="svc-tile"><div class="ico">📝</div><strong>New Proposal</strong><span>Start a quote in 2 min</span></div>
+              <div class="svc-tile" onclick="go('customer')"><div class="ico">👥</div><strong>CRM</strong><span>Leads &amp; clients</span></div>
+              <div class="svc-tile"><div class="ico">🧮</div><strong>Calculator</strong><span>Compare premiums</span></div>
+              <div class="svc-tile" onclick="go('tasks')"><div class="ico">📅</div><strong>My Work</strong><span>Tasks &amp; calendar</span></div>
+            </div>
+            <div class="policy-stepper">
+              <div class="ps-item on"><b>20</b>Active</div>
+              <div class="ps-item"><b>10</b>Pending</div>
+              <div class="ps-item"><b>5</b>Expired</div>
+            </div>
+            <div style="background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px">
+              <small style="color:var(--muted);font-size:11px">Commission (display)</small>
+              <strong style="font-size:20px">726,080 MMK</strong>
+            </div>
+          </div>
+          <button class="fab-help">Help me sell</button>
+          <nav class="tabbar">
+            <button class="tab active">Home</button>
+            <button class="tab" onclick="go('tasks')">Work</button>
+            <button class="tab">Account</button>
+          </nav>
+        </div>
+
+        <!-- Customer -->
+        <div class="screen" id="customer">
+          <div class="pad" style="padding-bottom:100px">
+            <strong style="font-size:22px;display:block;margin-bottom:14px">People</strong>
+            <div class="tabs">
+              <button class="active">Leads</button>
+              <button>Clients</button>
+            </div>
+            <div class="list-item" onclick="go('customer-detail')">
+              <strong>U Aung Min</strong>
+              <span>Warm lead · Quote saved 18 Aug</span>
+            </div>
+            <div class="list-item" onclick="go('customer-detail')">
+              <strong>Daw Khin Aye</strong>
+              <span>Client · Premium due in 3 days</span>
+            </div>
+            <div class="list-item">
+              <strong>Ma Thiri</strong>
+              <span>New lead · Needs first contact</span>
+            </div>
+          </div>
+          <nav class="tabbar">
+            <button class="tab" onclick="go('home')">Home</button>
+            <button class="tab active">Work</button>
+            <button class="tab">Account</button>
+          </nav>
+        </div>
+
+        <!-- Customer detail with qualify checklist -->
+        <div class="screen" id="customer-detail">
+          <div class="pad" style="padding-bottom:100px">
+            <button class="back" onclick="go('customer')">← People</button>
+            <strong style="font-size:22px">U Aung Min</strong>
+            <p style="font-size:13px;color:var(--muted);margin:6px 0 4px">Lead · Warm</p>
+            <div class="checklist">
+              <p style="font-size:12px;font-weight:700;margin-bottom:12px;color:var(--muted)">QUALIFY CHECKLIST</p>
+              <ul style="padding:0">
+                <li class="done">Contact details confirmed</li>
+                <li class="done">Needs assessment done</li>
+                <li>Quote presented</li>
+                <li>Objections addressed</li>
+                <li>Ready to convert</li>
+              </ul>
+            </div>
+            <div style="margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px">
+              <p style="font-size:12px;color:var(--muted);margin-bottom:6px">Suggested next step</p>
+              <p style="font-size:14px;font-weight:600">Schedule follow-up to review Whole Life 20 quote</p>
+            </div>
+          </div>
+          <button class="fab-help">Help me sell</button>
+          <nav class="tabbar">
+            <button class="tab" onclick="go('home')">Home</button>
+            <button class="tab active">Work</button>
+            <button class="tab">Account</button>
+          </nav>
+        </div>
+
+        <!-- Tasks -->
+        <div class="screen" id="tasks">
+          <div class="pad" style="padding-bottom:100px">
+            <strong style="font-size:22px;display:block;margin-bottom:14px">My work</strong>
+            <div class="month-grid">
+              <div class="hd">S</div><div class="hd">M</div><div class="hd">T</div><div class="hd">W</div><div class="hd">T</div><div class="hd">F</div><div class="hd">S</div>
+              <div class="d">17</div><div class="d">18</div><div class="d today">19</div><div class="d">20</div><div class="d">21</div><div class="d">22</div><div class="d">23</div>
+            </div>
+            <p style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px">TUESDAY 19 AUG</p>
+            <div class="list-item"><strong>09:00 · Team huddle</strong><span>Assigned by AM · 30 min</span></div>
+            <div class="list-item"><strong>11:30 · Client visit</strong><span>Daw Khin · Premium collection</span></div>
+            <div class="list-item"><strong>15:00 · Submit documents</strong><span>e-App #118 · Due today</span></div>
+          </div>
+          <nav class="tabbar">
+            <button class="tab" onclick="go('home')">Home</button>
+            <button class="tab active">Work</button>
+            <button class="tab">Account</button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#picker button').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === id);
+  });
+}
+document.querySelectorAll('#picker button').forEach(b => {
+  b.addEventListener('click', () => go(b.dataset.screen));
+});
+</script>
+</body>
+</html>

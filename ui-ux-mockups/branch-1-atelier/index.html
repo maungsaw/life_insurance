@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Branch 1 · Atelier — KBZ LIFE Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #F4F0EA;
+  --ink: #1B4332;
+  --muted: #6B7B6E;
+  --line: #D8D0C4;
+  --card: #FFFCF8;
+  --primary: #1B4332;
+  --accent: #E07A5F;
+  --accent-soft: #FCEEE9;
+  --ok: #2D6A4F;
+  --phone-w: 390px;
+  --phone-h: 844px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: linear-gradient(135deg, #EDE6DC 0%, #F4F0EA 50%, #E8E0D4 100%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.layout { display: flex; gap: 32px; max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; flex-wrap: wrap; }
+.sidebar { flex: 1; min-width: 260px; max-width: 340px; }
+.sidebar h1 { font-size: 28px; line-height: 1.15; margin: 8px 0 10px; }
+.sidebar .eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 800; }
+.sidebar p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-bottom: 20px; }
+.picker { display: flex; flex-direction: column; gap: 6px; }
+.picker button {
+  text-align: left; border: 1px solid var(--line); background: var(--card);
+  padding: 12px 14px; border-radius: 14px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 600; color: var(--ink); transition: .15s;
+}
+.picker button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.picker button span { display: block; font-size: 11px; font-weight: 500; opacity: .75; margin-top: 2px; }
+.palette { display: flex; gap: 8px; margin-top: 20px; }
+.palette div { width: 48px; height: 48px; border-radius: 12px; font-size: 9px; font-weight: 700; color: #fff; display: flex; align-items: end; padding: 4px; }
+.phone-wrap { flex-shrink: 0; }
+.phone-shell {
+  width: var(--phone-w); height: var(--phone-h); border-radius: 42px;
+  background: var(--primary); padding: 12px;
+  box-shadow: 0 24px 60px rgba(27,67,50,.25);
+}
+.phone {
+  width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+  background: var(--bg); position: relative; display: flex; flex-direction: column;
+}
+.notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 110px; height: 26px; background: var(--primary); border-radius: 18px; z-index: 5; }
+.screen { display: none; flex: 1; overflow: auto; }
+.screen.active { display: flex; flex-direction: column; }
+.pad { padding: 52px 20px 100px; flex: 1; }
+.top-chips {
+  display: flex; gap: 6px; padding: 48px 16px 12px; overflow-x: auto;
+  border-bottom: 1px solid var(--line); background: var(--card);
+}
+.chip-nav {
+  border: 0; background: transparent; padding: 8px 14px; border-radius: 999px;
+  font-family: inherit; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; white-space: nowrap;
+}
+.chip-nav.active { background: var(--primary); color: #fff; }
+.greet { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.greet strong { display: block; font-size: 26px; color: var(--ink); font-weight: 800; margin-top: 2px; }
+.row-between { display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px; }
+.bell { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); display: grid; place-items: center; font-size: 18px; cursor: pointer; }
+.section-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 18px 0 10px; }
+.timeline { display: flex; flex-direction: column; gap: 10px; }
+.t-item {
+  background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+  padding: 14px 16px; display: flex; gap: 12px; align-items: start;
+}
+.t-time { font-size: 11px; font-weight: 700; color: var(--accent); min-width: 44px; padding-top: 2px; }
+.t-body strong { display: block; font-size: 14px; margin-bottom: 2px; }
+.t-body span { font-size: 12px; color: var(--muted); }
+.mdrt-strip {
+  margin-top: 16px; padding: 14px 16px; border-radius: 16px;
+  background: linear-gradient(90deg, var(--primary), #2D6A4F); color: #fff;
+}
+.mdrt-strip small { opacity: .85; font-size: 11px; }
+.mdrt-bar { height: 6px; background: rgba(255,255,255,.25); border-radius: 99px; margin-top: 8px; overflow: hidden; }
+.mdrt-bar i { display: block; height: 100%; width: 64%; background: var(--accent); border-radius: 99px; }
+.scroll-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+.svc-chip {
+  flex-shrink: 0; background: var(--card); border: 1px solid var(--line);
+  border-radius: 16px; padding: 14px 16px; min-width: 100px; text-align: center; cursor: pointer;
+}
+.svc-chip .ico { font-size: 22px; margin-bottom: 6px; }
+.svc-chip span { font-size: 11px; font-weight: 700; }
+.editorial {
+  margin: 0 0 16px; padding: 28px 20px; border-radius: 0 0 28px 28px;
+  background: linear-gradient(160deg, #2D6A4F, var(--primary));
+  color: #fff;
+}
+.editorial p { font-size: 13px; opacity: .9; margin-bottom: 6px; }
+.editorial h2 { font-size: 22px; font-weight: 800; margin-bottom: 14px; line-height: 1.2; }
+.btn-white { background: #fff; color: var(--primary); border: 0; padding: 12px 20px; border-radius: 999px; font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.field input {
+  width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px;
+  font-family: inherit; font-size: 15px; background: var(--card);
+}
+.btn-primary {
+  width: 100%; padding: 16px; border: 0; border-radius: 16px; background: var(--primary);
+  color: #fff; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 8px;
+}
+.btn-link { background: none; border: 0; color: var(--accent); font-family: inherit; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 12px; }
+.otp-row { display: flex; gap: 12px; justify-content: center; margin: 24px 0; }
+.otp-circle {
+  width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--line);
+  background: var(--card); display: grid; place-items: center; font-size: 22px; font-weight: 700;
+}
+.otp-circle.filled { border-color: var(--primary); background: var(--accent-soft); }
+.comm-inline {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; margin-bottom: 16px;
+}
+.comm-inline strong { font-size: 20px; font-variant-numeric: tabular-nums; }
+.comm-inline small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+.tabs { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+.tab { flex: 1; padding: 10px; border: 0; background: none; font-family: inherit; font-weight: 700; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.tab.active { color: var(--primary); border-bottom-color: var(--accent); }
+.search { width: 100%; padding: 12px 16px; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; font-family: inherit; background: var(--card); }
+.list-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
+}
+.list-card strong { display: block; font-size: 14px; }
+.list-card span { font-size: 12px; color: var(--muted); }
+.pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-top: 4px; }
+.sticky-cta {
+  position: absolute; left: 16px; right: 16px; bottom: 16px;
+  padding: 14px; border-radius: 16px; background: var(--primary); color: #fff;
+  text-align: center; font-weight: 700; font-size: 14px; border: 0; cursor: pointer; z-index: 4;
+}
+.week-strip { display: flex; gap: 6px; margin-bottom: 16px; }
+.day {
+  flex: 1; text-align: center; padding: 10px 4px; border-radius: 12px;
+  background: var(--card); border: 1px solid var(--line); font-size: 11px;
+}
+.day.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.day b { display: block; font-size: 16px; margin-top: 2px; }
+.back { border: 0; background: none; font-family: inherit; font-weight: 700; color: var(--primary); cursor: pointer; margin-bottom: 12px; font-size: 13px; }
+.profile-block { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 10px; }
+.profile-block h4 { font-size: 12px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .06em; }
+@media (max-width: 900px) {
+  .layout { flex-direction: column; align-items: center; }
+  .sidebar { max-width: 100%; width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="eyebrow">Branch 1 · Design backup</div>
+    <h1>Atelier</h1>
+    <p>Editorial planner feel — top chips, timeline home, no bottom FAB. Deliberately unlike Wireframe1/2 blue grid.</p>
+    <div class="picker" id="picker">
+      <button type="button" class="active" data-screen="guest"><span>P0</span>Guest Home</button>
+      <button type="button" data-screen="login"><span>P0</span>Login</button>
+      <button type="button" data-screen="otp"><span>P0</span>OTP</button>
+      <button type="button" data-screen="home"><span>P0</span>Home (FA)</button>
+      <button type="button" data-screen="customer"><span>P0</span>Customer</button>
+      <button type="button" data-screen="customer-detail"><span>P0</span>Customer detail</button>
+      <button type="button" data-screen="tasks"><span>P0</span>Tasks</button>
+    </div>
+    <div class="palette">
+      <div style="background:#F4F0EA;color:#1B4332">stone</div>
+      <div style="background:#1B4332">forest</div>
+      <div style="background:#E07A5F">terra</div>
+    </div>
+  </aside>
+  <div class="phone-wrap">
+    <div class="phone-shell">
+      <div class="phone">
+        <div class="notch"></div>
+
+        <!-- Guest -->
+        <div class="screen active" id="guest">
+          <div class="editorial">
+            <p>KBZ LIFE Agency Platform</p>
+            <h2>Grow with purpose.<br/>Partner with us.</h2>
+            <button class="btn-white" onclick="go('login')">Login or Register</button>
+          </div>
+          <div class="pad" style="padding-top:16px">
+            <div class="section-label">Explore as guest</div>
+            <div class="scroll-row">
+              <div class="svc-chip" onclick="go('login')"><div class="ico">📝</div><span>New Proposal</span></div>
+              <div class="svc-chip"><div class="ico">📦</div><span>Product</span></div>
+              <div class="svc-chip"><div class="ico">🧮</div><span>Calculator</span></div>
+              <div class="svc-chip" onclick="go('login')"><div class="ico">💼</div><span>Commission</span></div>
+              <div class="svc-chip" onclick="go('login')"><div class="ico">📋</div><span>Status</span></div>
+              <div class="svc-chip" onclick="go('login')"><div class="ico">👥</div><span>CRM</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login -->
+        <div class="screen" id="login">
+          <div class="pad">
+            <div class="greet"><span>Welcome back</span><strong>Sign in</strong></div>
+            <p style="color:var(--muted);font-size:13px;margin:12px 0 20px">Agent tools need your verified login.</p>
+            <div class="field"><label>Agent ID / Email</label><input value="FA-2841" /></div>
+            <div class="field"><label>Password</label><input type="password" value="••••••••" /></div>
+            <button class="btn-primary" onclick="go('otp')">Continue</button>
+            <button class="btn-link">Forgot password?</button>
+          </div>
+        </div>
+
+        <!-- OTP -->
+        <div class="screen" id="otp">
+          <div class="pad">
+            <button class="back" onclick="go('login')">← Back</button>
+            <div class="greet"><span>Verify it's you</span><strong>Enter OTP</strong></div>
+            <p style="color:var(--muted);font-size:13px;margin:12px 0">Code sent to 09••••••42</p>
+            <div class="otp-row">
+              <div class="otp-circle filled">4</div>
+              <div class="otp-circle filled">8</div>
+              <div class="otp-circle filled">2</div>
+              <div class="otp-circle">·</div>
+            </div>
+            <button class="btn-primary" onclick="go('home')">Verify &amp; enter</button>
+            <button class="btn-link">Resend code · 0:42</button>
+          </div>
+        </div>
+
+        <!-- Home FA -->
+        <div class="screen" id="home">
+          <div class="top-chips">
+            <button class="chip-nav active">Today</button>
+            <button class="chip-nav" onclick="go('customer')">People</button>
+            <button class="chip-nav">Sell</button>
+            <button class="chip-nav">Me</button>
+          </div>
+          <div class="pad" style="padding-top:16px;padding-bottom:90px">
+            <div class="row-between">
+              <div class="greet"><span>Wednesday · 19 Aug</span><strong>Good morning,<br/>Mg Htet</strong></div>
+              <div class="bell">🔔</div>
+            </div>
+            <div class="comm-inline">
+              <div><small>Commission (display)</small><strong>726,080 MMK</strong></div>
+              <span style="color:var(--ok);font-size:12px;font-weight:700">↑ 4.2%</span>
+            </div>
+            <div class="section-label">Today · 3 items need you</div>
+            <div class="timeline">
+              <div class="t-item"><div class="t-time">10:30</div><div class="t-body"><strong>Premium due</strong><span>Daw Khin Aye · Policy #8821</span></div></div>
+              <div class="t-item"><div class="t-time">14:00</div><div class="t-body"><strong>Follow up lead</strong><span>U Aung Min · Warm · Quote saved</span></div></div>
+              <div class="t-item"><div class="t-time">Task</div><div class="t-body"><strong>Submit e-App docs</strong><span>Application #E-2024-118</span></div></div>
+            </div>
+            <div class="mdrt-strip">
+              <small>Road to MDRT</small>
+              <div style="font-weight:800;margin-top:2px">64% of target</div>
+              <div class="mdrt-bar"><i></i></div>
+            </div>
+          </div>
+          <button class="sticky-cta">Start quote</button>
+        </div>
+
+        <!-- Customer -->
+        <div class="screen" id="customer">
+          <div class="top-chips">
+            <button class="chip-nav" onclick="go('home')">Today</button>
+            <button class="chip-nav active">People</button>
+            <button class="chip-nav">Sell</button>
+            <button class="chip-nav">Me</button>
+          </div>
+          <div class="pad" style="padding-top:12px">
+            <strong style="font-size:20px;display:block;margin-bottom:12px">People</strong>
+            <div class="tabs">
+              <button class="tab active">Leads</button>
+              <button class="tab">Clients</button>
+            </div>
+            <input class="search" placeholder="Search name or phone…" />
+            <div class="list-card" onclick="go('customer-detail')">
+              <strong>U Aung Min</strong>
+              <span>09 812 345 67 · Added 12 Aug</span>
+              <span class="pill">Warm</span>
+            </div>
+            <div class="list-card" onclick="go('customer-detail')">
+              <strong>Daw Khin Aye</strong>
+              <span>09 421 998 01 · Premium due</span>
+              <span class="pill">Client</span>
+            </div>
+            <div class="list-card">
+              <strong>Ma Thiri</strong>
+              <span>09 555 120 88 · New lead</span>
+              <span class="pill">Cold</span>
+            </div>
+          </div>
+          <button class="sticky-cta">Add lead</button>
+        </div>
+
+        <!-- Customer detail -->
+        <div class="screen" id="customer-detail">
+          <div class="pad">
+            <button class="back" onclick="go('customer')">← People</button>
+            <strong style="font-size:22px">U Aung Min</strong>
+            <p style="color:var(--muted);font-size:13px;margin:6px 0 16px">Lead · Warm · Last touch 2d ago</p>
+            <div class="profile-block"><h4>Activity</h4><p style="font-size:13px">Quote saved · Whole Life 20 · 18 Aug</p></div>
+            <div class="profile-block"><h4>Next step</h4><p style="font-size:13px">Schedule follow-up call · Proposal review</p></div>
+            <div class="profile-block"><h4>Notes</h4><p style="font-size:13px;color:var(--muted)">Interested in education rider. Prefers MM.</p></div>
+          </div>
+          <button class="sticky-cta">Convert to client</button>
+        </div>
+
+        <!-- Tasks -->
+        <div class="screen" id="tasks">
+          <div class="top-chips">
+            <button class="chip-nav" onclick="go('home')">Today</button>
+            <button class="chip-nav">People</button>
+            <button class="chip-nav">Sell</button>
+            <button class="chip-nav active">Work</button>
+          </div>
+          <div class="pad" style="padding-top:12px">
+            <strong style="font-size:20px;display:block;margin-bottom:12px">My work</strong>
+            <div class="week-strip">
+              <div class="day"><span>Mon</span><b>18</b></div>
+              <div class="day active"><span>Tue</span><b>19</b></div>
+              <div class="day"><span>Wed</span><b>20</b></div>
+              <div class="day"><span>Thu</span><b>21</b></div>
+              <div class="day"><span>Fri</span><b>22</b></div>
+            </div>
+            <div class="section-label">Timeline · Tue 19</div>
+            <div class="timeline">
+              <div class="t-item"><div class="t-time">09:00</div><div class="t-body"><strong>Team huddle</strong><span>Assigned · 30 min</span></div></div>
+              <div class="t-item"><div class="t-time">11:30</div><div class="t-body"><strong>Client visit</strong><span>Daw Khin · Premium collection</span></div></div>
+              <div class="t-item"><div class="t-time">15:00</div><div class="t-body"><strong>Submit documents</strong><span>e-App #118 · Due today</span></div></div>
+            </div>
+          </div>
+          <button class="sticky-cta">Add task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#picker button').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === id);
+  });
+}
+document.querySelectorAll('#picker button').forEach(b => {
+  b.addEventListener('click', () => go(b.dataset.screen));
+});
+</script>
+</body>
+</html>

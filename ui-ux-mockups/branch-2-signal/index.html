@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Branch 2 · Signal — KBZ LIFE Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0D1117;
+  --surface: #161B22;
+  --surface2: #21262D;
+  --ink: #E6EDF3;
+  --muted: #8B949E;
+  --line: #30363D;
+  --signal: #2DD4BF;
+  --amber: #FBBF24;
+  --danger: #F85149;
+  --phone-w: 390px;
+  --phone-h: 844px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #010409;
+  color: var(--ink);
+  min-height: 100vh;
+}
+.layout { display: flex; gap: 32px; max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; flex-wrap: wrap; }
+.sidebar { flex: 1; min-width: 260px; max-width: 340px; }
+.sidebar h1 { font-size: 28px; line-height: 1.15; margin: 8px 0 10px; color: var(--signal); }
+.sidebar .eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); font-weight: 700; }
+.sidebar p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-bottom: 20px; }
+.picker { display: flex; flex-direction: column; gap: 6px; }
+.picker button {
+  text-align: left; border: 1px solid var(--line); background: var(--surface);
+  padding: 12px 14px; border-radius: 10px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 600; color: var(--ink); transition: .15s;
+}
+.picker button.active { background: var(--signal); color: #0D1117; border-color: var(--signal); }
+.picker button span { display: block; font-size: 11px; font-weight: 500; opacity: .75; margin-top: 2px; }
+.palette { display: flex; gap: 8px; margin-top: 20px; }
+.palette div { width: 48px; height: 48px; border-radius: 8px; font-size: 9px; font-weight: 700; color: #fff; display: flex; align-items: end; padding: 4px; }
+.phone-shell {
+  width: var(--phone-w); height: var(--phone-h); border-radius: 42px;
+  background: #000; padding: 12px; box-shadow: 0 24px 60px rgba(45,212,191,.12);
+}
+.phone {
+  width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+  background: var(--bg); position: relative; display: flex;
+}
+.notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 110px; height: 26px; background: #000; border-radius: 18px; z-index: 5; }
+.rail {
+  width: 52px; background: var(--surface); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; align-items: center; padding: 48px 0 12px; gap: 8px; z-index: 2;
+}
+.rail-btn {
+  width: 40px; height: 40px; border: 0; border-radius: 10px; background: transparent;
+  color: var(--muted); font-size: 18px; cursor: pointer; display: grid; place-items: center;
+}
+.rail-btn.active { background: var(--surface2); color: var(--signal); box-shadow: inset 0 0 0 1px var(--line); }
+.main { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.screen { display: none; flex: 1; overflow: auto; flex-direction: column; }
+.screen.active { display: flex; }
+.pad { padding: 48px 14px 20px 14px; flex: 1; }
+.hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.hdr h2 { font-size: 16px; font-weight: 700; }
+.search-pill {
+  font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--line);
+  padding: 6px 10px; border-radius: 8px; cursor: pointer;
+}
+.bento { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.tile {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+}
+.tile.wide { grid-column: span 2; }
+.tile label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.tile strong { display: block; font-size: 22px; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.tile .delta { font-size: 11px; color: var(--signal); font-weight: 600; }
+.spark { height: 32px; margin-top: 8px; background: linear-gradient(90deg, transparent, var(--signal)); opacity: .3; border-radius: 4px; position: relative; }
+.spark::after { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 32'%3E%3Cpolyline fill='none' stroke='%232DD4BF' stroke-width='2' points='0,24 20,18 40,22 60,8 80,14 100,6 120,12'/%3E%3C/svg%3E") center/contain no-repeat; opacity: 1; }
+.alert-row {
+  display: flex; gap: 8px; margin: 8px 0 14px;
+}
+.alert-chip {
+  flex: 1; padding: 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--line); background: var(--surface);
+}
+.alert-chip.red { border-color: var(--danger); color: var(--danger); }
+.alert-chip.amber { border-color: var(--amber); color: var(--amber); }
+.icon-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.icon-btn {
+  width: 56px; height: 56px; border-radius: 12px; background: var(--surface);
+  border: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; gap: 2px;
+}
+.icon-btn span { font-size: 8px; color: var(--muted); font-weight: 600; }
+.guest-lock {
+  position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 10px;
+  background: var(--surface); border: 1px solid var(--line); padding: 20px; text-align: center;
+}
+.guest-lock .blur { filter: blur(4px); opacity: .5; font-size: 13px; }
+.guest-lock .overlay {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(13,17,23,.7); font-size: 12px; font-weight: 600; color: var(--signal);
+}
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.field input {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--surface); color: var(--ink); font-family: inherit; font-size: 14px;
+}
+.btn-signal {
+  width: 100%; padding: 14px; border: 0; border-radius: 10px; background: var(--signal);
+  color: #0D1117; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px;
+}
+.pin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 220px; margin: 20px auto; }
+.pin-key {
+  aspect-ratio: 1; border-radius: 50%; border: 1px solid var(--line); background: var(--surface);
+  display: grid; place-items: center; font-size: 20px; font-weight: 600; cursor: pointer;
+}
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.pill-tab {
+  padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer;
+}
+.pill-tab.active { border-color: var(--signal); color: var(--signal); }
+.list-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 6px; cursor: pointer;
+}
+.list-row strong { font-size: 13px; }
+.list-row span { font-size: 11px; color: var(--muted); display: block; }
+.kanban { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
+.lane { min-width: 120px; flex-shrink: 0; }
+.lane h4 { font-size: 10px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+.card-sm {
+  background: var(--surface2); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px; font-size: 11px; margin-bottom: 6px;
+}
+.back { border: 0; background: none; color: var(--signal); font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+.no-rail .pad { padding-left: 14px; }
+@media (max-width: 900px) { .layout { flex-direction: column; align-items: center; } .sidebar { max-width: 100%; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="eyebrow">Branch 2 · Design backup</div>
+    <h1>Signal</h1>
+    <p>Dark performance HUD — left icon rail, bento KPIs, kanban tasks. No white cards or partner banner.</p>
+    <div class="picker" id="picker">
+      <button type="button" class="active" data-screen="guest"><span>P0</span>Guest Home</button>
+      <button type="button" data-screen="login"><span>P0</span>Login</button>
+      <button type="button" data-screen="otp"><span>P0</span>OTP</button>
+      <button type="button" data-screen="home"><span>P0</span>Home (FA)</button>
+      <button type="button" data-screen="customer"><span>P0</span>Customer</button>
+      <button type="button" data-screen="customer-detail"><span>P0</span>Customer detail</button>
+      <button type="button" data-screen="tasks"><span>P0</span>Tasks</button>
+    </div>
+    <div class="palette">
+      <div style="background:#0D1117;border:1px solid #30363D">bg</div>
+      <div style="background:#2DD4BF;color:#000">cyan</div>
+      <div style="background:#FBBF24;color:#000">amber</div>
+    </div>
+  </aside>
+  <div class="phone-wrap">
+    <div class="phone-shell">
+      <div class="phone">
+        <div class="notch"></div>
+
+        <!-- Guest (no rail) -->
+        <div class="screen active" id="guest">
+          <div class="main no-rail" style="width:100%">
+            <div class="pad">
+              <div class="hdr"><h2>KBZ LIFE</h2><span class="search-pill">⌘ Search</span></div>
+              <div class="tile wide" style="margin-bottom:12px">
+                <label>Calculator · live</label>
+                <strong style="font-size:14px;margin-top:8px">Try premium estimate</strong>
+                <p style="font-size:11px;color:var(--muted);margin-top:6px">Guest mode · save needs login</p>
+              </div>
+              <div class="guest-lock"><div class="blur">Commission · CRM · Tasks</div><div class="overlay">🔒 Login to unlock</div></div>
+              <div class="guest-lock"><div class="blur">Proposal · e-App</div><div class="overlay">🔒 Partner tools</div></div>
+              <button class="btn-signal" onclick="go('login')">Agent login</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login -->
+        <div class="screen" id="login">
+          <div class="main no-rail" style="width:100%">
+            <div class="pad">
+              <h2 style="font-size:20px;margin-bottom:4px">Agent access</h2>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:20px">Step 1 · Identity</p>
+              <div class="field"><label>Agent ID</label><input value="FA-2841" /></div>
+              <button class="btn-signal" onclick="go('otp')">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- OTP pin pad -->
+        <div class="screen" id="otp">
+          <div class="main no-rail" style="width:100%">
+            <div class="pad">
+              <button class="back" onclick="go('login')">← Back</button>
+              <h2 style="font-size:20px">Enter PIN</h2>
+              <p style="font-size:12px;color:var(--muted);margin:8px 0 0">SMS OTP · 09••••42</p>
+              <div style="text-align:center;font-size:24px;letter-spacing:12px;margin:16px 0;font-variant-numeric:tabular-nums">••••</div>
+              <div class="pin-grid">
+                <div class="pin-key">1</div><div class="pin-key">2</div><div class="pin-key">3</div>
+                <div class="pin-key">4</div><div class="pin-key">5</div><div class="pin-key">6</div>
+                <div class="pin-key">7</div><div class="pin-key">8</div><div class="pin-key">9</div>
+                <div class="pin-key" style="visibility:hidden"></div><div class="pin-key">0</div>
+                <div class="pin-key" onclick="go('home')" style="font-size:14px">✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Home with rail -->
+        <div class="screen" id="home">
+          <nav class="rail">
+            <button class="rail-btn active" title="Home">⌂</button>
+            <button class="rail-btn" title="People" onclick="go('customer')">👤</button>
+            <button class="rail-btn" title="Sell">◆</button>
+            <button class="rail-btn" title="Work" onclick="go('tasks')">☑</button>
+            <button class="rail-btn" title="Me">⚙</button>
+          </nav>
+          <div class="main">
+            <div class="pad">
+              <div class="hdr"><h2>Portfolio</h2><span class="search-pill">⌘K</span></div>
+              <div class="bento">
+                <div class="tile"><label>FYP</label><strong>82%</strong><span class="delta">↑ vs target</span></div>
+                <div class="tile"><label>MDRT</label><strong>64%</strong><span class="delta">On track</span></div>
+                <div class="tile wide"><label>Proposal pulse</label><div class="spark"></div></div>
+              </div>
+              <div class="alert-row">
+                <div class="alert-chip red">3 FA below target</div>
+                <div class="alert-chip amber">5 premiums due</div>
+              </div>
+              <div class="tile wide" style="margin-bottom:10px">
+                <label>Commission</label>
+                <strong>726,080</strong><span style="font-size:11px;color:var(--muted)"> MMK · display only</span>
+              </div>
+              <label style="font-size:10px;color:var(--muted);text-transform:uppercase">Quick</label>
+              <div class="icon-row" style="margin-top:8px">
+                <div class="icon-btn"><span>Quote</span>+</div>
+                <div class="icon-btn"><span>Lead</span>◎</div>
+                <div class="icon-btn"><span>Call</span>☎</div>
+                <div class="icon-btn"><span>Export</span>↓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer -->
+        <div class="screen" id="customer">
+          <nav class="rail">
+            <button class="rail-btn" onclick="go('home')">⌂</button>
+            <button class="rail-btn active">👤</button>
+            <button class="rail-btn">◆</button>
+            <button class="rail-btn" onclick="go('tasks')">☑</button>
+            <button class="rail-btn">⚙</button>
+          </nav>
+          <div class="main">
+            <div class="pad">
+              <div class="hdr"><h2>CRM</h2><span class="search-pill">Filter</span></div>
+              <div class="tabs">
+                <button class="pill-tab active">Leads</button>
+                <button class="pill-tab">Clients</button>
+                <button class="pill-tab">Hot</button>
+              </div>
+              <div class="list-row" onclick="go('customer-detail')">
+                <div><strong>U Aung Min</strong><span>Warm · Quote saved</span></div>
+                <span style="color:var(--signal)">→</span>
+              </div>
+              <div class="list-row" onclick="go('customer-detail')">
+                <div><strong>Daw Khin Aye</strong><span>Client · Due 3d</span></div>
+                <span style="color:var(--amber)">!</span>
+              </div>
+              <div class="list-row">
+                <div><strong>Ma Thiri</strong><span>Cold · 5d idle</span></div>
+                <span style="color:var(--muted)">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer detail -->
+        <div class="screen" id="customer-detail">
+          <nav class="rail">
+            <button class="rail-btn" onclick="go('home')">⌂</button>
+            <button class="rail-btn active">👤</button>
+            <button class="rail-btn">◆</button>
+            <button class="rail-btn">☑</button>
+            <button class="rail-btn">⚙</button>
+          </nav>
+          <div class="main">
+            <div class="pad">
+              <button class="back" onclick="go('customer')">← CRM</button>
+              <h2 style="font-size:18px">U Aung Min</h2>
+              <div class="tabs" style="margin-top:10px">
+                <button class="pill-tab active">Profile</button>
+                <button class="pill-tab">Activity</button>
+                <button class="pill-tab">Policies</button>
+              </div>
+              <div class="tile" style="margin-top:10px">
+                <label>Stage</label><strong style="font-size:14px">Warm lead</strong>
+              </div>
+              <div class="tile" style="margin-top:8px">
+                <label>Last quote</label><strong style="font-size:14px">Whole Life 20 · 18 Aug</strong>
+              </div>
+              <div class="tile" style="margin-top:8px">
+                <label>Signal</label><strong style="font-size:14px;color:var(--signal)">Follow up within 48h</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks kanban -->
+        <div class="screen" id="tasks">
+          <nav class="rail">
+            <button class="rail-btn" onclick="go('home')">⌂</button>
+            <button class="rail-btn">👤</button>
+            <button class="rail-btn">◆</button>
+            <button class="rail-btn active">☑</button>
+            <button class="rail-btn">⚙</button>
+          </nav>
+          <div class="main">
+            <div class="pad">
+              <div class="hdr"><h2>Tasks</h2><span class="search-pill">+ New</span></div>
+              <div class="kanban">
+                <div class="lane">
+                  <h4>Today · 3</h4>
+                  <div class="card-sm">Submit e-App docs</div>
+                  <div class="card-sm">Call Daw Khin</div>
+                  <div class="card-sm">Team huddle 09:00</div>
+                </div>
+                <div class="lane">
+                  <h4>This week · 5</h4>
+                  <div class="card-sm">Recruitment review</div>
+                  <div class="card-sm">MDRT check-in</div>
+                </div>
+                <div class="lane">
+                  <h4>Done</h4>
+                  <div class="card-sm" style="opacity:.6">Quote sent · U Aung</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#picker button').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === id);
+  });
+}
+document.querySelectorAll('#picker button').forEach(b => {
+  b.addEventListener('click', () => go(b.dataset.screen));
+});
+</script>
+</body>
+</html>
