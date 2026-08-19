@@ -3,8 +3,9 @@
 **Date:** 2026-08-19  
 **Audience:** Product · Agency leadership · UX stakeholders · Engineering  
 **Duration:** 45–60 minutes  
-**Live deck:** `ui-ux-mockups/stakeholder-meeting/index.html` (← / → or buttons)  
-**Scope:** Mobile app only · BRD v2.3 flows unchanged
+**Live review:** PNG packs in `KBZ_UI&UX/Branch1_Atelier/` · `Branch2_Signal/` · `Branch3_Grove/` (same format as Wireframe1/2). Flutter widgets live in `lib/design_mockups/`.  
+**Deck:** `ui-ux-mockups/stakeholder-meeting/index.html`  
+**Spec:** `docs/113-flutter-png-mockup-pack.md`
 
 ---
 
@@ -23,7 +24,7 @@ Pick **one primary mobile design direction** (or approve a **hybrid**) that is *
 | 0–5 | Context: feedback “looks like wireframes” | Product |
 | 5–10 | What stays the same (BRD · flows · scope) | Product |
 | 10–15 | Reference vs three new directions | UX / Eng |
-| 15–25 | **Live demo:** Guest → Auth → Home → CRM → Tasks (each branch) | UX |
+| 15–25 | **PNG review:** Overview sheet + per-screen images (each branch) | UX |
 | 25–35 | Side-by-side comparison · personas | UX |
 | 35–45 | Discussion · risks · MM/ENG · offline | All |
 | 45–50 | **Decision** · next steps · timeline | Product |
@@ -34,7 +35,7 @@ Pick **one primary mobile design direction** (or approve a **hybrid**) that is *
 
 > Stakeholders provided Wireframe1 and Wireframe2 as references. Our first build followed those patterns closely — blue hero, service grid, bottom nav with center FAB. Feedback: **the app still looks like the wireframes**, not a fresh modern product.
 >
-> We are **not** removing features or changing BRD scope. We are proposing **three genuinely different visual and navigation approaches**, implemented as HTML backups on separate git branches for review before Flutter work on `main`.
+> We are **not** removing features or changing BRD scope. We are proposing **three genuinely different visual and navigation approaches**, drawn in **Flutter** (same stack as `main`) and exported as **PNG mockups** — the same review format as Wireframe1/2. HTML is not the source of truth.
 
 ---
 
