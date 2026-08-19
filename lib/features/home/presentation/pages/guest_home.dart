@@ -57,14 +57,6 @@ class GuestHomePage extends StatelessWidget {
         onTap: () => showAuthGate(context),
       ),
       AppServiceItem(
-        label: 'Claim',
-        icon: Icons.verified_outlined,
-        onTap: () => showAuthGate(
-          context,
-          message: 'Commission and servicing after you sign in.',
-        ),
-      ),
-      AppServiceItem(
         label: 'CRM',
         icon: Icons.groups_outlined,
         onTap: () => showAuthGate(context),
