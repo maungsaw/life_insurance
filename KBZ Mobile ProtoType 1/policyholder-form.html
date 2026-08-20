@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Application — FR-05</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB', steel: '#0582CA', baltic: '#006494',
+                        deep: '#003554', cream: '#F7F3EC', mint: '#57C785', warn: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
+        .phone-frame {
+            width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
+            overflow: hidden; position: relative; background: #F7F3EC;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333;
+        }
+        .phone-frame::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 28px; background: #1a1a2e; border-radius: 0 0 18px 18px; z-index: 100;
+        }
+        .scroll-content { height: calc(100% - 88px); overflow-y: auto; scrollbar-width: none; padding-bottom: 12px; }
+        .scroll-content.full { height: 100%; }
+        .scroll-content::-webkit-scrollbar { display: none; }
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; right: 0; background: #FFFcf7;
+            box-shadow: 0 -4px 20px rgba(0,53,84,0.08); border-radius: 24px 24px 0 0; z-index: 50;
+            padding: 12px 16px 28px;
+        }
+        .soft-card { background: #FFFcf7; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,53,84,0.08); }
+        .form-label { display: block; font-size: 11px; font-weight: 600; color: #00355499; margin-bottom: 6px; }
+        .form-label .req { color: #ef4444; }
+        .form-input {
+            width: 100%; padding: 12px 14px; border-radius: 12px; background: #FFFcf7;
+            border: 1px solid rgba(0,53,84,0.08); font-size: 14px; color: #003554; outline: none;
+        }
+        .form-input:focus { border-color: #0582CA; box-shadow: 0 0 0 3px rgba(0,166,251,0.12); }
+        .form-input.ro { background: rgba(0,53,84,0.04); color: #003554aa; }
+        .upload-box {
+            border: 1.5px dashed rgba(0,53,84,0.18); border-radius: 14px; padding: 14px; text-align: center;
+            cursor: pointer; background: #FFFcf7; transition: all 0.2s;
+        }
+        .upload-box:hover { border-color: #0582CA; }
+        .upload-box.ok { border-style: solid; border-color: #57C785; background: rgba(87,199,133,0.08); }
+        .step-circle {
+            width: 26px; height: 26px; border-radius: 50%; background: rgba(0,53,84,0.1); color: #00355488;
+            display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700;
+        }
+        .step-circle.on { background: #003554; color: white; }
+        .step-circle.done { background: #57C785; color: white; }
+        .step-line { flex: 1; height: 2px; background: rgba(0,53,84,0.1); margin: 0 4px; }
+        .step-line.done { background: #57C785; }
+        .hidden-step { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        .sig-pad {
+            width: 100%; height: 120px; border-radius: 14px; background: #fff;
+            border: 1px solid rgba(0,53,84,0.1); touch-action: none; cursor: crosshair;
+        }
+        .status-chip {
+            display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+        }
+        .st-draft { background: rgba(0,53,84,0.08); color: #003554; }
+        .st-submitted { background: rgba(0,166,251,0.15); color: #0582CA; }
+        .st-correction { background: rgba(245,158,11,0.18); color: #b45309; }
+        .st-approved { background: rgba(87,199,133,0.2); color: #15803d; }
+        .st-rejected { background: rgba(239,68,68,0.15); color: #b91c1c; }
+        .side-note {
+            max-width: 260px; background: white; border-radius: 16px; padding: 14px 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06); font-size: 12px; color: #334155; line-height: 1.45;
+        }
+        .filter-pill {
+            white-space: nowrap; padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+            background: #FFFcf7; color: #00355499; box-shadow: 0 4px 12px rgba(0,53,84,0.06);
+        }
+        .filter-pill.on { background: #003554; color: white; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 p-8">
+
+    <div class="text-center lg:text-left mb-2 lg:mb-0 lg:self-start lg:pt-12">
+        <h1 class="text-2xl font-bold text-deep mb-1">e-Application</h1>
+        <p class="text-slate-500 text-sm mb-4">FR-05 · Mobile sales</p>
+        <div class="side-note text-left space-y-2">
+            <p><strong class="text-deep">Start from:</strong> Product, Quote, Client, Lead, Renewal.</p>
+            <p><strong class="text-deep">Docs:</strong> NRC F/B for PH, Insured, Beneficiary · JPEG/PNG/PDF · max 12 MB.</p>
+            <p><strong class="text-deep">Sign:</strong> Client + Agent mandatory.</p>
+            <div class="flex flex-col gap-2 pt-1">
+                <button type="button" onclick="showMode('wizard')" class="py-2 rounded-xl bg-deep text-white text-xs font-semibold">Open e-App wizard</button>
+                <button type="button" onclick="showMode('tracker')" class="py-2 rounded-xl bg-deep/5 text-deep text-xs font-semibold">Application tracker</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="phone-frame">
+
+        <!-- ========== TRACKER ========== -->
+        <div id="trackerMode" class="hidden-step">
+            <div class="scroll-content full px-0">
+                <div class="flex items-center justify-between px-5 pt-4 pb-1">
+                    <span class="text-sm font-semibold text-deep">9:30</span>
+                </div>
+                <div class="flex items-center gap-3 px-5 py-2">
+                    <a href="after-login.html" class="w-9 h-9 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+                        <svg class="w-4 h-4 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <div>
+                        <h1 class="text-deep text-lg font-bold">Applications</h1>
+                        <p class="text-deep/40 text-[10px]">Live status from Core</p>
+                    </div>
+                </div>
+                <div class="px-5 pb-3">
+                    <input id="trackerSearch" type="search" class="form-input" placeholder="Search name / app no…" oninput="filterTracker()">
+                </div>
+                <div class="px-5 pb-3 flex gap-2 overflow-x-auto" style="scrollbar-width:none">
+                    <button type="button" class="filter-pill on" data-st="all" onclick="setStatusFilter(this)">All</button>
+                    <button type="button" class="filter-pill" data-st="Draft" onclick="setStatusFilter(this)">Draft</button>
+                    <button type="button" class="filter-pill" data-st="Submitted" onclick="setStatusFilter(this)">Submitted</button>
+                    <button type="button" class="filter-pill" data-st="Correction" onclick="setStatusFilter(this)">Correction</button>
+                    <button type="button" class="filter-pill" data-st="Approved" onclick="setStatusFilter(this)">Approved</button>
+                    <button type="button" class="filter-pill" data-st="Rejected" onclick="setStatusFilter(this)">Rejected</button>
+                </div>
+                <div class="px-4 space-y-2 pb-8" id="trackerList">
+                    <button type="button" class="w-full text-left soft-card p-4 app-row" data-name="thant zin win" data-st="Submitted" onclick="openAppDetail('Submitted')">
+                        <div class="flex justify-between items-start mb-1">
+                            <p class="text-deep font-semibold text-sm">Thant Zin Win</p>
+                            <span class="status-chip st-submitted">Submitted</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px]">PA · APP-2026-1042 · 18 Aug</p>
+                    </button>
+                    <button type="button" class="w-full text-left soft-card p-4 app-row" data-name="aye aye mon" data-st="Correction" onclick="openAppDetail('Correction')">
+                        <div class="flex justify-between items-start mb-1">
+                            <p class="text-deep font-semibold text-sm">Aye Aye Mon</p>
+                            <span class="status-chip st-correction">Mark for Correction</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px]">Family Health · APP-2026-0988 · missing NRC back</p>
+                    </button>
+                    <button type="button" class="w-full text-left soft-card p-4 app-row" data-name="ko ko aung" data-st="Draft" onclick="showMode('wizard')">
+                        <div class="flex justify-between items-start mb-1">
+                            <p class="text-deep font-semibold text-sm">Ko Ko Aung</p>
+                            <span class="status-chip st-draft">Draft</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px]">Universal Life · local draft</p>
+                    </button>
+                    <button type="button" class="w-full text-left soft-card p-4 app-row" data-name="hla hla" data-st="Approved" onclick="openAppDetail('Approved')">
+                        <div class="flex justify-between items-start mb-1">
+                            <p class="text-deep font-semibold text-sm">Hla Hla</p>
+                            <span class="status-chip st-approved">Approved</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px]">PA · POL issued · 10 Aug</p>
+                    </button>
+                    <button type="button" class="w-full text-left soft-card p-4 app-row" data-name="min min" data-st="Rejected" onclick="openAppDetail('Rejected')">
+                        <div class="flex justify-between items-start mb-1">
+                            <p class="text-deep font-semibold text-sm">Min Min</p>
+                            <span class="status-chip st-rejected">Rejected</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px]">Credit Life · UW declined</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== WIZARD ========== -->
+        <div id="wizardMode">
+            <div class="scroll-content">
+                <div class="flex items-center justify-between px-5 pt-4 pb-1">
+                    <span class="text-sm font-semibold text-deep">9:30</span>
+                </div>
+                <div class="flex items-center gap-3 px-5 py-2">
+                    <button type="button" onclick="goBackNav()" class="w-9 h-9 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+                        <svg class="w-4 h-4 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <h1 class="text-deep text-lg font-bold truncate" id="pageTitle">e-Application</h1>
+                        <p class="text-deep/40 text-[10px]" id="sourceLabel">From quote · Personal Accident</p>
+                    </div>
+                    <button type="button" onclick="saveEappDraft()" class="text-steel text-[11px] font-bold">Save draft</button>
+                </div>
+
+                <div class="flex items-center px-4 py-2" id="stepIndicators">
+                    <div class="step-circle on" id="sc1">1</div>
+                    <div class="step-line" id="sl1"></div>
+                    <div class="step-circle" id="sc2">2</div>
+                    <div class="step-line" id="sl2"></div>
+                    <div class="step-circle" id="sc3">3</div>
+                    <div class="step-line" id="sl3"></div>
+                    <div class="step-circle" id="sc4">4</div>
+                    <div class="step-line" id="sl4"></div>
+                    <div class="step-circle" id="sc5">5</div>
+                </div>
+
+                <!-- STEP 1: Prefill / Customer + Product -->
+                <div id="step1" class="px-4 pb-4">
+                    <div class="rounded-2xl px-4 py-3 mb-3 bg-sky/10">
+                        <p class="text-steel text-[11px] font-semibold">Auto-filled from Core / quote</p>
+                        <p class="text-deep/55 text-[10px] mt-0.5">Customer, product &amp; premium pre-populated. Edit only if needed.</p>
+                    </div>
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep/45 font-bold text-[10px] tracking-wider mb-2">PRODUCT &amp; PREMIUM</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-deep/45">Product</span><span class="text-deep font-semibold">Personal Accident</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Code</span><span class="text-deep font-semibold">PA-001</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Sum Assured</span><span class="text-deep font-semibold">1,000,000 MMK</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Premium</span><span class="text-deep font-semibold">7,100 MMK</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Frequency</span><span class="text-deep font-semibold">One time</span></div>
+                        </div>
+                    </div>
+                    <div class="soft-card p-4">
+                        <p class="text-deep/45 font-bold text-[10px] tracking-wider mb-3">POLICYHOLDER</p>
+                        <div class="mb-3">
+                            <label class="form-label">Full name <span class="req">*</span></label>
+                            <input class="form-input" value="Thant Zin Win" id="phName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone <span class="req">*</span></label>
+                            <input class="form-input" value="09 777 220 119">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input class="form-input" value="thantzin@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">NRC <span class="req">*</span></label>
+                            <input class="form-input" value="12/PAZATA(N)098745">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <div>
+                                <label class="form-label">Gender</label>
+                                <select class="form-input"><option>Male</option><option>Female</option></select>
+                            </div>
+                            <div>
+                                <label class="form-label">Date of birth</label>
+                                <input type="date" class="form-input" value="1992-03-14">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Address</label>
+                            <textarea class="form-input min-h-[64px]">No. 42, Strand Rd, Yangon</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Insured + Beneficiary -->
+                <div id="step2" class="hidden-step px-4 pb-4">
+                    <div class="soft-card p-4 mb-3">
+                        <div class="flex items-center justify-between mb-3">
+                            <p class="text-deep font-bold text-sm">Insured person</p>
+                            <label class="flex items-center gap-2 text-[11px] text-deep/60">
+                                <input type="checkbox" id="sameAsPH" checked onchange="toggleInsured()" class="rounded"> Same as policyholder
+                            </label>
+                        </div>
+                        <div id="insuredFields" class="opacity-40 pointer-events-none">
+                            <div class="mb-3">
+                                <label class="form-label">Full name</label>
+                                <input class="form-input ro" value="Thant Zin Win" readonly>
+                            </div>
+                            <div>
+                                <label class="form-label">NRC</label>
+                                <input class="form-input ro" value="12/PAZATA(N)098745" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="soft-card p-4">
+                        <p class="text-deep font-bold text-sm mb-3">Beneficiary</p>
+                        <div class="mb-3">
+                            <label class="form-label">Name <span class="req">*</span></label>
+                            <input class="form-input" value="Zaw Min Thu">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Relationship <span class="req">*</span></label>
+                            <select class="form-input"><option>Father</option><option>Spouse</option><option>Child</option></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">NRC <span class="req">*</span></label>
+                            <input class="form-input" value="12/PAZATA(N)548964">
+                        </div>
+                        <div>
+                            <label class="form-label">Share %</label>
+                            <input class="form-input" value="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Documents -->
+                <div id="step3" class="hidden-step px-4 pb-4">
+                    <div class="rounded-2xl px-4 py-3 mb-3 bg-deep/[0.04]">
+                        <p class="text-deep text-[11px] leading-relaxed">JPEG / JPG / PNG / PDF · max <strong>12 MB</strong> each. Images are compressed for clarity. Camera or gallery.</p>
+                    </div>
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep font-bold text-sm mb-3">Policyholder NRC <span class="text-red-500">*</span></p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Front</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Back</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                        </div>
+                    </div>
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep font-bold text-sm mb-3">Insured NRC <span class="text-red-500">*</span></p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Front</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Back</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                        </div>
+                    </div>
+                    <div class="soft-card p-4">
+                        <p class="text-deep font-bold text-sm mb-3">Beneficiary NRC <span class="text-red-500">*</span></p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Front</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                            <div class="upload-box" onclick="markUpload(this)"><p class="text-xs font-semibold text-deep">Back</p><p class="text-[10px] text-deep/40 mt-1">Tap to capture</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: E-Signatures -->
+                <div id="step4" class="hidden-step px-4 pb-4">
+                    <div class="soft-card p-4 mb-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-deep font-bold text-sm">Client / Policyholder <span class="text-red-500">*</span></p>
+                            <button type="button" onclick="clearSig('sigClient')" class="text-[10px] text-steel font-semibold">Clear</button>
+                        </div>
+                        <canvas id="sigClient" class="sig-pad" width="310" height="120"></canvas>
+                        <p class="text-[10px] text-deep/40 mt-2">Sign inside the box</p>
+                    </div>
+                    <div class="soft-card p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <p class="text-deep font-bold text-sm">Agent signature <span class="text-red-500">*</span></p>
+                            <button type="button" onclick="clearSig('sigAgent')" class="text-[10px] text-steel font-semibold">Clear</button>
+                        </div>
+                        <canvas id="sigAgent" class="sig-pad" width="310" height="120"></canvas>
+                        <p class="text-[10px] text-deep/40 mt-2">Embedded securely into e-App PDF → Core</p>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Review & Submit -->
+                <div id="step5" class="hidden-step px-4 pb-4">
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep font-bold text-sm mb-3">Review before submit</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between"><span class="text-deep/45">Policyholder</span><span class="text-deep font-semibold" id="revName">Thant Zin Win</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Product</span><span class="text-deep font-semibold">Personal Accident</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Premium</span><span class="text-deep font-semibold">7,100 MMK</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Documents</span><span class="text-mint font-semibold text-xs">6 / 6 NRC</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Signatures</span><span class="text-mint font-semibold text-xs">Client + Agent</span></div>
+                        </div>
+                    </div>
+                    <div class="rounded-2xl px-4 py-3 bg-deep/[0.04] mb-3">
+                        <p class="text-deep/55 text-[11px] leading-relaxed">On submit → status <strong class="text-deep">Submitted</strong>. Underwriting may return <strong class="text-deep">Mark for Correction</strong> for edit &amp; resubmit. Lead start → converts to Client after Core policy submit.</p>
+                    </div>
+                    <label class="flex items-start gap-2 text-[11px] text-deep/60">
+                        <input type="checkbox" class="mt-0.5" id="declareOk"> I confirm details are accurate and signatures are authorized.
+                    </label>
+                </div>
+
+                <!-- Success -->
+                <div id="stepDone" class="hidden-step px-5 pt-6 pb-4">
+                    <div class="soft-card p-6 text-center">
+                        <div class="w-14 h-14 rounded-full bg-mint/20 flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-7 h-7 text-mint" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <h2 class="text-deep font-bold text-lg mb-1">Application submitted</h2>
+                        <p class="text-deep/50 text-sm mb-1">APP-2026-1105</p>
+                        <span class="status-chip st-submitted mb-4">Submitted</span>
+                        <p class="text-deep/45 text-[11px] mt-3 leading-relaxed">Tracking syncs in real time from KBZ Life Core.</p>
+                    </div>
+                    <button type="button" onclick="showMode('tracker')" class="w-full mt-4 bg-deep text-white font-semibold py-3.5 rounded-2xl text-sm">Open tracker</button>
+                    <a href="after-login.html" class="block text-center mt-3 text-deep/45 text-sm font-semibold">Back to Home</a>
+                </div>
+            </div>
+
+            <div class="bottom-nav" id="wizardNav">
+                <div class="flex gap-2">
+                    <button type="button" id="prevBtn" onclick="prevStep()" class="hidden flex-1 py-3.5 rounded-xl bg-deep/5 text-deep font-semibold text-sm">Previous</button>
+                    <button type="button" id="nextBtn" onclick="nextStep()" class="flex-1 py-3.5 rounded-xl bg-deep text-white font-semibold text-sm shadow-lg shadow-sky/20">Next</button>
+                    <button type="button" id="submitBtn" onclick="submitEapp()" class="hidden flex-1 py-3.5 rounded-xl bg-deep text-white font-semibold text-sm">Submit to Core</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- App detail sheet -->
+        <div id="appDetail" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:320;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-deep font-bold text-lg" id="detailTitle">Application</h3>
+                    <button type="button" onclick="closeAppDetail()" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-sm text-deep/55 mb-4" id="detailBody"></p>
+                <div class="flex gap-2 mb-4 text-[10px] text-deep/40 overflow-x-auto">
+                    <span>Draft</span><span>→</span><span>Submitted</span><span>→</span><span>Correction</span><span>→</span><span>Approved / Rejected</span>
+                </div>
+                <button type="button" id="detailAction" onclick="closeAppDetail(); showMode('wizard')" class="w-full bg-deep text-white font-bold py-3.5 rounded-xl text-sm mb-2">Edit &amp; resubmit</button>
+                <button type="button" onclick="closeAppDetail()" class="w-full py-3 text-deep/50 font-semibold text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        const from = params.get('from') || 'quote';
+        const sourceMap = {
+            quote: 'From quote · Personal Accident',
+            product: 'From product catalog · Personal Accident',
+            client: 'From client profile · Thant Zin Win',
+            lead: 'From lead · converts to Client on Core submit',
+            renewal: 'Renewal · Start e-App (within configured window)'
+        };
+        document.getElementById('sourceLabel').textContent = sourceMap[from] || sourceMap.quote;
+
+        let currentStep = 1;
+        const totalSteps = 5;
+        const titles = ['Customer & product', 'Insured & beneficiary', 'Documents', 'E-Signatures', 'Review & submit'];
+        let statusFilter = 'all';
+
+        function showMode(mode) {
+            document.getElementById('trackerMode').classList.toggle('hidden-step', mode !== 'tracker');
+            document.getElementById('wizardMode').classList.toggle('hidden-step', mode !== 'wizard');
+            if (mode === 'wizard') updateUI();
+            history.replaceState(null, '', mode === 'tracker' ? '?view=tracker' : (from ? '?from=' + from : ''));
+        }
+
+        function updateUI() {
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById('step' + i).classList.add('hidden-step');
+            }
+            document.getElementById('stepDone').classList.add('hidden-step');
+            document.getElementById('wizardNav').style.display = '';
+
+            if (currentStep > totalSteps) {
+                document.getElementById('stepDone').classList.remove('hidden-step');
+                document.getElementById('wizardNav').style.display = 'none';
+                document.getElementById('pageTitle').textContent = 'Submitted';
+                return;
+            }
+
+            const el = document.getElementById('step' + currentStep);
+            el.classList.remove('hidden-step');
+            el.classList.add('fade-in');
+            document.getElementById('pageTitle').textContent = titles[currentStep - 1];
+
+            for (let i = 1; i <= totalSteps; i++) {
+                const c = document.getElementById('sc' + i);
+                c.classList.remove('on', 'done');
+                if (i === currentStep) { c.classList.add('on'); c.textContent = i; }
+                else if (i < currentStep) { c.classList.add('done'); c.textContent = '✓'; }
+                else { c.textContent = i; }
+            }
+            for (let i = 1; i < totalSteps; i++) {
+                document.getElementById('sl' + i).classList.toggle('done', i < currentStep);
+            }
+
+            document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
+            document.getElementById('nextBtn').classList.toggle('hidden', currentStep === totalSteps);
+            document.getElementById('submitBtn').classList.toggle('hidden', currentStep !== totalSteps);
+            document.querySelector('.scroll-content').scrollTop = 0;
+            if (currentStep === 4) initPads();
+        }
+
+        function nextStep() {
+            if (currentStep === 4 && (!hasInk('sigClient') || !hasInk('sigAgent'))) {
+                alert('Client and Agent signatures are required.');
+                return;
+            }
+            if (currentStep < totalSteps) { currentStep++; updateUI(); }
+        }
+        function prevStep() {
+            if (currentStep > 1) { currentStep--; updateUI(); }
+        }
+        function goBackNav() {
+            if (currentStep > 1 && currentStep <= totalSteps) prevStep();
+            else location.href = 'after-login.html';
+        }
+        function saveEappDraft() {
+            alert('e-App saved as Draft (local / backend). Open it anytime from Applications tracker.');
+        }
+        function submitEapp() {
+            if (!document.getElementById('declareOk').checked) {
+                alert('Please confirm the declaration.');
+                return;
+            }
+            document.getElementById('revName').textContent = document.getElementById('phName').value;
+            currentStep = totalSteps + 1;
+            updateUI();
+        }
+
+        function toggleInsured() {
+            const same = document.getElementById('sameAsPH').checked;
+            const box = document.getElementById('insuredFields');
+            box.classList.toggle('opacity-40', same);
+            box.classList.toggle('pointer-events-none', same);
+        }
+        function markUpload(el) {
+            el.classList.add('ok');
+            el.querySelector('p:last-child').textContent = 'Attached ✓';
+        }
+
+        /* Signature pads */
+        const pads = {};
+        function initPads() {
+            ['sigClient', 'sigAgent'].forEach(id => {
+                if (pads[id]) return;
+                const canvas = document.getElementById(id);
+                const ctx = canvas.getContext('2d');
+                ctx.strokeStyle = '#003554';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                let drawing = false;
+                const pos = (e) => {
+                    const r = canvas.getBoundingClientRect();
+                    const t = e.touches ? e.touches[0] : e;
+                    return { x: (t.clientX - r.left) * (canvas.width / r.width), y: (t.clientY - r.top) * (canvas.height / r.height) };
+                };
+                const start = (e) => { e.preventDefault(); drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); pads[id].ink = true; };
+                const move = (e) => { if (!drawing) return; e.preventDefault(); const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); };
+                const end = () => { drawing = false; };
+                canvas.addEventListener('mousedown', start);
+                canvas.addEventListener('mousemove', move);
+                canvas.addEventListener('mouseup', end);
+                canvas.addEventListener('mouseleave', end);
+                canvas.addEventListener('touchstart', start, { passive: false });
+                canvas.addEventListener('touchmove', move, { passive: false });
+                canvas.addEventListener('touchend', end);
+                pads[id] = { canvas, ctx, ink: false };
+            });
+        }
+        function clearSig(id) {
+            const p = pads[id];
+            if (!p) return;
+            p.ctx.clearRect(0, 0, p.canvas.width, p.canvas.height);
+            p.ink = false;
+        }
+        function hasInk(id) { return pads[id] && pads[id].ink; }
+
+        /* Tracker */
+        function setStatusFilter(btn) {
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('on'));
+            btn.classList.add('on');
+            statusFilter = btn.dataset.st;
+            filterTracker();
+        }
+        function filterTracker() {
+            const q = (document.getElementById('trackerSearch').value || '').toLowerCase();
+            document.querySelectorAll('.app-row').forEach(row => {
+                const nameOk = row.dataset.name.includes(q);
+                const stOk = statusFilter === 'all' || row.dataset.st === statusFilter;
+                row.style.display = nameOk && stOk ? '' : 'none';
+            });
+        }
+        function openAppDetail(st) {
+            const map = {
+                Submitted: { title: 'Submitted', body: 'Transmitted to Core for underwriting. Status updates in real time.', action: false },
+                Correction: { title: 'Mark for Correction', body: 'Underwriting returned this app — missing Beneficiary NRC back. Edit documents and resubmit.', action: true },
+                Approved: { title: 'Approved', body: 'Underwriting approved. Policy issued in Core System.', action: false },
+                Rejected: { title: 'Rejected', body: 'Application declined by underwriting.', action: false }
+            };
+            const d = map[st] || map.Submitted;
+            document.getElementById('detailTitle').textContent = d.title;
+            document.getElementById('detailBody').textContent = d.body;
+            document.getElementById('detailAction').style.display = d.action ? '' : 'none';
+            document.getElementById('appDetail').style.display = 'flex';
+        }
+        function closeAppDetail() { document.getElementById('appDetail').style.display = 'none'; }
+        document.getElementById('appDetail').addEventListener('click', function (e) {
+            if (e.target === this) closeAppDetail();
+        });
+
+        if (params.get('view') === 'tracker') showMode('tracker');
+        else updateUI();
+    </script>
+</body>
+</html>

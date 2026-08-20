@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After Login — FA Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB',
+                        steel: '#0582CA',
+                        baltic: '#006494',
+                        deep: '#003554',
+                        cream: '#F7F3EC',
+                        mint: '#57C785',
+                        warn: '#F59E0B',
+                        brand: '#0582CA',
+                        'brand-dark': '#003554',
+                        'brand-light': '#e8f6fe',
+                        navy: '#003554',
+                        accent: '#e8a838',
+                        green: '#57C785',
+                        cyan: '#00A6FB',
+                        red: '#ef4444',
+                        purple: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #e8ecf1;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            border-radius: 40px;
+            border: 8px solid #1a1a2e;
+            overflow: hidden;
+            position: relative;
+            background: #F7F3EC;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333;
+        }
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 28px;
+            background: #1a1a2e;
+            border-radius: 0 0 18px 18px;
+            z-index: 100;
+        }
+        .scroll-content {
+            height: calc(100% - 80px);
+            overflow-y: auto;
+            scrollbar-width: none;
+            padding-bottom: 10px;
+        }
+        .scroll-content::-webkit-scrollbar { display: none; }
+
+        .gradient-dashboard {
+            background: linear-gradient(135deg, #00A6FB 0%, #0582CA 55%, #006494 100%);
+            box-shadow: 0 12px 28px rgba(5, 130, 202, 0.28);
+        }
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            border-radius: 30px 30px 0 0;
+            z-index: 50;
+        }
+        .card-shadow { box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08); }
+        .soft-card {
+            background: #FFFcf7;
+            border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
+        }
+        .avail-dot {
+            width: 5px; height: 5px; border-radius: 999px; background: #57C785; margin-top: 6px;
+            box-shadow: 0 0 0 3px rgba(87, 199, 133, 0.16);
+        }
+        .offline-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white; padding: 8px 12px; display: none; align-items: center; gap: 8px;
+            position: sticky; top: 0; z-index: 40;
+        }
+        .offline-banner.show { display: flex; }
+        .service-grid-item {
+            border: none;
+            transition: all 0.2s;
+            background: transparent;
+        }
+        .service-grid-item:hover { background: rgba(0, 166, 251, 0.06); }
+
+        /* KPI Cards - Fixed Layout */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .kpi-card-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circular-progress {
+            width: 48px;
+            height: 48px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .circular-progress svg {
+            transform: rotate(-90deg);
+        }
+        .circular-progress circle {
+            fill: none;
+            stroke-width: 4;
+        }
+        .circular-progress .bg { stroke: rgba(255,255,255,0.2); }
+        .circular-progress .fill {
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .dashboard-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f0f2f5;
+            z-index: 200;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .dashboard-overlay::-webkit-scrollbar { display: none; }
+        .dashboard-overlay.open {
+            transform: translateY(0);
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .metric-row:last-child { border-bottom: none; }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .tab-pill.active {
+            background: #1a5fb4;
+            color: white;
+        }
+
+        .pol-type {
+            white-space: nowrap; padding: 6px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+            background: #FFFcf7; color: rgba(0,53,84,0.55); box-shadow: 0 4px 12px rgba(0,53,84,0.06);
+        }
+        .pol-type.on { background: #003554; color: white; }
+
+        .tab-pill.inactive {
+            background: white;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-8">
+
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-1">After Login</h1>
+        <p class="text-gray-500 text-base">FR-02 Dashboard · FR-03 CRM · FR-06 Policies (Active, read-only)</p>
+        <p class="text-gray-400 text-xs mt-1">
+            <a href="before-login.html" class="text-steel font-semibold">Before Login</a>
+            ·
+            <a href="login.html" class="text-steel font-semibold">Login</a>
+            · After Login
+        </p>
+        <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
+            <button type="button" onclick="toggleOffline()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Toggle Offline</button>
+            <button type="button" id="roleFaBtn" onclick="setDemoRole('fa')" class="text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium">Role: FA</button>
+            <button type="button" id="roleLeaderBtn" onclick="setDemoRole('leader')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Role: Leader</button>
+        </div>
+    </div>
+
+    <div class="phone-frame">
+        <div class="scroll-content" id="homeView">
+
+            <!-- Status Bar -->
+            <div class="flex items-center justify-between px-6 pt-4 pb-2">
+                <span class="text-sm font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-deep" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                    </svg>
+                    <div class="w-6 h-3 border border-deep rounded-sm relative ml-1">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="offlineBanner" class="offline-banner">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div class="flex-1">
+                    <div class="text-xs font-bold">Offline Mode</div>
+                    <div class="text-[9px] opacity-90">Showing cached dashboard · Last synced 2h ago</div>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-4 py-2">
+                <div class="w-9 h-9 rounded-full bg-sky/15 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-deep font-semibold text-xs">Myat Moe Pyae</span>
+                    <button type="button" onclick="openProfileSheet()" class="w-7 h-7 rounded-full bg-gray-300 overflow-hidden border-2 border-white shadow">
+                        <svg class="w-full h-full" viewBox="0 0 40 40">
+                            <rect width="40" height="40" fill="#8fa8c8"/>
+                            <circle cx="20" cy="15" r="7" fill="#6b8aaa"/>
+                            <path d="M8 38c0-6 5-10 12-10s12 4 12 10" fill="#6b8aaa"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="w-8 h-8 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-deep" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Hero slot: Guest Partner → Logged-in This month -->
+            <div class="mx-4 mt-1">
+                <div class="rounded-[18px] gradient-dashboard px-5 pt-5 pb-4">
+                    <div class="flex items-start justify-between gap-2 mb-4">
+                        <div>
+                            <p class="text-white/80 text-[10px] font-semibold tracking-wider uppercase">This month</p>
+                            <h2 class="text-white font-bold text-xl leading-tight">Good Morning, Mr Chit</h2>
+                            <p class="text-white/85 text-[12px] mt-1">Your personal performance</p>
+                        </div>
+                        <button onclick="openDashboard()" class="bg-white text-steel font-bold text-[11px] px-3 py-2 rounded-xl flex-shrink-0 shadow-sm">See more</button>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-card-item">
+                            <div class="text-white/75 text-[10px] font-semibold mb-1">Policies</div>
+                            <div class="text-white text-2xl font-bold leading-none">20</div>
+                            <div class="text-white/55 text-[8px] mt-1">8 new · 12 active</div>
+                        </div>
+                        <div class="kpi-card-item">
+                            <div class="text-white/75 text-[10px] font-semibold mb-1">FYP</div>
+                            <div class="text-white text-2xl font-bold leading-none">72%</div>
+                            <div class="text-white/55 text-[8px] mt-1">MoM ↑ 8%</div>
+                        </div>
+                        <div class="kpi-card-item">
+                            <div class="text-white/75 text-[10px] font-semibold mb-1">Commission</div>
+                            <div class="text-white text-[14px] font-bold leading-tight">MMK<br>726,000.00</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
+                        <div class="flex-1">
+                            <div class="text-white/70 text-[9px] font-semibold">Road to MDRT</div>
+                            <div class="h-1.5 bg-white/20 rounded-full mt-1 overflow-hidden"><div class="h-full bg-white rounded-full" style="width:65%"></div></div>
+                        </div>
+                        <span class="text-white text-xs font-bold">65%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Same soft-card shell as guest Available / Unlock -->
+            <div class="mx-4 mt-4 soft-card overflow-hidden">
+                <div class="px-4 pt-4 pb-3">
+                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">AVAILABLE NOW</h3>
+                    <div class="grid grid-cols-3 gap-0">
+                        <a href="products.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline">
+                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+                            <span class="text-deep text-[11px] font-semibold">Product</span><span class="avail-dot"></span>
+                        </a>
+                        <a href="get-quote.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline" style="border-left:1px solid rgba(0,53,84,0.09);border-right:1px solid rgba(0,53,84,0.09);">
+                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></div>
+                            <span class="text-deep text-[11px] font-semibold">Calculator</span><span class="avail-dot"></span>
+                        </a>
+                        <button type="button" class="flex flex-col items-center text-center py-2 px-1.5">
+                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                            <span class="text-deep text-[11px] font-semibold">Online</span><span class="avail-dot"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="border-t border-deep/5"></div>
+                <div class="px-4 pt-3 pb-4">
+                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">YOUR TOOLS</h3>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <a href="policyholder-form.html?from=product" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">New Proposal</span></a>
+                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Commission</span></button>
+                        <a href="policyholder-form.html?view=tracker" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Proposal Status</span></a>
+                        <button type="button" onclick="showAppTab('customer')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">CRM</span></button>
+                        <button type="button" onclick="showAppTab('policies')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Policies</span></button>
+                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Task Management</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mx-4 mt-4 mb-3 soft-card overflow-hidden">
+                <div class="px-4 pt-4 pb-3 flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em]">PROMOTION &amp; CAMPAIGN</h3>
+                        <p class="text-deep/45 text-[10px] mt-1">Latest incentives &amp; announcements</p>
+                    </div>
+                    <button type="button" class="text-steel text-[12px] font-semibold flex-shrink-0">View all</button>
+                </div>
+                <div class="px-3 pb-3 flex gap-2.5 overflow-x-auto" style="scrollbar-width:none;">
+                    <div class="flex-shrink-0 rounded-2xl p-4" style="width:78%;background:linear-gradient(135deg,#00A6FB,#0582CA);min-height:120px;">
+                        <span class="inline-flex text-[9px] font-bold uppercase tracking-wide bg-white/20 text-white px-2 py-0.5 rounded-full">Incentive</span>
+                        <h4 class="text-white font-bold text-[15px] mt-2 leading-snug">Earn more with every milestone</h4>
+                        <span class="inline-flex mt-3 text-[11px] font-bold bg-white text-deep px-3 py-1.5 rounded-full">Explore →</span>
+                    </div>
+                    <div class="flex-shrink-0 rounded-2xl p-4" style="width:78%;background:linear-gradient(135deg,#006494,#003554);min-height:120px;">
+                        <span class="inline-flex text-[9px] font-bold uppercase tracking-wide bg-white/20 text-white px-2 py-0.5 rounded-full">This month</span>
+                        <h4 class="text-white font-bold text-[15px] mt-2 leading-snug">Special incentives for top closers</h4>
+                        <span class="inline-flex mt-3 text-[11px] font-bold bg-white text-deep px-3 py-1.5 rounded-full">Explore →</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ========== FR-03 Customer (Leads / Clients) ========== -->
+        <div class="scroll-content" id="customerView" style="display:none;">
+            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <span class="text-xs font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative ml-1"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <div id="crmOfflineBanner" class="offline-banner">
+                <div class="flex-1">
+                    <div class="text-xs font-bold">Offline Mode</div>
+                    <div class="text-[9px] opacity-90">New leads save locally · will sync when online</div>
+                </div>
+            </div>
+
+            <div class="px-4 pt-2 pb-2 flex items-center justify-between">
+                <div>
+                    <h2 class="text-deep font-bold text-lg leading-none">Customer</h2>
+                    <p class="text-deep/45 text-[11px] mt-1">Leads &amp; Clients</p>
+                </div>
+                <button type="button" onclick="openNewLead()" class="bg-deep text-white text-[11px] font-bold px-3 py-2 rounded-xl">+ New Lead</button>
+            </div>
+
+            <div class="mx-4 mb-3">
+                <div class="relative">
+                    <svg class="w-4 h-4 text-deep/35 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    <input type="search" placeholder="Search name or phone" class="w-full pl-9 pr-3 py-3 rounded-xl bg-[#FFFcf7] border border-deep/10 text-sm text-deep outline-none focus:border-steel">
+                </div>
+            </div>
+
+            <div class="mx-4 mb-3 flex p-1 rounded-xl bg-deep/5">
+                <button type="button" id="tabLeads" onclick="switchCrmTab('leads')" class="flex-1 py-2 rounded-lg text-[12px] font-bold bg-white text-deep shadow-sm">Leads</button>
+                <button type="button" id="tabClients" onclick="switchCrmTab('clients')" class="flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50">Clients</button>
+            </div>
+
+            <!-- Leads list -->
+            <div id="leadsList" class="mx-4 mb-4 space-y-2.5">
+                <button type="button" onclick="openLeadDetail('Aye Chan')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">AC</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm truncate">Aye Chan</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-warn/15 text-warn px-1.5 py-0.5 rounded">Follow-up</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">09 750 112 233 · PA interest</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <button type="button" onclick="openLeadDetail('Ko Min Thu')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">KM</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm truncate">Ko Min Thu</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-sky/15 text-steel px-1.5 py-0.5 rounded">New</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">09 421 889 001 · Saved offline</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <button type="button" onclick="openLeadDetail('Su Su Hlaing')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">SS</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm truncate">Su Su Hlaing</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-mint px-1.5 py-0.5 rounded">Hot</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">09 965 442 110 · Meeting tomorrow</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <p class="text-[10px] text-deep/40 px-1 pt-1">Lead → Client conversion happens automatically after policy submit in Core. No manual convert.</p>
+            </div>
+
+            <!-- Clients list -->
+            <div id="clientsList" class="mx-4 mb-4 space-y-2.5" style="display:none;">
+                <button type="button" onclick="openClientDetail()" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-mint/20 text-deep font-bold text-sm flex items-center justify-center">TW</div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-deep font-semibold text-sm">Thant Zin Win</span>
+                        <p class="text-deep/45 text-[11px] mt-0.5">09 777 220 119 · 2 active policies</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <button type="button" onclick="openClientDetail()" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-mint/20 text-deep font-bold text-sm flex items-center justify-center">MH</div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-deep font-semibold text-sm">May Hnin Oo</span>
+                        <p class="text-deep/45 text-[11px] mt-0.5">09 250 331 447 · 1 active policy</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- ========== FR-06 Policies (Active, read-only) ========== -->
+        <div class="scroll-content" id="policiesView" style="display:none;">
+            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <span class="text-xs font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative ml-1"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <div class="px-4 pt-2 pb-2 flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                    <h2 class="text-deep font-bold text-lg leading-none">Policies</h2>
+                    <p class="text-deep/45 text-[11px] mt-1">Active only · read-only · Core sync</p>
+                </div>
+                <span id="policyScopeChip" class="flex-shrink-0 text-[10px] font-bold bg-mint/15 text-deep px-2.5 py-1 rounded-full">My book</span>
+            </div>
+
+            <div class="mx-4 mb-2">
+                <div class="relative">
+                    <svg class="w-4 h-4 text-deep/35 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    <input type="search" id="policySearch" oninput="filterPolicies()" placeholder="Name, policy no, NRC, phone…" class="w-full pl-9 pr-3 py-3 rounded-xl bg-[#FFFcf7] border border-deep/10 text-sm text-deep outline-none focus:border-steel">
+                </div>
+                <p class="text-[10px] text-deep/35 mt-1.5 px-0.5">Wildcard / partial match supported</p>
+            </div>
+
+            <div class="mx-4 mb-3 flex gap-2 overflow-x-auto" style="scrollbar-width:none;">
+                <button type="button" class="pol-type on" data-type="all" onclick="setPolicyType(this)">All</button>
+                <button type="button" class="pol-type" data-type="endowment" onclick="setPolicyType(this)">Endowment</button>
+                <button type="button" class="pol-type" data-type="health" onclick="setPolicyType(this)">Health</button>
+                <button type="button" class="pol-type" data-type="ul" onclick="setPolicyType(this)">Universal Life</button>
+                <button type="button" class="pol-type" data-type="pa" onclick="setPolicyType(this)">Protection</button>
+            </div>
+
+            <div id="leaderScopeNote" class="mx-4 mb-3 hidden rounded-xl bg-sky/10 px-3 py-2">
+                <p class="text-[11px] text-steel leading-snug">Leader view: your policies + downline FA book (JWT / Core hierarchy).</p>
+            </div>
+
+            <div class="mx-4 mb-4 space-y-2.5" id="policyList">
+                <button type="button" class="policy-row w-full text-left soft-card px-3.5 py-3" data-q="thant zin win pol-pa-2026-0112 12/pazata(n)098745 09 777 220 119" data-type="pa" data-scope="self" onclick="openPolicyDetail('pa')">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-deep font-semibold text-sm truncate">Thant Zin Win</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5">POL-PA-2026-0112 · Personal Accident</p>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-deep px-1.5 py-0.5 rounded flex-shrink-0">Active</span>
+                    </div>
+                    <p class="text-deep/50 text-[11px] mt-2">Next due <strong class="text-deep">03 Sep 2026</strong> · 7,100 MMK</p>
+                </button>
+                <button type="button" class="policy-row w-full text-left soft-card px-3.5 py-3" data-q="thant zin win pol-en-2025-0881 12/pazata(n)098745 09 777 220 119" data-type="endowment" data-scope="self" onclick="openPolicyDetail('en')">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-deep font-semibold text-sm truncate">Thant Zin Win</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5">POL-EN-2025-0881 · Short Term Endowment</p>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-deep px-1.5 py-0.5 rounded flex-shrink-0">Active</span>
+                    </div>
+                    <p class="text-deep/50 text-[11px] mt-2">Next due <strong class="text-deep">15 Oct 2026</strong> · 85,000 MMK</p>
+                </button>
+                <button type="button" class="policy-row w-full text-left soft-card px-3.5 py-3" data-q="may hnin oo pol-fh-2026-0044 09 250 331 447" data-type="health" data-scope="self" onclick="openPolicyDetail('fh')">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-deep font-semibold text-sm truncate">May Hnin Oo</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5">POL-FH-2026-0044 · Family Health</p>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-deep px-1.5 py-0.5 rounded flex-shrink-0">Active</span>
+                    </div>
+                    <p class="text-deep/50 text-[11px] mt-2">Next due <strong class="text-deep">22 Aug 2026</strong> · 42,000 MMK</p>
+                </button>
+                <button type="button" class="policy-row w-full text-left soft-card px-3.5 py-3" data-q="aung kyaw pol-ul-2026-2201 09 111 222 333 aye thrain" data-type="ul" data-scope="downline" onclick="openPolicyDetail('ul')" style="display:none;">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <p class="text-deep font-semibold text-sm truncate">Aung Kyaw</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5">POL-UL-2026-2201 · Universal Life</p>
+                        </div>
+                        <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-deep px-1.5 py-0.5 rounded flex-shrink-0">Active</span>
+                    </div>
+                    <p class="text-deep/50 text-[11px] mt-2">FA: <strong class="text-deep">Aye Thrain</strong> · Next due 01 Sep 2026</p>
+                </button>
+            </div>
+            <p class="mx-4 mb-6 text-[10px] text-deep/40">Lapsed / cancelled policies are hidden. Data from Core real-time API · JWT scoped.</p>
+        </div>
+
+        <!-- Fixed Bottom Navigation -->
+        <div class="bottom-nav px-2 pt-3 pb-6">
+            <div class="flex items-center justify-around">
+                <button type="button" id="navHome" onclick="showAppTab('home')" class="flex flex-col items-center">
+                    <svg class="w-6 h-6 text-steel" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span class="text-steel text-xs font-semibold mt-1">Home</span>
+                </button>
+                <button type="button" id="navCustomer" onclick="showAppTab('customer')" class="flex flex-col items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Customer</span>
+                </button>
+                <div class="relative -mt-6">
+                    <div class="w-14 h-14 bg-deep rounded-full flex items-center justify-center shadow-lg shadow-sky/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                </div>
+                <a href="products.html" class="flex flex-col items-center no-underline">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Product</span>
+                </a>
+                <button type="button" onclick="openProfileSheet()" class="flex flex-col items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Profile</span>
+                </button>
+            </div>
+        </div>
+
+
+        <!-- New Lead sheet -->
+        <div id="newLeadSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-deep font-bold text-lg">New Lead</h3>
+                    <button type="button" onclick="closeSheet('newLeadSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <label class="block text-deep text-xs font-semibold mb-1.5">Full name *</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" placeholder="Lead name">
+                <label class="block text-deep text-xs font-semibold mb-1.5">Phone *</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" placeholder="09 xxx xxx xxx">
+                <label class="block text-deep text-xs font-semibold mb-1.5">Interest</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" placeholder="e.g. Personal Accident">
+                <label class="block text-deep text-xs font-semibold mb-1.5">Note</label>
+                <textarea class="w-full mb-4 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[72px]" placeholder="Optional note"></textarea>
+                <p class="text-[10px] text-deep/40 mb-3">If offline, this lead is stored on device and syncs when you’re back online.</p>
+                <button type="button" onclick="closeSheet('newLeadSheet'); alert('Lead saved');" class="w-full bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Save Lead</button>
+            </div>
+        </div>
+
+        <!-- Client profile sheet -->
+        <div id="clientSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-deep font-bold text-lg">Client profile</h3>
+                    <button type="button" onclick="closeSheet('clientSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep font-bold">Thant Zin Win</p>
+                    <p class="text-deep/50 text-xs mt-1">09 777 220 119 · Yangon</p>
+                </div>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ACTIVE POLICIES</p>
+                <button type="button" onclick="closeSheet('clientSheet'); openPolicyDetail('pa')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep text-sm font-semibold">Personal Accident</p>
+                    <p class="text-deep/45 text-[11px]">POL-PA-2026-0112 · Active · view</p>
+                </button>
+                <button type="button" onclick="closeSheet('clientSheet'); openPolicyDetail('en')" class="w-full text-left soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep text-sm font-semibold">Endowment</p>
+                    <p class="text-deep/45 text-[11px]">POL-EN-2025-0881 · Active · view</p>
+                </button>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ASSOCIATED CONTACTS</p>
+                <div class="soft-card p-3 mb-3 text-sm text-deep" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">Spouse · Daw Hla Hla</div>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">HISTORY &amp; NOTES</p>
+                <div class="soft-card p-3 text-[12px] text-deep/70 space-y-2 mb-4" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p>12-Aug-2026 · Premium reminder call</p>
+                    <p>03-Jul-2026 · Policy servicing visit</p>
+                </div>
+                <div class="soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep text-sm font-semibold">Personal Accident · renews 03 Sep 2026</p>
+                    <p class="text-deep/45 text-[11px] mb-2">Start e-App available (within portal window: 2 weeks / 1 month)</p>
+                    <a href="policyholder-form.html?from=renewal" class="inline-block text-center w-full bg-steel/10 text-steel font-bold py-2.5 rounded-xl text-xs">Start e-App · Renewal</a>
+                </div>
+                <a href="policyholder-form.html?from=client" class="block w-full text-center bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Start e-App</a>
+            </div>
+        </div>
+
+        <!-- Lead detail sheet -->
+        <div id="leadSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 id="leadSheetName" class="text-deep font-bold text-lg">Lead</h3>
+                    <button type="button" onclick="closeSheet('leadSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep/50 text-xs">Phone</p>
+                    <p class="text-deep text-sm font-semibold">09 750 112 233</p>
+                    <p class="text-deep/50 text-xs mt-2">Interest</p>
+                    <p class="text-deep text-sm font-semibold">Personal Accident</p>
+                </div>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ADD ACTIVITY</p>
+                <textarea id="activityNote" class="w-full mb-2 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[64px]" placeholder="Meeting note / follow-up…"></textarea>
+                <p class="text-[10px] text-deep/40 mb-3">Activity notes are sent to the server right away (not kept permanently on this phone).</p>
+                <button type="button" onclick="saveActivity()" class="w-full bg-deep text-white font-bold py-3 rounded-xl text-sm mb-2">Save activity</button>
+                <button type="button" class="w-full bg-cream text-deep font-semibold py-3 rounded-xl text-sm mb-2">Edit lead</button>
+                <a href="policyholder-form.html?from=lead" class="block w-full text-center bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Start e-App</a>
+                <p class="text-[10px] text-deep/40 mt-2 text-center">On Core policy submit, this lead converts to Client.</p>
+            </div>
+        </div>
+
+
+        <!-- FR-06 Policy detail (read-only) -->
+        <div id="policySheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:90%;overflow-y:auto;">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-1">
+                    <h3 class="text-deep font-bold text-lg" id="polTitle">Policy</h3>
+                    <button type="button" onclick="closeSheet('policySheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[11px] mb-4" id="polSub">Active · read-only</p>
+
+                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">COVERAGE</p>
+                    <div class="space-y-2 text-sm" id="polCoverage"></div>
+                </div>
+                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREMIUM</p>
+                    <div class="space-y-2 text-sm" id="polPremium"></div>
+                </div>
+                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">BENEFICIARIES</p>
+                    <div class="space-y-2 text-sm" id="polBene"></div>
+                </div>
+                <p class="text-[10px] text-deep/40 text-center">No edit on mobile · servicing changes via Core / ops channels</p>
+            </div>
+        </div>
+
+        <!-- Profile / Settings sheet (FR-01 biometric + FR-11) -->
+        <div id="profileSheet" class="modal-overlay" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:85%;overflow-y:auto;">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-12 h-12 rounded-full bg-sky/15 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-deep font-bold text-base">Myat Moe Pyae</h3>
+                        <p class="text-deep/50 text-xs">Agent · Settings</p>
+                    </div>
+                    <button type="button" onclick="closeProfileSheet()" class="ml-auto text-deep/40 text-xl leading-none">×</button>
+                </div>
+
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">SECURITY</p>
+                <div class="soft-card mb-4 overflow-hidden" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div class="flex items-center justify-between px-4 py-3.5">
+                        <div class="pr-3">
+                            <p class="text-deep text-sm font-semibold">Biometric login</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5 leading-snug">Fingerprint / Face ID · change anytime</p>
+                        </div>
+                        <button type="button" id="bioToggle" onclick="toggleBiometric()" class="relative w-12 h-7 rounded-full bg-deep transition-colors flex-shrink-0" aria-pressed="true">
+                            <span id="bioKnob" class="absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-white shadow transition-all"></span>
+                        </button>
+                    </div>
+                    <div class="border-t border-deep/5 px-4 py-3 flex items-center justify-between">
+                        <div>
+                            <p class="text-deep text-sm font-semibold">Change password</p>
+                            <p class="text-deep/45 text-[11px]">You’ll sign in again on all devices</p>
+                        </div>
+                        <span class="text-steel text-xs font-semibold">Open</span>
+                    </div>
+                </div>
+
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREFERENCES</p>
+                <div class="soft-card mb-5 overflow-hidden" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div class="px-4 py-3 flex items-center justify-between">
+                        <p class="text-deep text-sm font-semibold">Language</p>
+                        <span class="text-steel text-xs font-semibold">ENG · MM</span>
+                    </div>
+                </div>
+
+                <a href="before-login.html" class="block w-full text-center bg-cream text-deep font-semibold py-3.5 rounded-xl text-sm">Log out</a>
+                <p id="bioStatus" class="text-center text-[11px] text-mint font-semibold mt-3">Biometric: On</p>
+            </div>
+        </div>
+
+        <!-- ============ DASHBOARD OVERLAY (with APE, Due, K1, MDRT) ============ -->
+        <div id="dashboardOverlay" class="dashboard-overlay">
+            <div class="sticky top-0 bg-white z-10 px-4 pt-4 pb-3 border-b border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                    <button onclick="closeDashboard()" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#1a2744]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <h1 class="text-[#1a2744] font-bold text-base">My Dashboard</h1>
+                    <div class="w-9"></div>
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-1">
+                    <button class="tab-pill inactive">Today</button>
+                    <button class="tab-pill active">This Month</button>
+                    <button class="tab-pill inactive">This Quarter</button>
+                    <button class="tab-pill inactive">YTD</button>
+                </div>
+            </div>
+
+            <div class="px-4 pt-4 pb-6">
+
+                <!-- Performance Overview -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-blue-100">
+                            <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">Performance Overview</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="detail-card">
+                            <div class="text-[10px] text-gray-500 font-medium mb-1">New Policies</div>
+                            <div class="text-[#1a2744] font-bold text-xl">8</div>
+                            <div class="text-green text-[9px] font-medium mt-1">↑ 3 vs last month</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="text-[10px] text-gray-500 font-medium mb-1">Active Policies</div>
+                            <div class="text-[#1a2744] font-bold text-xl">12</div>
+                            <div class="text-green text-[9px] font-medium mt-1">↑ 2 vs last month</div>
+                        </div>
+                    </div>
+                    <div class="detail-card mb-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] text-gray-500 font-medium">Initial FYP</span>
+                            <span class="text-[#1a2744] font-bold text-sm">MMK 3.2M</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill bg-brand" style="width: 65%"></div>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-[9px] text-gray-400">Target: 5M</span>
+                            <span class="text-[9px] text-brand font-medium">65%</span>
+                        </div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] text-gray-500 font-medium">Subsequent FYP</span>
+                            <span class="text-[#1a2744] font-bold text-sm">MMK 1.8M</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill bg-accent" style="width: 80%"></div>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-[9px] text-gray-400">Target: 2.25M</span>
+                            <span class="text-[9px] text-accent font-medium">80%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- APE Section (Moved from main card) -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-purple-100">
+                            <svg class="w-4 h-4 text-purple" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">APE / AFYP</h3>
+                    </div>
+                    <div class="detail-card">
+                        <div class="text-center mb-3">
+                            <div class="text-[10px] text-gray-500 font-medium">Annualized Premium Equivalent</div>
+                            <div class="text-[#1a2744] font-bold text-2xl">MMK 4.2M</div>
+                            <div class="text-green text-xs font-medium mt-1">↑ 10% vs last month</div>
+                        </div>
+                        <div class="border-t border-gray-100 pt-3">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-gray-600">Installment Premium</span>
+                                <span class="text-xs font-semibold text-[#1a2744]">MMK 3.5M</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-600">Single Premium</span>
+                                <span class="text-xs font-semibold text-[#1a2744]">MMK 700K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collections & Due (Moved from main card) -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-green-100">
+                            <svg class="w-4 h-4 text-green" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">Collections</h3>
+                    </div>
+                    <div class="detail-card mb-2">
+                        <div class="metric-row">
+                            <span class="text-xs text-gray-500">Number of Dues</span>
+                            <span class="text-sm font-bold text-[#1a2744]">5</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="text-xs text-gray-500">Due Amount</span>
+                            <span class="text-sm font-bold text-red">MMK 450,000</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="text-xs text-gray-500">Collected Premium</span>
+                            <span class="text-sm font-bold text-green">MMK 1,200,000</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="text-xs text-gray-500">Collection Rate</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-16 h-1.5 bg-gray-200 rounded-full">
+                                    <div class="h-full bg-green rounded-full" style="width: 73%"></div>
+                                </div>
+                                <span class="text-sm font-bold text-green">73%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-3 flex items-start gap-2">
+                        <svg class="w-4 h-4 text-red flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <div>
+                            <p class="text-xs font-semibold text-red">3 Overdue Payments</p>
+                            <p class="text-[10px] text-gray-600 mt-0.5">MMK 180,000 needs immediate follow-up</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Commission -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-accent/20">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">Commission</h3>
+                    </div>
+                    <div class="detail-card">
+                        <div class="text-center mb-3">
+                            <div class="text-[10px] text-gray-500 font-medium">Total Commission</div>
+                            <div class="text-[#1a2744] font-bold text-2xl">MMK 726,000</div>
+                            <div class="text-green text-xs font-medium mt-1">↑ 15% vs last month</div>
+                        </div>
+                        <div class="border-t border-gray-100 pt-3 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-brand"></div>
+                                    <span class="text-xs text-gray-600">Life Insurance</span>
+                                </div>
+                                <span class="text-xs font-semibold text-[#1a2744]">MMK 420,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-accent"></div>
+                                    <span class="text-xs text-gray-600">Health Insurance</span>
+                                </div>
+                                <span class="text-xs font-semibold text-[#1a2744]">MMK 186,000</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-green"></div>
+                                    <span class="text-xs text-gray-600">Accident Insurance</span>
+                                </div>
+                                <span class="text-xs font-semibold text-[#1a2744]">MMK 120,000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persistency (K1) -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-cyan-100">
+                            <svg class="w-4 h-4 text-cyan" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">Persistency</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="detail-card text-center">
+                            <div class="text-[10px] text-gray-500 font-medium mb-1">K1 Persistency</div>
+                            <div class="text-[#1a2744] font-bold text-2xl">92%</div>
+                            <div class="text-[9px] text-gray-400 mt-1">18 / 20 policies</div>
+                            <div class="mt-2">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill bg-green" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            <div class="text-green text-[9px] font-medium mt-1">↑ 3%</div>
+                        </div>
+                        <div class="detail-card text-center">
+                            <div class="text-[10px] text-gray-500 font-medium mb-1">K2 Persistency</div>
+                            <div class="text-[#1a2744] font-bold text-2xl">87%</div>
+                            <div class="text-[9px] text-gray-400 mt-1">13 / 15 policies</div>
+                            <div class="mt-2">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill bg-accent" style="width: 87%"></div>
+                                </div>
+                            </div>
+                            <div class="text-accent text-[9px] font-medium mt-1">Stable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Road to MDRT -->
+                <div class="mb-5 fade-in">
+                    <div class="section-header">
+                        <div class="section-icon bg-accent/20">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-[#1a2744] font-bold text-sm">Road to MDRT</h3>
+                    </div>
+                    <div class="detail-card">
+                        <div class="flex items-center gap-4">
+                            <div class="relative w-20 h-20 flex-shrink-0">
+                                <svg class="w-20 h-20" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+                                    <circle cx="50" cy="50" r="42" fill="none" stroke="#e8a838" stroke-width="8"
+                                        stroke-dasharray="264"
+                                        stroke-dashoffset="92"
+                                        stroke-linecap="round"
+                                        transform="rotate(-90 50 50)"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-[#1a2744] font-bold text-xl">65%</span>
+                                    <span class="text-[8px] text-gray-500">to MDRT</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="mb-2">
+                                    <div class="text-[10px] text-gray-500 font-medium">Current FYP</div>
+                                    <div class="text-[#1a2744] font-bold text-lg">MMK 5.0M</div>
+                                </div>
+                                <div class="mb-2">
+                                    <div class="text-[10px] text-gray-500 font-medium">MDRT Target</div>
+                                    <div class="text-[#1a2744] font-bold text-lg">MMK 7.7M</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-gray-500 font-medium">Remaining</div>
+                                    <div class="text-accent font-bold text-sm">MMK 2.7M</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function openDashboard() {
+            document.getElementById('dashboardOverlay').classList.add('open');
+        }
+        function closeDashboard() {
+            document.getElementById('dashboardOverlay').classList.remove('open');
+        }
+        document.querySelectorAll('.tab-pill').forEach(tab => {
+            tab.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.tab-pill').forEach(t => {
+                    t.classList.remove('active');
+                    t.classList.add('inactive');
+                });
+                this.classList.remove('inactive');
+                this.classList.add('active');
+            });
+        });
+
+        let biometricOn = true;
+        if (location.hash === '#customer') setTimeout(() => showAppTab('customer'), 0);
+        if (location.hash === '#policies') setTimeout(() => showAppTab('policies'), 0);
+        
+        let demoRole = 'fa';
+        let policyTypeFilter = 'all';
+
+        function showAppTab(tab) {
+            const home = document.getElementById('homeView');
+            const customer = document.getElementById('customerView');
+            const policies = document.getElementById('policiesView');
+            const navHome = document.getElementById('navHome');
+            const navCustomer = document.getElementById('navCustomer');
+            home.style.display = tab === 'home' ? 'block' : 'none';
+            customer.style.display = tab === 'customer' ? 'block' : 'none';
+            policies.style.display = tab === 'policies' ? 'block' : 'none';
+
+            const homeSvg = navHome.querySelector('svg');
+            const homeSpan = navHome.querySelector('span');
+            const custSvg = navCustomer.querySelector('svg');
+            const custSpan = navCustomer.querySelector('span');
+            const homeOn = tab === 'home';
+            const custOn = tab === 'customer';
+            if (homeOn) {
+                homeSvg.classList.remove('text-gray-400'); homeSvg.classList.add('text-steel');
+                homeSpan.className = 'text-steel text-xs font-semibold mt-1';
+            } else {
+                homeSvg.classList.remove('text-steel'); homeSvg.classList.add('text-gray-400');
+                homeSpan.className = 'text-gray-400 text-xs mt-1';
+            }
+            if (custOn) {
+                custSvg.classList.remove('text-gray-400'); custSvg.classList.add('text-steel');
+                custSpan.className = 'text-steel text-xs font-semibold mt-1';
+            } else {
+                custSvg.classList.remove('text-steel'); custSvg.classList.add('text-gray-400');
+                custSpan.className = 'text-gray-400 text-xs mt-1';
+            }
+            if (tab === 'customer') switchCrmTab('leads');
+            if (tab === 'policies') filterPolicies();
+        }
+
+        function setDemoRole(role) {
+            demoRole = role;
+            const fa = document.getElementById('roleFaBtn');
+            const ld = document.getElementById('roleLeaderBtn');
+            if (role === 'fa') {
+                fa.className = 'text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium';
+                ld.className = 'text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium';
+                document.getElementById('policyScopeChip').textContent = 'My book';
+                document.getElementById('leaderScopeNote').classList.add('hidden');
+            } else {
+                ld.className = 'text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium';
+                fa.className = 'text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium';
+                document.getElementById('policyScopeChip').textContent = 'Self + downline';
+                document.getElementById('leaderScopeNote').classList.remove('hidden');
+            }
+            filterPolicies();
+        }
+
+        function setPolicyType(btn) {
+            document.querySelectorAll('.pol-type').forEach(b => b.classList.remove('on'));
+            btn.classList.add('on');
+            policyTypeFilter = btn.dataset.type;
+            filterPolicies();
+        }
+
+        function filterPolicies() {
+            const q = (document.getElementById('policySearch')?.value || '').toLowerCase().trim();
+            document.querySelectorAll('.policy-row').forEach(row => {
+                const scopeOk = demoRole === 'leader' || row.dataset.scope === 'self';
+                const typeOk = policyTypeFilter === 'all' || row.dataset.type === policyTypeFilter;
+                const textOk = !q || (row.dataset.q || '').includes(q);
+                row.style.display = scopeOk && typeOk && textOk ? '' : 'none';
+            });
+        }
+
+        const policyData = {
+            pa: {
+                title: 'Personal Accident',
+                sub: 'POL-PA-2026-0112 · Active',
+                coverage: [['Client', 'Thant Zin Win'], ['Sum assured', '1,000,000 MMK'], ['Term', '1 Year'], ['Product', 'PA-001']],
+                premium: [['Next due', '03 Sep 2026'], ['Amount', '7,100 MMK'], ['Frequency', 'One time'], ['Last paid', '03 Sep 2025']],
+                bene: [['Zaw Min Thu', 'Father · 100%']]
+            },
+            en: {
+                title: 'Short Term Endowment',
+                sub: 'POL-EN-2025-0881 · Active',
+                coverage: [['Client', 'Thant Zin Win'], ['Sum assured', '5,000,000 MMK'], ['Term', '5 Years'], ['Product', 'EN-STE']],
+                premium: [['Next due', '15 Oct 2026'], ['Amount', '85,000 MMK'], ['Frequency', 'Annual'], ['Last paid', '15 Oct 2025']],
+                bene: [['Daw Hla Hla', 'Spouse · 100%']]
+            },
+            fh: {
+                title: 'Family Health',
+                sub: 'POL-FH-2026-0044 · Active',
+                coverage: [['Client', 'May Hnin Oo'], ['Sum assured', '3,000,000 MMK'], ['Plan', 'Family'], ['Product', 'FH-01']],
+                premium: [['Next due', '22 Aug 2026'], ['Amount', '42,000 MMK'], ['Frequency', 'Quarterly'], ['Last paid', '22 May 2026']],
+                bene: [['Ko Min Oo', 'Spouse · 50%'], ['Su Su Oo', 'Child · 50%']]
+            },
+            ul: {
+                title: 'Universal Life',
+                sub: 'POL-UL-2026-2201 · Active · Downline',
+                coverage: [['Client', 'Aung Kyaw'], ['Sum assured', '10,000,000 MMK'], ['Servicing FA', 'Aye Thrain'], ['Product', 'UL-01']],
+                premium: [['Next due', '01 Sep 2026'], ['Amount', '120,000 MMK'], ['Frequency', 'Monthly'], ['Last paid', '01 Aug 2026']],
+                bene: [['Ma Ma Aye', 'Spouse · 100%']]
+            }
+        };
+
+        function openPolicyDetail(id) {
+            const d = policyData[id] || policyData.pa;
+            document.getElementById('polTitle').textContent = d.title;
+            document.getElementById('polSub').textContent = d.sub + ' · read-only';
+            const row = (a,b) => `<div class="flex justify-between gap-2"><span class="text-deep/45">${a}</span><span class="text-deep font-semibold text-right">${b}</span></div>`;
+            document.getElementById('polCoverage').innerHTML = d.coverage.map(([a,b]) => row(a,b)).join('');
+            document.getElementById('polPremium').innerHTML = d.premium.map(([a,b]) => row(a,b)).join('');
+            document.getElementById('polBene').innerHTML = d.bene.map(([a,b]) => row(a,b)).join('');
+            openSheet('policySheet');
+        }
+        function switchCrmTab(which) {
+            const leads = which === 'leads';
+            document.getElementById('leadsList').style.display = leads ? 'block' : 'none';
+            document.getElementById('clientsList').style.display = leads ? 'none' : 'block';
+            const tl = document.getElementById('tabLeads');
+            const tc = document.getElementById('tabClients');
+            tl.className = leads ? 'flex-1 py-2 rounded-lg text-[12px] font-bold bg-white text-deep shadow-sm' : 'flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50';
+            tc.className = !leads ? 'flex-1 py-2 rounded-lg text-[12px] font-bold bg-white text-deep shadow-sm' : 'flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50';
+        }
+        function openSheet(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        function closeSheet(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        function openNewLead() { openSheet('newLeadSheet'); }
+        function openClientDetail() { openSheet('clientSheet'); }
+        function openLeadDetail(name) {
+            document.getElementById('leadSheetName').textContent = name;
+            openSheet('leadSheet');
+        }
+        function saveActivity() {
+            const note = document.getElementById('activityNote');
+            if (!note.value.trim()) { alert('Please enter a note'); return; }
+            note.value = '';
+            alert('Activity sent to server');
+            closeSheet('leadSheet');
+        }
+
+        function toggleOffline() {
+            document.getElementById('offlineBanner').classList.toggle('show');
+            const crm = document.getElementById('crmOfflineBanner');
+            if (crm) crm.classList.toggle('show');
+        }
+
+        function openProfileSheet() {
+            const sheet = document.getElementById('profileSheet');
+            sheet.style.display = 'flex';
+        }
+        function closeProfileSheet() {
+            document.getElementById('profileSheet').style.display = 'none';
+        }
+        document.getElementById('profileSheet').addEventListener('click', function (e) {
+            if (e.target === this) closeProfileSheet();
+        });
+
+        function toggleBiometric() {
+            biometricOn = !biometricOn;
+            const btn = document.getElementById('bioToggle');
+            const knob = document.getElementById('bioKnob');
+            const status = document.getElementById('bioStatus');
+            btn.setAttribute('aria-pressed', biometricOn ? 'true' : 'false');
+            if (biometricOn) {
+                btn.classList.remove('bg-gray-300');
+                btn.classList.add('bg-deep');
+                knob.style.left = 'auto';
+                knob.style.right = '2px';
+                status.textContent = 'Biometric: On';
+                status.className = 'text-center text-[11px] text-mint font-semibold mt-3';
+            } else {
+                btn.classList.remove('bg-deep');
+                btn.classList.add('bg-gray-300');
+                knob.style.right = 'auto';
+                knob.style.left = '2px';
+                status.textContent = 'Biometric: Off';
+                status.className = 'text-center text-[11px] text-deep/45 font-semibold mt-3';
+            }
+        }
+    </script>
+
+</body>
+</html>

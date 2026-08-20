@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products — FR-04 Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB',
+                        steel: '#0582CA',
+                        baltic: '#006494',
+                        deep: '#003554',
+                        cream: '#F7F3EC',
+                        mint: '#57C785',
+                        warn: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
+        .phone-frame {
+            width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
+            overflow: hidden; position: relative; background: #F7F3EC;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333;
+        }
+        .phone-frame::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 28px; background: #1a1a2e; border-radius: 0 0 18px 18px; z-index: 100;
+        }
+        .scroll-content {
+            height: calc(100% - 80px); overflow-y: auto; scrollbar-width: none; padding-bottom: 12px;
+        }
+        .scroll-content::-webkit-scrollbar { display: none; }
+        .bottom-nav {
+            position: absolute; bottom: 0; left: 0; right: 0; background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08); border-radius: 30px 30px 0 0; z-index: 50;
+        }
+        .soft-card {
+            background: #FFFcf7; border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
+        }
+        .filter-tab {
+            white-space: nowrap; padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+            color: #00355499; background: #FFFcf7; box-shadow: 0 4px 12px rgba(0,53,84,0.06);
+            transition: all 0.2s;
+        }
+        .filter-tab.active { background: #003554; color: white; }
+        .product-card {
+            background: #FFFcf7; border-radius: 18px; padding: 14px 12px 12px;
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
+            display: flex; flex-direction: column; align-items: center; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0, 53, 84, 0.12); }
+        .product-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0,166,251,0.12), rgba(5,130,202,0.18));
+            display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+        }
+        .tag-pill {
+            display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 600;
+            color: #0582CA; background: rgba(0,166,251,0.1); margin-top: auto;
+        }
+        .product-card-link { display: block; text-decoration: none; color: inherit; }
+        .tabs-scroll { overflow-x: auto; scrollbar-width: none; }
+        .tabs-scroll::-webkit-scrollbar { display: none; }
+        .offline-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white; padding: 8px 12px; display: none; align-items: center; gap: 8px;
+            position: sticky; top: 0; z-index: 40;
+        }
+        .offline-banner.show { display: flex; }
+        .side-note {
+            max-width: 280px; background: white; border-radius: 16px; padding: 14px 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06); font-size: 12px; color: #334155; line-height: 1.45;
+        }
+        .side-note h4 { font-size: 13px; font-weight: 700; color: #003554; margin-bottom: 6px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 p-8">
+
+    <div class="text-center lg:text-left mb-2 lg:mb-0 lg:self-start lg:pt-16">
+        <h1 class="text-2xl font-bold text-deep mb-1">Product Library</h1>
+        <p class="text-slate-500 text-sm mb-4">FR-04 · Mobile · After login</p>
+        <div class="side-note text-left space-y-3">
+            <div>
+                <h4>Visibility (two-tier)</h4>
+                <p>Only <strong>Active</strong> products (Web setup) <strong>and</strong> assigned ON for this FA (FR-11) appear here. Travel Protect is OFF for this agent — hidden.</p>
+            </div>
+            <div>
+                <h4>Draft quotes</h4>
+                <p>Local drafts never expire. Max count from <code class="text-[11px] bg-cream px-1 rounded">Max_Local_Draft_Quotes_Limit</code> (demo: 5).</p>
+            </div>
+            <button type="button" onclick="toggleOffline()" class="w-full mt-1 py-2 rounded-xl bg-deep text-white text-xs font-semibold">Toggle Offline</button>
+        </div>
+    </div>
+
+    <div class="phone-frame">
+        <div class="scroll-content">
+
+            <div id="offlineBanner" class="offline-banner text-xs font-medium">
+                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                <span>Offline — drafts stay on this device until sync</span>
+            </div>
+
+            <div class="flex items-center justify-between px-5 pt-4 pb-2">
+                <span class="text-sm font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5 opacity-70">
+                    <div class="w-6 h-3 border border-deep rounded-sm relative">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-2">
+                <div class="w-9 h-9 flex items-center justify-center">
+                    <svg viewBox="0 0 36 36" class="w-9 h-9">
+                        <path d="M18 3L5 9v9c0 8 5.5 15 13 18 7.5-3 13-10 13-18V9L18 3z" fill="#003554"/>
+                        <line x1="18" y1="12" x2="18" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="13" y1="17" x2="23" y2="17" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-deep font-semibold text-xs">Myat Moe Pyae</span>
+                    <div class="w-8 h-8 rounded-full bg-steel/20 overflow-hidden shadow">
+                        <svg class="w-full h-full" viewBox="0 0 40 40">
+                            <rect width="40" height="40" fill="#0582CA"/>
+                            <circle cx="20" cy="15" r="7" fill="#e8f6fe"/>
+                            <path d="M8 38c0-6 5-10 12-10s12 4 12 10" fill="#e8f6fe"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="w-8 h-8 flex items-center justify-center text-deep/50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="px-5 pt-2 pb-1">
+                <h1 class="text-deep text-2xl font-bold">Products</h1>
+                <p class="text-deep/45 text-xs mt-1">Your authorized Life &amp; Health plans</p>
+            </div>
+
+            <div class="px-5 pb-3 pt-2">
+                <div class="tabs-scroll flex gap-2">
+                    <button type="button" class="filter-tab active" data-filter="all" onclick="setFilter(this)">All</button>
+                    <button type="button" class="filter-tab" data-filter="Saving" onclick="setFilter(this)">Saving</button>
+                    <button type="button" class="filter-tab" data-filter="Protection" onclick="setFilter(this)">Protection</button>
+                    <button type="button" class="filter-tab" data-filter="Health" onclick="setFilter(this)">Health</button>
+                </div>
+            </div>
+
+            <div class="px-4 pb-3">
+                <div class="grid grid-cols-2 gap-3" id="productGrid">
+
+                    <div class="product-card" data-tag="Saving">
+                        <div class="product-icon">
+                            <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-deep font-bold text-sm text-center mb-1">Universal Life</h3>
+                        <p class="text-deep/45 text-[11px] text-center leading-tight mb-3">Flexible protection and growth.</p>
+                        <span class="tag-pill">Saving</span>
+                    </div>
+
+                    <div class="product-card" data-tag="Saving">
+                        <div class="product-icon">
+                            <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-deep font-bold text-sm text-center mb-1">Short Term Endowment</h3>
+                        <p class="text-deep/45 text-[11px] text-center leading-tight mb-3">Secure milestones with confidence.</p>
+                        <span class="tag-pill">Saving</span>
+                    </div>
+
+                    <a href="personal-accident.html" class="product-card-link" data-tag="Protection">
+                        <div class="product-card" data-tag="Protection">
+                            <div class="product-icon">
+                                <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-deep font-bold text-sm text-center mb-1">Personal Accident</h3>
+                            <p class="text-deep/45 text-[11px] text-center leading-tight mb-3">Support against accidents &amp; injuries.</p>
+                            <span class="tag-pill">Protection</span>
+                        </div>
+                    </a>
+
+                    <div class="product-card" data-tag="Protection">
+                        <div class="product-icon">
+                            <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-deep font-bold text-sm text-center mb-1">Credit Life</h3>
+                        <p class="text-deep/45 text-[11px] text-center leading-tight mb-3">Protect loans and repayments.</p>
+                        <span class="tag-pill">Protection</span>
+                    </div>
+
+                    <div class="product-card" data-tag="Health">
+                        <div class="product-icon">
+                            <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-deep font-bold text-sm text-center mb-1">Family Health</h3>
+                        <p class="text-deep/45 text-[11px] text-center leading-tight mb-3">Healthcare for your loved ones.</p>
+                        <span class="tag-pill">Health</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- My Draft Quotes (FR-04.4) -->
+            <div class="px-4 pb-4">
+                <div class="soft-card p-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="text-deep font-bold text-sm">My draft quotes</h3>
+                            <p class="text-deep/40 text-[10px] mt-0.5">On device · no expiry · <span id="draftCountLabel">2</span>/5</p>
+                        </div>
+                        <a href="get-quote.html?auth=1" class="text-steel text-xs font-semibold">Calculator</a>
+                    </div>
+                    <button type="button" onclick="openDraftSheet('pa')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-deep text-sm font-semibold">Personal Accident</p>
+                                <p class="text-deep/45 text-[11px]">1,000,000 MMK · Draft</p>
+                            </div>
+                            <span class="text-[10px] font-semibold text-warn bg-warn/10 px-2 py-1 rounded-full">Local</span>
+                        </div>
+                    </button>
+                    <button type="button" onclick="openDraftSheet('ul')" class="w-full text-left soft-card p-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-deep text-sm font-semibold">Universal Life</p>
+                                <p class="text-deep/45 text-[11px]">Pending sync</p>
+                            </div>
+                            <span class="text-[10px] font-semibold text-steel bg-sky/10 px-2 py-1 rounded-full">Queued</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Submitted quote validity hint -->
+            <div class="px-4 pb-6">
+                <div class="rounded-2xl px-4 py-3 bg-deep/[0.04]">
+                    <p class="text-deep/55 text-[11px] leading-relaxed">
+                        Submitted quotes stay valid for <strong class="text-deep">30 days</strong> (admin-configurable). After that, status becomes <strong class="text-deep">EXPIRED</strong>.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav px-2 pt-3 pb-6">
+            <div class="flex items-center justify-around">
+                <a href="after-login.html" class="flex flex-col items-center no-underline">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Home</span>
+                </a>
+                <a href="after-login.html#customer" class="flex flex-col items-center no-underline">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Customer</span>
+                </a>
+                <div class="relative -mt-6">
+                    <div class="w-14 h-14 bg-deep rounded-full flex items-center justify-center shadow-lg shadow-sky/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <svg class="w-6 h-6 text-steel" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span class="text-steel text-xs font-semibold mt-1">Product</span>
+                </div>
+                <a href="after-login.html" class="flex flex-col items-center no-underline">
+                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="text-gray-400 text-xs mt-1">Profile</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Draft detail sheet -->
+        <div id="draftSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg" id="draftTitle">Draft quote</h3>
+                    <button type="button" onclick="closeDraftSheet()" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/50 text-sm mb-4" id="draftBody">Saved on this device. Syncs automatically when online.</p>
+                <p class="text-[10px] text-deep/40 mb-4">Drafts do not expire. Limit: 5 per device (portal setting).</p>
+                <a href="get-quote.html?auth=1" class="block w-full text-center bg-deep text-white font-bold py-3.5 rounded-xl text-sm mb-2">Open calculator</a>
+                <a href="policyholder-form.html?from=quote" class="block w-full text-center bg-steel/10 text-steel font-bold py-3 rounded-xl text-sm mb-2">Convert to e-App</a>
+                <button type="button" onclick="closeDraftSheet()" class="w-full py-3 rounded-xl bg-deep/5 text-deep font-semibold text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let offline = false;
+
+        function toggleOffline() {
+            offline = !offline;
+            document.getElementById('offlineBanner').classList.toggle('show', offline);
+        }
+
+        function setFilter(btn) {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            const f = btn.dataset.filter;
+            document.querySelectorAll('#productGrid > *').forEach(el => {
+                const tag = el.dataset.tag || el.querySelector('.product-card')?.dataset.tag;
+                el.style.display = (f === 'all' || tag === f) ? '' : 'none';
+            });
+        }
+
+        function openDraftSheet(id) {
+            const map = {
+                pa: { title: 'Personal Accident', body: 'Sum insured 1,000,000 MMK · stored locally as Draft.' },
+                ul: { title: 'Universal Life', body: 'Queued for sync when connectivity returns.' }
+            };
+            const d = map[id] || map.pa;
+            document.getElementById('draftTitle').textContent = d.title;
+            document.getElementById('draftBody').textContent = d.body;
+            const sheet = document.getElementById('draftSheet');
+            sheet.style.display = 'flex';
+        }
+
+        function closeDraftSheet() {
+            document.getElementById('draftSheet').style.display = 'none';
+        }
+
+        document.getElementById('draftSheet').addEventListener('click', function (e) {
+            if (e.target === this) closeDraftSheet();
+        });
+    </script>
+</body>
+</html>

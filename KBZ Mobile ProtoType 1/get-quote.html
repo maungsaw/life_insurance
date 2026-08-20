@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get a Quote — FR-04 Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB',
+                        steel: '#0582CA',
+                        baltic: '#006494',
+                        deep: '#003554',
+                        cream: '#F7F3EC',
+                        mint: '#57C785',
+                        warn: '#F59E0B',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
+        .phone-frame {
+            width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
+            overflow: hidden; position: relative; background: #F7F3EC;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333;
+        }
+        .phone-frame::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 28px; background: #1a1a2e; border-radius: 0 0 18px 18px; z-index: 100;
+        }
+        .scroll-content { height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 24px; }
+        .scroll-content::-webkit-scrollbar { display: none; }
+        .form-input {
+            width: 100%; padding: 14px 16px; border-radius: 14px; background: #FFFcf7;
+            border: 1px solid rgba(0,53,84,0.08); font-size: 15px; color: #003554;
+            transition: all 0.2s; outline: none; box-shadow: 0 4px 12px rgba(0,53,84,0.04);
+        }
+        .form-input:focus { border-color: #0582CA; box-shadow: 0 0 0 3px rgba(0,166,251,0.15); }
+        .risk-toggle { display: flex; border-radius: 14px; overflow: hidden; background: #FFFcf7; box-shadow: 0 4px 12px rgba(0,53,84,0.06); }
+        .risk-btn {
+            flex: 1; padding: 12px; text-align: center; font-weight: 600; font-size: 15px;
+            cursor: pointer; transition: all 0.2s; color: #00355499; background: transparent;
+        }
+        .risk-btn.active { background: #003554; color: white; }
+        .risk-btn.active-yes { background: #ef4444; color: white; }
+        .quote-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid rgba(0,53,84,0.06);
+        }
+        .quote-row:last-child { border-bottom: none; }
+        .soft-card {
+            background: #FFFcf7; border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
+        }
+        .step-dot { width: 8px; height: 8px; border-radius: 999px; background: rgba(0,53,84,0.15); }
+        .step-dot.on { background: #0582CA; }
+        .fade-in { animation: fadeIn 0.35s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hidden-view { display: none !important; }
+        .offline-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white; padding: 8px 12px; display: none; align-items: center; gap: 8px;
+            position: sticky; top: 0; z-index: 40; font-size: 11px; font-weight: 500;
+        }
+        .offline-banner.show { display: flex; }
+        .side-note {
+            max-width: 260px; background: white; border-radius: 16px; padding: 14px 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06); font-size: 12px; color: #334155; line-height: 1.45;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 p-8">
+
+    <div class="text-center lg:text-left mb-2 lg:mb-0 lg:self-start lg:pt-16">
+        <h1 class="text-2xl font-bold text-deep mb-1">Premium Calculator</h1>
+        <p class="text-slate-500 text-sm mb-4">FR-04 · Guided quote</p>
+        <div class="side-note text-left space-y-3">
+            <p><strong class="text-deep">Draft:</strong> save offline; no expiry; sync when online.</p>
+            <p><strong class="text-deep">Submit:</strong> default 30-day validity → then EXPIRED.</p>
+            <button type="button" onclick="toggleOffline()" class="w-full py-2 rounded-xl bg-deep text-white text-xs font-semibold">Toggle Offline</button>
+            <a href="products.html" class="block text-center text-steel text-xs font-semibold pt-1">← Product library</a>
+        </div>
+    </div>
+
+    <div class="phone-frame">
+        <div class="scroll-content">
+
+            <div id="offlineBanner" class="offline-banner">
+                <span>Offline — you can still calculate &amp; save a draft</span>
+            </div>
+
+            <!-- FORM -->
+            <div id="formView" class="px-5 pt-5 pb-6">
+                <div class="flex items-center gap-3 mb-5">
+                    <a href="personal-accident.html" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-deep text-xl font-bold">Get a Quote</h1>
+                        <p class="text-deep/40 text-[11px]">Personal Accident</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="step-dot on"></div>
+                    <div class="step-dot"></div>
+                    <span class="text-deep/40 text-[10px] ml-1">Step 1 · Client inputs</span>
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-deep/50 text-sm font-medium mb-2 block">Date of birth <span class="text-red-500">*</span></label>
+                    <input type="date" id="dob" class="form-input" value="1995-08-17">
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-deep/50 text-sm font-medium mb-2 block">Sum Insured</label>
+                    <select id="sumInsured" class="form-input appearance-none cursor-pointer">
+                        <option value="500000">500,000 MMK</option>
+                        <option value="1000000" selected>1,000,000 MMK</option>
+                        <option value="2000000">2,000,000 MMK</option>
+                        <option value="5000000">5,000,000 MMK</option>
+                        <option value="10000000">10,000,000 MMK</option>
+                    </select>
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-deep/50 text-sm font-medium mb-2 block">Policy Term</label>
+                    <select id="policyTerm" class="form-input appearance-none cursor-pointer">
+                        <option value="3">3 Months</option>
+                        <option value="6">6 Months</option>
+                        <option value="12" selected>12 Months (1 Year)</option>
+                    </select>
+                </div>
+
+                <div class="mb-8">
+                    <label class="text-deep/50 text-sm font-medium mb-2 block">High risk industry?</label>
+                    <div class="risk-toggle">
+                        <div class="risk-btn" id="riskYes" onclick="setRisk('yes')">Yes</div>
+                        <div class="risk-btn active" id="riskNo" onclick="setRisk('no')">No ✓</div>
+                    </div>
+                    <p class="text-steel text-xs mt-2">(construction, mining, heavy equipment…)</p>
+                </div>
+
+                <button type="button" onclick="calculateQuote()" class="w-full bg-deep text-white font-semibold py-4 rounded-2xl text-base shadow-lg shadow-sky/20 active:scale-[0.98] transition-all">
+                    Calculate premium
+                </button>
+            </div>
+
+            <!-- QUOTE RESULT -->
+            <div id="quoteView" class="hidden-view px-5 pt-5 pb-6 fade-in">
+                <div class="flex items-center gap-3 mb-5">
+                    <button type="button" onclick="backToForm()" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-deep text-xl font-bold">Your quote</h1>
+                        <p class="text-deep/40 text-[11px]">Core pricing · estimate</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mb-5">
+                    <div class="step-dot on"></div>
+                    <div class="step-dot on"></div>
+                    <span class="text-deep/40 text-[10px] ml-1">Step 2 · Review &amp; save</span>
+                </div>
+
+                <div class="soft-card p-5 mb-4">
+                    <h2 class="text-deep font-bold text-base mb-3">Quote details</h2>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Product</span><span class="text-deep font-semibold text-sm">Personal Accident</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Sum Insured</span><span class="text-deep font-semibold text-sm" id="qSumInsured">1,000,000 MMK</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Policy Term</span><span class="text-deep font-semibold text-sm" id="qPolicyTerm">1 Year</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Premium</span><span class="text-deep font-semibold text-sm" id="qPremium">7,000 MMK</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Stamp fees</span><span class="text-deep font-semibold text-sm">100 MMK</span></div>
+                    <div class="flex justify-between items-center pt-4 mt-2 border-t border-deep/10">
+                        <span class="text-deep font-bold">Total Premium</span>
+                        <span class="text-deep font-bold text-xl" id="qTotalPremium">7,100 MMK</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <select class="form-input appearance-none cursor-pointer text-deep/40 text-sm">
+                        <option>Referral code (optional)</option>
+                        <option>REF2024A</option>
+                        <option>PARTNER01</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <button type="button" onclick="saveDraft()" class="py-3.5 rounded-2xl bg-[#FFFcf7] text-deep font-semibold text-sm shadow" style="box-shadow:0 8px 24px rgba(0,53,84,0.08);">
+                        Save draft
+                    </button>
+                    <button type="button" onclick="submitOrBuy()" class="py-3.5 rounded-2xl bg-deep text-white font-semibold text-sm shadow-lg shadow-sky/20">
+                        Buy / e-App
+                    </button>
+                </div>
+                <p class="text-deep/40 text-[10px] text-center leading-relaxed" id="actionHint">
+                    Draft stays on device (no expiry). Submitted quotes valid 30 days.
+                </p>
+            </div>
+
+            <!-- SUBMITTED CONFIRMATION -->
+            <div id="submittedView" class="hidden-view px-5 pt-8 pb-6 fade-in">
+                <div class="soft-card p-6 text-center mb-4">
+                    <div class="w-14 h-14 rounded-full bg-mint/20 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-7 h-7 text-mint" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-deep font-bold text-lg mb-1">Quote submitted</h2>
+                    <p class="text-deep/50 text-sm mb-4">Synced to KBZ Life Core. Status: <strong class="text-deep">ACTIVE</strong></p>
+                    <div class="rounded-xl bg-deep/[0.04] px-4 py-3 text-left">
+                        <p class="text-deep/55 text-[11px] leading-relaxed">
+                            Valid until <strong class="text-deep" id="validUntil">19 Sep 2026</strong> (30 days). After expiry, status becomes <strong class="text-deep">EXPIRED</strong>.
+                        </p>
+                    </div>
+                </div>
+                <a href="policyholder-form.html?from=quote&auth=1" class="block w-full text-center bg-deep text-white font-semibold py-3.5 rounded-2xl text-sm mb-2">Start e-App</a>
+                <a href="products.html" class="block w-full text-center py-3 rounded-2xl text-deep/50 font-semibold text-sm mb-1">Back to Products</a>
+                <button type="button" onclick="backToForm()" class="w-full py-2 rounded-2xl text-deep/40 font-semibold text-xs">New calculation</button>
+            </div>
+
+        </div>
+
+        <!-- Login gate -->
+        <div id="loginGate" class="absolute inset-0 bg-deep/45 backdrop-blur-sm hidden items-end z-50">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl p-5">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-deep text-lg font-bold mb-1">Login required</h3>
+                <p class="text-deep/50 text-sm mb-4">Sign in to save a draft, submit this quote, or continue to purchase.</p>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeLoginGate()" class="flex-1 py-3 rounded-xl bg-deep/5 text-deep font-semibold">Later</button>
+                    <a href="login.html" class="flex-1 py-3 rounded-xl bg-deep text-white text-center font-semibold">Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Draft saved toast sheet -->
+        <div id="draftToast" class="absolute inset-0 bg-deep/45 backdrop-blur-sm hidden items-end z-50">
+            <div class="w-full bg-[#FFFcf7] rounded-t-3xl p-5">
+                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <h3 class="text-deep text-lg font-bold mb-1">Draft saved</h3>
+                <p class="text-deep/50 text-sm mb-2" id="draftToastMsg">Stored on this device. Will sync when online.</p>
+                <p class="text-[10px] text-deep/40 mb-4">Drafts never expire · 3/5 local slots used</p>
+                <a href="products.html" class="block w-full text-center bg-deep text-white font-semibold py-3.5 rounded-xl text-sm mb-2">View in Products</a>
+                <button type="button" onclick="closeDraftToast()" class="w-full py-3 rounded-xl text-deep/50 font-semibold text-sm">Keep editing</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isHighRisk = false;
+        let offline = false;
+        const LOGGED_IN = new URLSearchParams(location.search).get('auth') === '1';
+
+        function toggleOffline() {
+            offline = !offline;
+            document.getElementById('offlineBanner').classList.toggle('show', offline);
+            const hint = document.getElementById('actionHint');
+            if (hint) {
+                hint.textContent = offline
+                    ? 'Offline: Save draft locally. Submit needs connection (or queues until online).'
+                    : 'Draft stays on device (no expiry). Submitted quotes valid 30 days.';
+            }
+        }
+
+        function setRisk(value) {
+            const yesBtn = document.getElementById('riskYes');
+            const noBtn = document.getElementById('riskNo');
+            if (value === 'yes') {
+                isHighRisk = true;
+                yesBtn.classList.add('active-yes');
+                yesBtn.classList.remove('active');
+                yesBtn.innerHTML = 'Yes ✓';
+                noBtn.classList.remove('active', 'active-yes');
+                noBtn.innerHTML = 'No';
+            } else {
+                isHighRisk = false;
+                noBtn.classList.add('active');
+                noBtn.classList.remove('active-yes');
+                noBtn.innerHTML = 'No ✓';
+                yesBtn.classList.remove('active', 'active-yes');
+                yesBtn.innerHTML = 'Yes';
+            }
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function showView(id) {
+            ['formView', 'quoteView', 'submittedView'].forEach(v => {
+                document.getElementById(v).classList.add('hidden-view');
+            });
+            const el = document.getElementById(id);
+            el.classList.remove('hidden-view');
+            el.classList.add('fade-in');
+        }
+
+        function calculateQuote() {
+            const dob = document.getElementById('dob').value;
+            const sumInsured = parseInt(document.getElementById('sumInsured').value, 10);
+            const policyTerm = parseInt(document.getElementById('policyTerm').value, 10);
+            if (!dob) { alert('Please enter Date of Birth'); return; }
+
+            const birthDate = new Date(dob);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
+            if (age < 16 || age > 65) { alert('Age must be between 16 and 65 years'); return; }
+
+            let baseRate = isHighRisk ? 0.00707 : 0.007;
+            let termMultiplier = 1;
+            if (policyTerm === 3) termMultiplier = 0.25;
+            else if (policyTerm === 6) termMultiplier = 0.5;
+
+            const premium = Math.round(sumInsured * baseRate * termMultiplier);
+            const totalPremium = premium + 100;
+            let termDisplay = policyTerm === 3 ? '3 Months' : policyTerm === 6 ? '6 Months' : '1 Year';
+
+            document.getElementById('qSumInsured').textContent = formatNumber(sumInsured) + ' MMK';
+            document.getElementById('qPolicyTerm').textContent = termDisplay;
+            document.getElementById('qPremium').textContent = formatNumber(premium) + ' MMK';
+            document.getElementById('qTotalPremium').textContent = formatNumber(totalPremium) + ' MMK';
+            showView('quoteView');
+        }
+
+        function backToForm() { showView('formView'); }
+
+        function saveDraft() {
+            if (!LOGGED_IN) {
+                openLoginGate();
+                return;
+            }
+            const msg = document.getElementById('draftToastMsg');
+            msg.textContent = offline
+                ? 'Saved locally while offline. Auto-syncs when you’re back online.'
+                : 'Draft saved and will sync to the portal backend.';
+            const toast = document.getElementById('draftToast');
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+        }
+
+        function closeDraftToast() {
+            const toast = document.getElementById('draftToast');
+            toast.classList.remove('flex');
+            toast.classList.add('hidden');
+        }
+
+        function submitOrBuy() {
+            if (!LOGGED_IN && !confirmGuestContinue()) {
+                openLoginGate();
+                return;
+            }
+            if (offline) {
+                alert('You’re offline. Quote will queue and submit when online — or Save draft now.');
+                return;
+            }
+            // FR-05: convert completed calculation into live e-App
+            if (LOGGED_IN) {
+                location.href = 'policyholder-form.html?from=quote';
+                return;
+            }
+            const d = new Date();
+            d.setDate(d.getDate() + 30);
+            document.getElementById('validUntil').textContent = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            showView('submittedView');
+        }
+
+        function confirmGuestContinue() {
+            // Guest can estimate; Buy/Submit needs login — always show gate unless ?auth=1
+            return false;
+        }
+
+        function openLoginGate() {
+            const modal = document.getElementById('loginGate');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeLoginGate() {
+            const modal = document.getElementById('loginGate');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        document.getElementById('loginGate').addEventListener('click', function (e) {
+            if (e.target === this) closeLoginGate();
+        });
+        document.getElementById('draftToast').addEventListener('click', function (e) {
+            if (e.target === this) closeDraftToast();
+        });
+    </script>
+</body>
+</html>

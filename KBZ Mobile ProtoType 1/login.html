@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FR-01 · Secure Login &amp; Authentication</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB',
+                        steel: '#0582CA',
+                        baltic: '#006494',
+                        deep: '#003554',
+                        cream: '#F7F3EC',
+                        mint: '#57C785',
+                        warn: '#F59E0B',
+                        danger: '#EF4444',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
+        .phone-frame {
+            width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
+            overflow: hidden; position: relative; background: #F7F3EC;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333; flex-shrink: 0;
+        }
+        .phone-frame::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 28px; background: #1a1a2e; border-radius: 0 0 18px 18px; z-index: 100;
+        }
+        .screen { display: none; height: 100%; overflow-y: auto; scrollbar-width: none; }
+        .screen.active { display: block; }
+        .screen::-webkit-scrollbar { display: none; }
+
+        .field {
+            width: 100%; padding: 13px 14px; border-radius: 12px; background: #fffdf8;
+            border: 1px solid #dbe7ee; font-size: 15px; color: #003554; outline: none;
+        }
+        .field:focus { border-color: #0582CA; box-shadow: 0 0 0 3px rgba(5,130,202,0.12); background: #fff; }
+        .field-wrap { position: relative; }
+        .field-icon-l { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #0582CA; pointer-events: none; }
+        .field-icon-r { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; background: none; border: none; cursor: pointer; }
+        .field.has-l { padding-left: 42px; }
+        .field.has-r { padding-right: 42px; }
+
+        .btn-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+        }
+        .btn-primary:hover { background: #006494; }
+        .btn-ghost {
+            display: block; width: 100%; text-align: center; background: #F7F3EC; color: #003554;
+            font-weight: 600; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+        }
+        .link-steel { color: #0582CA; font-weight: 600; font-size: 12px; text-decoration: none; }
+        .soft-card { background: #FFFcf7; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,53,84,0.08); }
+
+        .otp-box {
+            width: 48px; height: 54px; border-radius: 12px; border: 1px solid #dbe7ee;
+            background: #fffdf8; text-align: center; font-size: 20px; font-weight: 700; color: #003554;
+        }
+        .otp-box:focus { border-color: #0582CA; outline: none; box-shadow: 0 0 0 3px rgba(5,130,202,0.12); }
+
+        .rule-ok { color: #57C785; }
+        .rule-bad { color: #94a3b8; }
+
+        .modal-layer {
+            position: absolute; inset: 0; background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px;
+        }
+        .modal-layer.show { display: flex; }
+        .modal-box {
+            width: 100%; background: #FFFcf7; border-radius: 20px; padding: 22px 20px;
+            box-shadow: 0 16px 40px rgba(0,53,84,0.2); text-align: center;
+        }
+
+        .flow-chip {
+            border: 1px solid #dbe7ee; background: #fff; color: #003554; border-radius: 999px;
+            padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+        }
+        .flow-chip.active { background: #003554; color: #fff; border-color: #003554; }
+
+        .status-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 6px; }
+        .back-btn {
+            width: 36px; height: 36px; border-radius: 999px; background: rgba(0,53,84,0.06);
+            display: inline-flex; align-items: center; justify-content: center; color: #003554;
+        }
+        .pw-meter { height: 4px; border-radius: 999px; background: #e2e8f0; overflow: hidden; }
+        .pw-meter > span { display: block; height: 100%; width: 40%; background: #F59E0B; border-radius: 999px; }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-10">
+
+    <div class="max-w-6xl mx-auto mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">FR-01 · Secure Login &amp; Authentication</h1>
+        <p class="text-gray-500 mt-1">End-user flows only inside the phone · team preview chips are for QA (not for agents)</p>
+        <details class="mt-4">
+            <summary class="text-sm font-semibold text-deep cursor-pointer select-none">Team preview · jump to screen</summary>
+            <div class="flex flex-wrap gap-2 mt-3" id="flowNav"></div>
+            <p class="text-xs text-gray-400 mt-2" id="flowHint">Phone content stays end-user copy. Use chips only for QA.</p>
+        </details>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8 items-start justify-center">
+        <div class="phone-frame" id="phone">
+            <!-- ============ SPLASH ============ -->
+            <div class="screen active" data-screen="splash">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="flex flex-col items-center justify-center" style="height: calc(100% - 40px);">
+                    <div class="w-20 h-20 rounded-full bg-sky/15 flex items-center justify-center mb-4">
+                        <svg class="w-10 h-10 text-steel" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h2 class="text-deep text-2xl font-bold">KBZ LIFE</h2>
+                    <p class="text-deep/50 text-sm mt-1">Agency Sales Digital Platform</p>
+                    <button class="btn-primary mt-10 mx-8 w-[calc(100%-4rem)]" onclick="showScreen('login')">Get Started</button>
+                </div>
+            </div>
+
+            <!-- ============ LOGIN ============ -->
+            <div class="screen" data-screen="login">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2">
+                    <a href="before-login.html" class="back-btn"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></a>
+                </div>
+                <div class="px-6 pb-8">
+                    <div class="text-center mb-7">
+                        <div class="w-16 h-16 rounded-full bg-sky/15 flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-8 h-8 text-steel" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h2 class="text-deep text-xl font-bold">Login Account</h2>
+                        <p class="text-deep/50 text-sm mt-1">Phone Number + Password / OTP</p>
+                    </div>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Phone Number <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-4">
+                        <span class="field-icon-l text-xs font-bold">+95</span>
+                        <input class="field has-l" type="tel" placeholder="9 xxx xxx xxx" inputmode="numeric">
+                    </div>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Password <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-2">
+                        <span class="field-icon-l">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+                        </span>
+                        <input id="loginPw" class="field has-l has-r" type="password" placeholder="Enter password">
+                        <button type="button" class="field-icon-r" onclick="togglePw('loginPw', this)" aria-label="Show password">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex justify-end mb-5">
+                        <button type="button" class="link-steel" onclick="showScreen('forgot')">Forgot Password?</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="handleLoginSuccess()">LOGIN</button>
+
+                    <p class="text-center text-deep/50 text-sm mt-8">Don’t have an account?</p>
+                    <button type="button" class="link-steel block text-center mx-auto mt-1 text-sm" onclick="showScreen('register')">Register Now</button>
+                    <p class="text-center text-[10px] text-deep/40 mt-2 px-4">Registration needs an active agent mobile number with KBZ LIFE.</p>
+                </div>
+            </div>
+
+            <!-- ============ REGISTER (Details) ============ -->
+            <div class="screen" data-screen="register">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('login')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Register Account</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <p class="text-deep/50 text-xs mb-4">Fill in your details to create an agent account.</p>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Name (From ID Card) <span class="text-danger">*</span></label>
+                    <input class="field mb-3" type="text" placeholder="Full name as on NRC">
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Mobile Number <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-3">
+                        <span class="field-icon-l text-xs font-bold">+95</span>
+                        <input class="field has-l" type="tel" placeholder="9 xxx xxx xxx">
+                    </div>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">NRC Number <span class="text-danger">*</span></label>
+                    <input class="field mb-3" type="text" placeholder="12/XXXXXX(N)000000">
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">E-mail Address <span class="text-deep/40 font-normal">(Optional)</span></label>
+                    <input class="field mb-3" type="email" placeholder="name@example.com">
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Referral Code <span class="text-deep/40 font-normal">(Optional)</span></label>
+                    <input class="field mb-5" type="text" placeholder="If any">
+
+                    <button class="btn-primary" onclick="showScreen('otp-reg')">CONTINUE</button>
+                </div>
+            </div>
+
+            <!-- ============ OTP (Register / Forgot / MFA) ============ -->
+            <div class="screen" data-screen="otp-reg">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('register')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">OTP Verification</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <div class="soft-card p-4 mb-6 text-center">
+                        <p class="text-deep/60 text-sm">Enter the 6-digit code sent to</p>
+                        <p class="text-deep font-bold mt-1">+95 9 *** *** 968</p>
+                    </div>
+                    <div class="flex justify-between gap-2 mb-6" id="otpBoxes">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                    </div>
+                    <p class="text-center text-deep/50 text-xs mb-6">Didn’t receive code? <button type="button" class="link-steel">Resend in 0:45</button></p>
+                    <button class="btn-primary" onclick="showScreen('create-pw')">VERIFY OTP</button>
+                </div>
+            </div>
+
+            <!-- ============ CREATE PASSWORD ============ -->
+            <div class="screen" data-screen="create-pw">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('otp-reg')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Create Password</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">New Password <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-2">
+                        <span class="field-icon-l"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span>
+                        <input id="newPw" class="field has-l has-r" type="password" placeholder="New password">
+                        <button type="button" class="field-icon-r" onclick="togglePw('newPw', this)"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    </div>
+                    <div class="pw-meter mb-4"><span></span></div>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Confirm Password <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-4">
+                        <span class="field-icon-l"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span>
+                        <input class="field has-l" type="password" placeholder="Confirm password">
+                    </div>
+
+                    <div class="soft-card p-3 mb-5 space-y-1.5 text-[11px]">
+                        <p class="rule-ok">✓ At least 8 characters</p>
+                        <p class="rule-ok">✓ Contains a number</p>
+                        <p class="rule-bad">○ Upper &amp; lowercase letter</p>
+                        <p class="rule-bad">○ Special character</p>
+                    </div>
+                    <button class="btn-primary" onclick="openModal('successReg')">COMPLETE</button>
+                </div>
+            </div>
+
+            <!-- ============ FORGOT PASSWORD ============ -->
+            <div class="screen" data-screen="forgot">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('login')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Forgot Password</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <p class="text-deep/55 text-sm mb-5">Enter your registered mobile number. We’ll send an SMS OTP.</p>
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Mobile Number <span class="text-danger">*</span></label>
+                    <div class="field-wrap mb-5">
+                        <span class="field-icon-l text-xs font-bold">+95</span>
+                        <input class="field has-l" type="tel" placeholder="9 xxx xxx xxx">
+                    </div>
+                    <button class="btn-primary" onclick="showScreen('otp-forgot')">CONTINUE</button>
+                </div>
+            </div>
+
+            <div class="screen" data-screen="otp-forgot">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('forgot')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Verify OTP</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <p class="text-deep/55 text-sm mb-5 text-center">OTP sent via KBZ Life SMS API</p>
+                    <div class="flex justify-between gap-2 mb-6">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                        <input class="otp-box" maxlength="1" inputmode="numeric">
+                    </div>
+                    <button class="btn-primary" onclick="showScreen('reset-pw')">VERIFY</button>
+                </div>
+            </div>
+
+            <!-- ============ RESET PASSWORD + REMARK ============ -->
+            <div class="screen" data-screen="reset-pw">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('otp-forgot')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Reset Password</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Remark / Reason <span class="text-danger">*</span></label>
+                    <textarea class="field mb-1 min-h-[72px]" placeholder="Mandatory reason for password reset (audit log)"></textarea>
+                    <p class="text-[10px] text-deep/40 mb-4">Recorded with timestamp for compliance.</p>
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">New Password <span class="text-danger">*</span></label>
+                    <input class="field mb-3" type="password" placeholder="New password">
+
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Confirm Password <span class="text-danger">*</span></label>
+                    <input class="field mb-4" type="password" placeholder="Confirm password">
+
+                    <div class="soft-card p-3 mb-5 text-[11px] text-deep/70">
+                        For your security, you’ll need to sign in again on all devices after this change.
+                    </div>
+                    <button class="btn-primary" onclick="openModal('successReset')">UPDATE PASSWORD</button>
+                </div>
+            </div>
+
+            <!-- ============ LOCKED ============ -->
+            <div class="screen" data-screen="locked">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('login')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Login Account</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <div class="rounded-xl bg-danger/10 border border-danger/20 p-4 mb-5">
+                        <p class="text-danger font-bold text-sm">Account is locked</p>
+                        <p class="text-danger/80 text-xs mt-1 leading-relaxed">5 consecutive failed password attempts. Unlock requires System Administrator via Web Portal. No auto-unlock.</p>
+                    </div>
+                    <input class="field mb-3 opacity-60" disabled value="+95 9 xxx xxx xxx">
+                    <input class="field mb-4 opacity-60" disabled type="password" value="********">
+                    <button class="btn-primary opacity-50 cursor-not-allowed" disabled>LOGIN</button>
+                    <p class="text-center text-xs text-deep/45 mt-6">Contact KBZ LIFE support / agency admin to unlock.</p>
+                </div>
+            </div>
+
+            <!-- ============ BIOMETRIC ============ -->
+            <div class="screen" data-screen="biometric">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-6 pt-10 pb-10 text-center">
+                    <div class="w-20 h-20 rounded-full bg-sky/15 flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 11c1.66 0 3-1.34 3-3S13.66 5 12 5 9 6.34 9 8s1.34 3 3 3z"/><path d="M12 14c-4 0-7 2-7 4v1h14v-1c0-2-3-4-7-4z"/></svg>
+                    </div>
+                    <h2 class="text-deep text-xl font-bold mb-2">Enable Biometric Login?</h2>
+                    <p class="text-deep/55 text-sm leading-relaxed mb-6">Use Fingerprint or Face ID for faster sign-in next time. You can change this anytime in Profile settings.</p>
+                    <button class="btn-primary mb-2" onclick="location.href='after-login.html'">Enable</button>
+                    <button class="btn-ghost" onclick="location.href='after-login.html'">Not now</button>
+                </div>
+            </div>
+
+            <!-- Modals -->
+            <div class="modal-layer" id="pathB">
+                <div class="modal-box text-left">
+                    <div class="w-12 h-12 rounded-full bg-warn/15 flex items-center justify-center mx-auto mb-3">
+                        <span class="text-warn text-xl font-bold">!</span>
+                    </div>
+                    <h3 class="text-deep font-bold text-lg text-center mb-2">Registration pending review</h3>
+                    <p class="text-deep/60 text-sm leading-relaxed mb-3">We couldn’t complete registration for this mobile number yet. Your details were submitted for KBZ LIFE review.</p>
+                    <ul class="text-[11px] text-deep/70 space-y-1.5 mb-4 list-disc pl-4">
+                        <li>You’ll get an SMS when your application is approved</li>
+                        <li>Then open the app again to finish registration</li>
+                    </ul>
+                    <button class="btn-primary" onclick="closeModal('pathB'); showScreen('login');">OK</button>
+                </div>
+            </div>
+
+            <div class="modal-layer" id="sessionBlock">
+                <div class="modal-box">
+                    <div class="w-12 h-12 rounded-full bg-warn/15 flex items-center justify-center mx-auto mb-3">
+                        <span class="text-warn text-xl font-bold">!</span>
+                    </div>
+                    <h3 class="text-deep font-bold text-lg mb-2">Already logged in</h3>
+                    <p class="text-deep/60 text-sm leading-relaxed mb-5">You are already logged in on another mobile device. Please log out from that device first.</p>
+                    <div class="flex gap-2">
+                        <button class="btn-ghost flex-1" onclick="closeModal('sessionBlock')">Back</button>
+                        <button class="btn-primary flex-1" onclick="closeModal('sessionBlock')">OK</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-layer" id="successReg">
+                <div class="modal-box">
+                    <div class="w-14 h-14 rounded-full bg-mint/20 flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-7 h-7 text-mint" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h3 class="text-deep font-bold text-lg mb-1">Registration complete</h3>
+                    <p class="text-deep/55 text-sm mb-5">Your account is ready. You can log in now.</p>
+                    <button class="btn-primary" onclick="closeModal('successReg'); showScreen('login');">Go to Login</button>
+                </div>
+            </div>
+
+            <div class="modal-layer" id="successReset">
+                <div class="modal-box">
+                    <div class="w-14 h-14 rounded-full bg-mint/20 flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-7 h-7 text-mint" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h3 class="text-deep font-bold text-lg mb-1">Password updated</h3>
+                    <p class="text-deep/55 text-sm mb-5">Please sign in again with your new password.</p>
+                    <button class="btn-primary" onclick="closeModal('successReset'); showScreen('login');">Login again</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side panel · team only -->
+        <aside class="max-w-md w-full bg-white rounded-2xl shadow-sm p-5 text-sm text-gray-700">
+            <h3 class="font-bold text-gray-900 text-base mb-1">End-user flow map</h3>
+            <p class="text-xs text-gray-400 mb-3">Phone = agent UI only. Edge cases appear as natural modals when the system triggers them.</p>
+            <ol class="list-decimal pl-4 space-y-2 text-[13px] leading-relaxed">
+                <li><strong>Happy login</strong> — Phone + Password → Biometric offer → Home</li>
+                <li><strong>Register (in Core)</strong> — Details → OTP → Create password → Login</li>
+                <li><strong>Register (not in Core)</strong> — Details → pending-review modal (system-driven)</li>
+                <li><strong>Forgot password</strong> — Mobile → OTP → Remark + new PW → Login</li>
+                <li><strong>Locked</strong> — After 5 fails → locked screen</li>
+                <li><strong>Session block</strong> — Modal when another mobile session is active</li>
+            </ol>
+            <div class="mt-4 p-3 rounded-xl bg-cream text-[12px] text-deep/80 space-y-2">
+                <p class="font-semibold text-deep">QA triggers (outside phone)</p>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" class="flow-chip" onclick="openModal('pathB')">Path B modal</button>
+                    <button type="button" class="flow-chip" onclick="openModal('sessionBlock')">Session block</button>
+                    <button type="button" class="flow-chip" onclick="showScreen('locked')">Locked</button>
+                </div>
+            </div>
+            <a href="before-login.html" class="inline-block mt-4 text-steel font-semibold text-sm">← Back to Before Login</a>
+        </aside>
+    </div>
+
+    <script>
+        const SCREENS = [
+            { id: 'splash', label: 'Splash', hint: 'Brand entry' },
+            { id: 'login', label: 'Login', hint: 'End-user login' },
+            { id: 'register', label: 'Register', hint: 'Details entry' },
+            { id: 'otp-reg', label: 'OTP', hint: '6-digit SMS OTP' },
+            { id: 'create-pw', label: 'Create PW', hint: 'Password setup' },
+            { id: 'forgot', label: 'Forgot', hint: 'Reset start' },
+            { id: 'otp-forgot', label: 'OTP Reset', hint: 'Forgot OTP' },
+            { id: 'reset-pw', label: 'Reset + Remark', hint: 'Mandatory reason' },
+            { id: 'biometric', label: 'Biometric', hint: 'Optional enable' },
+            { id: 'locked', label: 'Locked', hint: 'Edge case · QA' },
+        ];
+
+        const nav = document.getElementById('flowNav');
+        const hint = document.getElementById('flowHint');
+        SCREENS.forEach(function (s) {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'flow-chip' + (s.id === 'splash' ? ' active' : '');
+            b.textContent = s.label;
+            b.dataset.id = s.id;
+            b.addEventListener('click', function () { showScreen(s.id); });
+            nav.appendChild(b);
+        });
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(function (el) {
+                el.classList.toggle('active', el.dataset.screen === id);
+            });
+            document.querySelectorAll('#flowNav .flow-chip').forEach(function (el) {
+                el.classList.toggle('active', el.dataset.id === id);
+            });
+            const meta = SCREENS.find(function (s) { return s.id === id; });
+            if (meta) hint.textContent = meta.label + ' — ' + meta.hint;
+            closeAllModals();
+        }
+
+        function handleLoginSuccess() {
+            showScreen('biometric');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        function closeAllModals() {
+            document.querySelectorAll('.modal-layer').forEach(function (m) { m.classList.remove('show'); });
+        }
+
+        function togglePw(inputId, btn) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        document.querySelectorAll('.otp-box').forEach(function (box, i, list) {
+            box.addEventListener('input', function () {
+                if (box.value && list[i + 1]) list[i + 1].focus();
+            });
+            box.addEventListener('keydown', function (e) {
+                if (e.key === 'Backspace' && !box.value && list[i - 1]) list[i - 1].focus();
+            });
+        });
+    </script>
+</body>
+</html>
