@@ -61,6 +61,8 @@ flutter:
 
   assets:
     - assets/main-logo.png
+    - assets/splash-lockup.png
+    - assets/brand-mark.png
     - assets/images.png
     - assets/galaxy-member.png
   

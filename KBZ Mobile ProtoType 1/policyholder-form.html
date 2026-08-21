@@ -35,7 +35,7 @@
         .scroll-content::-webkit-scrollbar { display: none; }
         .bottom-nav {
             position: absolute; bottom: 0; left: 0; right: 0; background: #FFFcf7;
-            box-shadow: 0 -4px 20px rgba(0,53,84,0.08); border-radius: 24px 24px 0 0; z-index: 50;
+            box-shadow: 0 -4px 20px rgba(0,53,84,0.08); border-radius: 30px 30px 0 0; z-index: 50;
             padding: 12px 16px 28px;
         }
         .soft-card { background: #FFFcf7; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,53,84,0.08); }
@@ -85,6 +85,129 @@
             background: #FFFcf7; color: #00355499; box-shadow: 0 4px 12px rgba(0,53,84,0.06);
         }
         .filter-pill.on { background: #003554; color: white; }
+
+        /* Phase B — shared sheet + nav hit targets */
+        .nav-hit {
+            min-width: 56px; min-height: 48px; padding: 4px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: none; background: transparent; cursor: pointer;
+        }
+        .sheet-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 310; display: none; align-items: flex-end;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-panel {
+            width: 100%; background: #FFFcf7; border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px; max-height: 90%; overflow-y: auto;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px; border-radius: 999px;
+            background: rgba(0,53,84,0.15); margin: 0 auto 16px;
+        }
+        .btn-sheet-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-sheet-secondary {
+            display: block; width: 100%; text-align: center; background: rgba(0,53,84,0.05); color: #003554;
+            font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Phase C — motion + theater */
+        .sheet-overlay.open {
+            display: flex;
+            animation: overlayIn 0.22s ease;
+        }
+        .sheet-overlay.open .sheet-panel {
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sheetRise {
+            from { transform: translateY(28px); opacity: 0.85; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-success {
+            position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 400;
+            background: #003554; color: #fff; border-radius: 14px; padding: 12px 14px;
+            display: none; align-items: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(0,53,84,0.28);
+            font-size: 13px; font-weight: 600;
+        }
+        .toast-success.show {
+            display: flex;
+            animation: toastIn 0.32s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }
+        .empty-state {
+            text-align: center; padding: 36px 20px 28px;
+        }
+        .empty-state .empty-icon {
+            width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 14px;
+            background: rgba(0,166,251,0.1); display: flex; align-items: center; justify-content: center;
+        }
+        .step-fade {
+            animation: fadeIn 0.32s ease-out;
+        }
+        .scan-frame {
+            position: relative; aspect-ratio: 1.6; border-radius: 16px;
+            background: #0a1628; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .scan-corners {
+            position: absolute; inset: 18%;
+            border: 2px solid rgba(0,166,251,0.85); border-radius: 8px;
+            box-shadow: 0 0 0 999px rgba(0,0,0,0.35);
+        }
+        .uw-ring {
+            width: 120px; height: 120px; border-radius: 999px; margin: 0 auto;
+            background: conic-gradient(#0582CA 0 72%, rgba(0,53,84,0.12) 0);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .uw-ring-inner {
+            width: 96px; height: 96px; border-radius: 999px; background: #FFFcf7;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .pipeline {
+            display: flex; align-items: center; justify-content: space-between; gap: 4px;
+            margin: 16px 0;
+        }
+        .pipeline-step {
+            flex: 1; text-align: center; font-size: 9px; font-weight: 700;
+            color: rgba(0,53,84,0.35);
+        }
+        .pipeline-step.on { color: #0582CA; }
+        .pipeline-step.done { color: #57C785; }
+        .pipeline-dot {
+            width: 10px; height: 10px; border-radius: 999px; margin: 0 auto 4px;
+            background: rgba(0,53,84,0.12);
+        }
+        .pipeline-step.on .pipeline-dot { background: #0582CA; }
+        .pipeline-step.done .pipeline-dot { background: #57C785; }
+        .accordion-row {
+            border: 1px solid rgba(0,53,84,0.08); border-radius: 14px;
+            margin-bottom: 8px; overflow: hidden; background: #FFFcf7;
+        }
+        .accordion-row summary {
+            list-style: none; cursor: pointer; padding: 12px 14px;
+            font-size: 13px; font-weight: 700; color: #003554;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .accordion-row summary::-webkit-details-marker { display: none; }
+        .accordion-row .acc-body {
+            padding: 0 14px 12px; font-size: 12px; color: rgba(0,53,84,0.55);
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col lg:flex-row items-center justify-center gap-8 p-8">
@@ -94,17 +217,24 @@
         <p class="text-slate-500 text-sm mb-4">FR-05 · Mobile sales</p>
         <div class="side-note text-left space-y-2">
             <p><strong class="text-deep">Start from:</strong> Product, Quote, Client, Lead, Renewal.</p>
-            <p><strong class="text-deep">Docs:</strong> NRC F/B for PH, Insured, Beneficiary · JPEG/PNG/PDF · max 12 MB.</p>
-            <p><strong class="text-deep">Sign:</strong> Client + Agent mandatory.</p>
+            <p><strong class="text-deep">Step 1:</strong> Prefill when Core/quote exists · Manual when not.</p>
+            <p><strong class="text-deep">Docs:</strong> NRC F/B · max 12 MB · Signatures mandatory.</p>
             <div class="flex flex-col gap-2 pt-1">
                 <button type="button" onclick="showMode('wizard')" class="py-2 rounded-xl bg-deep text-white text-xs font-semibold">Open e-App wizard</button>
+                <button type="button" id="qaPrefillBtn" onclick="toggleSimulateNoPrefill()" class="py-2 rounded-xl bg-deep/5 text-deep text-xs font-semibold">Simulate no prefill</button>
                 <button type="button" onclick="showMode('tracker')" class="py-2 rounded-xl bg-deep/5 text-deep text-xs font-semibold">Application tracker</button>
+                <a href="?from=blank" class="block text-center text-steel text-[11px] font-semibold pt-1">Open blank manual</a>
+                <a href="?from=quote" class="block text-center text-steel text-[11px] font-semibold">Open quote prefill</a>
             </div>
         </div>
     </div>
 
     <div class="phone-frame">
 
+        <div id="successToast" class="toast-success" role="status">
+            <svg class="w-5 h-5 text-mint flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="successToastMsg">Draft saved</span>
+        </div>
         <!-- ========== TRACKER ========== -->
         <div id="trackerMode" class="hidden-step">
             <div class="scroll-content full px-0">
@@ -188,7 +318,7 @@
                     <button type="button" onclick="saveEappDraft()" class="text-steel text-[11px] font-bold">Save draft</button>
                 </div>
 
-                <div class="flex items-center px-4 py-2" id="stepIndicators">
+                <div class="flex items-center px-3 py-2" id="stepIndicators">
                     <div class="step-circle on" id="sc1">1</div>
                     <div class="step-line" id="sl1"></div>
                     <div class="step-circle" id="sc2">2</div>
@@ -198,55 +328,107 @@
                     <div class="step-circle" id="sc4">4</div>
                     <div class="step-line" id="sl4"></div>
                     <div class="step-circle" id="sc5">5</div>
+                    <div class="step-line" id="sl5"></div>
+                    <div class="step-circle" id="sc6">6</div>
                 </div>
 
-                <!-- STEP 1: Prefill / Customer + Product -->
+                <!-- STEP 1: Prefill / Manual / Hybrid -->
                 <div id="step1" class="px-4 pb-4">
-                    <div class="rounded-2xl px-4 py-3 mb-3 bg-sky/10">
+                    <div id="entryBannerPrefill" class="rounded-2xl px-4 py-3 mb-3 bg-sky/10">
                         <p class="text-steel text-[11px] font-semibold">Auto-filled from Core / quote</p>
                         <p class="text-deep/55 text-[10px] mt-0.5">Customer, product &amp; premium pre-populated. Edit only if needed.</p>
                     </div>
-                    <div class="soft-card p-4 mb-3">
-                        <p class="text-deep/45 font-bold text-[10px] tracking-wider mb-2">PRODUCT &amp; PREMIUM</p>
+                    <div id="entryBannerHybrid" class="rounded-2xl px-4 py-3 mb-3 bg-warn/10" style="display:none;">
+                        <p class="text-warn text-[11px] font-semibold">Customer from CRM · product not priced</p>
+                        <p class="text-deep/55 text-[10px] mt-0.5">Confirm person, then set product &amp; premium (or open calculator).</p>
+                    </div>
+                    <div id="entryBannerManual" class="rounded-2xl px-4 py-3 mb-3 bg-deep/[0.05]" style="display:none;">
+                        <p class="text-deep text-[11px] font-semibold">Enter details manually</p>
+                        <p class="text-deep/55 text-[10px] mt-0.5">No quote linked — pick product and type customer, or search CRM.</p>
+                    </div>
+
+                    <!-- Product · prefill summary -->
+                    <div id="productCardPrefill" class="soft-card p-4 mb-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <p class="text-deep/45 font-bold text-[10px] tracking-wider">PRODUCT &amp; PREMIUM</p>
+                            <button type="button" onclick="promptChangeProduct()" class="text-steel text-[10px] font-bold">Change</button>
+                        </div>
                         <div class="space-y-2 text-sm">
-                            <div class="flex justify-between"><span class="text-deep/45">Product</span><span class="text-deep font-semibold">Personal Accident</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Code</span><span class="text-deep font-semibold">PA-001</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Sum Assured</span><span class="text-deep font-semibold">1,000,000 MMK</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Premium</span><span class="text-deep font-semibold">7,100 MMK</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Frequency</span><span class="text-deep font-semibold">One time</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Product</span><span class="text-deep font-semibold" id="sumProduct">Personal Accident</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Code</span><span class="text-deep font-semibold" id="sumCode">PA-001</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Sum Assured</span><span class="text-deep font-semibold" id="sumSa">1,000,000 MMK</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Premium</span><span class="text-deep font-semibold" id="sumPrem">7,100 MMK</span></div>
+                            <div class="flex justify-between"><span class="text-deep/45">Frequency</span><span class="text-deep font-semibold" id="sumFreq">One time</span></div>
                         </div>
                     </div>
+
+                    <!-- Product · manual / hybrid editable -->
+                    <div id="productCardManual" class="soft-card p-4 mb-3" style="display:none;">
+                        <p class="text-deep/45 font-bold text-[10px] tracking-wider mb-3">PRODUCT &amp; PREMIUM</p>
+                        <div class="mb-3">
+                            <label class="form-label">Product <span class="req">*</span></label>
+                            <select id="manProduct" class="form-input" onchange="syncManualProduct()">
+                                <option value="pa">Personal Accident</option>
+                                <option value="ul">Universal Life</option>
+                                <option value="fh">Family Health</option>
+                                <option value="credit">Credit Life</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <div>
+                                <label class="form-label">Sum assured <span class="req">*</span></label>
+                                <select id="manSum" class="form-input">
+                                    <option value="500000">500,000</option>
+                                    <option value="1000000" selected>1,000,000</option>
+                                    <option value="2000000">2,000,000</option>
+                                    <option value="5000000">5,000,000</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Premium (MMK) <span class="req">*</span></label>
+                                <input id="manPrem" class="form-input" type="number" placeholder="e.g. 7100" value="">
+                            </div>
+                        </div>
+                        <a href="get-quote.html?auth=1" class="block w-full text-center text-steel text-xs font-bold py-2.5 rounded-xl bg-sky/10">Open calculator →</a>
+                    </div>
+
                     <div class="soft-card p-4">
-                        <p class="text-deep/45 font-bold text-[10px] tracking-wider mb-3">POLICYHOLDER</p>
+                        <div class="flex items-center justify-between mb-3 gap-2">
+                            <p class="text-deep/45 font-bold text-[10px] tracking-wider">POLICYHOLDER</p>
+                            <div id="phQuickActions" class="flex gap-2" style="display:none;">
+                                <button type="button" onclick="openCrmSearch()" class="text-steel text-[10px] font-bold">Search CRM</button>
+                                <button type="button" onclick="openScanSheet()" class="text-steel text-[10px] font-bold">Scan NRC</button>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Full name <span class="req">*</span></label>
-                            <input class="form-input" value="Thant Zin Win" id="phName">
+                            <input class="form-input" id="phName" data-prefill="Thant Zin Win" placeholder="Full name">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Phone <span class="req">*</span></label>
-                            <input class="form-input" value="09 777 220 119">
+                            <input class="form-input" id="phPhone" data-prefill="09 777 220 119" placeholder="09 xxx xxx xxx">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input class="form-input" value="thantzin@email.com">
+                            <input class="form-input" id="phEmail" data-prefill="thantzin@email.com" placeholder="name@email.com">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">NRC <span class="req">*</span></label>
-                            <input class="form-input" value="12/PAZATA(N)098745">
+                            <input class="form-input" id="phNrc" data-prefill="12/PAZATA(N)098745" placeholder="12/XXXXXX(N)000000">
                         </div>
                         <div class="grid grid-cols-2 gap-2 mb-3">
                             <div>
                                 <label class="form-label">Gender</label>
-                                <select class="form-input"><option>Male</option><option>Female</option></select>
+                                <select class="form-input" id="phGender"><option>Male</option><option>Female</option></select>
                             </div>
                             <div>
                                 <label class="form-label">Date of birth</label>
-                                <input type="date" class="form-input" value="1992-03-14">
+                                <input type="date" class="form-input" id="phDob" data-prefill="1992-03-14">
                             </div>
                         </div>
                         <div>
                             <label class="form-label">Address</label>
-                            <textarea class="form-input min-h-[64px]">No. 42, Strand Rd, Yangon</textarea>
+                            <textarea class="form-input min-h-[64px]" id="phAddr" data-prefill="No. 42, Strand Rd, Yangon" placeholder="Street, township, city"></textarea>
                         </div>
                     </div>
                 </div>
@@ -292,11 +474,40 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: Documents -->
+                <!-- STEP 3: Health declaration (wireframe flow) -->
                 <div id="step3" class="hidden-step px-4 pb-4">
-                    <div class="rounded-2xl px-4 py-3 mb-3 bg-deep/[0.04]">
-                        <p class="text-deep text-[11px] leading-relaxed">JPEG / JPG / PNG / PDF · max <strong>12 MB</strong> each. Images are compressed for clarity. Camera or gallery.</p>
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep font-bold text-sm mb-3">Health declaration</p>
+                        <p class="text-deep/55 text-[12px] mb-3">Do you have any high-risk disease or ongoing treatment?</p>
+                        <div class="flex gap-2 mb-3">
+                            <button type="button" id="healthNo" onclick="setHealth(false)" class="flex-1 py-2.5 rounded-xl bg-deep text-white text-xs font-bold">No</button>
+                            <button type="button" id="healthYes" onclick="setHealth(true)" class="flex-1 py-2.5 rounded-xl bg-deep/5 text-deep text-xs font-bold">Yes</button>
+                        </div>
+                        <div id="healthDetail" class="hidden-step">
+                            <label class="form-label">If yes, please specify</label>
+                            <textarea class="form-input min-h-[72px]" placeholder="Describe condition…"></textarea>
+                        </div>
                     </div>
+                    <div class="rounded-2xl px-4 py-3 bg-deep/[0.04]">
+                        <p class="text-deep/55 text-[11px] leading-relaxed">Answers feed underwriting. False declarations may void cover.</p>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Documents + optional NRC scan -->
+                <div id="step4" class="hidden-step px-4 pb-4">
+                    <div class="rounded-2xl px-4 py-3 mb-3 bg-deep/[0.04]">
+                        <p class="text-deep text-[11px] leading-relaxed">JPEG / JPG / PNG / PDF · max <strong>12 MB</strong> each. Or scan NRC with camera (optional).</p>
+                    </div>
+                    <button type="button" onclick="openScanSheet()" class="w-full soft-card p-3 mb-3 flex items-center gap-3 text-left">
+                        <div class="w-10 h-10 rounded-xl bg-sky/15 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-deep text-sm font-semibold">Scan NRC card</p>
+                            <p class="text-deep/45 text-[10px]">Auto-fill · you can skip and upload</p>
+                        </div>
+                        <span class="text-steel text-[11px] font-bold">Open</span>
+                    </button>
                     <div class="soft-card p-4 mb-3">
                         <p class="text-deep font-bold text-sm mb-3">Policyholder NRC <span class="text-red-500">*</span></p>
                         <div class="grid grid-cols-2 gap-2">
@@ -320,8 +531,8 @@
                     </div>
                 </div>
 
-                <!-- STEP 4: E-Signatures -->
-                <div id="step4" class="hidden-step px-4 pb-4">
+                <!-- STEP 5: E-Signatures -->
+                <div id="step5" class="hidden-step px-4 pb-4">
                     <div class="soft-card p-4 mb-3">
                         <div class="flex justify-between items-center mb-2">
                             <p class="text-deep font-bold text-sm">Client / Policyholder <span class="text-red-500">*</span></p>
@@ -340,20 +551,27 @@
                     </div>
                 </div>
 
-                <!-- STEP 5: Review & Submit -->
-                <div id="step5" class="hidden-step px-4 pb-4">
+                <!-- STEP 6: Confirm & Submit (accordion review) -->
+                <div id="step6" class="hidden-step px-4 pb-4">
                     <div class="soft-card p-4 mb-3">
-                        <p class="text-deep font-bold text-sm mb-3">Review before submit</p>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between"><span class="text-deep/45">Policyholder</span><span class="text-deep font-semibold" id="revName">Thant Zin Win</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Product</span><span class="text-deep font-semibold">Personal Accident</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Premium</span><span class="text-deep font-semibold">7,100 MMK</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Documents</span><span class="text-mint font-semibold text-xs">6 / 6 NRC</span></div>
-                            <div class="flex justify-between"><span class="text-deep/45">Signatures</span><span class="text-mint font-semibold text-xs">Client + Agent</span></div>
-                        </div>
+                        <p class="text-deep font-bold text-sm mb-1">Premium summary</p>
+                        <p class="text-deep text-xl font-extrabold tabular-nums">7,100 <span class="text-sm font-bold text-deep/45">MMK</span></p>
+                        <p class="text-deep/45 text-[11px] mt-1">Personal Accident · One time · Sum 1,000,000</p>
                     </div>
-                    <div class="rounded-2xl px-4 py-3 bg-deep/[0.04] mb-3">
-                        <p class="text-deep/55 text-[11px] leading-relaxed">On submit → status <strong class="text-deep">Submitted</strong>. Underwriting may return <strong class="text-deep">Mark for Correction</strong> for edit &amp; resubmit. Lead start → converts to Client after Core policy submit.</p>
+                    <details class="accordion-row" open>
+                        <summary>Policyholder <span class="text-deep/35 text-xs font-semibold">▾</span></summary>
+                        <div class="acc-body" id="revName">Thant Zin Win · 09 777 220 119 · 12/PAZATA(N)098745</div>
+                    </details>
+                    <details class="accordion-row">
+                        <summary>Insured &amp; beneficiary <span class="text-deep/35 text-xs font-semibold">▾</span></summary>
+                        <div class="acc-body">Insured same as PH · Beneficiary Zaw Min Thu (Father) 100%</div>
+                    </details>
+                    <details class="accordion-row">
+                        <summary>Health &amp; documents <span class="text-deep/35 text-xs font-semibold">▾</span></summary>
+                        <div class="acc-body">Health: No high-risk · NRC 6/6 attached · Signatures ready</div>
+                    </details>
+                    <div class="rounded-2xl px-4 py-3 bg-deep/[0.04] mb-3 mt-2">
+                        <p class="text-deep/55 text-[11px] leading-relaxed">On submit → <strong class="text-deep">Submitted</strong> → Underwriting. Correction returns for edit &amp; resubmit.</p>
                     </div>
                     <label class="flex items-start gap-2 text-[11px] text-deep/60">
                         <input type="checkbox" class="mt-0.5" id="declareOk"> I confirm details are accurate and signatures are authorized.
@@ -366,13 +584,43 @@
                         <div class="w-14 h-14 rounded-full bg-mint/20 flex items-center justify-center mx-auto mb-4">
                             <svg class="w-7 h-7 text-mint" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
-                        <h2 class="text-deep font-bold text-lg mb-1">Application submitted</h2>
+                        <h2 class="text-deep font-bold text-lg mb-1">Proposal created</h2>
                         <p class="text-deep/50 text-sm mb-1">APP-2026-1105</p>
-                        <span class="status-chip st-submitted mb-4">Submitted</span>
-                        <p class="text-deep/45 text-[11px] mt-3 leading-relaxed">Tracking syncs in real time from KBZ Life Core.</p>
+                        <span class="status-chip st-submitted mb-2">Submitted</span>
+                        <div class="pipeline">
+                            <div class="pipeline-step done"><div class="pipeline-dot"></div>Proposal</div>
+                            <div class="pipeline-step on"><div class="pipeline-dot"></div>Underwrite</div>
+                            <div class="pipeline-step"><div class="pipeline-dot"></div>Payment</div>
+                            <div class="pipeline-step"><div class="pipeline-dot"></div>Policy</div>
+                        </div>
+                        <p class="text-deep/45 text-[11px] leading-relaxed">Your proposal is with underwriting.</p>
                     </div>
-                    <button type="button" onclick="showMode('tracker')" class="w-full mt-4 bg-deep text-white font-semibold py-3.5 rounded-2xl text-sm">Open tracker</button>
+                    <button type="button" onclick="showUW()" class="w-full mt-4 bg-deep text-white font-semibold py-3.5 rounded-2xl text-sm">Track underwriting</button>
+                    <button type="button" onclick="showMode('tracker')" class="w-full mt-2 py-3 rounded-2xl text-steel text-sm font-semibold bg-steel/10">All applications</button>
                     <a href="after-login.html" class="block text-center mt-3 text-deep/45 text-sm font-semibold">Back to Home</a>
+                </div>
+
+                <!-- Underwriting track (wireframe One Touch) -->
+                <div id="stepUW" class="hidden-step px-5 pt-4 pb-4">
+                    <div class="soft-card p-5 text-center">
+                        <div class="pipeline mb-5">
+                            <div class="pipeline-step done"><div class="pipeline-dot"></div>Proposal</div>
+                            <div class="pipeline-step on"><div class="pipeline-dot"></div>Underwrite</div>
+                            <div class="pipeline-step"><div class="pipeline-dot"></div>Payment</div>
+                            <div class="pipeline-step"><div class="pipeline-dot"></div>Policy</div>
+                        </div>
+                        <div class="uw-ring mb-4">
+                            <div class="uw-ring-inner">
+                                <span class="text-[10px] font-semibold text-deep/45">Remaining</span>
+                                <span class="text-deep font-extrabold text-lg tabular-nums" id="uwTimer">03:00</span>
+                            </div>
+                        </div>
+                        <h2 class="text-deep font-bold text-base mb-1">Underwriting stage</h2>
+                        <p class="text-deep/50 text-[12px] leading-relaxed mb-4">APP-2026-1105 is under review. Typical SLA 1–3 business days; this timer is a demo stub.</p>
+                        <span class="status-chip st-submitted">In review</span>
+                    </div>
+                    <a href="after-login.html" class="block w-full mt-4 text-center bg-deep text-white font-semibold py-3.5 rounded-2xl text-sm">Home</a>
+                    <button type="button" onclick="showMode('tracker')" class="w-full mt-2 py-3 rounded-2xl text-steel text-sm font-semibold bg-steel/10">Proposal list</button>
                 </div>
             </div>
 
@@ -385,10 +633,58 @@
             </div>
         </div>
 
+        <!-- NRC scan sheet (optional · Skip allowed) -->
+        <div id="scanSheet" class="sheet-overlay" style="z-index:330;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Insured scanner</h3>
+                    <button type="button" onclick="closeScanSheet()" class="text-deep/40 text-xl">×</button>
+                </div>
+                <div class="flex gap-2 mb-3">
+                    <button type="button" class="flex-1 py-2 rounded-xl bg-deep text-white text-[11px] font-bold">NRC</button>
+                    <button type="button" class="flex-1 py-2 rounded-xl bg-deep/5 text-deep text-[11px] font-bold">Old NRC</button>
+                    <button type="button" class="flex-1 py-2 rounded-xl bg-deep/5 text-deep text-[11px] font-bold">Passport</button>
+                </div>
+                <div class="scan-frame mb-3">
+                    <div class="scan-corners"></div>
+                    <p class="relative z-10 text-white/80 text-[11px] font-semibold">Scan the front NRC photo</p>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeScanSheet()" class="btn-sheet-secondary flex-1">Skip</button>
+                    <button type="button" onclick="captureScan()" class="btn-sheet-primary flex-1">Capture</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CRM search (manual / hybrid) -->
+        <div id="crmSearchSheet" class="sheet-overlay" style="z-index:335;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Search CRM</h3>
+                    <button type="button" onclick="closeSheetEl('crmSearchSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <input type="search" class="form-input mb-3" placeholder="Name or phone" id="crmLookupQ" oninput="filterCrmLookup()">
+                <button type="button" onclick="pickCrmClient('Thant Zin Win','09 777 220 119','12/PAZATA(N)098745','thantzin@email.com')" class="crm-lookup w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);" data-q="thant zin win 09 777">
+                    <p class="text-deep text-sm font-semibold">Thant Zin Win</p>
+                    <p class="text-deep/45 text-[11px]">09 777 220 119 · Client</p>
+                </button>
+                <button type="button" onclick="pickCrmClient('Aye Chan','09 750 112 233','','')" class="crm-lookup w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);" data-q="aye chan 09 750">
+                    <p class="text-deep text-sm font-semibold">Aye Chan</p>
+                    <p class="text-deep/45 text-[11px]">09 750 112 233 · Lead</p>
+                </button>
+                <button type="button" onclick="pickCrmClient('May Hnin Oo','09 250 331 447','','may@email.com')" class="crm-lookup w-full text-left soft-card p-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);" data-q="may hnin oo 09 250">
+                    <p class="text-deep text-sm font-semibold">May Hnin Oo</p>
+                    <p class="text-deep/45 text-[11px]">09 250 331 447 · Client</p>
+                </button>
+            </div>
+        </div>
+
         <!-- App detail sheet -->
-        <div id="appDetail" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:320;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <div id="appDetail" class="sheet-overlay" style="z-index:320;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-deep font-bold text-lg" id="detailTitle">Application</h3>
                     <button type="button" onclick="closeAppDetail()" class="text-deep/40 text-xl">×</button>
@@ -406,25 +702,196 @@
     <script>
         const params = new URLSearchParams(location.search);
         const from = params.get('from') || 'quote';
+        let forceNoPrefill = params.get('prefill') === '0';
+        if (params.get('prefill') === '1') forceNoPrefill = false;
+
         const sourceMap = {
             quote: 'From quote · Personal Accident',
             product: 'From product catalog · Personal Accident',
             client: 'From client profile · Thant Zin Win',
             lead: 'From lead · converts to Client on Core submit',
-            renewal: 'Renewal · Start e-App (within configured window)'
+            renewal: 'Renewal · Start e-App (within configured window)',
+            blank: 'New e-App · manual entry'
         };
         document.getElementById('sourceLabel').textContent = sourceMap[from] || sourceMap.quote;
 
-        let currentStep = 1;
-        const totalSteps = 5;
-        const titles = ['Customer & product', 'Insured & beneficiary', 'Documents', 'E-Signatures', 'Review & submit'];
-        let statusFilter = 'all';
+        /** @type {'prefill'|'manual'|'hybrid'} */
+        let entryMode = 'prefill';
 
+        function resolveEntryMode() {
+            if (forceNoPrefill || from === 'blank') return 'manual';
+            if (from === 'quote') return 'prefill';
+            if (from === 'client' || from === 'lead') return 'hybrid';
+            if (from === 'product' || from === 'renewal') return 'manual';
+            return 'prefill';
+        }
+
+        function setField(id, value, clear) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (clear) {
+                el.value = el.tagName === 'TEXTAREA' || el.tagName === 'INPUT' ? '' : el.value;
+                if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            } else {
+                const pf = el.getAttribute('data-prefill');
+                el.value = value != null ? value : (pf || el.value);
+            }
+        }
+
+        function applyEntryMode() {
+            entryMode = resolveEntryMode();
+            const prefill = entryMode === 'prefill';
+            const hybrid = entryMode === 'hybrid';
+            const manual = entryMode === 'manual';
+
+            document.getElementById('entryBannerPrefill').style.display = prefill ? '' : 'none';
+            document.getElementById('entryBannerHybrid').style.display = hybrid ? '' : 'none';
+            document.getElementById('entryBannerManual').style.display = manual ? '' : 'none';
+            document.getElementById('productCardPrefill').style.display = prefill ? '' : 'none';
+            document.getElementById('productCardManual').style.display = (manual || hybrid) ? '' : 'none';
+            document.getElementById('phQuickActions').style.display = (manual || hybrid) ? 'flex' : 'none';
+
+            if (prefill) {
+                ['phName','phPhone','phEmail','phNrc','phDob','phAddr'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.dataset.prefill) el.value = el.dataset.prefill;
+                });
+            } else if (hybrid) {
+                ['phName','phPhone','phEmail','phNrc','phDob','phAddr'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && el.dataset.prefill) el.value = el.dataset.prefill;
+                });
+                document.getElementById('manPrem').value = '';
+                document.getElementById('manPrem').placeholder = 'Required · or use calculator';
+            } else {
+                ['phName','phPhone','phEmail','phNrc','phAddr'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+                document.getElementById('phDob').value = '';
+                document.getElementById('manPrem').value = '';
+            }
+
+            const qa = document.getElementById('qaPrefillBtn');
+            if (qa) {
+                qa.textContent = forceNoPrefill ? 'Use Core / quote prefill' : 'Simulate no prefill';
+                qa.className = forceNoPrefill
+                    ? 'py-2 rounded-xl bg-deep text-white text-xs font-semibold'
+                    : 'py-2 rounded-xl bg-deep/5 text-deep text-xs font-semibold';
+            }
+
+            let label = sourceMap[from] || sourceMap.quote;
+            if (forceNoPrefill && from !== 'blank') label += ' · manual override';
+            document.getElementById('sourceLabel').textContent = label;
+        }
+
+        function toggleSimulateNoPrefill() {
+            forceNoPrefill = !forceNoPrefill;
+            const q = new URLSearchParams(location.search);
+            q.set('from', from);
+            q.set('prefill', forceNoPrefill ? '0' : '1');
+            history.replaceState(null, '', '?' + q.toString());
+            applyEntryMode();
+            currentStep = 1;
+            updateUI();
+            showSuccessToast(forceNoPrefill ? 'Manual entry mode' : 'Prefill mode');
+        }
+
+        function syncManualProduct() {
+            const map = {
+                pa: { name: 'Personal Accident', code: 'PA-001' },
+                ul: { name: 'Universal Life', code: 'UL-01' },
+                fh: { name: 'Family Health', code: 'FH-01' },
+                credit: { name: 'Credit Life', code: 'CL-01' }
+            };
+            const p = map[document.getElementById('manProduct').value] || map.pa;
+            document.getElementById('sumProduct').textContent = p.name;
+            document.getElementById('sumCode').textContent = p.code;
+        }
+
+        function promptChangeProduct() {
+            if (confirm('Change product? You’ll need to re-check premium (open calculator or edit).')) {
+                forceNoPrefill = true;
+                applyEntryMode();
+                showSuccessToast('Switched to editable product');
+            }
+        }
+
+        function openCrmSearch() {
+            const el = document.getElementById('crmSearchSheet');
+            el.classList.add('open');
+            el.style.display = 'flex';
+        }
+        function closeSheetEl(id) {
+            const el = document.getElementById(id);
+            el.classList.remove('open');
+            el.style.display = 'none';
+        }
+        function filterCrmLookup() {
+            const q = (document.getElementById('crmLookupQ').value || '').toLowerCase();
+            document.querySelectorAll('.crm-lookup').forEach(row => {
+                row.style.display = !q || (row.dataset.q || '').includes(q) ? '' : 'none';
+            });
+        }
+        function pickCrmClient(name, phone, nrc, email) {
+            document.getElementById('phName').value = name;
+            document.getElementById('phPhone').value = phone;
+            document.getElementById('phNrc').value = nrc || '';
+            document.getElementById('phEmail').value = email || '';
+            closeSheetEl('crmSearchSheet');
+            showSuccessToast('Customer loaded from CRM');
+        }
+
+        function validateStep1() {
+            const name = document.getElementById('phName').value.trim();
+            const phone = document.getElementById('phPhone').value.trim();
+            const nrc = document.getElementById('phNrc').value.trim();
+            if (!name || !phone || !nrc) {
+                alert('Please fill required policyholder fields (name, phone, NRC).');
+                return false;
+            }
+            if (entryMode === 'manual' || entryMode === 'hybrid') {
+                const prem = document.getElementById('manPrem').value.trim();
+                if (!prem) {
+                    alert('Enter premium (MMK) or open the calculator first.');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        let currentStep = 1;
+        const totalSteps = 6;
+        const titles = [
+            'Customer & product',
+            'Insured & beneficiary',
+            'Health declaration',
+            'Documents',
+            'E-Signatures',
+            'Confirm & submit'
+        ];
+        let statusFilter = 'all';
+        let showingUW = false;
+
+        function showSuccessToast(msg) {
+            const toast = document.getElementById('successToast');
+            document.getElementById('successToastMsg').textContent = msg || 'Done';
+            toast.classList.add('show');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
         function showMode(mode) {
+            showingUW = false;
             document.getElementById('trackerMode').classList.toggle('hidden-step', mode !== 'tracker');
             document.getElementById('wizardMode').classList.toggle('hidden-step', mode !== 'wizard');
             if (mode === 'wizard') updateUI();
-            history.replaceState(null, '', mode === 'tracker' ? '?view=tracker' : (from ? '?from=' + from : ''));
+            const q = new URLSearchParams();
+            if (mode === 'tracker') q.set('view', 'tracker');
+            else {
+                q.set('from', from);
+                q.set('prefill', forceNoPrefill ? '0' : '1');
+            }
+            history.replaceState(null, '', '?' + q.toString());
         }
 
         function updateUI() {
@@ -432,18 +899,29 @@
                 document.getElementById('step' + i).classList.add('hidden-step');
             }
             document.getElementById('stepDone').classList.add('hidden-step');
+            document.getElementById('stepUW').classList.add('hidden-step');
             document.getElementById('wizardNav').style.display = '';
+            document.getElementById('stepIndicators').style.display = '';
+
+            if (showingUW) {
+                document.getElementById('stepUW').classList.remove('hidden-step');
+                document.getElementById('wizardNav').style.display = 'none';
+                document.getElementById('stepIndicators').style.display = 'none';
+                document.getElementById('pageTitle').textContent = 'Underwriting';
+                return;
+            }
 
             if (currentStep > totalSteps) {
                 document.getElementById('stepDone').classList.remove('hidden-step');
                 document.getElementById('wizardNav').style.display = 'none';
+                document.getElementById('stepIndicators').style.display = 'none';
                 document.getElementById('pageTitle').textContent = 'Submitted';
                 return;
             }
 
             const el = document.getElementById('step' + currentStep);
             el.classList.remove('hidden-step');
-            el.classList.add('fade-in');
+            el.classList.remove('step-fade'); void el.offsetWidth; el.classList.add('step-fade');
             document.getElementById('pageTitle').textContent = titles[currentStep - 1];
 
             for (let i = 1; i <= totalSteps; i++) {
@@ -460,12 +938,13 @@
             document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
             document.getElementById('nextBtn').classList.toggle('hidden', currentStep === totalSteps);
             document.getElementById('submitBtn').classList.toggle('hidden', currentStep !== totalSteps);
-            document.querySelector('.scroll-content').scrollTop = 0;
-            if (currentStep === 4) initPads();
+            document.querySelector('#wizardMode .scroll-content').scrollTop = 0;
+            if (currentStep === 5) initPads();
         }
 
         function nextStep() {
-            if (currentStep === 4 && (!hasInk('sigClient') || !hasInk('sigAgent'))) {
+            if (currentStep === 1 && !validateStep1()) return;
+            if (currentStep === 5 && (!hasInk('sigClient') || !hasInk('sigAgent'))) {
                 alert('Client and Agent signatures are required.');
                 return;
             }
@@ -475,20 +954,52 @@
             if (currentStep > 1) { currentStep--; updateUI(); }
         }
         function goBackNav() {
+            if (showingUW) { showingUW = false; updateUI(); return; }
             if (currentStep > 1 && currentStep <= totalSteps) prevStep();
             else location.href = 'after-login.html';
         }
         function saveEappDraft() {
-            alert('e-App saved as Draft (local / backend). Open it anytime from Applications tracker.');
+            showSuccessToast('e-App saved as Draft');
         }
         function submitEapp() {
             if (!document.getElementById('declareOk').checked) {
                 alert('Please confirm the declaration.');
                 return;
             }
-            document.getElementById('revName').textContent = document.getElementById('phName').value;
+            const name = document.getElementById('phName').value;
+            document.getElementById('revName').textContent = name + ' · 09 777 220 119 · 12/PAZATA(N)098745';
             currentStep = totalSteps + 1;
             updateUI();
+        }
+        function showUW() {
+            showingUW = true;
+            updateUI();
+        }
+        function setHealth(yes) {
+            document.getElementById('healthYes').className = yes
+                ? 'flex-1 py-2.5 rounded-xl bg-deep text-white text-xs font-bold'
+                : 'flex-1 py-2.5 rounded-xl bg-deep/5 text-deep text-xs font-bold';
+            document.getElementById('healthNo').className = !yes
+                ? 'flex-1 py-2.5 rounded-xl bg-deep text-white text-xs font-bold'
+                : 'flex-1 py-2.5 rounded-xl bg-deep/5 text-deep text-xs font-bold';
+            document.getElementById('healthDetail').classList.toggle('hidden-step', !yes);
+        }
+        function openScanSheet() {
+            const el = document.getElementById('scanSheet');
+            el.classList.add('open');
+            el.style.display = 'flex';
+        }
+        function closeScanSheet() {
+            const el = document.getElementById('scanSheet');
+            el.classList.remove('open');
+            el.style.display = 'none';
+        }
+        function captureScan() {
+            closeScanSheet();
+            if (entryMode !== 'prefill' && !document.getElementById('phNrc').value) {
+                document.getElementById('phNrc').value = '12/PAZATA(N)098745';
+            }
+            showSuccessToast('NRC front captured · review uploads');
         }
 
         function toggleInsured() {
@@ -565,14 +1076,29 @@
             document.getElementById('detailTitle').textContent = d.title;
             document.getElementById('detailBody').textContent = d.body;
             document.getElementById('detailAction').style.display = d.action ? '' : 'none';
-            document.getElementById('appDetail').style.display = 'flex';
+            const el = document.getElementById('appDetail');
+            el.classList.add('open');
+            el.style.display = 'flex';
         }
-        function closeAppDetail() { document.getElementById('appDetail').style.display = 'none'; }
+        function closeAppDetail() {
+            const el = document.getElementById('appDetail');
+            el.classList.remove('open');
+            el.style.display = 'none';
+        }
         document.getElementById('appDetail').addEventListener('click', function (e) {
             if (e.target === this) closeAppDetail();
         });
+        document.getElementById('scanSheet').addEventListener('click', function (e) {
+            if (e.target === this) closeScanSheet();
+        });
 
+        document.getElementById('crmSearchSheet').addEventListener('click', function (e) {
+            if (e.target === this) closeSheetEl('crmSearchSheet');
+        });
+
+        applyEntryMode();
         if (params.get('view') === 'tracker') showMode('tracker');
+        else if (params.get('view') === 'uw') { showMode('wizard'); currentStep = totalSteps + 1; showingUW = true; updateUI(); }
         else updateUI();
     </script>
 </body>

@@ -6,7 +6,9 @@
     <title>After Login — FA Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+
+<script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -69,16 +71,30 @@
         .scroll-content::-webkit-scrollbar { display: none; }
 
         .gradient-dashboard {
-            background: linear-gradient(135deg, #00A6FB 0%, #0582CA 55%, #006494 100%);
-            box-shadow: 0 12px 28px rgba(5, 130, 202, 0.28);
+            background:
+                radial-gradient(120% 80% at 100% 0%, rgba(87, 199, 133, 0.22) 0%, transparent 45%),
+                radial-gradient(90% 60% at 0% 100%, rgba(0, 166, 251, 0.35) 0%, transparent 50%),
+                linear-gradient(145deg, #00A6FB 0%, #0582CA 52%, #006494 100%);
+            box-shadow: 0 14px 32px rgba(5, 130, 202, 0.32), 0 2px 0 rgba(255,255,255,0.12) inset;
+            position: relative;
+            overflow: hidden;
         }
+        .gradient-dashboard::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 28%);
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        .gradient-dashboard > * { position: relative; z-index: 1; }
         .bottom-nav {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            background: #FFFcf7;
+            box-shadow: 0 -4px 20px rgba(0,53,84,0.08);
             border-radius: 30px 30px 0 0;
             z-index: 50;
         }
@@ -94,10 +110,17 @@
         }
         .offline-banner {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white; padding: 8px 12px; display: none; align-items: center; gap: 8px;
-            position: sticky; top: 0; z-index: 40;
+            color: white; padding: 8px 14px; display: none; align-items: center; gap: 8px;
+            position: sticky; top: 28px; z-index: 40;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
         }
         .offline-banner.show { display: flex; }
+        .offline-banner > span,
+        .offline-banner .ob-text {
+            flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            font-size: 11px; font-weight: 600; line-height: 1.3;
+        }
+        .status-safe { padding-top: 34px; }
         .service-grid-item {
             border: none;
             transition: all 0.2s;
@@ -105,20 +128,241 @@
         }
         .service-grid-item:hover { background: rgba(0, 166, 251, 0.06); }
 
-        /* KPI Cards - Fixed Layout */
+        /* KPI Cards — Concept A glass strip */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
         .kpi-card-item {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.32);
             border-radius: 14px;
-            padding: 12px;
+            padding: 10px 8px 11px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 53, 84, 0.12), inset 0 1px 0 rgba(255,255,255,0.25);
+        }
+        .kpi-card-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            border-radius: 14px 14px 0 0;
+        }
+        .kpi-card-item.kpi-policies::before { background: linear-gradient(90deg, #7dd3fc, #00A6FB); }
+        .kpi-card-item.kpi-fyp::before { background: linear-gradient(90deg, #7ee0a8, #57C785); }
+        .kpi-card-item.kpi-commission::before { background: linear-gradient(90deg, #fcd34d, #e8a838); }
+        .kpi-chip-sky {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #003554;
+            background: rgba(224, 242, 254, 0.95);
+            padding: 2px 6px;
+            border-radius: 999px;
+            box-shadow: 0 0 10px rgba(0, 166, 251, 0.35);
+        }
+        .kpi-dual {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+        .kpi-dual-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .kpi-dual-num {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
+        }
+        .kpi-dual-label {
+            font-size: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.65);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .kpi-dual-divider {
+            width: 1px;
+            align-self: stretch;
+            margin: 1px 6px;
+            background: rgba(255, 255, 255, 0.28);
+            flex-shrink: 0;
+        }
+        .kpi-chip-mint {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            margin-top: 6px;
+            font-size: 8px;
+            font-weight: 700;
+            color: #0d5c38;
+            background: #57C785;
+            padding: 2px 6px;
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(87, 199, 133, 0.45);
+        }
+        .kpi-chip-gold {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #5c3d0a;
+            background: linear-gradient(135deg, #fde68a, #e8a838);
+            padding: 2px 7px;
+            border-radius: 999px;
+            box-shadow: 0 0 12px rgba(232, 168, 56, 0.45);
+        }
+        .mdrt-panel {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 14px;
+            padding: 10px 12px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .mdrt-badge {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #57C785, #3daa68);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            box-shadow: 0 4px 14px rgba(87, 199, 133, 0.45);
+        }
+        .mdrt-track {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+            position: relative;
+        }
+        .mdrt-fill {
+            height: 100%;
+            width: 65%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #57C785 0%, #9aefb8 100%);
+            box-shadow: 0 0 12px rgba(87, 199, 133, 0.7);
+        }
+        .brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 53, 84, 0.14);
+        }
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* My work / Task Management (FR-07) */
+        .task-scope {
+            display: flex; gap: 6px; background: rgba(0,53,84,0.06);
+            padding: 4px; border-radius: 12px;
+        }
+        .task-scope button {
+            flex: 1; border: none; background: transparent; cursor: pointer;
+            font-family: inherit; font-size: 12px; font-weight: 700;
+            color: rgba(0,53,84,0.45); padding: 8px 0; border-radius: 10px;
+        }
+        .task-scope button.on { background: #fff; color: #003554; box-shadow: 0 2px 8px rgba(0,53,84,0.1); }
+        .task-day-strip { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+        .task-day-strip::-webkit-scrollbar { display: none; }
+        .task-day-chip {
+            flex: 0 0 46px; border: none; background: transparent; cursor: pointer;
+            font-family: inherit; border-radius: 12px; padding: 8px 4px; text-align: center;
+        }
+        .task-day-chip .wd { display: block; font-size: 9px; font-weight: 700; color: rgba(0,53,84,0.4); text-transform: uppercase; }
+        .task-day-chip .dn { display: block; font-size: 15px; font-weight: 800; color: #003554; margin-top: 2px; }
+        .task-day-chip.on { background: #003554; }
+        .task-day-chip.on .wd, .task-day-chip.on .dn { color: #fff; }
+        .task-day-chip.has::after {
+            content: ''; display: block; width: 4px; height: 4px; border-radius: 99px;
+            background: #00A6FB; margin: 4px auto 0;
+        }
+        .task-day-chip.on.has::after { background: #57C785; }
+        .task-hour-row { display: flex; gap: 10px; min-height: 56px; }
+        .task-hour-gutter {
+            width: 64px; flex-shrink: 0; font-size: 10px; font-weight: 700;
+            color: rgba(0,53,84,0.4); padding-top: 2px; font-variant-numeric: tabular-nums;
+        }
+        .task-hour-body { flex: 1; border-top: 1px solid rgba(0,53,84,0.08); padding: 6px 0 10px; min-width: 0; }
+        .task-card {
+            background: #FFFcf7; border-radius: 12px; padding: 10px 10px 10px 12px;
+            box-shadow: 0 4px 14px rgba(0,53,84,0.07); margin-bottom: 8px;
+            border-left: 3px solid #94a3b8; position: relative;
+        }
+        .task-card.pri-high { border-left-color: #F59E0B; }
+        .task-card.overdue { border-left-color: #E11D48; }
+        .task-card.done { opacity: 0.72; }
+        .task-pill {
+            display: inline-flex; align-items: center; font-size: 8px; font-weight: 800;
+            letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 6px; border-radius: 999px;
+        }
+        .task-pill.pending { background: #FEF3C7; color: #92400E; }
+        .task-pill.progress { background: #E0F2FE; color: #0369A1; }
+        .task-pill.done { background: #D1FAE5; color: #065F46; }
+        .task-pill.overdue { background: #FFE4E6; color: #BE123C; }
+        .task-pill.new { background: #003554; color: #fff; }
+        .task-month-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+        }
+        .task-month-cell {
+            aspect-ratio: 1; border: none; background: transparent; border-radius: 10px;
+            font-family: inherit; font-size: 11px; font-weight: 700; color: #003554;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+        }
+        .task-month-cell.mute { color: rgba(0,53,84,0.25); }
+        .task-month-cell.on { background: #003554; color: #fff; }
+        .task-month-dots { display: flex; gap: 2px; height: 4px; }
+        .task-month-dots i { width: 4px; height: 4px; border-radius: 99px; display: block; }
+        .task-week-strip { display: flex; gap: 6px; }
+        .task-week-chip {
+            flex: 1; border: none; background: rgba(0,53,84,0.04); border-radius: 12px;
+            padding: 8px 2px; font-family: inherit; cursor: pointer; text-align: center;
+        }
+        .task-week-chip.on { background: #003554; color: #fff; }
+        .task-week-chip .wd { font-size: 9px; font-weight: 700; opacity: 0.55; text-transform: uppercase; }
+        .task-week-chip.on .wd { opacity: 0.75; color: #fff; }
+        .task-week-chip .dn { font-size: 14px; font-weight: 800; color: #003554; margin-top: 2px; }
+        .task-week-chip.on .dn { color: #fff; }
+        .task-week-chip .ct { font-size: 9px; font-weight: 700; color: #0582CA; margin-top: 2px; }
+        .task-week-chip.on .ct { color: #7dd3fc; }
+        .btn-see-more {
+            background: #fff;
+            color: #0582CA;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 53, 84, 0.18);
+            border: none;
+            cursor: pointer;
         }
 
         .circular-progress {
@@ -146,7 +390,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: #f0f2f5;
+            background: #F7F3EC;
             z-index: 200;
             transform: translateY(100%);
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -159,10 +403,10 @@
         }
 
         .detail-card {
-            background: white;
-            border-radius: 16px;
+            background: #FFFcf7;
+            border-radius: 18px;
             padding: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
         }
 
         .progress-bar-bg {
@@ -217,7 +461,7 @@
             transition: all 0.2s;
         }
         .tab-pill.active {
-            background: #1a5fb4;
+            background: #003554;
             color: white;
         }
 
@@ -228,9 +472,140 @@
         .pol-type.on { background: #003554; color: white; }
 
         .tab-pill.inactive {
-            background: white;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
+            background: #FFFcf7;
+            color: rgba(0,53,84,0.55);
+            box-shadow: 0 4px 12px rgba(0,53,84,0.06);
+        }
+
+        /* Phase B — shared sheet + nav hit targets */
+        
+        .nav-ico {
+            width: 22px; height: 22px; color: rgba(0,53,84,0.38);
+            transition: color 0.15s;
+        }
+        .nav-hit.on .nav-ico, .nav-hit.active .nav-ico { color: #0582CA; }
+        .nav-hit .nav-label {
+            font-size: 10px; font-weight: 600; margin-top: 4px;
+            color: rgba(0,53,84,0.38); letter-spacing: 0.01em;
+        }
+        .nav-hit.on .nav-label, .nav-hit.active .nav-label {
+            color: #0582CA; font-weight: 700;
+        }
+
+        .ph-fill {
+            display: inline-flex; align-items: center; justify-content: center;
+            line-height: 1;
+        }
+        .nav-hit .ph-fill {
+            font-size: 22px; color: rgba(0,53,84,0.38);
+            transition: color 0.15s;
+        }
+        .nav-hit.on .ph-fill,
+        .nav-hit.active .ph-fill { color: #0582CA; }
+        .nav-fab .ph-fill { font-size: 26px; color: #fff; }
+        .ui-tile .ph-fill { font-size: 24px; color: #0582CA; }
+        .ui-tile-sm .ph-fill { font-size: 18px; color: #0582CA; }
+        .product-icon .ph-fill { font-size: 26px; color: #0582CA; }
+        .profile-avatar-ico .ph-fill { font-size: 32px; color: #0582CA; }
+
+
+        .ui-ico {
+            width: 18px; height: 18px; color: #0582CA; display: block;
+        }
+        .ui-ico-lg {
+            width: 26px; height: 26px;
+        }
+        .ui-tile {
+            width: 48px; height: 48px; border-radius: 16px;
+            background: rgba(0,166,251,0.1);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 6px;
+        }
+        .ui-tile-sm {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: rgba(0,166,251,0.1);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-fab {
+            width: 56px; height: 56px; border-radius: 999px;
+            background: #003554; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,166,251,0.28), 0 0 0 4px #F7F3EC;
+            border: none; cursor: pointer; padding: 0;
+        }
+
+        .nav-hit {
+            min-width: 56px; min-height: 48px; padding: 4px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: none; background: transparent; cursor: pointer;
+        }
+        .sheet-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 310; display: none; align-items: flex-end;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-panel {
+            width: 100%; background: #FFFcf7; border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px; max-height: 90%; overflow-y: auto;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px; border-radius: 999px;
+            background: rgba(0,53,84,0.15); margin: 0 auto 16px;
+        }
+        .btn-sheet-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-sheet-secondary {
+            display: block; width: 100%; text-align: center; background: rgba(0,53,84,0.05); color: #003554;
+            font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Phase C — motion + theater */
+        .sheet-overlay.open {
+            display: flex;
+            animation: overlayIn 0.22s ease;
+        }
+        .sheet-overlay.open .sheet-panel {
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sheetRise {
+            from { transform: translateY(28px); opacity: 0.85; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-success {
+            position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 400;
+            background: #003554; color: #fff; border-radius: 14px; padding: 12px 14px;
+            display: none; align-items: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(0,53,84,0.28);
+            font-size: 13px; font-weight: 600;
+        }
+        .toast-success.show {
+            display: flex;
+            animation: toastIn 0.32s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }
+        .empty-state {
+            text-align: center; padding: 36px 20px 28px;
+        }
+        .empty-state .empty-icon {
+            width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 14px;
+            background: rgba(0,166,251,0.1); display: flex; align-items: center; justify-content: center;
+        }
+        .step-fade {
+            animation: fadeIn 0.32s ease-out;
         }
     </style>
 </head>
@@ -249,6 +624,8 @@
             <button type="button" onclick="toggleOffline()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Toggle Offline</button>
             <button type="button" id="roleFaBtn" onclick="setDemoRole('fa')" class="text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium">Role: FA</button>
             <button type="button" id="roleLeaderBtn" onclick="setDemoRole('leader')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Role: Leader</button>
+            <button type="button" onclick="simulateEmptySearch()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Simulate empty</button>
+            <button type="button" onclick="showSuccessToast('Saved successfully')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Show success toast</button>
         </div>
     </div>
 
@@ -256,7 +633,7 @@
         <div class="scroll-content" id="homeView">
 
             <!-- Status Bar -->
-            <div class="flex items-center justify-between px-6 pt-4 pb-2">
+            <div class="status-safe flex items-center justify-between px-6 pb-2">
                 <span class="text-sm font-semibold text-deep">9:30</span>
                 <div class="flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-deep" fill="currentColor" viewBox="0 0 24 24">
@@ -268,90 +645,90 @@
                 </div>
             </div>
 
-            <div id="offlineBanner" class="offline-banner">
-                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <div class="flex-1">
-                    <div class="text-xs font-bold">Offline Mode</div>
-                    <div class="text-[9px] opacity-90">Showing cached dashboard · Last synced 2h ago</div>
+            <!-- Header: flush mark · one username · bell -->
+            <div class="flex items-center gap-3 px-4 py-2">
+                <div class="brand-mark" aria-hidden="true">
+                    <img src="/assets/brand-mark.png" alt="" width="36" height="36" onerror="this.onerror=null;this.src='../assets/brand-mark.png';">
                 </div>
-            </div>
-
-            <!-- Header -->
-            <div class="flex items-center justify-between px-4 py-2">
-                <div class="w-9 h-9 rounded-full bg-sky/15 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-deep font-semibold text-xs">Myat Moe Pyae</span>
-                    <button type="button" onclick="openProfileSheet()" class="w-7 h-7 rounded-full bg-gray-300 overflow-hidden border-2 border-white shadow">
-                        <svg class="w-full h-full" viewBox="0 0 40 40">
-                            <rect width="40" height="40" fill="#8fa8c8"/>
-                            <circle cx="20" cy="15" r="7" fill="#6b8aaa"/>
-                            <path d="M8 38c0-6 5-10 12-10s12 4 12 10" fill="#6b8aaa"/>
-                        </svg>
-                    </button>
-                </div>
-                <div class="w-8 h-8 flex items-center justify-center">
+                <button type="button" onclick="showAppTab('profile')" class="flex-1 min-w-0 text-left">
+                    <span id="agentDisplayName" class="text-deep font-bold text-sm truncate block leading-tight">Myat Moe Pyae</span>
+                </button>
+                <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-deep/5" aria-label="Notifications">
                     <svg class="w-5 h-5 text-deep" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
                     </svg>
                 </div>
             </div>
 
-            <!-- Hero slot: Guest Partner → Logged-in This month -->
+            <div id="offlineBanner" class="offline-banner">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Offline — cached dashboard · synced 2h ago</span>
+            </div>
+
+            <!-- Hero slot: This month — equal KPI accents + MDRT badge -->
             <div class="mx-4 mt-1">
-                <div class="rounded-[18px] gradient-dashboard px-5 pt-5 pb-4">
-                    <div class="flex items-start justify-between gap-2 mb-4">
-                        <div>
-                            <p class="text-white/80 text-[10px] font-semibold tracking-wider uppercase">This month</p>
-                            <h2 class="text-white font-bold text-xl leading-tight">Good Morning, Mr Chit</h2>
-                            <p class="text-white/85 text-[12px] mt-1">Your personal performance</p>
+                <div class="rounded-[20px] gradient-dashboard px-4 pt-4 pb-3.5">
+                    <div class="flex items-start justify-between gap-2 mb-3.5">
+                        <div class="min-w-0">
+                            <p class="text-white/75 text-[10px] font-semibold tracking-[0.14em] uppercase">This month</p>
+                            <h2 class="text-white font-bold text-[18px] leading-tight mt-0.5 truncate">Good Morning, <span id="agentGreetingName">Myat Moe Pyae</span></h2>
+                            <p class="text-white/80 text-[11px] mt-1">Your personal performance</p>
                         </div>
-                        <button onclick="openDashboard()" class="bg-white text-steel font-bold text-[11px] px-3 py-2 rounded-xl flex-shrink-0 shadow-sm">See more</button>
+                        <button type="button" onclick="openDashboard()" class="btn-see-more">See more</button>
                     </div>
                     <div class="kpi-grid">
-                        <div class="kpi-card-item">
-                            <div class="text-white/75 text-[10px] font-semibold mb-1">Policies</div>
-                            <div class="text-white text-2xl font-bold leading-none">20</div>
-                            <div class="text-white/55 text-[8px] mt-1">8 new · 12 active</div>
+                        <div class="kpi-card-item kpi-policies">
+                            <div class="text-white/70 text-[9px] font-semibold tracking-wide uppercase">Policies</div>
+                            <div class="text-white text-[22px] font-extrabold leading-none mt-1.5 tabular-nums">20</div>
+                            <div class="kpi-dual mt-2">
+                                <div class="kpi-dual-col">
+                                    <span class="kpi-dual-num">8</span>
+                                    <span class="kpi-dual-label">New</span>
+                                </div>
+                                <div class="kpi-dual-divider" aria-hidden="true"></div>
+                                <div class="kpi-dual-col">
+                                    <span class="kpi-dual-num">12</span>
+                                    <span class="kpi-dual-label">Active</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="kpi-card-item">
-                            <div class="text-white/75 text-[10px] font-semibold mb-1">FYP</div>
-                            <div class="text-white text-2xl font-bold leading-none">72%</div>
-                            <div class="text-white/55 text-[8px] mt-1">MoM ↑ 8%</div>
+                        <div class="kpi-card-item kpi-fyp">
+                            <div class="text-white/70 text-[9px] font-semibold tracking-wide uppercase">FYP</div>
+                            <div class="text-white text-[22px] font-extrabold leading-none mt-1.5 tabular-nums">72%</div>
+                            <span class="kpi-chip-mint">MoM ↑ 8%</span>
                         </div>
-                        <div class="kpi-card-item">
-                            <div class="text-white/75 text-[10px] font-semibold mb-1">Commission</div>
-                            <div class="text-white text-[14px] font-bold leading-tight">MMK<br>726,000.00</div>
+                        <div class="kpi-card-item kpi-commission">
+                            <div class="text-white/70 text-[9px] font-semibold tracking-wide uppercase">Commission</div>
+                            <div class="text-white text-[17px] font-extrabold leading-none mt-1.5 tabular-nums tracking-tight">726,000</div>
+                            <span class="kpi-chip-gold">MMK</span>
                         </div>
                     </div>
-                    <div class="mt-3 flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2">
-                        <div class="flex-1">
-                            <div class="text-white/70 text-[9px] font-semibold">Road to MDRT</div>
-                            <div class="h-1.5 bg-white/20 rounded-full mt-1 overflow-hidden"><div class="h-full bg-white rounded-full" style="width:65%"></div></div>
+                    <div class="mdrt-panel">
+                        <div class="mdrt-badge" aria-label="65 percent">65%</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-white font-semibold text-[11px]">Road to MDRT</div>
+                            <div class="text-white/65 text-[9px] mt-0.5">65% of annual target</div>
+                            <div class="mdrt-track"><div class="mdrt-fill"></div></div>
                         </div>
-                        <span class="text-white text-xs font-bold">65%</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Same soft-card shell as guest Available / Unlock -->
+                                    <!-- Same soft-card shell as guest Available / Unlock -->
             <div class="mx-4 mt-4 soft-card overflow-hidden">
                 <div class="px-4 pt-4 pb-3">
                     <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">AVAILABLE NOW</h3>
                     <div class="grid grid-cols-3 gap-0">
                         <a href="products.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+                            <div class="ui-tile"><i class="ph-fill ph-hexagon" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Product</span><span class="avail-dot"></span>
                         </a>
                         <a href="get-quote.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline" style="border-left:1px solid rgba(0,53,84,0.09);border-right:1px solid rgba(0,53,84,0.09);">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg></div>
+                            <div class="ui-tile"><i class="ph-fill ph-calculator" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Calculator</span><span class="avail-dot"></span>
                         </a>
-                        <button type="button" class="flex flex-col items-center text-center py-2 px-1.5">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5"><svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                        <button type="button" onclick="openSheet('onlineSheet')" class="flex flex-col items-center text-center py-2 px-1.5">
+                            <div class="ui-tile"><i class="ph-fill ph-globe" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Online</span><span class="avail-dot"></span>
                         </button>
                     </div>
@@ -360,12 +737,12 @@
                 <div class="px-4 pt-3 pb-4">
                     <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">YOUR TOOLS</h3>
                     <div class="grid grid-cols-2 gap-2.5">
-                        <a href="policyholder-form.html?from=product" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">New Proposal</span></a>
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 118 2.83"/><path d="M22 12A10 10 0 0012 2v10z"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Commission</span></button>
-                        <a href="policyholder-form.html?view=tracker" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Proposal Status</span></a>
-                        <button type="button" onclick="showAppTab('customer')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">CRM</span></button>
-                        <button type="button" onclick="showAppTab('policies')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Policies</span></button>
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Task Management</span></button>
+                        <a href="policyholder-form.html?from=product" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="ui-tile-sm"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">New Proposal</span></a>
+                        <button type="button" onclick="openSheet('commissionSheet')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-chart-pie" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Commission</span></button>
+                        <a href="policyholder-form.html?view=tracker" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left no-underline"><div class="ui-tile-sm"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Proposal Status</span></a>
+                        <button type="button" onclick="openSheet('claimSheet')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-shield-check" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Claim</span></button>
+                        <button type="button" onclick="showAppTab('customer')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-users" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">CRM</span></button>
+                        <button type="button" onclick="showAppTab('tasks')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-calendar-blank" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Task Management</span></button>
                     </div>
                 </div>
             </div>
@@ -397,18 +774,11 @@
 
         <!-- ========== FR-03 Customer (Leads / Clients) ========== -->
         <div class="scroll-content" id="customerView" style="display:none;">
-            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+            <div class="status-safe flex items-center justify-between px-6 pb-1">
                 <span class="text-xs font-semibold text-deep">9:30</span>
                 <div class="flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
                     <div class="w-5 h-2.5 border border-deep rounded-sm relative ml-1"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
-                </div>
-            </div>
-
-            <div id="crmOfflineBanner" class="offline-banner">
-                <div class="flex-1">
-                    <div class="text-xs font-bold">Offline Mode</div>
-                    <div class="text-[9px] opacity-90">New leads save locally · will sync when online</div>
                 </div>
             </div>
 
@@ -420,11 +790,18 @@
                 <button type="button" onclick="openNewLead()" class="bg-deep text-white text-[11px] font-bold px-3 py-2 rounded-xl">+ New Lead</button>
             </div>
 
-            <div class="mx-4 mb-3">
-                <div class="relative">
+            <div id="crmOfflineBanner" class="offline-banner">
+                <span>Offline — new leads save locally until sync</span>
+            </div>
+
+            <div class="mx-4 mb-3 mt-3 flex gap-2">
+                <div class="relative flex-1 min-w-0">
                     <svg class="w-4 h-4 text-deep/35 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-                    <input type="search" placeholder="Search name or phone" class="w-full pl-9 pr-3 py-3 rounded-xl bg-[#FFFcf7] border border-deep/10 text-sm text-deep outline-none focus:border-steel">
+                    <input type="search" id="crmSearch" oninput="filterCrm()" placeholder="Search name or phone" class="w-full pl-9 pr-3 py-3 rounded-xl bg-[#FFFcf7] border border-deep/10 text-sm text-deep outline-none focus:border-steel">
                 </div>
+                <button type="button" onclick="openSheet('crmFilterSheet')" class="w-11 h-11 rounded-xl bg-[#FFFcf7] border border-deep/10 flex items-center justify-center flex-shrink-0" aria-label="Filter">
+                    <svg class="w-4 h-4 text-deep/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                </button>
             </div>
 
             <div class="mx-4 mb-3 flex p-1 rounded-xl bg-deep/5">
@@ -434,7 +811,7 @@
 
             <!-- Leads list -->
             <div id="leadsList" class="mx-4 mb-4 space-y-2.5">
-                <button type="button" onclick="openLeadDetail('Aye Chan')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="aye chan 09 750 112 233" data-status="followup" data-product="protection" onclick="openLeadDetail('Aye Chan')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">AC</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -445,7 +822,7 @@
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button type="button" onclick="openLeadDetail('Ko Min Thu')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="ko min thu 09 421 889 001" data-status="new" data-product="saving" onclick="openLeadDetail('Ko Min Thu')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">KM</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -456,7 +833,7 @@
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button type="button" onclick="openLeadDetail('Su Su Hlaing')" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="su su hlaing 09 965 442 110" data-status="hot" data-product="health" onclick="openLeadDetail('Su Su Hlaing')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">SS</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -469,21 +846,34 @@
                 </button>
                 <p class="text-[10px] text-deep/40 px-1 pt-1">Lead → Client conversion happens automatically after policy submit in Core. No manual convert.</p>
             </div>
+            <div id="crmEmpty" class="mx-4 mb-4 empty-state soft-card" style="display:none;">
+                <div class="empty-icon">
+                    <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                </div>
+                <p class="text-deep font-bold text-sm">No matches</p>
+                <p class="text-deep/45 text-xs mt-1">Try another name or phone number</p>
+            </div>
 
             <!-- Clients list -->
             <div id="clientsList" class="mx-4 mb-4 space-y-2.5" style="display:none;">
-                <button type="button" onclick="openClientDetail()" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="thant zin win 09 777 220 119" data-status="active" data-product="protection" onclick="openClientDetail()" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-mint/20 text-deep font-bold text-sm flex items-center justify-center">TW</div>
                     <div class="flex-1 min-w-0">
-                        <span class="text-deep font-semibold text-sm">Thant Zin Win</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm">Thant Zin Win</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-mint px-1.5 py-0.5 rounded">Active</span>
+                        </div>
                         <p class="text-deep/45 text-[11px] mt-0.5">09 777 220 119 · 2 active policies</p>
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button type="button" onclick="openClientDetail()" class="w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="may hnin oo 09 250 331 447" data-status="active" data-product="health" onclick="openClientDetail()" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-mint/20 text-deep font-bold text-sm flex items-center justify-center">MH</div>
                     <div class="flex-1 min-w-0">
-                        <span class="text-deep font-semibold text-sm">May Hnin Oo</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm">May Hnin Oo</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-mint px-1.5 py-0.5 rounded">Active</span>
+                        </div>
                         <p class="text-deep/45 text-[11px] mt-0.5">09 250 331 447 · 1 active policy</p>
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
@@ -494,7 +884,7 @@
 
         <!-- ========== FR-06 Policies (Active, read-only) ========== -->
         <div class="scroll-content" id="policiesView" style="display:none;">
-            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+            <div class="status-safe flex items-center justify-between px-6 pb-1">
                 <span class="text-xs font-semibold text-deep">9:30</span>
                 <div class="flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
@@ -510,13 +900,20 @@
                 <span id="policyScopeChip" class="flex-shrink-0 text-[10px] font-bold bg-mint/15 text-deep px-2.5 py-1 rounded-full">My book</span>
             </div>
 
-            <div class="mx-4 mb-2">
-                <div class="relative">
+            <div id="policyOfflineBanner" class="offline-banner">
+                <span>Offline — last synced active policies</span>
+            </div>
+
+            <div class="mx-4 mb-2 mt-3 flex gap-2">
+                <div class="relative flex-1 min-w-0">
                     <svg class="w-4 h-4 text-deep/35 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
                     <input type="search" id="policySearch" oninput="filterPolicies()" placeholder="Name, policy no, NRC, phone…" class="w-full pl-9 pr-3 py-3 rounded-xl bg-[#FFFcf7] border border-deep/10 text-sm text-deep outline-none focus:border-steel">
                 </div>
-                <p class="text-[10px] text-deep/35 mt-1.5 px-0.5">Wildcard / partial match supported</p>
+                <button type="button" onclick="openSheet('policyFilterSheet')" class="w-11 h-11 rounded-xl bg-[#FFFcf7] border border-deep/10 flex items-center justify-center flex-shrink-0" aria-label="Filter">
+                    <svg class="w-4 h-4 text-deep/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                </button>
             </div>
+            <p class="text-[10px] text-deep/35 mx-4 mb-2">Wildcard / partial match · filter sheet for status</p>
 
             <div class="mx-4 mb-3 flex gap-2 overflow-x-auto" style="scrollbar-width:none;">
                 <button type="button" class="pol-type on" data-type="all" onclick="setPolicyType(this)">All</button>
@@ -572,53 +969,199 @@
                     <p class="text-deep/50 text-[11px] mt-2">FA: <strong class="text-deep">Aye Thrain</strong> · Next due 01 Sep 2026</p>
                 </button>
             </div>
+            <div id="policyEmpty" class="mx-4 mb-4 empty-state soft-card" style="display:none;">
+                <div class="empty-icon">
+                    <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <p class="text-deep font-bold text-sm">No active policies found</p>
+                <p class="text-deep/45 text-xs mt-1">Adjust search or product filter</p>
+            </div>
             <p class="mx-4 mb-6 text-[10px] text-deep/40">Lapsed / cancelled policies are hidden. Data from Core real-time API · JWT scoped.</p>
         </div>
 
-        <!-- Fixed Bottom Navigation -->
-        <div class="bottom-nav px-2 pt-3 pb-6">
-            <div class="flex items-center justify-around">
-                <button type="button" id="navHome" onclick="showAppTab('home')" class="flex flex-col items-center">
-                    <svg class="w-6 h-6 text-steel" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                    <span class="text-steel text-xs font-semibold mt-1">Home</span>
-                </button>
-                <button type="button" id="navCustomer" onclick="showAppTab('customer')" class="flex flex-col items-center">
-                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                    </svg>
-                    <span class="text-gray-400 text-xs mt-1">Customer</span>
-                </button>
-                <div class="relative -mt-6">
-                    <div class="w-14 h-14 bg-deep rounded-full flex items-center justify-center shadow-lg shadow-sky/30">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
+        <!-- ========== Profile screen (FR-01 biometric + settings) ========== -->
+        <div class="scroll-content" id="profileView" style="display:none;">
+            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <span class="text-xs font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative ml-1"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <div class="px-4 pt-2 pb-1">
+                <h2 class="text-deep font-bold text-lg leading-none">Profile</h2>
+                <p class="text-deep/45 text-[11px] mt-1">Account · security · preferences</p>
+            </div>
+
+            <div class="mx-4 mt-3 soft-card p-4">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-14 h-14 rounded-2xl bg-sky/15 flex items-center justify-center flex-shrink-0 profile-avatar-ico"><i class="ph-fill ph-user-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="text-deep font-bold text-base truncate">Myat Moe Pyae</h3>
+                        <p class="text-deep/50 text-xs mt-0.5">Agent · FA code FA-10428</p>
+                        <p class="text-deep/40 text-[11px] mt-1">myat.moe@kbzlife.demo</p>
                     </div>
                 </div>
-                <a href="products.html" class="flex flex-col items-center no-underline">
-                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                    </svg>
-                    <span class="text-gray-400 text-xs mt-1">Product</span>
+                <a href="get-quote.html?auth=1" class="block w-full text-center bg-deep text-white font-bold py-3 rounded-xl text-sm mb-3">Create New Quote</a>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="rounded-xl bg-cream/90 px-3 py-2.5 text-center">
+                        <p class="text-deep/45 text-[9px] font-bold tracking-wide">TOTAL PREMIUM</p>
+                        <p class="text-deep font-extrabold text-sm mt-0.5 tabular-nums">5.0M</p>
+                    </div>
+                    <div class="rounded-xl bg-cream/90 px-3 py-2.5 text-center">
+                        <p class="text-deep/45 text-[9px] font-bold tracking-wide">COMMISSION</p>
+                        <p class="text-deep font-extrabold text-sm mt-0.5 tabular-nums">726k</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 mt-5">
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">SECURITY</p>
+                <div class="soft-card overflow-hidden mb-4">
+                    <div class="flex items-center justify-between px-4 py-3.5">
+                        <div class="pr-3 min-w-0">
+                            <p class="text-deep text-sm font-semibold">Biometric login</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5 leading-snug">Fingerprint / Face ID · change anytime</p>
+                        </div>
+                        <button type="button" id="bioToggle" onclick="toggleBiometric()" class="relative w-12 h-7 rounded-full bg-deep transition-colors flex-shrink-0" aria-pressed="true">
+                            <span id="bioKnob" class="absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-white shadow transition-all"></span>
+                        </button>
+                    </div>
+                    <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
+                        <div class="min-w-0 pr-3">
+                            <p class="text-deep text-sm font-semibold">Change password</p>
+                            <p class="text-deep/45 text-[11px]">You’ll sign in again on all devices</p>
+                        </div>
+                        <span class="text-steel text-xs font-semibold flex-shrink-0">Open</span>
+                    </div>
+                </div>
+
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREFERENCES</p>
+                <div class="soft-card overflow-hidden mb-4">
+                    <div class="px-4 py-3.5 flex items-center justify-between">
+                        <p class="text-deep text-sm font-semibold">Language</p>
+                        <span class="text-steel text-xs font-semibold">ENG · MM</span>
+                    </div>
+                    <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
+                        <p class="text-deep text-sm font-semibold">Notifications</p>
+                        <span class="text-steel text-xs font-semibold">On</span>
+                    </div>
+                </div>
+
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">REPORTS</p>
+                <div class="soft-card overflow-hidden mb-4">
+                    <button type="button" onclick="openSheet('reportSheet')" class="w-full px-4 py-3.5 flex items-center justify-between text-left">
+                        <p class="text-deep text-sm font-semibold">Commission report</p>
+                        <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">SUPPORT</p>
+                <div class="soft-card overflow-hidden mb-5">
+                    <div class="px-4 py-3.5 flex items-center justify-between">
+                        <p class="text-deep text-sm font-semibold">Help &amp; FAQ</p>
+                        <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                    <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
+                        <p class="text-deep text-sm font-semibold">App version</p>
+                        <span class="text-deep/40 text-xs font-medium">1.0.0-demo</span>
+                    </div>
+                </div>
+
+                <a href="before-login.html" class="block w-full text-center bg-white text-deep font-semibold py-3.5 rounded-xl text-sm border border-deep/10 shadow-sm">Log out</a>
+                <p id="bioStatus" class="text-center text-[11px] text-mint font-semibold mt-3 mb-8">Biometric: On</p>
+            </div>
+        </div>
+
+        <!-- ========== My work / Task Management (FR-07) ========== -->
+        <div class="scroll-content" id="tasksView" style="display:none;">
+            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <span class="text-xs font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative ml-1"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+            </div>
+
+            <div class="px-4 pt-2 pb-2 flex items-center gap-2">
+                <button type="button" onclick="showAppTab('home')" class="w-9 h-9 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Back">
+                    <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-deep font-bold text-lg leading-none">My work</h2>
+                    <p class="text-deep/45 text-[11px] mt-1">Calendar · Day · Week · Month</p>
+                </div>
+                <button type="button" onclick="openTaskDetail(null)" class="bg-deep text-white text-[11px] font-bold px-3 py-2 rounded-xl flex-shrink-0">Create</button>
+            </div>
+
+            <div class="px-4 mb-3">
+                <div class="task-scope" role="tablist">
+                    <button type="button" id="taskScopeDay" class="on" onclick="setTaskScope('day')">Day</button>
+                    <button type="button" id="taskScopeWeek" onclick="setTaskScope('week')">Week</button>
+                    <button type="button" id="taskScopeMonth" onclick="setTaskScope('month')">Month</button>
+                </div>
+            </div>
+
+            <div class="px-4 mb-2 flex items-center gap-2">
+                <button type="button" onclick="shiftTaskDate(-1)" class="w-8 h-8 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Previous">
+                    <svg class="w-4 h-4 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div class="flex-1 text-center min-w-0">
+                    <p id="taskDateTitle" class="text-deep font-bold text-sm truncate">Fri, 14 Aug 2026</p>
+                </div>
+                <button type="button" onclick="shiftTaskDate(1)" class="w-8 h-8 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Next">
+                    <svg class="w-4 h-4 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <button type="button" id="taskTodayBtn" onclick="goTaskToday()" class="text-[10px] font-bold text-steel px-2.5 py-1.5 rounded-lg bg-sky/10 flex-shrink-0">Today</button>
+            </div>
+
+            <div class="px-4 mb-2 flex items-center justify-between gap-2">
+                <p id="taskCountLine" class="text-deep/50 text-[11px] font-semibold">0 tasks</p>
+                <button type="button" onclick="openSheet('taskFilterSheet')" class="text-[11px] font-bold text-steel px-2.5 py-1.5 rounded-lg border border-deep/10 bg-white">Filter</button>
+            </div>
+
+            <div id="taskBody" class="px-4 pb-8"></div>
+        </div>
+
+        <div id="successToast" class="toast-success" role="status">
+            <svg class="w-5 h-5 text-mint flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="successToastMsg">Done</span>
+        </div>
+
+        <!-- Fixed Bottom Navigation · Phosphor Fill -->
+        <div class="bottom-nav px-1 pt-2 pb-5">
+            <div class="flex items-center justify-around">
+                <button type="button" id="navHome" onclick="showAppTab('home')" class="nav-hit on">
+                    <i class="ph-fill ph-house" aria-hidden="true"></i>
+                    <span class="nav-label">Home</span>
+                </button>
+                <button type="button" id="navCustomer" onclick="showAppTab('customer')" class="nav-hit">
+                    <i class="ph-fill ph-users" aria-hidden="true"></i>
+                    <span class="nav-label">Customer</span>
+                </button>
+                <div class="relative -mt-7">
+                    <button type="button" class="nav-fab" aria-label="Quick action" onclick="showAppTab('tasks')">
+                        <i class="ph-fill ph-shield-check" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <a href="products.html" class="nav-hit" id="navProduct">
+                    <i class="ph-fill ph-hexagon" aria-hidden="true"></i>
+                    <span class="nav-label">Product</span>
                 </a>
-                <button type="button" onclick="openProfileSheet()" class="flex flex-col items-center">
-                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span class="text-gray-400 text-xs mt-1">Profile</span>
+                <button type="button" id="navProfile" onclick="showAppTab('profile')" class="nav-hit">
+                    <i class="ph-fill ph-user-circle" aria-hidden="true"></i>
+                    <span class="nav-label">Profile</span>
                 </button>
             </div>
         </div>
 
 
         <!-- New Lead sheet -->
-        <div id="newLeadSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <div id="newLeadSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-deep font-bold text-lg">New Lead</h3>
                     <button type="button" onclick="closeSheet('newLeadSheet')" class="text-deep/40 text-xl">×</button>
@@ -632,51 +1175,65 @@
                 <label class="block text-deep text-xs font-semibold mb-1.5">Note</label>
                 <textarea class="w-full mb-4 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[72px]" placeholder="Optional note"></textarea>
                 <p class="text-[10px] text-deep/40 mb-3">If offline, this lead is stored on device and syncs when you’re back online.</p>
-                <button type="button" onclick="closeSheet('newLeadSheet'); alert('Lead saved');" class="w-full bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Save Lead</button>
+                <button type="button" onclick="closeSheet('newLeadSheet'); showSuccessToast('Lead saved');" class="btn-sheet-primary">Save Lead</button>
             </div>
         </div>
 
         <!-- Client profile sheet -->
-        <div id="clientSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-deep font-bold text-lg">Client profile</h3>
+        <div id="clientSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Customer details</h3>
                     <button type="button" onclick="closeSheet('clientSheet')" class="text-deep/40 text-xl">×</button>
                 </div>
-                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep font-bold">Thant Zin Win</p>
-                    <p class="text-deep/50 text-xs mt-1">09 777 220 119 · Yangon</p>
+                <div class="text-center mb-3">
+                    <div class="w-16 h-16 rounded-full bg-mint/20 text-deep font-bold text-xl flex items-center justify-center mx-auto">TW</div>
+                    <p class="text-deep font-bold mt-2">Thant Zin Win</p>
+                    <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-mint px-2 py-0.5 rounded">Active</span>
                 </div>
-                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ACTIVE POLICIES</p>
+                <div class="flex justify-center gap-4 mb-4">
+                    <button type="button" class="flex flex-col items-center gap-1" onclick="showSuccessToast('Call · demo')"><span class="w-10 h-10 rounded-full bg-sky/15 flex items-center justify-center"><i class="ph-fill ph-phone text-steel" style="font-size:18px"></i></span><span class="text-[9px] font-semibold text-deep/50">Phone</span></button>
+                    <button type="button" class="flex flex-col items-center gap-1" onclick="showSuccessToast('Email · demo')"><span class="w-10 h-10 rounded-full bg-sky/15 flex items-center justify-center"><i class="ph-fill ph-envelope text-steel" style="font-size:18px"></i></span><span class="text-[9px] font-semibold text-deep/50">Email</span></button>
+                    <button type="button" class="flex flex-col items-center gap-1" onclick="openSheet('clientProfileSheet')"><span class="w-10 h-10 rounded-full bg-sky/15 flex items-center justify-center"><i class="ph-fill ph-user text-steel" style="font-size:18px"></i></span><span class="text-[9px] font-semibold text-deep/50">Profile</span></button>
+                </div>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">POLICIES LIST</p>
                 <button type="button" onclick="closeSheet('clientSheet'); openPolicyDetail('pa')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep text-sm font-semibold">Personal Accident</p>
-                    <p class="text-deep/45 text-[11px]">POL-PA-2026-0112 · Active · view</p>
+                    <div class="flex justify-between"><p class="text-deep text-sm font-semibold">Personal Accident</p><span class="text-[9px] font-bold text-mint bg-mint/15 px-1.5 py-0.5 rounded">Active</span></div>
+                    <p class="text-deep/45 text-[11px]">POL-PA-2026-0112</p>
                 </button>
                 <button type="button" onclick="closeSheet('clientSheet'); openPolicyDetail('en')" class="w-full text-left soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep text-sm font-semibold">Endowment</p>
-                    <p class="text-deep/45 text-[11px]">POL-EN-2025-0881 · Active · view</p>
+                    <div class="flex justify-between"><p class="text-deep text-sm font-semibold">Endowment</p><span class="text-[9px] font-bold text-mint bg-mint/15 px-1.5 py-0.5 rounded">Active</span></div>
+                    <p class="text-deep/45 text-[11px]">POL-EN-2025-0881</p>
                 </button>
-                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ASSOCIATED CONTACTS</p>
-                <div class="soft-card p-3 mb-3 text-sm text-deep" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">Spouse · Daw Hla Hla</div>
-                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">HISTORY &amp; NOTES</p>
-                <div class="soft-card p-3 text-[12px] text-deep/70 space-y-2 mb-4" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p>12-Aug-2026 · Premium reminder call</p>
-                    <p>03-Jul-2026 · Policy servicing visit</p>
+                <a href="policyholder-form.html?from=client" class="btn-sheet-primary">Start e-App</a>
+            </div>
+        </div>
+
+        <!-- Client profile edit (wireframe Profile Details) -->
+        <div id="clientProfileSheet" class="sheet-overlay" style="z-index:330;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Profile details</h3>
+                    <button type="button" onclick="closeSheet('clientProfileSheet')" class="text-deep/40 text-xl">×</button>
                 </div>
-                <div class="soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep text-sm font-semibold">Personal Accident · renews 03 Sep 2026</p>
-                    <p class="text-deep/45 text-[11px] mb-2">Start e-App available (within portal window: 2 weeks / 1 month)</p>
-                    <a href="policyholder-form.html?from=renewal" class="inline-block text-center w-full bg-steel/10 text-steel font-bold py-2.5 rounded-xl text-xs">Start e-App · Renewal</a>
-                </div>
-                <a href="policyholder-form.html?from=client" class="block w-full text-center bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Start e-App</a>
+                <label class="block text-deep text-xs font-semibold mb-1.5">Name</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" value="Thant Zin Win">
+                <label class="block text-deep text-xs font-semibold mb-1.5">Mobile</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" value="09 777 220 119">
+                <label class="block text-deep text-xs font-semibold mb-1.5">NRC</label>
+                <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" value="12/PAZATA(N)098745">
+                <label class="block text-deep text-xs font-semibold mb-1.5">Email</label>
+                <input class="w-full mb-4 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" value="thantzin@email.com">
+                <button type="button" onclick="closeSheet('clientProfileSheet'); showSuccessToast('Profile updated')" class="btn-sheet-primary">Update</button>
             </div>
         </div>
 
         <!-- Lead detail sheet -->
-        <div id="leadSheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:88%;overflow-y:auto;">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <div id="leadSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 id="leadSheetName" class="text-deep font-bold text-lg">Lead</h3>
                     <button type="button" onclick="closeSheet('leadSheet')" class="text-deep/40 text-xl">×</button>
@@ -690,89 +1247,233 @@
                 <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ADD ACTIVITY</p>
                 <textarea id="activityNote" class="w-full mb-2 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[64px]" placeholder="Meeting note / follow-up…"></textarea>
                 <p class="text-[10px] text-deep/40 mb-3">Activity notes are sent to the server right away (not kept permanently on this phone).</p>
-                <button type="button" onclick="saveActivity()" class="w-full bg-deep text-white font-bold py-3 rounded-xl text-sm mb-2">Save activity</button>
+                <button type="button" onclick="saveActivity()" class="btn-sheet-primary mb-2">Save activity</button>
                 <button type="button" class="w-full bg-cream text-deep font-semibold py-3 rounded-xl text-sm mb-2">Edit lead</button>
-                <a href="policyholder-form.html?from=lead" class="block w-full text-center bg-deep text-white font-bold py-3.5 rounded-xl text-sm">Start e-App</a>
+                <a href="policyholder-form.html?from=lead" class="btn-sheet-primary">Start e-App</a>
                 <p class="text-[10px] text-deep/40 mt-2 text-center">On Core policy submit, this lead converts to Client.</p>
             </div>
         </div>
 
 
-        <!-- FR-06 Policy detail (read-only) -->
-        <div id="policySheet" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:310;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:90%;overflow-y:auto;">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <!-- FR-06 Policy detail (accordions · wireframe flow) -->
+        <div id="policySheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <div class="flex items-center justify-between mb-1">
                     <h3 class="text-deep font-bold text-lg" id="polTitle">Policy</h3>
                     <button type="button" onclick="closeSheet('policySheet')" class="text-deep/40 text-xl">×</button>
                 </div>
-                <p class="text-deep/45 text-[11px] mb-4" id="polSub">Active · read-only</p>
+                <p class="text-deep/45 text-[11px] mb-3" id="polSub">Active · read-only</p>
 
-                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">COVERAGE</p>
-                    <div class="space-y-2 text-sm" id="polCoverage"></div>
-                </div>
-                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREMIUM</p>
-                    <div class="space-y-2 text-sm" id="polPremium"></div>
-                </div>
-                <div class="soft-card p-4 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">BENEFICIARIES</p>
-                    <div class="space-y-2 text-sm" id="polBene"></div>
-                </div>
-                <p class="text-[10px] text-deep/40 text-center">No edit on mobile · servicing changes via Core / ops channels</p>
+                <details class="mb-2 rounded-xl border border-deep/10 bg-[#FFFcf7] overflow-hidden" open>
+                    <summary class="px-3.5 py-3 text-sm font-bold text-deep cursor-pointer flex justify-between list-none">Policy information <span class="text-deep/30">▾</span></summary>
+                    <div class="px-3.5 pb-3 space-y-2 text-sm" id="polCoverage"></div>
+                </details>
+                <details class="mb-2 rounded-xl border border-deep/10 bg-[#FFFcf7] overflow-hidden">
+                    <summary class="px-3.5 py-3 text-sm font-bold text-deep cursor-pointer flex justify-between list-none">Premium <span class="text-deep/30">▾</span></summary>
+                    <div class="px-3.5 pb-3 space-y-2 text-sm" id="polPremium"></div>
+                </details>
+                <details class="mb-2 rounded-xl border border-deep/10 bg-[#FFFcf7] overflow-hidden">
+                    <summary class="px-3.5 py-3 text-sm font-bold text-deep cursor-pointer flex justify-between list-none">Beneficiary <span class="text-deep/30">▾</span></summary>
+                    <div class="px-3.5 pb-3 space-y-2 text-sm" id="polBene"></div>
+                </details>
+                <details class="mb-3 rounded-xl border border-deep/10 bg-[#FFFcf7] overflow-hidden">
+                    <summary class="px-3.5 py-3 text-sm font-bold text-deep cursor-pointer flex justify-between list-none">Insured / Policyholder <span class="text-deep/30">▾</span></summary>
+                    <div class="px-3.5 pb-3 text-sm text-deep/55" id="polPeople">Same book as policy owner · details from Core</div>
+                </details>
+                <p class="text-[10px] text-deep/40 text-center">No edit on mobile · servicing via Core / ops</p>
             </div>
         </div>
 
-        <!-- Profile / Settings sheet (FR-01 biometric + FR-11) -->
-        <div id="profileSheet" class="modal-overlay" style="position:absolute;inset:0;background:rgba(0,53,84,0.45);backdrop-filter:blur(4px);z-index:300;display:none;align-items:flex-end;">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl px-5 pt-3 pb-8" style="max-height:85%;overflow-y:auto;">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-12 h-12 rounded-full bg-sky/15 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-deep font-bold text-base">Myat Moe Pyae</h3>
-                        <p class="text-deep/50 text-xs">Agent · Settings</p>
-                    </div>
-                    <button type="button" onclick="closeProfileSheet()" class="ml-auto text-deep/40 text-xl leading-none">×</button>
+        <!-- Commission stub (wireframe flow · our skin) -->
+        <div id="commissionSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Commission</h3>
+                    <button type="button" onclick="closeSheet('commissionSheet')" class="text-deep/40 text-xl">×</button>
                 </div>
-
-                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">SECURITY</p>
-                <div class="soft-card mb-4 overflow-hidden" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <div class="flex items-center justify-between px-4 py-3.5">
-                        <div class="pr-3">
-                            <p class="text-deep text-sm font-semibold">Biometric login</p>
-                            <p class="text-deep/45 text-[11px] mt-0.5 leading-snug">Fingerprint / Face ID · change anytime</p>
-                        </div>
-                        <button type="button" id="bioToggle" onclick="toggleBiometric()" class="relative w-12 h-7 rounded-full bg-deep transition-colors flex-shrink-0" aria-pressed="true">
-                            <span id="bioKnob" class="absolute top-0.5 right-0.5 w-6 h-6 rounded-full bg-white shadow transition-all"></span>
-                        </button>
-                    </div>
-                    <div class="border-t border-deep/5 px-4 py-3 flex items-center justify-between">
-                        <div>
-                            <p class="text-deep text-sm font-semibold">Change password</p>
-                            <p class="text-deep/45 text-[11px]">You’ll sign in again on all devices</p>
-                        </div>
-                        <span class="text-steel text-xs font-semibold">Open</span>
-                    </div>
+                <div class="soft-card p-4 mb-3 text-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep/45 text-[10px] font-bold tracking-wide">THIS MONTH</p>
+                    <p class="text-deep text-2xl font-extrabold tabular-nums mt-1">726,000 <span class="text-sm font-bold text-deep/40">MMK</span></p>
+                    <p class="text-mint text-[11px] font-semibold mt-1">↑ 15% vs last month</p>
                 </div>
-
-                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREFERENCES</p>
-                <div class="soft-card mb-5 overflow-hidden" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
-                    <div class="px-4 py-3 flex items-center justify-between">
-                        <p class="text-deep text-sm font-semibold">Language</p>
-                        <span class="text-steel text-xs font-semibold">ENG · MM</span>
-                    </div>
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm soft-card px-3 py-2.5" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);"><span class="text-deep/55">Life</span><span class="text-deep font-semibold">420,000</span></div>
+                    <div class="flex justify-between text-sm soft-card px-3 py-2.5" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);"><span class="text-deep/55">Health</span><span class="text-deep font-semibold">186,000</span></div>
+                    <div class="flex justify-between text-sm soft-card px-3 py-2.5" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);"><span class="text-deep/55">Accident</span><span class="text-deep font-semibold">120,000</span></div>
                 </div>
-
-                <a href="before-login.html" class="block w-full text-center bg-cream text-deep font-semibold py-3.5 rounded-xl text-sm">Log out</a>
-                <p id="bioStatus" class="text-center text-[11px] text-mint font-semibold mt-3">Biometric: On</p>
+                <button type="button" onclick="closeSheet('commissionSheet'); openDashboard()" class="btn-sheet-primary">Open full dashboard</button>
             </div>
         </div>
 
-        <!-- ============ DASHBOARD OVERLAY (with APE, Due, K1, MDRT) ============ -->
+        <!-- Claim stub -->
+        <div id="claimSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Claim</h3>
+                    <button type="button" onclick="closeSheet('claimSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/50 text-sm mb-4 leading-relaxed">Assist clients with claim intake. Status syncs from Core — mobile is guide + status only in this prototype.</p>
+                <div class="soft-card p-3 mb-2 flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div><p class="text-deep text-sm font-semibold">CLM-2026-018</p><p class="text-deep/45 text-[11px]">PA · Thant Zin Win</p></div>
+                    <span class="text-[10px] font-bold text-warn bg-warn/10 px-2 py-1 rounded-full">In review</span>
+                </div>
+                <div class="soft-card p-3 mb-4 flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div><p class="text-deep text-sm font-semibold">CLM-2026-004</p><p class="text-deep/45 text-[11px]">Health · May Hnin Oo</p></div>
+                    <span class="text-[10px] font-bold text-mint bg-mint/15 px-2 py-1 rounded-full">Paid</span>
+                </div>
+                <button type="button" onclick="closeSheet('claimSheet')" class="btn-sheet-secondary">Close</button>
+            </div>
+        </div>
+
+        <!-- Online sales stub -->
+        <div id="onlineSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Online</h3>
+                    <button type="button" onclick="closeSheet('onlineSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/50 text-sm mb-4">Digital / web-originated leads and applications attributed to you.</p>
+                <div class="soft-card p-3 mb-4" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <p class="text-deep text-sm font-semibold">3 open online apps</p>
+                    <p class="text-deep/45 text-[11px] mt-1">Track in Proposal Status · convert via e-App when needed</p>
+                </div>
+                <a href="policyholder-form.html?view=tracker" class="btn-sheet-primary mb-2">Open proposal status</a>
+                <button type="button" onclick="closeSheet('onlineSheet')" class="btn-sheet-secondary">Close</button>
+            </div>
+        </div>
+
+        <!-- CRM filter (wireframe) -->
+        <div id="crmFilterSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Filter</h3>
+                    <button type="button" onclick="closeSheet('crmFilterSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[10px] font-bold tracking-wide mb-2">STATUS</p>
+                <div class="flex flex-wrap gap-2 mb-4" id="crmStatusChips">
+                    <button type="button" class="pol-type on" data-v="all" onclick="pickChip(this,'crmStatusChips')">All</button>
+                    <button type="button" class="pol-type" data-v="active" onclick="pickChip(this,'crmStatusChips')">Active</button>
+                    <button type="button" class="pol-type" data-v="new" onclick="pickChip(this,'crmStatusChips')">New</button>
+                    <button type="button" class="pol-type" data-v="hot" onclick="pickChip(this,'crmStatusChips')">Hot</button>
+                    <button type="button" class="pol-type" data-v="followup" onclick="pickChip(this,'crmStatusChips')">Follow-up</button>
+                </div>
+                <p class="text-deep/45 text-[10px] font-bold tracking-wide mb-2">PRODUCT</p>
+                <div class="flex flex-wrap gap-2 mb-4" id="crmProductChips">
+                    <button type="button" class="pol-type on" data-v="all" onclick="pickChip(this,'crmProductChips')">All</button>
+                    <button type="button" class="pol-type" data-v="protection" onclick="pickChip(this,'crmProductChips')">Protection</button>
+                    <button type="button" class="pol-type" data-v="saving" onclick="pickChip(this,'crmProductChips')">Saving</button>
+                    <button type="button" class="pol-type" data-v="health" onclick="pickChip(this,'crmProductChips')">Health</button>
+                </div>
+                <button type="button" onclick="applyCrmFilter()" class="btn-sheet-primary mb-2">Apply</button>
+                <button type="button" onclick="resetCrmFilter()" class="btn-sheet-secondary">Reset</button>
+            </div>
+        </div>
+
+        <!-- Policy filter -->
+        <div id="policyFilterSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Filter policies</h3>
+                    <button type="button" onclick="closeSheet('policyFilterSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[10px] font-bold tracking-wide mb-2">STATUS</p>
+                <div class="flex flex-wrap gap-2 mb-4" id="polStatusChips">
+                    <button type="button" class="pol-type on" data-v="active" onclick="pickChip(this,'polStatusChips')">Active</button>
+                    <button type="button" class="pol-type" data-v="pending" onclick="pickChip(this,'polStatusChips')">Pending</button>
+                    <button type="button" class="pol-type" data-v="expired" onclick="pickChip(this,'polStatusChips')">Expired</button>
+                </div>
+                <p class="text-[11px] text-deep/45 mb-4">Mobile book shows Active only from Core. Pending / Expired are demo empty states.</p>
+                <button type="button" onclick="applyPolicyStatusFilter()" class="btn-sheet-primary mb-2">Apply</button>
+                <button type="button" onclick="closeSheet('policyFilterSheet')" class="btn-sheet-secondary">Close</button>
+            </div>
+        </div>
+
+        <!-- Task filter -->
+        <div id="taskFilterSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Filter tasks</h3>
+                    <button type="button" onclick="closeSheet('taskFilterSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[10px] font-bold tracking-wide mb-2">STATUS</p>
+                <div class="flex flex-wrap gap-2 mb-4" id="taskStatusChips">
+                    <button type="button" class="pol-type on" data-v="all" onclick="pickChip(this,'taskStatusChips')">All</button>
+                    <button type="button" class="pol-type" data-v="pending" onclick="pickChip(this,'taskStatusChips')">Pending</button>
+                    <button type="button" class="pol-type" data-v="progress" onclick="pickChip(this,'taskStatusChips')">In progress</button>
+                    <button type="button" class="pol-type" data-v="done" onclick="pickChip(this,'taskStatusChips')">Done</button>
+                </div>
+                <button type="button" onclick="applyTaskFilter()" class="btn-sheet-primary mb-2">Apply</button>
+                <button type="button" onclick="taskStatusFilter='all'; pickChip(document.querySelector('#taskStatusChips [data-v=all]'),'taskStatusChips'); applyTaskFilter()" class="btn-sheet-secondary">Reset</button>
+            </div>
+        </div>
+
+        <!-- Task detail (Agent Info / Training · wireframe) -->
+        <div id="taskDetailSheet" class="sheet-overlay" style="z-index:340;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-deep font-bold text-lg" id="taskDetailTitle">Task</h3>
+                    <button type="button" onclick="closeSheet('taskDetailSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-3 text-[11px]">
+                    <div><p class="text-deep/40 font-semibold mb-1">Task ID</p><p class="text-deep font-bold" id="tdId">T-NEW</p></div>
+                    <div><p class="text-deep/40 font-semibold mb-1">Priority</p><p class="text-deep font-bold" id="tdPri">High</p></div>
+                    <div><p class="text-deep/40 font-semibold mb-1">Type</p><p class="text-deep font-bold" id="tdType">On-Boarding</p></div>
+                    <div><p class="text-deep/40 font-semibold mb-1">Status</p><p class="text-deep font-bold" id="tdStatus">Open</p></div>
+                </div>
+                <div class="flex p-1 rounded-xl bg-deep/5 mb-3">
+                    <button type="button" id="tdTabAgent" onclick="setTaskDetailTab('agent')" class="flex-1 py-2 rounded-lg text-[11px] font-bold bg-white text-deep shadow-sm">Agent Info</button>
+                    <button type="button" id="tdTabTrain" onclick="setTaskDetailTab('train')" class="flex-1 py-2 rounded-lg text-[11px] font-semibold text-deep/50">Training Detail</button>
+                </div>
+                <div id="tdAgentPane">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Agent name</label>
+                    <input id="tdAgentName" class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="May Thu">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Phone</label>
+                    <input class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="09 779 405 866">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">NRC</label>
+                    <input class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="12/PAZATA(N)094875">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Join date</label>
+                    <input type="date" class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="2026-06-04">
+                </div>
+                <div id="tdTrainPane" style="display:none;">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Structure interview score</label>
+                    <input class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="82">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Training module</label>
+                    <input class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm" value="Product basics · Week 1">
+                    <label class="block text-deep text-xs font-semibold mb-1.5">Notes</label>
+                    <textarea class="w-full mb-3 px-3 py-2.5 rounded-xl bg-white border border-deep/10 text-sm min-h-[64px]">Shadowing FA mentor</textarea>
+                </div>
+                <button type="button" onclick="closeSheet('taskDetailSheet'); showSuccessToast('Task saved')" class="btn-sheet-primary">Save</button>
+            </div>
+        </div>
+
+        <!-- Commission report chart stub -->
+        <div id="reportSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">Commission report</h3>
+                    <button type="button" onclick="closeSheet('reportSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[11px] mb-3">By product line · this month</p>
+                <div class="flex items-end justify-between gap-2 h-36 px-1 mb-2">
+                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t-lg bg-steel" style="height:78%"></div><span class="text-[9px] font-bold text-deep/50">Protect</span></div>
+                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t-lg bg-sky" style="height:55%"></div><span class="text-[9px] font-bold text-deep/50">Saving</span></div>
+                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t-lg bg-baltic" style="height:42%"></div><span class="text-[9px] font-bold text-deep/50">Health</span></div>
+                    <div class="flex-1 flex flex-col items-center gap-1"><div class="w-full rounded-t-lg bg-deep/30" style="height:22%"></div><span class="text-[9px] font-bold text-deep/50">Travel</span></div>
+                </div>
+                <button type="button" onclick="closeSheet('reportSheet'); openSheet('commissionSheet')" class="btn-sheet-primary">View commission detail</button>
+            </div>
+        </div>
+
+        <!-- Dashboard overlay (See more) -->
         <div id="dashboardOverlay" class="dashboard-overlay">
             <div class="sticky top-0 bg-white z-10 px-4 pt-4 pb-3 border-b border-gray-100">
                 <div class="flex items-center justify-between mb-3">
@@ -1067,42 +1768,40 @@
         let biometricOn = true;
         if (location.hash === '#customer') setTimeout(() => showAppTab('customer'), 0);
         if (location.hash === '#policies') setTimeout(() => showAppTab('policies'), 0);
+        if (location.hash === '#profile') setTimeout(() => showAppTab('profile'), 0);
+        if (location.hash === '#tasks') setTimeout(() => showAppTab('tasks'), 0);
         
         let demoRole = 'fa';
         let policyTypeFilter = 'all';
+
+        function setNavItem(el, on) {
+            if (!el) return;
+            el.classList.toggle('on', !!on);
+        }
 
         function showAppTab(tab) {
             const home = document.getElementById('homeView');
             const customer = document.getElementById('customerView');
             const policies = document.getElementById('policiesView');
-            const navHome = document.getElementById('navHome');
-            const navCustomer = document.getElementById('navCustomer');
+            const profile = document.getElementById('profileView');
+            const tasks = document.getElementById('tasksView');
             home.style.display = tab === 'home' ? 'block' : 'none';
             customer.style.display = tab === 'customer' ? 'block' : 'none';
             policies.style.display = tab === 'policies' ? 'block' : 'none';
+            if (profile) profile.style.display = tab === 'profile' ? 'block' : 'none';
+            if (tasks) tasks.style.display = tab === 'tasks' ? 'block' : 'none';
 
-            const homeSvg = navHome.querySelector('svg');
-            const homeSpan = navHome.querySelector('span');
-            const custSvg = navCustomer.querySelector('svg');
-            const custSpan = navCustomer.querySelector('span');
-            const homeOn = tab === 'home';
-            const custOn = tab === 'customer';
-            if (homeOn) {
-                homeSvg.classList.remove('text-gray-400'); homeSvg.classList.add('text-steel');
-                homeSpan.className = 'text-steel text-xs font-semibold mt-1';
-            } else {
-                homeSvg.classList.remove('text-steel'); homeSvg.classList.add('text-gray-400');
-                homeSpan.className = 'text-gray-400 text-xs mt-1';
-            }
-            if (custOn) {
-                custSvg.classList.remove('text-gray-400'); custSvg.classList.add('text-steel');
-                custSpan.className = 'text-steel text-xs font-semibold mt-1';
-            } else {
-                custSvg.classList.remove('text-steel'); custSvg.classList.add('text-gray-400');
-                custSpan.className = 'text-gray-400 text-xs mt-1';
-            }
+            setNavItem(document.getElementById('navHome'), tab === 'home');
+            setNavItem(document.getElementById('navCustomer'), tab === 'customer');
+            setNavItem(document.getElementById('navProfile'), tab === 'profile');
+
             if (tab === 'customer') switchCrmTab('leads');
             if (tab === 'policies') filterPolicies();
+            if (tab === 'tasks') renderTasks();
+            if (history.replaceState) {
+                const hash = tab === 'home' ? '' : '#' + tab;
+                history.replaceState(null, '', location.pathname + location.search + hash);
+            }
         }
 
         function setDemoRole(role) {
@@ -1124,7 +1823,7 @@
         }
 
         function setPolicyType(btn) {
-            document.querySelectorAll('.pol-type').forEach(b => b.classList.remove('on'));
+            document.querySelectorAll('#policiesView .pol-type').forEach(b => b.classList.remove('on'));
             btn.classList.add('on');
             policyTypeFilter = btn.dataset.type;
             filterPolicies();
@@ -1132,12 +1831,18 @@
 
         function filterPolicies() {
             const q = (document.getElementById('policySearch')?.value || '').toLowerCase().trim();
+            let visible = 0;
+            const statusOkBook = policyStatusFilter === 'active';
             document.querySelectorAll('.policy-row').forEach(row => {
                 const scopeOk = demoRole === 'leader' || row.dataset.scope === 'self';
                 const typeOk = policyTypeFilter === 'all' || row.dataset.type === policyTypeFilter;
                 const textOk = !q || (row.dataset.q || '').includes(q);
-                row.style.display = scopeOk && typeOk && textOk ? '' : 'none';
+                const show = statusOkBook && scopeOk && typeOk && textOk;
+                row.style.display = show ? '' : 'none';
+                if (show) visible++;
             });
+            const empty = document.getElementById('policyEmpty');
+            if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
         }
 
         const policyData = {
@@ -1189,12 +1894,20 @@
             const tc = document.getElementById('tabClients');
             tl.className = leads ? 'flex-1 py-2 rounded-lg text-[12px] font-bold bg-white text-deep shadow-sm' : 'flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50';
             tc.className = !leads ? 'flex-1 py-2 rounded-lg text-[12px] font-bold bg-white text-deep shadow-sm' : 'flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50';
+            document.querySelectorAll('.crm-row').forEach(r => r.style.display = '');
+            const empty = document.getElementById('crmEmpty');
+            if (empty) empty.style.display = 'none';
+            filterCrm();
         }
         function openSheet(id) {
-            document.getElementById(id).style.display = 'flex';
+            const el = document.getElementById(id);
+            el.classList.add('open');
+            el.style.display = 'flex';
         }
         function closeSheet(id) {
-            document.getElementById(id).style.display = 'none';
+            const el = document.getElementById(id);
+            el.classList.remove('open');
+            el.style.display = 'none';
         }
         function openNewLead() { openSheet('newLeadSheet'); }
         function openClientDetail() { openSheet('clientSheet'); }
@@ -1206,26 +1919,124 @@
             const note = document.getElementById('activityNote');
             if (!note.value.trim()) { alert('Please enter a note'); return; }
             note.value = '';
-            alert('Activity sent to server');
             closeSheet('leadSheet');
+            showSuccessToast('Activity sent to server');
         }
 
         function toggleOffline() {
             document.getElementById('offlineBanner').classList.toggle('show');
             const crm = document.getElementById('crmOfflineBanner');
             if (crm) crm.classList.toggle('show');
+            const pol = document.getElementById('policyOfflineBanner');
+            if (pol) pol.classList.toggle('show');
         }
 
-        function openProfileSheet() {
-            const sheet = document.getElementById('profileSheet');
-            sheet.style.display = 'flex';
+
+        function showSuccessToast(msg) {
+            const toast = document.getElementById('successToast');
+            document.getElementById('successToastMsg').textContent = msg || 'Done';
+            toast.classList.add('show');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
         }
-        function closeProfileSheet() {
-            document.getElementById('profileSheet').style.display = 'none';
+        let crmStatusFilter = 'all';
+        let crmProductFilter = 'all';
+        let policyStatusFilter = 'active';
+        let taskStatusFilter = 'all';
+
+        function pickChip(btn, groupId) {
+            document.querySelectorAll('#' + groupId + ' .pol-type').forEach(b => b.classList.remove('on'));
+            btn.classList.add('on');
         }
-        document.getElementById('profileSheet').addEventListener('click', function (e) {
-            if (e.target === this) closeProfileSheet();
-        });
+        function chipValue(groupId) {
+            const on = document.querySelector('#' + groupId + ' .pol-type.on');
+            return on ? on.dataset.v : 'all';
+        }
+        function applyCrmFilter() {
+            crmStatusFilter = chipValue('crmStatusChips');
+            crmProductFilter = chipValue('crmProductChips');
+            closeSheet('crmFilterSheet');
+            filterCrm();
+        }
+        function resetCrmFilter() {
+            crmStatusFilter = 'all';
+            crmProductFilter = 'all';
+            pickChip(document.querySelector('#crmStatusChips [data-v=all]'), 'crmStatusChips');
+            pickChip(document.querySelector('#crmProductChips [data-v=all]'), 'crmProductChips');
+            filterCrm();
+            closeSheet('crmFilterSheet');
+        }
+        function applyPolicyStatusFilter() {
+            policyStatusFilter = chipValue('polStatusChips');
+            closeSheet('policyFilterSheet');
+            filterPolicies();
+            if (policyStatusFilter !== 'active') {
+                showSuccessToast('No ' + policyStatusFilter + ' policies in mobile book');
+            }
+        }
+        function applyTaskFilter() {
+            taskStatusFilter = chipValue('taskStatusChips');
+            closeSheet('taskFilterSheet');
+            renderTasks();
+        }
+        function setTaskDetailTab(which) {
+            const agent = which === 'agent';
+            document.getElementById('tdAgentPane').style.display = agent ? '' : 'none';
+            document.getElementById('tdTrainPane').style.display = agent ? 'none' : '';
+            document.getElementById('tdTabAgent').className = agent
+                ? 'flex-1 py-2 rounded-lg text-[11px] font-bold bg-white text-deep shadow-sm'
+                : 'flex-1 py-2 rounded-lg text-[11px] font-semibold text-deep/50';
+            document.getElementById('tdTabTrain').className = !agent
+                ? 'flex-1 py-2 rounded-lg text-[11px] font-bold bg-white text-deep shadow-sm'
+                : 'flex-1 py-2 rounded-lg text-[11px] font-semibold text-deep/50';
+        }
+        function openTaskDetail(id) {
+            const t = id ? MOCK_TASKS.find(x => x.id === id) : null;
+            document.getElementById('taskDetailTitle').textContent = t ? t.title : 'New task';
+            document.getElementById('tdId').textContent = t ? t.id : 'T-NEW';
+            document.getElementById('tdPri').textContent = t ? (t.priority.charAt(0).toUpperCase() + t.priority.slice(1)) : 'High';
+            document.getElementById('tdType').textContent = t ? (TASK_TYPE_LABEL[t.type] || t.type) : 'On-Boarding';
+            document.getElementById('tdStatus').textContent = t ? (TASK_STATUS_LABEL[t.status] || t.status) : 'Open';
+            if (t && t.link) document.getElementById('tdAgentName').value = t.link.replace(/^[^·]+·\s*/, '');
+            setTaskDetailTab(t && t.type === 'onboarding' ? 'agent' : 'agent');
+            openSheet('taskDetailSheet');
+        }
+
+        function filterCrm() {
+            const q = (document.getElementById('crmSearch')?.value || '').toLowerCase().trim();
+            const leadsEl = document.getElementById('leadsList');
+            const clientsEl = document.getElementById('clientsList');
+            const showingLeads = leadsEl.style.display !== 'none';
+            const list = showingLeads ? leadsEl : clientsEl;
+            let visible = 0;
+            list.querySelectorAll('.crm-row').forEach(row => {
+                const okQ = !q || (row.dataset.q || '').includes(q);
+                const st = row.dataset.status || '';
+                const pr = row.dataset.product || '';
+                const okSt = crmStatusFilter === 'all' || st === crmStatusFilter;
+                const okPr = crmProductFilter === 'all' || pr === crmProductFilter;
+                const ok = okQ && okSt && okPr;
+                row.style.display = ok ? '' : 'none';
+                if (ok) visible++;
+            });
+            const empty = document.getElementById('crmEmpty');
+            const noMatch = visible === 0;
+            if (empty) empty.style.display = noMatch ? 'block' : 'none';
+            if (showingLeads) {
+                leadsEl.style.display = noMatch ? 'none' : 'block';
+            } else {
+                clientsEl.style.display = noMatch ? 'none' : 'block';
+            }
+        }
+        function simulateEmptySearch() {
+            showAppTab('customer');
+            const input = document.getElementById('crmSearch');
+            if (input) { input.value = 'zzzz-nomatch'; filterCrm(); }
+            showAppTab('policies');
+            const ps = document.getElementById('policySearch');
+            if (ps) { ps.value = 'zzzz-nomatch'; filterPolicies(); }
+            showAppTab('customer');
+        }
 
         function toggleBiometric() {
             biometricOn = !biometricOn;
@@ -1239,15 +2050,294 @@
                 knob.style.left = 'auto';
                 knob.style.right = '2px';
                 status.textContent = 'Biometric: On';
-                status.className = 'text-center text-[11px] text-mint font-semibold mt-3';
+                status.className = 'text-center text-[11px] text-mint font-semibold mt-3 mb-8';
             } else {
                 btn.classList.remove('bg-deep');
                 btn.classList.add('bg-gray-300');
                 knob.style.right = 'auto';
                 knob.style.left = '2px';
                 status.textContent = 'Biometric: Off';
-                status.className = 'text-center text-[11px] text-deep/45 font-semibold mt-3';
+                status.className = 'text-center text-[11px] text-deep/45 font-semibold mt-3 mb-8';
             }
+        }
+
+        /* ——— My work / Task Management (FR-07 · Flutter TaskSession mirror) ——— */
+        const TASK_TODAY = new Date(2026, 7, 14); // Aug 14, 2026
+        const TASK_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const TASK_WDS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        const TASK_TYPE_LABEL = {
+            meeting: 'Meeting', call: 'Call', onboarding: 'On-Boarding',
+            leave: 'Leave appointment', servicing: 'Servicing', eapp: 'e-App', other: 'Other'
+        };
+        const TASK_STATUS_LABEL = { pending: 'Pending', progress: 'In Progress', done: 'Completed' };
+
+        let taskScope = 'day';
+        let taskSelected = new Date(TASK_TODAY.getTime());
+
+        const MOCK_TASKS = [
+            { id:'T-001', title:'Meeting appointment', type:'meeting', priority:'high', status:'pending',
+              start: new Date(2026,7,14,10,0), end: new Date(2026,7,14,11,0),
+              link:'Client · May Chan Myae', isNew:true },
+            { id:'T-002', title:'Follow-up call — life quote', type:'call', priority:'high', status:'progress',
+              start: new Date(2026,7,14,14,30), end: new Date(2026,7,14,15,0),
+              link:'Lead · Chan Myae', isNew:false },
+            { id:'T-003', title:'Send policy renewal documents', type:'servicing', priority:'medium', status:'pending',
+              start: new Date(2026,7,13,9,0), end: new Date(2026,7,13,17,0),
+              link:'Policy · 23487532096712', isNew:false },
+            { id:'T-004', title:'e-App signature follow-up', type:'eapp', priority:'medium', status:'pending',
+              start: new Date(2026,7,15,11,0), end: new Date(2026,7,15,12,0),
+              link:'e-App · EA-2026-0001', isNew:false },
+            { id:'T-005', title:'Leave appointment — AM', type:'leave', priority:'low', status:'done',
+              start: new Date(2026,7,12,9,0), end: new Date(2026,7,12,12,0),
+              link:'', isNew:false },
+            { id:'T-006', title:'Agent onboarding — May Thu', type:'onboarding', priority:'high', status:'progress',
+              start: new Date(2026,7,14,9,0), end: new Date(2026,7,14,17,0),
+              link:'Recruit · May Thu', isNew:true },
+        ];
+
+        function dateOnly(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+        function sameDay(a, b) {
+            return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+        }
+        function startOfWeek(d) {
+            const x = dateOnly(d);
+            const day = (x.getDay() + 6) % 7; // Mon=0
+            x.setDate(x.getDate() - day);
+            return x;
+        }
+        function addDays(d, n) {
+            const x = new Date(d.getTime());
+            x.setDate(x.getDate() + n);
+            return x;
+        }
+        function isOverdue(t) {
+            if (t.status === 'done') return false;
+            return dateOnly(t.end) < dateOnly(TASK_TODAY);
+        }
+        function taskOnDay(t, day) {
+            const d = dateOnly(day), s = dateOnly(t.start), e = dateOnly(t.end);
+            return d >= s && d <= e;
+        }
+        function h12(d) {
+            let h = d.getHours(), m = d.getMinutes();
+            const ap = h >= 12 ? 'PM' : 'AM';
+            h = h % 12; if (h === 0) h = 12;
+            return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ' ' + ap;
+        }
+        function h12Hour(hour) {
+            const ap = hour >= 12 ? 'PM' : 'AM';
+            let h = hour % 12; if (h === 0) h = 12;
+            return String(h).padStart(2,'0') + ':00 ' + ap;
+        }
+        function dayHero(d) {
+            const wd = TASK_WDS[(d.getDay() + 6) % 7];
+            return wd + ', ' + d.getDate() + ' ' + TASK_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+        }
+        function weekRangeTitle(start) {
+            const end = addDays(start, 6);
+            if (start.getMonth() === end.getMonth()) {
+                return start.getDate() + '–' + end.getDate() + ' ' + TASK_MONTHS[start.getMonth()] + ' ' + start.getFullYear();
+            }
+            return start.getDate() + ' ' + TASK_MONTHS[start.getMonth()] + ' – ' + end.getDate() + ' ' + TASK_MONTHS[end.getMonth()] + ' ' + end.getFullYear();
+        }
+        function monthTitle(d) {
+            return TASK_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+        }
+        function tasksForDay(day) {
+            return MOCK_TASKS.filter(t => taskOnDay(t, day) && (taskStatusFilter === 'all' || t.status === taskStatusFilter)).sort((a,b) => a.start - b.start);
+        }
+        function tasksForRange(a, b) {
+            const out = [];
+            MOCK_TASKS.forEach(t => {
+                if (taskStatusFilter !== 'all' && t.status !== taskStatusFilter) return;
+                const s = dateOnly(t.start), e = dateOnly(t.end);
+                if (e >= a && s <= b) out.push(t);
+            });
+            return out.sort((x,y) => x.start - y.start);
+        }
+
+        function setTaskScope(scope) {
+            taskScope = scope;
+            ['day','week','month'].forEach(s => {
+                const el = document.getElementById('taskScope' + s.charAt(0).toUpperCase() + s.slice(1));
+                if (el) el.classList.toggle('on', s === scope);
+            });
+            renderTasks();
+        }
+        function shiftTaskDate(dir) {
+            if (taskScope === 'day') taskSelected = addDays(taskSelected, dir);
+            else if (taskScope === 'week') taskSelected = addDays(taskSelected, 7 * dir);
+            else {
+                const m = taskSelected.getMonth() + dir;
+                const last = new Date(taskSelected.getFullYear(), m + 1, 0).getDate();
+                taskSelected = new Date(taskSelected.getFullYear(), m, Math.min(taskSelected.getDate(), last));
+            }
+            renderTasks();
+        }
+        function goTaskToday() {
+            taskSelected = new Date(TASK_TODAY.getTime());
+            renderTasks();
+        }
+
+        function statusPillHtml(t) {
+            let html = '';
+            if (isOverdue(t)) html += '<span class="task-pill overdue">Overdue</span>';
+            const cls = t.status === 'pending' ? 'pending' : t.status === 'progress' ? 'progress' : 'done';
+            html += '<span class="task-pill ' + cls + '">' + TASK_STATUS_LABEL[t.status] + '</span>';
+            if (t.isNew) html += '<span class="task-pill new">New</span>';
+            return html;
+        }
+        function taskCardHtml(t, opts) {
+            opts = opts || {};
+            const overdue = isOverdue(t);
+            const cls = ['task-card'];
+            if (t.priority === 'high') cls.push('pri-high');
+            if (overdue) cls.push('overdue');
+            if (t.status === 'done') cls.push('done');
+            const time = opts.showTime !== false
+                ? '<p class="text-deep/40 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>'
+                : '<p class="text-deep/40 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>';
+            return '<button type="button" class="' + cls.join(' ') + ' w-full text-left" onclick="openTaskDetail(\'' + t.id + '\')">' +
+                '<div class="flex items-start justify-between gap-2">' +
+                '<div class="min-w-0 flex-1">' +
+                '<p class="text-deep font-bold text-[13px] leading-snug truncate">' + t.title + '</p>' +
+                time +
+                (t.link ? '<p class="text-deep/45 text-[10px] mt-1 truncate">' + t.link + '</p>' : '') +
+                '</div>' +
+                '<div class="flex flex-col items-end gap-1 flex-shrink-0">' + statusPillHtml(t) + '</div>' +
+                '</div>' +
+                '<p class="text-deep/35 text-[9px] font-semibold mt-2 uppercase tracking-wide">' + (TASK_TYPE_LABEL[t.type] || t.type) + '</p>' +
+                '</button>';
+        }
+
+        function renderTasks() {
+            const body = document.getElementById('taskBody');
+            const titleEl = document.getElementById('taskDateTitle');
+            const countEl = document.getElementById('taskCountLine');
+            if (!body) return;
+
+            const weekStart = startOfWeek(taskSelected);
+            const weekEnd = addDays(weekStart, 6);
+            const monthFirst = new Date(taskSelected.getFullYear(), taskSelected.getMonth(), 1);
+            const monthLast = new Date(taskSelected.getFullYear(), taskSelected.getMonth() + 1, 0);
+
+            if (taskScope === 'day') titleEl.textContent = dayHero(taskSelected);
+            else if (taskScope === 'week') titleEl.textContent = weekRangeTitle(weekStart);
+            else titleEl.textContent = monthTitle(taskSelected);
+
+            let scopeTasks = [];
+            if (taskScope === 'day') scopeTasks = tasksForDay(taskSelected);
+            else if (taskScope === 'week') scopeTasks = tasksForRange(weekStart, weekEnd);
+            else scopeTasks = tasksForRange(monthFirst, monthLast);
+
+            const overdueN = scopeTasks.filter(isOverdue).length;
+            countEl.textContent = scopeTasks.length + ' task' + (scopeTasks.length === 1 ? '' : 's') +
+                (overdueN ? ' · ' + overdueN + ' overdue' : '');
+
+            if (taskScope === 'day') body.innerHTML = renderDayBody(taskSelected);
+            else if (taskScope === 'week') body.innerHTML = renderWeekBody(weekStart);
+            else body.innerHTML = renderMonthBody(taskSelected);
+        }
+
+        function renderDayBody(day) {
+            const weekStart = startOfWeek(day);
+            let strip = '<div class="task-day-strip mb-3">';
+            for (let i = 0; i < 7; i++) {
+                const d = addDays(weekStart, i);
+                const has = tasksForDay(d).length > 0;
+                const on = sameDay(d, day);
+                strip += '<button type="button" class="task-day-chip' + (on?' on':'') + (has?' has':'') +
+                    '" onclick="taskSelected=new Date(' + d.getFullYear() + ',' + d.getMonth() + ',' + d.getDate() + ');renderTasks()">' +
+                    '<span class="wd">' + TASK_WDS[i] + '</span><span class="dn">' + d.getDate() + '</span></button>';
+            }
+            strip += '</div>';
+
+            const dayTasks = tasksForDay(day);
+            const allDay = dayTasks.filter(t => !sameDay(t.start, t.end));
+            const timed = dayTasks.filter(t => sameDay(t.start, t.end));
+            let hours = [];
+            for (let h = 8; h <= 18; h++) hours.push(h);
+            timed.forEach(t => {
+                const h = t.start.getHours();
+                if (h < hours[0]) hours.unshift(h);
+                if (h > hours[hours.length-1]) hours.push(h);
+            });
+            hours = [...new Set(hours)].sort((a,b)=>a-b);
+
+            let html = strip;
+            if (allDay.length) {
+                html += '<p class="text-deep/40 text-[9px] font-bold uppercase tracking-wide mb-1.5">All day</p>';
+                allDay.forEach(t => { html += taskCardHtml(t); });
+            }
+            if (!timed.length && !allDay.length) {
+                html += '<div class="soft-card p-6 text-center"><p class="text-deep font-bold text-sm">No tasks this day</p><p class="text-deep/45 text-xs mt-1">Create a task or pick another day</p></div>';
+                return html;
+            }
+            hours.forEach(h => {
+                const inHour = timed.filter(t => t.start.getHours() === h);
+                html += '<div class="task-hour-row"><div class="task-hour-gutter">' + h12Hour(h) + '</div><div class="task-hour-body">';
+                if (inHour.length) inHour.forEach(t => { html += taskCardHtml(t, { showTime: true }); });
+                html += '</div></div>';
+            });
+            return html;
+        }
+
+        function renderWeekBody(weekStart) {
+            let strip = '<div class="task-week-strip mb-3">';
+            for (let i = 0; i < 7; i++) {
+                const d = addDays(weekStart, i);
+                const n = tasksForDay(d).length;
+                const on = sameDay(d, taskSelected);
+                strip += '<button type="button" class="task-week-chip' + (on?' on':'') +
+                    '" onclick="taskSelected=new Date(' + d.getFullYear() + ',' + d.getMonth() + ',' + d.getDate() + ');renderTasks()">' +
+                    '<div class="wd">' + TASK_WDS[i] + '</div><div class="dn">' + d.getDate() + '</div>' +
+                    (n ? '<div class="ct">' + n + '</div>' : '<div class="ct" style="opacity:0">0</div>') +
+                    '</button>';
+            }
+            strip += '</div>';
+            let html = strip;
+            let any = false;
+            for (let i = 0; i < 7; i++) {
+                const d = addDays(weekStart, i);
+                const list = tasksForDay(d);
+                if (!list.length) continue;
+                any = true;
+                html += '<p class="text-deep font-bold text-xs mb-2 mt-3">' + dayHero(d).replace(/ 2026/, '') + '</p>';
+                list.forEach(t => { html += taskCardHtml(t); });
+            }
+            if (!any) html += '<div class="soft-card p-6 text-center"><p class="text-deep font-bold text-sm">No tasks this week</p></div>';
+            return html;
+        }
+
+        function renderMonthBody(selected) {
+            const y = selected.getFullYear(), m = selected.getMonth();
+            const first = new Date(y, m, 1);
+            const start = startOfWeek(first);
+            const wdLabels = '<div class="task-month-grid mb-1">' +
+                TASK_WDS.map(w => '<div class="text-center text-[9px] font-bold text-deep/35 py-1">' + w.charAt(0) + '</div>').join('') +
+                '</div>';
+            let grid = '<div class="task-month-grid mb-4">';
+            for (let i = 0; i < 42; i++) {
+                const d = addDays(start, i);
+                const mute = d.getMonth() !== m;
+                const on = sameDay(d, selected);
+                const list = tasksForDay(d);
+                const dots = list.slice(0, 3).map(t => {
+                    const c = isOverdue(t) ? '#E11D48' : t.status === 'done' ? '#57C785' : t.status === 'progress' ? '#00A6FB' : '#F59E0B';
+                    return '<i style="background:' + c + '"></i>';
+                }).join('');
+                grid += '<button type="button" class="task-month-cell' + (mute?' mute':'') + (on?' on':'') +
+                    '" onclick="taskSelected=new Date(' + d.getFullYear() + ',' + d.getMonth() + ',' + d.getDate() + ');renderTasks()">' +
+                    '<span>' + d.getDate() + '</span>' +
+                    (dots ? '<span class="task-month-dots">' + dots + '</span>' : '') +
+                    '</button>';
+            }
+            grid += '</div>';
+            const dayList = tasksForDay(selected);
+            let agenda = '<p class="text-deep font-bold text-xs mb-2">' + dayHero(selected) + '</p>';
+            if (dayList.length) dayList.forEach(t => { agenda += taskCardHtml(t); });
+            else agenda += '<div class="soft-card p-5 text-center"><p class="text-deep/50 text-xs">No tasks on this day</p></div>';
+            return wdLabels + grid + agenda;
         }
     </script>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Accident - Product Detail</title>
+    <title>Personal Accident — Product Detail</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -12,549 +12,384 @@
                 extend: {
                     fontFamily: { sans: ['DM Sans', 'sans-serif'] },
                     colors: {
-                        primary: '#003554',
-                        'primary-light': '#0582CA',
-                        'primary-dark': '#003554',
-                        navy: '#003554',
+                        sky: '#00A6FB',
+                        steel: '#0582CA',
+                        baltic: '#006494',
+                        deep: '#003554',
+                        cream: '#F7F3EC',
+                        mint: '#57C785',
+                        warn: '#F59E0B',
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            background: #e8ecf1;
-            font-family: 'DM Sans', sans-serif;
-        }
+        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
         .phone-frame {
-            width: 375px;
-            height: 812px;
-            border-radius: 40px;
-            border: 8px solid #1a1a2e;
-            overflow: hidden;
-            position: relative;
-            background: #F7F3EC;
+            width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
+            overflow: hidden; position: relative; background: #F7F3EC;
             box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 2px #333;
         }
         .phone-frame::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 28px;
-            background: #1a1a2e;
-            border-radius: 0 0 18px 18px;
-            z-index: 100;
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 150px; height: 28px; background: #1a1a2e; border-radius: 0 0 18px 18px; z-index: 100;
         }
         .scroll-content {
-            height: calc(100% - 72px);
-            overflow-y: auto;
-            scrollbar-width: none;
-            padding-bottom: 10px;
+            height: calc(100% - 118px); overflow-y: auto; scrollbar-width: none; padding-bottom: 12px;
         }
         .scroll-content::-webkit-scrollbar { display: none; }
-
+        .soft-card {
+            background: #FFFcf7; border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
+        }
         .bottom-actions {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-            z-index: 50;
-            padding: 12px 16px 28px;
+            position: absolute; bottom: 0; left: 0; right: 0; background: #FFFcf7;
+            box-shadow: 0 -4px 20px rgba(0,53,84,0.08); border-radius: 30px 30px 0 0;
+            z-index: 50; padding: 12px 16px 28px;
         }
-
-        .accordion-item {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-            overflow: hidden;
-            transition: all 0.2s;
-        }
+        .accordion-item { background: #FFFcf7; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,53,84,0.08); overflow: hidden; }
         .accordion-header {
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .accordion-header:hover {
-            background: #f8fafc;
+            padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+            cursor: pointer; user-select: none;
         }
         .accordion-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #e8f6fe;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(0,166,251,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .accordion-content.open {
-            max-height: 500px;
-        }
-        .accordion-content-inner {
-            padding: 0 16px 14px 60px;
-        }
-        .chevron {
-            transition: transform 0.3s ease;
-        }
-        .chevron.rotated {
-            transform: rotate(180deg);
-        }
-
-        .info-card {
-            background: #f5f8fc;
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s;
-        }
-        .info-card:hover {
-            background: #e8f6fe;
-            transform: translateY(-1px);
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .accordion-content.open { max-height: 520px; }
+        .accordion-content-inner { padding: 0 16px 14px 60px; }
+        .chevron { transition: transform 0.3s ease; color: rgba(0,53,84,0.35); }
+        .chevron.rotated { transform: rotate(180deg); }
+        .info-tile {
+            background: rgba(0,53,84,0.03); border-radius: 14px; padding: 12px;
+            display: flex; align-items: center; gap: 10px;
         }
         .info-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
+            width: 36px; height: 36px; border-radius: 10px;
+            background: linear-gradient(135deg, rgba(0,166,251,0.12), rgba(5,130,202,0.18));
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
         .check-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #003554;
+            width: 16px; height: 16px; border-radius: 50%; background: #57C785;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* Phase B — shared sheet + nav hit targets */
+        .nav-hit {
+            min-width: 56px; min-height: 48px; padding: 4px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: none; background: transparent; cursor: pointer;
+        }
+        .sheet-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 310; display: none; align-items: flex-end;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-panel {
+            width: 100%; background: #FFFcf7; border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px; max-height: 90%; overflow-y: auto;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px; border-radius: 999px;
+            background: rgba(0,53,84,0.15); margin: 0 auto 16px;
+        }
+        .btn-sheet-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-sheet-secondary {
+            display: block; width: 100%; text-align: center; background: rgba(0,53,84,0.05); color: #003554;
+            font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Phase C — motion + theater */
+        .sheet-overlay.open {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            animation: overlayIn 0.22s ease;
+        }
+        .sheet-overlay.open .sheet-panel {
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sheetRise {
+            from { transform: translateY(28px); opacity: 0.85; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-success {
+            position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 400;
+            background: #003554; color: #fff; border-radius: 14px; padding: 12px 14px;
+            display: none; align-items: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(0,53,84,0.28);
+            font-size: 13px; font-weight: 600;
+        }
+        .toast-success.show {
+            display: flex;
+            animation: toastIn 0.32s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }
+        .empty-state {
+            text-align: center; padding: 36px 20px 28px;
+        }
+        .empty-state .empty-icon {
+            width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 14px;
+            background: rgba(0,166,251,0.1); display: flex; align-items: center; justify-content: center;
+        }
+        .step-fade {
+            animation: fadeIn 0.32s ease-out;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-8">
 
-    <!-- Title -->
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Personal Accident</h1>
-        <p class="text-gray-500 text-lg">Product Detail Page</p>
+    <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-deep mb-1">Personal Accident</h1>
+        <p class="text-slate-500 text-sm">Product detail · FR-04 bridge</p>
+        <a href="products.html" class="inline-block mt-2 text-steel text-xs font-semibold">← Product library</a>
     </div>
 
     <div class="phone-frame">
         <div class="scroll-content">
 
-            <!-- Status Bar -->
-            <div class="flex items-center justify-between px-6 pt-4 pb-2 bg-[#f0f2f5]">
-                <span class="text-sm font-semibold text-gray-900">9:30</span>
-                <div class="flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-                    </svg>
-                    <svg class="w-4 h-4 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-                    </svg>
-                    <div class="w-6 h-3 border border-gray-900 rounded-sm relative ml-1">
-                        <div class="absolute inset-0.5 bg-gray-900 rounded-xs" style="width:70%"></div>
-                        <div class="absolute -right-1 top-1 w-0.5 h-1.5 bg-gray-900 rounded-r"></div>
+            <!-- Status bar (shared cream pattern) -->
+            <div class="flex items-center justify-between px-5 pt-4 pb-1">
+                <span class="text-xs font-semibold text-deep">9:30</span>
+                <div class="flex items-center gap-1.5 opacity-60">
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Header with Back Button -->
-            <div class="flex items-center justify-between px-4 py-3 bg-[#f0f2f5]">
-                <a href="products.html" class="flex items-center gap-1 text-[#003554]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <!-- Header -->
+            <div class="flex items-center gap-3 px-4 py-2">
+                <a href="products.html" class="w-9 h-9 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+                    <svg class="w-4 h-4 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </a>
-                <h1 class="text-[#003554] font-bold text-base">Personal Accident</h1>
-                <button class="text-[#003554]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/>
-                        <polyline points="16,6 12,2 8,6"/>
-                        <line x1="12" y1="2" x2="12" y2="15"/>
-                    </svg>
-                </button>
+                <div class="flex-1 min-w-0">
+                    <h1 class="text-deep font-bold text-base truncate">Personal Accident</h1>
+                    <p class="text-deep/40 text-[10px]">Protection · PA-001</p>
+                </div>
             </div>
 
-            <!-- Hero Section -->
-            <div class="mx-4 mt-2 bg-white rounded-2xl p-5 card-shadow">
-                <div class="flex items-start gap-4 mb-4">
-                    <div class="w-16 h-16 rounded-full border-2 border-[#003554] bg-white flex items-center justify-center flex-shrink-0">
-                        <svg class="w-9 h-9 text-[#003554]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                            <path d="M14 11l3 3-3 3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="17" cy="17" r="3" fill="#003554" opacity="0.2"/>
-                            <path d="M17 15.5v3M15.5 17h3" stroke="#003554" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Hero card -->
+            <div class="mx-4 mt-1 soft-card p-4">
+                <div class="flex items-start gap-3 mb-4">
+                    <div class="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center"
+                         style="background:linear-gradient(135deg,rgba(0,166,251,0.15),rgba(5,130,202,0.22));">
+                        <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                         </svg>
                     </div>
-                    <div class="flex-1">
-                        <h2 class="text-[#003554] text-xl font-bold mb-1">Personal Accident</h2>
-                        <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-[#e8f6fe] text-[#003554] border border-[#003554]/30 mb-2">Protection</span>
-                        <p class="text-gray-500 text-xs leading-tight">accidental risks during the policy term</p>
+                    <div class="min-w-0">
+                        <h2 class="text-deep text-lg font-bold leading-snug">Personal Accident</h2>
+                        <span class="inline-block mt-1.5 text-[10px] font-bold text-steel bg-sky/10 px-2.5 py-1 rounded-full">Protection</span>
+                        <p class="text-deep/45 text-xs mt-2 leading-relaxed">Financial support against accidental risks during the policy term.</p>
                     </div>
                 </div>
 
-                <!-- Info Cards - 2x2 Grid -->
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                    <!-- Sum Insured -->
-                    <div class="info-card">
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="info-tile">
                         <div class="info-icon">
-                            <svg class="w-5 h-5 text-[#003554]" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                                <path d="M10 12l-2-2-1 1 3 3 5-5-1-1z" fill="white"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-steel" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-gray-500 font-medium leading-tight">Sum Insured</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight mt-0.5">5 – 200</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight">lakhs</div>
+                        <div>
+                            <p class="text-[10px] text-deep/40 font-medium">Sum Insured</p>
+                            <p class="text-deep text-sm font-bold leading-tight">5 – 200 lakhs</p>
                         </div>
                     </div>
-
-                    <!-- Term -->
-                    <div class="info-card">
+                    <div class="info-tile">
                         <div class="info-icon">
-                            <svg class="w-5 h-5 text-[#003554]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-gray-500 font-medium leading-tight">Term</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight mt-0.5">3 / 6 / 12</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight">months</div>
+                        <div>
+                            <p class="text-[10px] text-deep/40 font-medium">Term</p>
+                            <p class="text-deep text-sm font-bold leading-tight">3 / 6 / 12 mo</p>
                         </div>
                     </div>
-
-                    <!-- Premium -->
-                    <div class="info-card">
+                    <div class="info-tile">
                         <div class="info-icon">
-                            <svg class="w-5 h-5 text-[#003554]" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M12 6v12M9 9c0-1 1.5-1.5 3-1.5s3 .5 3 1.5-1.5 1.5-3 1.5-3 .5-3 1.5 1.5 1.5 3 1.5 3-.5 3-1.5" stroke="white" stroke-width="1.2" fill="none"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-gray-500 font-medium leading-tight">Premium</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight mt-0.5">0.7%</div>
-                            <div class="text-[9px] text-gray-400 leading-tight">(0.707% risky jobs)</div>
+                        <div>
+                            <p class="text-[10px] text-deep/40 font-medium">Premium</p>
+                            <p class="text-deep text-sm font-bold leading-tight">0.7%</p>
+                            <p class="text-[9px] text-deep/35">0.707% high risk</p>
                         </div>
                     </div>
-
-                    <!-- Lump-sum Payment -->
-                    <div class="info-card">
-                        <div class="info-icon" style="background: #e8f5e9;">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <line x1="12" y1="5" x2="12" y2="19"/>
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                            </svg>
+                    <div class="info-tile">
+                        <div class="info-icon" style="background:rgba(87,199,133,0.18);">
+                            <svg class="w-4 h-4 text-mint" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-[10px] text-gray-500 font-medium leading-tight">Payment</div>
-                            <div class="text-[#003554] text-sm font-bold leading-tight mt-0.5">Lump-sum</div>
-                            <div class="text-[9px] text-gray-400 leading-tight">one-time payment</div>
+                        <div>
+                            <p class="text-[10px] text-deep/40 font-medium">Payment</p>
+                            <p class="text-deep text-sm font-bold leading-tight">Lump-sum</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Accordion Sections -->
+            <!-- Accordions -->
             <div class="mx-4 mt-3 space-y-2.5 pb-4">
 
-                <!-- Who should take this policy? (Open) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
                         <div class="accordion-icon">
-                            <svg class="w-4 h-4 text-[#003554]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                                <path d="M16 3.13a4 4 0 010 7.75"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Who should take this policy?</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron rotated" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Who should take this policy?</h4>
+                        <svg class="w-4 h-4 chevron rotated" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content open">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Any individual within <strong>(16) to (65) years</strong> can take this policy.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Any individual aged <strong class="text-deep">(16) to (65)</strong> can take this policy.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Things that are assured (Open) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #e8f5e9;">
-                            <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                            </svg>
+                        <div class="accordion-icon" style="background:rgba(87,199,133,0.18);">
+                            <svg class="w-4 h-4 text-mint" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Things that are assured</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron rotated" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Things that are assured</h4>
+                        <svg class="w-4 h-4 chevron rotated" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content open">
-                        <div class="accordion-content-inner">
-                            <div class="flex gap-4">
-                                <div class="flex-1 space-y-1">
-                                    <div class="check-item">
-                                        <div class="check-dot">
-                                            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-700 text-xs">Death</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <div class="check-dot">
-                                            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-700 text-xs">Total Permanent Disability</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <div class="check-dot">
-                                            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-700 text-xs">Injuries and loss of limbs</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <div class="check-dot">
-                                            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-700 text-xs">Hospitalization</span>
-                                    </div>
-                                    <div class="check-item">
-                                        <div class="check-dot">
-                                            <svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                                <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                        <span class="text-gray-700 text-xs">Being unable to work</span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-center justify-center flex-shrink-0 pt-2">
-                                    <div class="w-14 h-14 rounded-full bg-[#e8f6fe] flex items-center justify-center mb-1">
-                                        <svg class="w-7 h-7 text-[#003554]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                            <circle cx="17" cy="17" r="4" fill="#003554" opacity="0.2"/>
-                                            <path d="M15.5 17l1 1 2-2" stroke="#003554" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </div>
-                                    <span class="text-gray-500 text-[10px] text-center leading-tight">covered during<br>the policy term.</span>
-                                </div>
-                            </div>
+                        <div class="accordion-content-inner space-y-1.5">
+                            <div class="flex items-center gap-2"><div class="check-dot"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="text-deep/70 text-xs">Death</span></div>
+                            <div class="flex items-center gap-2"><div class="check-dot"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="text-deep/70 text-xs">Total Permanent Disability</span></div>
+                            <div class="flex items-center gap-2"><div class="check-dot"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="text-deep/70 text-xs">Injuries and loss of limbs</span></div>
+                            <div class="flex items-center gap-2"><div class="check-dot"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="text-deep/70 text-xs">Hospitalization</span></div>
+                            <div class="flex items-center gap-2"><div class="check-dot"><svg class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="text-deep/70 text-xs">Being unable to work</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Exclusion Clauses (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #fff3e0;">
-                            <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                            </svg>
+                        <div class="accordion-icon" style="background:rgba(245,158,11,0.16);">
+                            <svg class="w-4 h-4 text-warn" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Exclusion Clauses</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Exclusion Clauses</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Suicide, self-inflicted injuries, war-related incidents, and intoxication-related accidents are excluded.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Suicide, self-inflicted injuries, war-related incidents, and intoxication-related accidents are excluded.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Who can purchase (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
                         <div class="accordion-icon">
-                            <svg class="w-4 h-4 text-[#003554]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
-                            </svg>
+                            <svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Who can purchase</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Who can purchase</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Individuals aged 16 to 65 years, salaried or self-employed, can purchase this policy.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Individuals aged 16 to 65 years, salaried or self-employed, can purchase this policy.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Benefits (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #f3e5f5;">
-                            <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
-                            </svg>
+                        <div class="accordion-icon" style="background:rgba(0,100,148,0.12);">
+                            <svg class="w-4 h-4 text-baltic" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Benefits</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Benefits</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Lump-sum payout, hospitalization coverage, disability benefits, and family financial security.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Lump-sum payout, hospitalization coverage, disability benefits, and family financial security.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Endorsements (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #e3f2fd;">
-                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
+                        <div class="accordion-icon">
+                            <svg class="w-4 h-4 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">Endorsements</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">Endorsements</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Policy modifications, nominee changes, and sum insured adjustments can be endorsed.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Policy modifications, nominee changes, and sum insured adjustments can be endorsed.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- How to purchase (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #e8f5e9;">
-                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="9" cy="21" r="1"/>
-                                <circle cx="20" cy="21" r="1"/>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
-                            </svg>
+                        <div class="accordion-icon" style="background:rgba(87,199,133,0.18);">
+                            <svg class="w-4 h-4 text-mint" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">How to purchase</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">How to purchase</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Click "Get quote" to calculate premium, then complete your application online.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Tap <strong class="text-deep">Get quote</strong> to calculate premium, then continue to e-Application.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- How to claim (Closed) -->
                 <div class="accordion-item">
                     <div class="accordion-header" onclick="toggleAccordion(this)">
-                        <div class="accordion-icon" style="background: #fce4ec;">
-                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M12 8v4M12 16h.01"/>
-                            </svg>
+                        <div class="accordion-icon" style="background:rgba(239,68,68,0.12);">
+                            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-[#003554] font-semibold text-sm">How to claim</h4>
-                        </div>
-                        <svg class="w-4 h-4 text-gray-400 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                        <h4 class="flex-1 text-deep font-semibold text-sm">How to claim</h4>
+                        <svg class="w-4 h-4 chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-content-inner">
-                            <p class="text-gray-600 text-xs leading-relaxed">Submit claim form with supporting documents within 30 days of the incident. Our team will process within 15 working days.</p>
+                            <p class="text-deep/55 text-xs leading-relaxed">Submit claim form with supporting documents within 30 days of the incident. Processing typically within 15 working days.</p>
                         </div>
                     </div>
                 </div>
 
             </div>
-
         </div>
 
-        <!-- Fixed Bottom Action Button - Get Quote Only -->
-<div class="bottom-actions">
-    <a href="get-quote.html?auth=1" class="block w-full bg-[#003554] text-white font-semibold py-3.5 rounded-xl text-sm shadow-lg shadow-blue-200 hover:bg-[#006494] transition-all text-center">
-        Get quote
-    </a>
-    <a href="policyholder-form.html?from=product" class="block w-full mt-2 bg-[#0582CA]/15 text-[#003554] font-semibold py-3 rounded-xl text-sm text-center">Start e-App</a>
-</div>
+        <div class="bottom-actions">
+            <a href="get-quote.html?auth=1" class="btn-sheet-primary shadow-lg shadow-sky/20">Get quote</a>
+            <a href="policyholder-form.html?from=product" class="btn-sheet-secondary mt-2" style="background:rgba(5,130,202,0.12);">Start e-App</a>
+        </div>
+    </div>
 
-    <!-- Accordion Toggle Script -->
     <script>
         function toggleAccordion(header) {
             const content = header.nextElementSibling;
             const chevron = header.querySelector('.chevron');
             const isOpen = content.classList.contains('open');
-
-            // Close all
             document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
             document.querySelectorAll('.chevron').forEach(c => c.classList.remove('rotated'));
-
-            // Open clicked if it was closed
             if (!isOpen) {
                 content.classList.add('open');
                 chevron.classList.add('rotated');
             }
         }
     </script>
-
 </body>
 </html>

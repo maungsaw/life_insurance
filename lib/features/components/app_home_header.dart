@@ -24,21 +24,22 @@ class AppHomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        // Flush squircle — mark already has blue square fill; avoid circle/white pad
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           child: Image.asset(
             AppAssets.brandMark,
-            width: 40,
-            height: 40,
+            width: 36,
+            height: 36,
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: AppColors.lightPrimary,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.shield_outlined, color: Colors.white),
+              child: const Icon(Icons.shield_outlined, color: Colors.white, size: 20),
             ),
           ),
         ),

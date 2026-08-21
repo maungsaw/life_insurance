@@ -15,6 +15,6 @@ Available Now stays. Unlock With Login becomes **Your Tools** (no locks).
 - [x] Theme match before-login  
 - [x] Same section order / soft cards  
 - [x] Nav: Home · Customer · FAB · Product · Profile  
-- [x] Profile biometric toggle  
+- [x] Profile as full tab screen (biometric + settings)  
 - [x] Offline Mode banner (toggle for QA)  
 - [ ] Leaders team dashboard (separate screen)  

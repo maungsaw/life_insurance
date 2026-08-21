@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBZ LIFE · Mobile Prototype Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['DM Sans', 'sans-serif'] },
+                    colors: {
+                        sky: '#00A6FB', steel: '#0582CA', baltic: '#006494',
+                        deep: '#003554', cream: '#F7F3EC', mint: '#57C785',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(160deg, #e8ecf1 0%, #F7F3EC 45%, #e2eef8 100%);
+            min-height: 100vh;
+        }
+        .card {
+            background: #FFFcf7; border-radius: 20px; padding: 18px 18px 16px;
+            box-shadow: 0 10px 28px rgba(0,53,84,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none; display: block; color: inherit;
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(0,53,84,0.12); }
+        .phone-preview {
+            height: 120px; border-radius: 14px; margin-bottom: 12px;
+            background: linear-gradient(135deg, #00A6FB 0%, #0582CA 50%, #003554 100%);
+            position: relative; overflow: hidden;
+        }
+        .phone-preview::after {
+            content: ''; position: absolute; inset: 12px 28% 8px; border-radius: 10px;
+            background: rgba(247,243,236,0.92);
+        }
+    </style>
+</head>
+<body class="px-6 py-10 md:px-12 md:py-14">
+    <div class="max-w-5xl mx-auto">
+        <p class="text-steel text-xs font-bold tracking-[0.14em] uppercase mb-2">KBZ LIFE Agency · Stakeholder walkthrough</p>
+        <h1 class="text-deep text-3xl md:text-4xl font-bold mb-2">Mobile Prototype Gallery</h1>
+        <p class="text-deep/55 text-sm md:text-base max-w-2xl mb-8 leading-relaxed">
+            Open each phone frame in order for the end-to-end demo. Visual system: cream · Coolors · soft cards · shared nav &amp; sheets (Phase A–C polish).
+        </p>
+
+        <div class="flex flex-wrap gap-2 mb-10">
+            <span class="text-[11px] font-semibold bg-deep text-white px-3 py-1 rounded-full">FR-01 → FR-06</span>
+            <span class="text-[11px] font-semibold bg-white/80 text-deep px-3 py-1 rounded-full">375×812</span>
+            <span class="text-[11px] font-semibold bg-white/80 text-deep px-3 py-1 rounded-full">HTML · Tailwind · JS</span>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a class="card" href="../KBZ Mobile ProtoType 1/before-login.html">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#00A6FB,#006494);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">01 · GUEST</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Before Login</h2>
+                <p class="text-deep/45 text-xs mt-1">Partner hero · locks · promo</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/login.html">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#0582CA,#003554);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">02 · FR-01</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Login &amp; Auth</h2>
+                <p class="text-deep/45 text-xs mt-1">OTP · password · biometric</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/after-login.html">
+                <div class="phone-preview"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">03 · FR-02 · 03 · 06 · 07</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">After Login</h2>
+                <p class="text-deep/45 text-xs mt-1">Home · CRM · Policies · Profile · My work</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/after-login.html#tasks">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#F59E0B,#00A6FB,#57C785);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">03b · FR-07</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">My work</h2>
+                <p class="text-deep/45 text-xs mt-1">Day timeline · Week · Month · status pills</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/products.html">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#57C785,#006494);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">04 · FR-04</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Product Library</h2>
+                <p class="text-deep/45 text-xs mt-1">Authorized products · drafts</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/personal-accident.html">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#00A6FB,#57C785);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">05 · DETAIL</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Personal Accident</h2>
+                <p class="text-deep/45 text-xs mt-1">Benefits · Get quote · e-App</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/get-quote.html?auth=1">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#F59E0B,#003554);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">06 · FR-04</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Premium Calculator</h2>
+                <p class="text-deep/45 text-xs mt-1">Guided quote · compare · draft · Buy</p>
+            </a>
+            <a class="card sm:col-span-2 lg:col-span-1" href="../KBZ Mobile ProtoType 1/policyholder-form.html?from=quote">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#006494,#00A6FB);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">07 · FR-05</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">e-Application</h2>
+                <p class="text-deep/45 text-xs mt-1">Health · scan · confirm · UW track</p>
+            </a>
+            <a class="card" href="../KBZ Mobile ProtoType 1/policyholder-form.html?view=tracker">
+                <div class="phone-preview" style="background:linear-gradient(135deg,#003554,#0582CA);"></div>
+                <p class="text-[10px] font-bold text-steel tracking-wide">08 · FLOW</p>
+                <h2 class="text-deep font-bold text-lg mt-0.5">Proposal Status</h2>
+                <p class="text-deep/45 text-xs mt-1">Application tracker · Core statuses</p>
+            </a>
+        </div>
+
+        <p class="text-deep/40 text-xs mt-10 leading-relaxed">
+            Demo tip: Flow follows Wireframe1/2; skin is cream · Coolors. Path: Guest → Login → Home (Commission/Claim sheets) → Products → PA → Quote → e-App → UW track.
+        </p>
+    </div>
+</body>
+</html>

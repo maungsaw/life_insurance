@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:life_insurance/core/core.dart' show AppAssets, AppColors;
 
 enum AppBrandMarkStyle {
-  /// Full PNG wordmark (`AppAssets.mainLogo`) — no duplicate title text.
+  /// Stacked lockup (`AppAssets.splashLockup`) — Splash / Login. No duplicate title.
   wordmark,
+
+  /// Horizontal main logo (`AppAssets.mainLogo`).
+  horizontal,
 
   /// Icon mark + optional title / subtitle text.
   markAndTitle,
 }
 
-/// Splash / Login brand block (LoginRegister wireframe · docs/39).
+/// Splash / Login brand block (LoginRegister wireframe · docs/39 · logo brainstorm).
 class AppBrandMark extends StatelessWidget {
   const AppBrandMark({
     super.key,
@@ -20,20 +23,20 @@ class AppBrandMark extends StatelessWidget {
     this.compact = false,
   });
 
-  /// Splash: large centered wordmark.
+  /// Splash / Get Started: large centered stacked lockup.
   const AppBrandMark.splash({super.key})
       : style = AppBrandMarkStyle.wordmark,
         title = 'KBZ LIFE',
         subtitle = null,
-        logoHeight = 120,
+        logoHeight = 160,
         compact = false;
 
-  /// Login header: medium wordmark.
+  /// Login header: medium stacked lockup.
   const AppBrandMark.login({super.key})
       : style = AppBrandMarkStyle.wordmark,
         title = 'KBZ LIFE',
         subtitle = null,
-        logoHeight = 72,
+        logoHeight = 112,
         compact = true;
 
   final AppBrandMarkStyle style;
@@ -42,8 +45,11 @@ class AppBrandMark extends StatelessWidget {
   final double logoHeight;
   final bool compact;
 
-  String get _asset =>
-      style == AppBrandMarkStyle.wordmark ? AppAssets.mainLogo : AppAssets.brandMark;
+  String get _asset => switch (style) {
+        AppBrandMarkStyle.wordmark => AppAssets.splashLockup,
+        AppBrandMarkStyle.horizontal => AppAssets.mainLogo,
+        AppBrandMarkStyle.markAndTitle => AppAssets.brandMark,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +59,13 @@ class AppBrandMark extends StatelessWidget {
       fit: BoxFit.contain,
       errorBuilder: (context, error, stackTrace) => Icon(
         Icons.shield_moon_outlined,
-        size: logoHeight,
+        size: logoHeight * 0.5,
         color: AppColors.lightPrimary,
       ),
     );
 
-    if (style == AppBrandMarkStyle.wordmark) {
+    if (style == AppBrandMarkStyle.wordmark ||
+        style == AppBrandMarkStyle.horizontal) {
       return image;
     }
 

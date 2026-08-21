@@ -6,7 +6,9 @@
     <title>Before Login — Guest Home</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+
+<script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -94,8 +96,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            background: #FFFcf7;
+            box-shadow: 0 -4px 20px rgba(0,53,84,0.08);
             border-radius: 30px 30px 0 0;
             z-index: 50;
         }
@@ -231,14 +233,147 @@
         }
         .modal-sheet {
             background: #FFFcf7;
-            border-radius: 22px 22px 0 0;
-            padding: 16px 20px 28px;
+            border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px;
             width: 100%;
             transform: translateY(24px);
             transition: transform 0.25s;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
         }
         .modal-overlay.active .modal-sheet {
             transform: translateY(0);
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        /* Phase B — shared sheet + nav hit targets */
+        
+        .nav-ico {
+            width: 22px; height: 22px; color: rgba(0,53,84,0.38);
+            transition: color 0.15s;
+        }
+        .nav-hit.on .nav-ico, .nav-hit.active .nav-ico { color: #0582CA; }
+        .nav-hit .nav-label {
+            font-size: 10px; font-weight: 600; margin-top: 4px;
+            color: rgba(0,53,84,0.38); letter-spacing: 0.01em;
+        }
+        .nav-hit.on .nav-label, .nav-hit.active .nav-label {
+            color: #0582CA; font-weight: 700;
+        }
+
+        .ph-fill {
+            display: inline-flex; align-items: center; justify-content: center;
+            line-height: 1;
+        }
+        .nav-hit .ph-fill {
+            font-size: 22px; color: rgba(0,53,84,0.38);
+            transition: color 0.15s;
+        }
+        .nav-hit.on .ph-fill,
+        .nav-hit.active .ph-fill { color: #0582CA; }
+        .nav-fab .ph-fill { font-size: 26px; color: #fff; }
+        .ui-tile .ph-fill { font-size: 24px; color: #0582CA; }
+        .ui-tile-sm .ph-fill { font-size: 18px; color: #0582CA; }
+        .product-icon .ph-fill { font-size: 26px; color: #0582CA; }
+        .profile-avatar-ico .ph-fill { font-size: 32px; color: #0582CA; }
+
+
+        .ui-ico {
+            width: 18px; height: 18px; color: #0582CA; display: block;
+        }
+        .ui-ico-lg {
+            width: 26px; height: 26px;
+        }
+        .ui-tile {
+            width: 48px; height: 48px; border-radius: 16px;
+            background: rgba(0,166,251,0.1);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 6px;
+        }
+        .ui-tile-sm {
+            width: 32px; height: 32px; border-radius: 10px;
+            background: rgba(0,166,251,0.1);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-fab {
+            width: 56px; height: 56px; border-radius: 999px;
+            background: #003554; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,166,251,0.28), 0 0 0 4px #F7F3EC;
+            border: none; cursor: pointer; padding: 0;
+        }
+
+        .nav-hit {
+            min-width: 56px; min-height: 48px; padding: 4px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: none; background: transparent; cursor: pointer;
+        }
+        .sheet-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 310; display: none; align-items: flex-end;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-panel {
+            width: 100%; background: #FFFcf7; border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px; max-height: 90%; overflow-y: auto;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px; border-radius: 999px;
+            background: rgba(0,53,84,0.15); margin: 0 auto 16px;
+        }
+        .btn-sheet-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-sheet-secondary {
+            display: block; width: 100%; text-align: center; background: rgba(0,53,84,0.05); color: #003554;
+            font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Phase C — motion + theater */
+        .sheet-overlay.open {
+            display: flex;
+            animation: overlayIn 0.22s ease;
+        }
+        .sheet-overlay.open .sheet-panel {
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sheetRise {
+            from { transform: translateY(28px); opacity: 0.85; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-success {
+            position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 400;
+            background: #003554; color: #fff; border-radius: 14px; padding: 12px 14px;
+            display: none; align-items: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(0,53,84,0.28);
+            font-size: 13px; font-weight: 600;
+        }
+        .toast-success.show {
+            display: flex;
+            animation: toastIn 0.32s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }
+        .empty-state {
+            text-align: center; padding: 36px 20px 28px;
+        }
+        .empty-state .empty-icon {
+            width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 14px;
+            background: rgba(0,166,251,0.1); display: flex; align-items: center; justify-content: center;
+        }
+        .step-fade {
+            animation: fadeIn 0.32s ease-out;
         }
     </style>
 </head>
@@ -274,10 +409,8 @@
 
             <!-- App Header -->
             <div class="flex items-center justify-between px-4 py-2">
-                <div class="w-9 h-9 rounded-full bg-sky/15 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    </svg>
+<div class="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0 shadow-sm" style="box-shadow:0 2px 8px rgba(0,53,84,0.14)">
+                    <img src="/assets/brand-mark.png" onerror="this.onerror=null;this.src='../assets/brand-mark.png'" alt="KBZ LIFE" class="w-full h-full object-cover" width="36" height="36">
                 </div>
                 <button class="w-9 h-9 rounded-full flex items-center justify-center" aria-label="Notifications" onclick="openLoginSheet('Notifications need login')">
                     <svg class="w-5 h-5 text-deep" fill="currentColor" viewBox="0 0 24 24">
@@ -313,35 +446,18 @@
                 <div class="px-4 pt-4 pb-3">
                     <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">AVAILABLE NOW</h3>
                     <div class="grid grid-cols-3 gap-0">
-                        <a href="products.html" class="flex flex-col items-center text-center py-2 px-1.5">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5">
-                                <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                                </svg>
-                            </div>
+                        <a href="products.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline">
+                            <div class="ui-tile"><i class="ph-fill ph-hexagon" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Product</span>
                             <span class="avail-dot"></span>
                         </a>
-                        <a href="get-quote.html" class="available-divider flex flex-col items-center text-center py-2 px-1.5">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5">
-                                <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <rect x="4" y="2" width="16" height="20" rx="2"/>
-                                    <line x1="8" y1="6" x2="16" y2="6"/>
-                                    <line x1="8" y1="10" x2="16" y2="10"/>
-                                    <line x1="8" y1="14" x2="12" y2="14"/>
-                                </svg>
-                            </div>
+                        <a href="get-quote.html" class="available-divider flex flex-col items-center text-center py-2 px-1.5 no-underline">
+                            <div class="ui-tile"><i class="ph-fill ph-calculator" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Calculator</span>
                             <span class="avail-dot"></span>
                         </a>
                         <button type="button" class="flex flex-col items-center text-center py-2 px-1.5" onclick="alert('Online resources / Resource Library (FR-10)')">
-                            <div class="w-12 h-12 rounded-2xl bg-sky/10 flex items-center justify-center mb-1.5">
-                                <svg class="w-7 h-7 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <line x1="2" y1="12" x2="22" y2="12"/>
-                                    <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
-                                </svg>
-                            </div>
+                            <div class="ui-tile"><i class="ph-fill ph-globe" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Online</span>
                             <span class="avail-dot"></span>
                         </button>
@@ -355,61 +471,36 @@
                     <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">UNLOCK WITH LOGIN</h3>
                     <div class="grid grid-cols-2 gap-2.5">
                         <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('New Proposal (FR-05 e-Application)')">
-                            <div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4.5 h-4.5 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-                                    <polyline points="14,2 14,8 20,8"/>
-                                    <line x1="12" y1="18" x2="12" y2="12"/>
-                                    <line x1="9" y1="15" x2="15" y2="15"/>
-                                </svg>
-                            </div>
+                            <div class="ui-tile-sm"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">New Proposal</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <rect x="5" y="11" width="14" height="10" rx="2"/>
                                 <path d="M8 11V7a4 4 0 018 0v4"/>
                             </svg>
                         </button>
 
                         <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('Commission (FR-02 Dashboard)')">
-                            <div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4.5 h-4.5 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="M21.21 15.89A10 10 0 118 2.83"/>
-                                    <path d="M22 12A10 10 0 0012 2v10z"/>
-                                </svg>
-                            </div>
+                            <div class="ui-tile-sm"><i class="ph-fill ph-chart-pie" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">Commission</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <rect x="5" y="11" width="14" height="10" rx="2"/>
                                 <path d="M8 11V7a4 4 0 018 0v4"/>
                             </svg>
                         </button>
 
                         <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('Proposal Status (FR-05)')">
-                            <div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-4.5 h-4.5 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-                                    <rect x="9" y="3" width="6" height="4" rx="1"/>
-                                    <path d="M9 12h6M9 16h4"/>
-                                </svg>
-                            </div>
+                            <div class="ui-tile-sm"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">Proposal Status</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <rect x="5" y="11" width="14" height="10" rx="2"/>
                                 <path d="M8 11V7a4 4 0 018 0v4"/>
                             </svg>
                         </button>
 
                         <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('CRM / Clients & Leads (FR-03)')">
-                            <div class="w-8 h-8 rounded-lg bg-sky/10 flex items-center justify-center flex-shrink-0">
-                                <svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 010 7.75"/>
-                                </svg>
-                            </div>
+                            <div class="ui-tile-sm"><i class="ph-fill ph-users" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">CRM</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <rect x="5" y="11" width="14" height="10" rx="2"/>
                                 <path d="M8 11V7a4 4 0 018 0v4"/>
                             </svg>
@@ -500,40 +591,28 @@
         </div>
 
         <!-- Bottom Nav: Home · Customer · FAB · Product · Profile -->
-        <div class="bottom-nav px-2 pt-2 pb-5">
+        <div class="bottom-nav px-1 pt-2 pb-5">
             <div class="flex items-center justify-around">
-                <div class="flex flex-col items-center">
-                    <svg class="w-5 h-5 text-steel" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                    <span class="text-steel text-[9px] font-semibold mt-0.5">Home</span>
+                <div class="nav-hit on">
+                    <i class="ph-fill ph-house" aria-hidden="true"></i>
+                    <span class="nav-label">Home</span>
                 </div>
-                <button type="button" class="flex flex-col items-center" onclick="openLoginSheet('Customer / CRM (FR-03)')">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                    </svg>
-                    <span class="text-gray-400 text-[9px] mt-0.5">Customer</span>
+                <button type="button" class="nav-hit" onclick="openLoginSheet('Customer / CRM (FR-03)')">
+                    <i class="ph-fill ph-users" aria-hidden="true"></i>
+                    <span class="nav-label">Customer</span>
                 </button>
-                <div class="relative -mt-5">
-                    <button type="button" onclick="openLoginSheet('Quick action needs login')" class="w-12 h-12 bg-deep rounded-full flex items-center justify-center shadow-lg shadow-sky/30">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
+                <div class="relative -mt-7">
+                    <button type="button" onclick="openLoginSheet('Quick action needs login')" class="nav-fab" aria-label="Quick action">
+                        <i class="ph-fill ph-shield-check" aria-hidden="true"></i>
                     </button>
                 </div>
-                <a href="products.html" class="flex flex-col items-center">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                    </svg>
-                    <span class="text-gray-400 text-[9px] mt-0.5">Product</span>
+                <a href="products.html" class="nav-hit">
+                    <i class="ph-fill ph-hexagon" aria-hidden="true"></i>
+                    <span class="nav-label">Product</span>
                 </a>
-                <button type="button" class="flex flex-col items-center" onclick="openLoginSheet('Profile (FR-11)')">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span class="text-gray-400 text-[9px] mt-0.5">Profile</span>
+                <button type="button" class="nav-hit" onclick="openLoginSheet('Profile (FR-11)')">
+                    <i class="ph-fill ph-user-circle" aria-hidden="true"></i>
+                    <span class="nav-label">Profile</span>
                 </button>
             </div>
         </div>
@@ -541,7 +620,7 @@
         <!-- Login Required Sheet -->
         <div id="loginSheet" class="modal-overlay">
             <div class="modal-sheet">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+                <div class="sheet-handle"></div>
                 <div class="text-center mb-4">
                     <div class="w-14 h-14 bg-steel rounded-full flex items-center justify-center mx-auto mb-3">
                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

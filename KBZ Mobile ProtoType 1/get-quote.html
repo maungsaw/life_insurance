@@ -38,29 +38,65 @@
         .scroll-content { height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 24px; }
         .scroll-content::-webkit-scrollbar { display: none; }
         .form-input {
-            width: 100%; padding: 14px 16px; border-radius: 14px; background: #FFFcf7;
-            border: 1px solid rgba(0,53,84,0.08); font-size: 15px; color: #003554;
-            transition: all 0.2s; outline: none; box-shadow: 0 4px 12px rgba(0,53,84,0.04);
+            width: 100%; padding: 13px 14px; border-radius: 12px; background: rgba(247,243,236,0.65);
+            border: 1px solid rgba(0,53,84,0.08); font-size: 14px; color: #003554;
+            transition: all 0.2s; outline: none;
         }
-        .form-input:focus { border-color: #0582CA; box-shadow: 0 0 0 3px rgba(0,166,251,0.15); }
-        .risk-toggle { display: flex; border-radius: 14px; overflow: hidden; background: #FFFcf7; box-shadow: 0 4px 12px rgba(0,53,84,0.06); }
+        .form-input:focus { border-color: #0582CA; box-shadow: 0 0 0 3px rgba(0,166,251,0.12); background: #FFFcf7; }
+        .risk-toggle { display: flex; border-radius: 12px; overflow: hidden; background: rgba(247,243,236,0.85); border: 1px solid rgba(0,53,84,0.08); }
         .risk-btn {
-            flex: 1; padding: 12px; text-align: center; font-weight: 600; font-size: 15px;
+            flex: 1; padding: 11px; text-align: center; font-weight: 600; font-size: 14px;
             cursor: pointer; transition: all 0.2s; color: #00355499; background: transparent;
         }
         .risk-btn.active { background: #003554; color: white; }
         .risk-btn.active-yes { background: #ef4444; color: white; }
         .quote-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid rgba(0,53,84,0.06);
+            padding: 10px 0; border-bottom: 1px solid rgba(0,53,84,0.06);
         }
         .quote-row:last-child { border-bottom: none; }
         .soft-card {
             background: #FFFcf7; border-radius: 18px;
             box-shadow: 0 8px 24px rgba(0, 53, 84, 0.08);
         }
-        .step-dot { width: 8px; height: 8px; border-radius: 999px; background: rgba(0,53,84,0.15); }
-        .step-dot.on { background: #0582CA; }
+        .product-pill {
+            display: inline-flex; align-items: center;
+            font-size: 10px; font-weight: 700; color: #0582CA;
+            background: rgba(0,166,251,0.12); padding: 3px 9px; border-radius: 999px;
+        }
+        .quote-stepper {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 14px;
+        }
+        .quote-step {
+            text-align: center; padding: 8px 4px 7px; border-radius: 12px;
+            background: rgba(0,53,84,0.05); color: rgba(0,53,84,0.38);
+            font-size: 9px; font-weight: 700; letter-spacing: 0.02em;
+        }
+        .quote-step .n {
+            display: block; font-size: 11px; font-weight: 800; margin-bottom: 2px;
+        }
+        .quote-step.on {
+            background: #003554; color: #fff;
+        }
+        .quote-step.done {
+            background: rgba(87,199,133,0.18); color: #15803d;
+        }
+        .quote-hero {
+            text-align: center; padding: 18px 12px 14px;
+            border-radius: 16px; margin-bottom: 12px;
+            background: linear-gradient(145deg, rgba(0,166,251,0.1), rgba(5,130,202,0.06));
+        }
+        .quote-hero .label {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+            color: rgba(0,53,84,0.45); text-transform: uppercase;
+        }
+        .quote-hero .amount {
+            font-size: 28px; font-weight: 800; color: #003554;
+            font-variant-numeric: tabular-nums; line-height: 1.15; margin-top: 4px;
+        }
+        .quote-hero .sub {
+            font-size: 11px; color: rgba(0,53,84,0.45); margin-top: 4px;
+        }
         .fade-in { animation: fadeIn 0.35s ease-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -69,13 +105,153 @@
         .hidden-view { display: none !important; }
         .offline-banner {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white; padding: 8px 12px; display: none; align-items: center; gap: 8px;
-            position: sticky; top: 0; z-index: 40; font-size: 11px; font-weight: 500;
+            color: white; padding: 8px 14px; display: none; align-items: center; gap: 8px;
+            position: sticky; top: 28px; z-index: 40; font-size: 11px; font-weight: 600;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
         }
         .offline-banner.show { display: flex; }
+        .offline-banner > span {
+            flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .status-safe { padding-top: 34px; }
         .side-note {
             max-width: 260px; background: white; border-radius: 16px; padding: 14px 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.06); font-size: 12px; color: #334155; line-height: 1.45;
+        }
+        .cmp-chip {
+            flex: 1; padding: 8px 6px; border-radius: 999px; font-size: 11px; font-weight: 700;
+            color: rgba(0,53,84,0.45); background: #FFFcf7; border: 1px solid rgba(0,53,84,0.08);
+            cursor: pointer; box-shadow: 0 4px 12px rgba(0,53,84,0.05);
+        }
+        .cmp-chip.on {
+            color: #fff; background: #003554; border-color: #003554;
+        }
+        .cmp-matrix {
+            background: #FFFcf7; border-radius: 18px;
+            box-shadow: 0 8px 24px rgba(0,53,84,0.08); overflow: hidden;
+        }
+        .cmp-matrix table { width: 100%; border-collapse: collapse; }
+        .cmp-matrix th, .cmp-matrix td {
+            padding: 11px 10px; font-size: 11px; vertical-align: middle;
+            border-bottom: 1px solid rgba(0,53,84,0.06);
+        }
+        .cmp-matrix tr:last-child th, .cmp-matrix tr:last-child td { border-bottom: none; }
+        .cmp-matrix th.feat {
+            text-align: left; color: rgba(0,53,84,0.45); font-weight: 600; width: 32%;
+        }
+        .cmp-matrix th.plan {
+            text-align: center; font-weight: 800; color: #003554; font-size: 11px;
+            cursor: pointer; position: relative;
+        }
+        .cmp-matrix th.plan.sel {
+            color: #0582CA;
+            box-shadow: inset 0 -3px 0 #0582CA;
+            background: rgba(0,166,251,0.06);
+        }
+        .cmp-matrix td.sel { color: #003554; }
+        .cmp-matrix td {
+            text-align: center; color: #003554; font-weight: 600;
+        }
+        .cmp-matrix td.prem { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+        .cmp-matrix .best {
+            display: inline-block; margin-top: 4px; font-size: 8px; font-weight: 800;
+            color: #15803d; background: rgba(87,199,133,0.2); padding: 2px 6px; border-radius: 999px;
+        }
+        .cmp-footer {
+            position: sticky; bottom: 0; margin: 0 -20px -24px; padding: 12px 20px 20px;
+            background: linear-gradient(180deg, rgba(247,243,236,0) 0%, #F7F3EC 28%);
+            display: flex; gap: 10px;
+        }
+        .cmp-footer .btn-edit, .cta-edit {
+            flex: 1; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 14px;
+            background: #FFFcf7; color: #003554; border: 1.5px solid rgba(0,53,84,0.12); cursor: pointer;
+        }
+        .cmp-footer .btn-buy, .cta-buy {
+            flex: 1.2; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 14px;
+            background: #003554; color: #fff; border: none; cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,166,251,0.22);
+        }
+        .cta-row { display: flex; gap: 10px; }
+        .cta-row .cta-edit { flex: 1; }
+        .cta-row .cta-buy { flex: 1.2; }
+        .cta-draft {
+            width: 100%; margin-top: 8px; padding: 12px; border-radius: 14px;
+            font-weight: 600; font-size: 13px; color: #0582CA; background: rgba(0,166,251,0.08);
+            border: none; cursor: pointer;
+        }
+
+        /* Phase B — shared sheet + nav hit targets */
+        .nav-hit {
+            min-width: 56px; min-height: 48px; padding: 4px 6px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; border: none; background: transparent; cursor: pointer;
+        }
+        .sheet-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,53,84,0.45); backdrop-filter: blur(4px);
+            z-index: 310; display: none; align-items: flex-end;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-panel {
+            width: 100%; background: #FFFcf7; border-radius: 24px 24px 0 0;
+            padding: 12px 20px 28px; max-height: 90%; overflow-y: auto;
+            box-shadow: 0 -8px 32px rgba(0,53,84,0.12);
+        }
+        .sheet-handle {
+            width: 40px; height: 4px; border-radius: 999px;
+            background: rgba(0,53,84,0.15); margin: 0 auto 16px;
+        }
+        .btn-sheet-primary {
+            display: block; width: 100%; text-align: center; background: #003554; color: #fff;
+            font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-sheet-secondary {
+            display: block; width: 100%; text-align: center; background: rgba(0,53,84,0.05); color: #003554;
+            font-weight: 600; font-size: 14px; padding: 12px; border-radius: 12px; border: none; cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Phase C — motion + theater */
+        .sheet-overlay.open {
+            display: flex;
+            animation: overlayIn 0.22s ease;
+        }
+        .sheet-overlay.open .sheet-panel {
+            animation: sheetRise 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+        @keyframes overlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes sheetRise {
+            from { transform: translateY(28px); opacity: 0.85; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-success {
+            position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 400;
+            background: #003554; color: #fff; border-radius: 14px; padding: 12px 14px;
+            display: none; align-items: center; gap: 10px;
+            box-shadow: 0 12px 28px rgba(0,53,84,0.28);
+            font-size: 13px; font-weight: 600;
+        }
+        .toast-success.show {
+            display: flex;
+            animation: toastIn 0.32s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }
+        .empty-state {
+            text-align: center; padding: 36px 20px 28px;
+        }
+        .empty-state .empty-icon {
+            width: 56px; height: 56px; border-radius: 18px; margin: 0 auto 14px;
+            background: rgba(0,166,251,0.1); display: flex; align-items: center; justify-content: center;
+        }
+        .step-fade {
+            animation: fadeIn 0.32s ease-out;
         }
     </style>
 </head>
@@ -95,119 +271,180 @@
     <div class="phone-frame">
         <div class="scroll-content">
 
-            <div id="offlineBanner" class="offline-banner">
-                <span>Offline — you can still calculate &amp; save a draft</span>
-            </div>
-
-            <!-- FORM -->
-            <div id="formView" class="px-5 pt-5 pb-6">
-                <div class="flex items-center gap-3 mb-5">
-                    <a href="personal-accident.html" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+            <!-- FORM · Step 1 -->
+            <div id="formView" class="px-5 pb-6">
+                <div class="status-safe flex items-center justify-between pb-2">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative opacity-60">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-3">
+                    <a href="personal-accident.html" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </a>
+                    <div class="min-w-0 flex-1">
+                        <h1 class="text-deep text-lg font-bold leading-tight">Get a quote</h1>
+                        <span class="product-pill mt-1">Personal Accident</span>
+                    </div>
+                </div>
+
+                <div id="offlineBanner" class="offline-banner -mx-5 mb-3">
+                    <span>Offline — calculate &amp; save draft OK</span>
+                </div>
+
+                <div class="quote-stepper" aria-label="Progress">
+                    <div class="quote-step on"><span class="n">1</span>Inputs</div>
+                    <div class="quote-step"><span class="n">2</span>Compare</div>
+                    <div class="quote-step"><span class="n">3</span>Quote</div>
+                </div>
+
+                <div class="soft-card p-4 mb-4">
+                    <div class="mb-4">
+                        <label class="text-deep/50 text-xs font-semibold mb-1.5 block">Date of birth <span class="text-red-500">*</span></label>
+                        <input type="date" id="dob" class="form-input" value="1995-08-17">
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-deep/50 text-xs font-semibold mb-1.5 block">Sum insured</label>
+                        <select id="sumInsured" class="form-input appearance-none cursor-pointer">
+                            <option value="500000">500,000 MMK</option>
+                            <option value="1000000" selected>1,000,000 MMK</option>
+                            <option value="2000000">2,000,000 MMK</option>
+                            <option value="5000000">5,000,000 MMK</option>
+                            <option value="10000000">10,000,000 MMK</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-deep/50 text-xs font-semibold mb-1.5 block">Policy term</label>
+                        <select id="policyTerm" class="form-input appearance-none cursor-pointer">
+                            <option value="3">3 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12" selected>12 Months (1 Year)</option>
+                        </select>
+                    </div>
                     <div>
-                        <h1 class="text-deep text-xl font-bold">Get a Quote</h1>
-                        <p class="text-deep/40 text-[11px]">Personal Accident</p>
+                        <label class="text-deep/50 text-xs font-semibold mb-1.5 block">High risk industry?</label>
+                        <div class="risk-toggle">
+                            <div class="risk-btn" id="riskYes" onclick="setRisk('yes')">Yes</div>
+                            <div class="risk-btn active" id="riskNo" onclick="setRisk('no')">No ✓</div>
+                        </div>
+                        <p class="text-deep/40 text-[10px] mt-2">(construction, mining, heavy equipment…)</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 mb-6">
-                    <div class="step-dot on"></div>
-                    <div class="step-dot"></div>
-                    <span class="text-deep/40 text-[10px] ml-1">Step 1 · Client inputs</span>
-                </div>
-
-                <div class="mb-5">
-                    <label class="text-deep/50 text-sm font-medium mb-2 block">Date of birth <span class="text-red-500">*</span></label>
-                    <input type="date" id="dob" class="form-input" value="1995-08-17">
-                </div>
-
-                <div class="mb-5">
-                    <label class="text-deep/50 text-sm font-medium mb-2 block">Sum Insured</label>
-                    <select id="sumInsured" class="form-input appearance-none cursor-pointer">
-                        <option value="500000">500,000 MMK</option>
-                        <option value="1000000" selected>1,000,000 MMK</option>
-                        <option value="2000000">2,000,000 MMK</option>
-                        <option value="5000000">5,000,000 MMK</option>
-                        <option value="10000000">10,000,000 MMK</option>
-                    </select>
-                </div>
-
-                <div class="mb-5">
-                    <label class="text-deep/50 text-sm font-medium mb-2 block">Policy Term</label>
-                    <select id="policyTerm" class="form-input appearance-none cursor-pointer">
-                        <option value="3">3 Months</option>
-                        <option value="6">6 Months</option>
-                        <option value="12" selected>12 Months (1 Year)</option>
-                    </select>
-                </div>
-
-                <div class="mb-8">
-                    <label class="text-deep/50 text-sm font-medium mb-2 block">High risk industry?</label>
-                    <div class="risk-toggle">
-                        <div class="risk-btn" id="riskYes" onclick="setRisk('yes')">Yes</div>
-                        <div class="risk-btn active" id="riskNo" onclick="setRisk('no')">No ✓</div>
-                    </div>
-                    <p class="text-steel text-xs mt-2">(construction, mining, heavy equipment…)</p>
-                </div>
-
-                <button type="button" onclick="calculateQuote()" class="w-full bg-deep text-white font-semibold py-4 rounded-2xl text-base shadow-lg shadow-sky/20 active:scale-[0.98] transition-all">
+                <button type="button" onclick="calculateQuote()" class="w-full bg-deep text-white font-bold py-3.5 rounded-2xl text-sm shadow-lg shadow-sky/20 active:scale-[0.98] transition-all">
                     Calculate premium
                 </button>
             </div>
 
-            <!-- QUOTE RESULT -->
-            <div id="quoteView" class="hidden-view px-5 pt-5 pb-6 fade-in">
-                <div class="flex items-center gap-3 mb-5">
-                    <button type="button" onclick="backToForm()" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center">
+            <!-- COMPARE · Step 2 -->
+            <div id="compareView" class="hidden-view px-5 pt-5 pb-6 fade-in">
+                <div class="status-safe flex items-center justify-between pb-2">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative opacity-60">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-3">
+                    <button type="button" onclick="backToForm()" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    <div>
-                        <h1 class="text-deep text-xl font-bold">Your quote</h1>
-                        <p class="text-deep/40 text-[11px]">Core pricing · estimate</p>
+                    <div class="min-w-0 flex-1">
+                        <h1 class="text-deep text-lg font-bold leading-tight">Get a quote</h1>
+                        <span class="product-pill mt-1">Compare plans</span>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 mb-5">
-                    <div class="step-dot on"></div>
-                    <div class="step-dot on"></div>
-                    <span class="text-deep/40 text-[10px] ml-1">Step 2 · Review &amp; save</span>
+                <div class="quote-stepper" aria-label="Progress">
+                    <div class="quote-step done"><span class="n">✓</span>Inputs</div>
+                    <div class="quote-step on"><span class="n">2</span>Compare</div>
+                    <div class="quote-step"><span class="n">3</span>Quote</div>
                 </div>
 
-                <div class="soft-card p-5 mb-4">
-                    <h2 class="text-deep font-bold text-base mb-3">Quote details</h2>
-                    <div class="quote-row"><span class="text-deep/45 text-sm">Product</span><span class="text-deep font-semibold text-sm">Personal Accident</span></div>
-                    <div class="quote-row"><span class="text-deep/45 text-sm">Sum Insured</span><span class="text-deep font-semibold text-sm" id="qSumInsured">1,000,000 MMK</span></div>
-                    <div class="quote-row"><span class="text-deep/45 text-sm">Policy Term</span><span class="text-deep font-semibold text-sm" id="qPolicyTerm">1 Year</span></div>
+                <div class="flex gap-2 mb-3" role="tablist" aria-label="Compare category">
+                    <button type="button" class="cmp-chip on" id="cmpCatProtection" onclick="setCompareCategory('protection')">Protection</button>
+                    <button type="button" class="cmp-chip" id="cmpCatSaving" onclick="setCompareCategory('saving')">Saving</button>
+                    <button type="button" class="cmp-chip" id="cmpCatHealth" onclick="setCompareCategory('health')">Health</button>
+                </div>
+
+                <div class="cmp-matrix mb-2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="feat">Feature</th>
+                                <th class="plan sel" id="cmpHeadA" onclick="selectCompareCol('a')"></th>
+                                <th class="plan" id="cmpHeadB" onclick="selectCompareCol('b')"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cmpBody"></tbody>
+                    </table>
+                </div>
+                <p class="text-deep/40 text-[10px] text-center mb-3 leading-relaxed" id="cmpHint">
+                    Your calc on the left · alternate is illustrative
+                </p>
+
+                <div class="cmp-footer">
+                    <button type="button" class="btn-edit" onclick="backToForm()">Edit</button>
+                    <button type="button" class="btn-buy" onclick="buySelectedCompare()">Buy</button>
+                </div>
+            </div>
+
+            <!-- QUOTE · Step 3 -->
+            <div id="quoteView" class="hidden-view px-5 pt-5 pb-6 fade-in">
+                <div class="status-safe flex items-center justify-between pb-2">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative opacity-60">
+                        <div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mb-3">
+                    <button type="button" onclick="showView('compareView')" class="w-10 h-10 rounded-full bg-[#FFFcf7] shadow flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="min-w-0 flex-1">
+                        <h1 class="text-deep text-lg font-bold leading-tight">Get a quote</h1>
+                        <span class="product-pill mt-1" id="quoteProductPill">Personal Accident</span>
+                    </div>
+                </div>
+
+                <div class="quote-stepper" aria-label="Progress">
+                    <div class="quote-step done"><span class="n">✓</span>Inputs</div>
+                    <div class="quote-step done"><span class="n">✓</span>Compare</div>
+                    <div class="quote-step on"><span class="n">3</span>Quote</div>
+                </div>
+
+                <div class="soft-card p-4 mb-3">
+                    <div class="quote-hero">
+                        <div class="label">Total premium</div>
+                        <div class="amount" id="qTotalPremium">7,100 MMK</div>
+                        <div class="sub" id="qStampNote">Includes stamp 100 MMK</div>
+                    </div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Product</span><span class="text-deep font-semibold text-sm" id="qProduct">Personal Accident</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Sum insured</span><span class="text-deep font-semibold text-sm" id="qSumInsured">1,000,000 MMK</span></div>
+                    <div class="quote-row"><span class="text-deep/45 text-sm">Policy term</span><span class="text-deep font-semibold text-sm" id="qPolicyTerm">1 Year</span></div>
                     <div class="quote-row"><span class="text-deep/45 text-sm">Premium</span><span class="text-deep font-semibold text-sm" id="qPremium">7,000 MMK</span></div>
-                    <div class="quote-row"><span class="text-deep/45 text-sm">Stamp fees</span><span class="text-deep font-semibold text-sm">100 MMK</span></div>
-                    <div class="flex justify-between items-center pt-4 mt-2 border-t border-deep/10">
-                        <span class="text-deep font-bold">Total Premium</span>
-                        <span class="text-deep font-bold text-xl" id="qTotalPremium">7,100 MMK</span>
+                    <div class="pt-3 mt-1">
+                        <label class="text-deep/45 text-[10px] font-semibold mb-1.5 block">Referral code (optional)</label>
+                        <select class="form-input appearance-none cursor-pointer text-sm">
+                            <option>None</option>
+                            <option>REF2024A</option>
+                            <option>PARTNER01</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <select class="form-input appearance-none cursor-pointer text-deep/40 text-sm">
-                        <option>Referral code (optional)</option>
-                        <option>REF2024A</option>
-                        <option>PARTNER01</option>
-                    </select>
+                <div class="cta-row mb-1">
+                    <button type="button" class="cta-edit" onclick="showView('compareView')">Edit</button>
+                    <button type="button" class="cta-buy" onclick="submitOrBuy()">Buy</button>
                 </div>
-
-                <div class="grid grid-cols-2 gap-2 mb-3">
-                    <button type="button" onclick="saveDraft()" class="py-3.5 rounded-2xl bg-[#FFFcf7] text-deep font-semibold text-sm shadow" style="box-shadow:0 8px 24px rgba(0,53,84,0.08);">
-                        Save draft
-                    </button>
-                    <button type="button" onclick="submitOrBuy()" class="py-3.5 rounded-2xl bg-deep text-white font-semibold text-sm shadow-lg shadow-sky/20">
-                        Buy / e-App
-                    </button>
-                </div>
-                <p class="text-deep/40 text-[10px] text-center leading-relaxed" id="actionHint">
+                <button type="button" onclick="saveDraft()" class="cta-draft">Save draft</button>
+                <p class="text-deep/40 text-[10px] text-center leading-relaxed mt-3" id="actionHint">
                     Draft stays on device (no expiry). Submitted quotes valid 30 days.
                 </p>
             </div>
@@ -235,10 +472,14 @@
 
         </div>
 
+        <div id="successToast" class="toast-success" role="status" style="bottom:24px;">
+            <svg class="w-5 h-5 text-mint flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="successToastMsg">Draft saved</span>
+        </div>
         <!-- Login gate -->
-        <div id="loginGate" class="absolute inset-0 bg-deep/45 backdrop-blur-sm hidden items-end z-50">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl p-5">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <div id="loginGate" class="sheet-overlay" style="z-index:50;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <h3 class="text-deep text-lg font-bold mb-1">Login required</h3>
                 <p class="text-deep/50 text-sm mb-4">Sign in to save a draft, submit this quote, or continue to purchase.</p>
                 <div class="flex gap-2">
@@ -249,9 +490,9 @@
         </div>
 
         <!-- Draft saved toast sheet -->
-        <div id="draftToast" class="absolute inset-0 bg-deep/45 backdrop-blur-sm hidden items-end z-50">
-            <div class="w-full bg-[#FFFcf7] rounded-t-3xl p-5">
-                <div class="w-10 h-1 bg-deep/15 rounded-full mx-auto mb-4"></div>
+        <div id="draftToast" class="sheet-overlay" style="z-index:50;">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
                 <h3 class="text-deep text-lg font-bold mb-1">Draft saved</h3>
                 <p class="text-deep/50 text-sm mb-2" id="draftToastMsg">Stored on this device. Will sync when online.</p>
                 <p class="text-[10px] text-deep/40 mb-4">Drafts never expire · 3/5 local slots used</p>
@@ -302,12 +543,138 @@
         }
 
         function showView(id) {
-            ['formView', 'quoteView', 'submittedView'].forEach(v => {
+            ['formView', 'compareView', 'quoteView', 'submittedView'].forEach(v => {
                 document.getElementById(v).classList.add('hidden-view');
             });
             const el = document.getElementById(id);
             el.classList.remove('hidden-view');
             el.classList.add('fade-in');
+        }
+
+        let lastQuote = { product: 'Personal Accident', sum: 1000000, term: '1 Year', premium: 7000, total: 7100, freq: 'One time' };
+        let compareCategory = 'protection';
+        let compareSelected = 'a';
+        let comparePair = { a: null, b: null };
+
+        function buildComparePair() {
+            const sum = formatNumber(lastQuote.sum) + ' MMK';
+            const term = lastQuote.term;
+            const tot = formatNumber(lastQuote.total) + ' MMK';
+            const altTot = formatNumber(Math.round(lastQuote.total * 5.8)) + ' MMK';
+            const fhTot = formatNumber(Math.round(lastQuote.total * 4)) + ' MMK';
+            const steTot = formatNumber(Math.round(lastQuote.total * 3.2)) + ' MMK';
+
+            if (compareCategory === 'protection') {
+                comparePair = {
+                    a: {
+                        id: 'pa', name: 'Personal Accident', pay: term, benefit: sum,
+                        coverage: 'Accident · TPD', freq: lastQuote.freq || 'One time',
+                        guaranteed: 'Yes', premium: tot, live: true
+                    },
+                    b: {
+                        id: 'credit', name: 'Credit Life', pay: term, benefit: sum,
+                        coverage: 'Loan balance', freq: 'Monthly',
+                        guaranteed: 'Yes', premium: formatNumber(Math.round(lastQuote.total * 1.4)) + ' MMK', live: false
+                    }
+                };
+            } else if (compareCategory === 'saving') {
+                comparePair = {
+                    a: {
+                        id: 'ul', name: 'Universal Life', pay: '5 Years', benefit: 'Illustrative',
+                        coverage: 'Life + savings', freq: 'Monthly',
+                        guaranteed: 'Partial', premium: altTot, live: false
+                    },
+                    b: {
+                        id: 'ste', name: 'Short Term Endowment', pay: '3 Years', benefit: 'Illustrative',
+                        coverage: 'Savings milestone', freq: 'Annual',
+                        guaranteed: 'Yes', premium: steTot, live: false
+                    }
+                };
+            } else {
+                comparePair = {
+                    a: {
+                        id: 'fh', name: 'Family Health', pay: term, benefit: 'Illustrative',
+                        coverage: 'IPD + family', freq: 'Quarterly',
+                        guaranteed: 'Yes', premium: fhTot, live: false
+                    },
+                    b: {
+                        id: 'micro', name: 'Micro Health', pay: term, benefit: 'Unit plan',
+                        coverage: 'Basic IPD', freq: 'Monthly',
+                        guaranteed: 'Yes', premium: formatNumber(Math.round(lastQuote.total * 2.1)) + ' MMK', live: false
+                    }
+                };
+            }
+        }
+
+        function renderCompareMatrix() {
+            buildComparePair();
+            const a = comparePair.a, b = comparePair.b;
+            document.getElementById('cmpHeadA').textContent = a.name;
+            document.getElementById('cmpHeadB').textContent = b.name;
+            const rows = [
+                ['Pay period', a.pay, b.pay],
+                ['Benefit / sum', a.benefit, b.benefit],
+                ['Coverage', a.coverage, b.coverage],
+                ['Installment', a.freq, b.freq],
+                ['Guaranteed', a.guaranteed, b.guaranteed],
+            ];
+            let html = rows.map(([f, va, vb]) =>
+                '<tr><th class="feat">' + f + '</th>' +
+                '<td class="' + (compareSelected === 'a' ? 'sel' : '') + '">' + va + '</td>' +
+                '<td class="' + (compareSelected === 'b' ? 'sel' : '') + '">' + vb + '</td></tr>'
+            ).join('');
+            const aBest = compareSelected === 'a' ? '<span class="best">Selected</span>' : '';
+            const bBest = compareSelected === 'b' ? '<span class="best">Selected</span>' : '';
+            html += '<tr><th class="feat">Total premium</th>' +
+                '<td class="prem ' + (compareSelected === 'a' ? 'sel' : '') + '">' + a.premium + aBest + '</td>' +
+                '<td class="prem ' + (compareSelected === 'b' ? 'sel' : '') + '">' + b.premium + bBest + '</td></tr>';
+            document.getElementById('cmpBody').innerHTML = html;
+            document.getElementById('cmpHeadA').classList.toggle('sel', compareSelected === 'a');
+            document.getElementById('cmpHeadB').classList.toggle('sel', compareSelected === 'b');
+            document.getElementById('cmpHint').textContent = compareCategory === 'protection'
+                ? 'Personal Accident uses your calculation · Credit Life is illustrative'
+                : 'Illustrative pair for this category · Core multi-product pricing later';
+        }
+
+        function setCompareCategory(cat) {
+            compareCategory = cat;
+            compareSelected = 'a';
+            ['protection', 'saving', 'health'].forEach(c => {
+                const el = document.getElementById('cmpCat' + c.charAt(0).toUpperCase() + c.slice(1));
+                if (el) el.classList.toggle('on', c === cat);
+            });
+            renderCompareMatrix();
+        }
+
+        function selectCompareCol(col) {
+            compareSelected = col;
+            renderCompareMatrix();
+        }
+
+        function buySelectedCompare() {
+            const plan = comparePair[compareSelected];
+            if (!plan) return;
+            applyPlanToQuote(plan);
+            showView('quoteView');
+        }
+
+        function applyPlanToQuote(plan) {
+            const pill = document.getElementById('quoteProductPill');
+            const prod = document.getElementById('qProduct');
+            if (pill) pill.textContent = plan.name;
+            if (prod) prod.textContent = plan.name;
+            document.getElementById('qPolicyTerm').textContent = plan.pay;
+            if (plan.live) {
+                document.getElementById('qSumInsured').textContent = formatNumber(lastQuote.sum) + ' MMK';
+                document.getElementById('qPremium').textContent = formatNumber(lastQuote.premium) + ' MMK';
+                document.getElementById('qTotalPremium').textContent = formatNumber(lastQuote.total) + ' MMK';
+                document.getElementById('qStampNote').textContent = 'Includes stamp 100 MMK';
+            } else {
+                document.getElementById('qSumInsured').textContent = plan.benefit;
+                document.getElementById('qPremium').textContent = plan.premium;
+                document.getElementById('qTotalPremium').textContent = plan.premium;
+                document.getElementById('qStampNote').textContent = 'Illustrative estimate · stamp TBD';
+            }
         }
 
         function calculateQuote() {
@@ -332,11 +699,28 @@
             const totalPremium = premium + 100;
             let termDisplay = policyTerm === 3 ? '3 Months' : policyTerm === 6 ? '6 Months' : '1 Year';
 
-            document.getElementById('qSumInsured').textContent = formatNumber(sumInsured) + ' MMK';
-            document.getElementById('qPolicyTerm').textContent = termDisplay;
-            document.getElementById('qPremium').textContent = formatNumber(premium) + ' MMK';
-            document.getElementById('qTotalPremium').textContent = formatNumber(totalPremium) + ' MMK';
-            showView('quoteView');
+            lastQuote = {
+                product: 'Personal Accident',
+                sum: sumInsured,
+                term: termDisplay,
+                premium: premium,
+                total: totalPremium,
+                freq: 'One time'
+            };
+
+            compareCategory = 'protection';
+            compareSelected = 'a';
+            setCompareCategory('protection');
+            showView('compareView');
+        }
+
+        function selectCompare(kind) {
+            // legacy helper — map old ids into matrix buy
+            if (kind === 'pa') { compareCategory = 'protection'; compareSelected = 'a'; }
+            else if (kind === 'ul') { compareCategory = 'saving'; compareSelected = 'a'; }
+            else { compareCategory = 'health'; compareSelected = 'a'; }
+            buildComparePair();
+            buySelectedCompare();
         }
 
         function backToForm() { showView('formView'); }
@@ -351,14 +735,14 @@
                 ? 'Saved locally while offline. Auto-syncs when you’re back online.'
                 : 'Draft saved and will sync to the portal backend.';
             const toast = document.getElementById('draftToast');
-            toast.classList.remove('hidden');
-            toast.classList.add('flex');
+            toast.classList.add('open');
+            toast.style.display = 'flex';
         }
 
         function closeDraftToast() {
             const toast = document.getElementById('draftToast');
-            toast.classList.remove('flex');
-            toast.classList.add('hidden');
+            toast.classList.remove('open');
+            toast.style.display = 'none';
         }
 
         function submitOrBuy() {
@@ -386,16 +770,24 @@
             return false;
         }
 
+        function showSuccessToast(msg) {
+            const toast = document.getElementById('successToast');
+            if (!toast) return;
+            document.getElementById('successToastMsg').textContent = msg || 'Done';
+            toast.classList.add('show');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
         function openLoginGate() {
             const modal = document.getElementById('loginGate');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.classList.add('open');
+            modal.style.display = 'flex';
         }
 
         function closeLoginGate() {
             const modal = document.getElementById('loginGate');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
+            modal.classList.remove('open');
+            modal.style.display = 'none';
         }
 
         document.getElementById('loginGate').addEventListener('click', function (e) {
