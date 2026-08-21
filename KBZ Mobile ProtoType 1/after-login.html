@@ -652,13 +652,73 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 12px; font-weight: 800;
         }
+        .role-chip {
+            display: inline-flex; align-items: center;
+            font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+            padding: 2px 7px; border-radius: 999px;
+            background: rgba(5,130,202,0.12); color: #0582CA;
+            vertical-align: middle; margin-left: 6px;
+        }
+        .team-pulse {
+            width: 100%; text-align: left; border: none; cursor: pointer;
+            padding: 14px; border-radius: 18px; background: #FFFcf7;
+            box-shadow: 0 8px 24px rgba(0,53,84,0.08);
+        }
+        .team-seg {
+            display: flex; padding: 3px; border-radius: 12px; background: rgba(0,53,84,0.06); gap: 2px;
+        }
+        .team-seg button {
+            flex: 1; border: none; background: transparent; cursor: pointer;
+            font-size: 11px; font-weight: 700; color: rgba(0,53,84,0.45);
+            padding: 8px 6px; border-radius: 10px;
+        }
+        .team-seg button.on {
+            background: #fff; color: #003554; box-shadow: 0 1px 4px rgba(0,53,84,0.08);
+        }
+        .team-ring {
+            width: 72px; height: 72px; border-radius: 999px; flex-shrink: 0;
+            background: conic-gradient(#0582CA var(--p, 78%), rgba(0,53,84,0.08) 0);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .team-ring-inner {
+            width: 54px; height: 54px; border-radius: 999px; background: #FFFcf7;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .team-kpi-bar {
+            height: 6px; border-radius: 999px; background: rgba(0,53,84,0.08); overflow: hidden;
+        }
+        .team-kpi-bar > i {
+            display: block; height: 100%; border-radius: 999px;
+            background: linear-gradient(90deg, #00A6FB, #0582CA);
+        }
+        .team-badge {
+            font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .team-badge.qualified { background: rgba(245,158,11,0.18); color: #b45309; }
+        .team-badge.progress { background: rgba(5,130,202,0.12); color: #0582CA; }
+        .team-badge.track { background: rgba(0,53,84,0.06); color: rgba(0,53,84,0.5); }
+        .team-badge.below { background: rgba(239,68,68,0.12); color: #dc2626; }
+        .team-count {
+            text-align: center; padding: 10px 6px; border-radius: 14px;
+            background: rgba(0,166,251,0.08);
+        }
+        .mdrt-filt {
+            display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+        }
+        .mdrt-filt button {
+            flex-shrink: 0; border: 1px solid rgba(0,53,84,0.1); background: #fff;
+            border-radius: 999px; padding: 6px 12px; font-size: 11px; font-weight: 700;
+            color: rgba(0,53,84,0.5); cursor: pointer;
+        }
+        .mdrt-filt button.on { background: #003554; color: #fff; border-color: #003554; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-8">
 
     <div class="text-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-1">After Login</h1>
-        <p class="text-gray-500 text-base">FR-02 Dashboard · FR-03 CRM · FR-06 Policies · Notifications inbox</p>
+        <p class="text-gray-500 text-base">FR-02 Dashboard · FA / Leader · Team · CRM · Policies · Inbox</p>
         <p class="text-gray-400 text-xs mt-1">
             <a href="before-login.html" class="text-steel font-semibold">Before Login</a>
             ·
@@ -667,8 +727,10 @@
         </p>
         <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
             <button type="button" onclick="toggleOffline()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Toggle Offline</button>
-            <button type="button" id="roleFaBtn" onclick="setDemoRole('fa')" class="text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium">Role: FA</button>
-            <button type="button" id="roleLeaderBtn" onclick="setDemoRole('leader')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Role: Leader</button>
+            <button type="button" id="roleFaBtn" onclick="setDemoRole('fa')" class="text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium">FA</button>
+            <button type="button" id="roleAmBtn" onclick="setDemoRole('am')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">AM</button>
+            <button type="button" id="roleSamBtn" onclick="setDemoRole('sam')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">SAM</button>
+            <button type="button" id="roleDmBtn" onclick="setDemoRole('dm')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">DM</button>
             <button type="button" onclick="simulateEmptySearch()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Simulate empty</button>
             <button type="button" onclick="toggleNotifEmpty()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Toggle empty notifs</button>
             <button type="button" onclick="markAllNotifsRead()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Mark notifs read</button>
@@ -698,7 +760,10 @@
                     <img src="/assets/brand-mark.png" alt="" width="36" height="36" onerror="this.onerror=null;this.src='../assets/brand-mark.png';">
                 </div>
                 <button type="button" onclick="showAppTab('profile')" class="flex-1 min-w-0 text-left">
-                    <span id="agentDisplayName" class="text-deep font-bold text-sm truncate block leading-tight">Myat Moe Pyae</span>
+                    <span class="flex items-center gap-0 min-w-0">
+                        <span id="agentDisplayName" class="text-deep font-bold text-sm truncate leading-tight">Myat Moe Pyae</span>
+                        <span id="homeRoleChip" class="role-chip">FA</span>
+                    </span>
                 </button>
                 <button type="button" class="notif-bell" onclick="showAppTab('notifications')" aria-label="Notifications">
                     <i class="ph-fill ph-bell text-deep" style="font-size:18px" aria-hidden="true"></i>
@@ -758,6 +823,28 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Team pulse · Leaders only -->
+            <div id="teamPulseWrap" class="mx-4 mt-4" style="display:none;">
+                <button type="button" class="team-pulse" onclick="showAppTab('team')">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0">
+                            <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em]">TEAM PERFORMANCE</p>
+                            <p id="teamPulseSub" class="text-deep font-bold text-sm mt-1">Personal team · 5 FAs</p>
+                            <p class="text-deep/45 text-[11px] mt-1">Actual vs target · coaching view</p>
+                        </div>
+                        <div class="team-ring" id="teamPulseRing" style="--p:83%;width:56px;height:56px;">
+                            <div class="team-ring-inner" style="width:42px;height:42px;">
+                                <span id="teamPulsePct" class="text-deep font-extrabold text-[13px] leading-none">83%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between">
+                        <span class="text-deep/50 text-[11px] font-semibold"><span id="teamPulseActual">42.1M</span> / <span id="teamPulseTarget">50.0M</span></span>
+                        <span class="text-steel text-[12px] font-bold">See team →</span>
+                    </div>
+                </button>
             </div>
 
                                     <!-- Same soft-card shell as guest Available / Unlock -->
@@ -855,9 +942,13 @@
                 <button type="button" id="tabClients" onclick="switchCrmTab('clients')" class="flex-1 py-2 rounded-lg text-[12px] font-semibold text-deep/50">Clients</button>
             </div>
 
+            <div id="crmLeaderNote" class="mx-4 mb-3 hidden rounded-xl bg-sky/10 px-3 py-2">
+                <p class="text-[11px] text-steel leading-snug">Leader CRM: your book + downline clients (read). Filter by Owner FA in the filter sheet.</p>
+            </div>
+
             <!-- Leads list -->
             <div id="leadsList" class="mx-4 mb-4 space-y-2.5">
-                <button type="button" data-q="aye chan 09 750 112 233" data-status="followup" data-product="protection" onclick="openLeadDetail('Aye Chan')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="aye chan 09 750 112 233" data-status="followup" data-product="protection" data-scope="self" onclick="openLeadDetail('Aye Chan')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">AC</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -868,7 +959,7 @@
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button type="button" data-q="ko min thu 09 421 889 001" data-status="new" data-product="saving" onclick="openLeadDetail('Ko Min Thu')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="ko min thu 09 421 889 001" data-status="new" data-product="saving" data-scope="self" onclick="openLeadDetail('Ko Min Thu')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">KM</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -879,7 +970,7 @@
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button type="button" data-q="su su hlaing 09 965 442 110" data-status="hot" data-product="health" onclick="openLeadDetail('Su Su Hlaing')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
+                <button type="button" data-q="su su hlaing 09 965 442 110" data-status="hot" data-product="health" data-scope="self" onclick="openLeadDetail('Su Su Hlaing')" class="crm-row w-full text-left soft-card px-3.5 py-3 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-sm flex items-center justify-center">SS</div>
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2">
@@ -887,6 +978,17 @@
                             <span class="text-[9px] font-bold uppercase tracking-wide bg-mint/20 text-mint px-1.5 py-0.5 rounded">Hot</span>
                         </div>
                         <p class="text-deep/45 text-[11px] mt-0.5">09 965 442 110 · Meeting tomorrow</p>
+                    </div>
+                    <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+                <button type="button" data-q="nwe oo 09 333 100 200 aye thrain" data-status="followup" data-product="protection" data-scope="downline" onclick="openLeadDetail('Nwe Oo')" class="crm-row crm-downline w-full text-left soft-card px-3.5 py-3 flex items-center gap-3" style="display:none;">
+                    <div class="w-10 h-10 rounded-full bg-mint/15 text-deep font-bold text-sm flex items-center justify-center">NO</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="text-deep font-semibold text-sm truncate">Nwe Oo</span>
+                            <span class="text-[9px] font-bold uppercase tracking-wide bg-warn/15 text-warn px-1.5 py-0.5 rounded">Follow-up</span>
+                        </div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">Owner FA: Aye Thrain · PA interest</p>
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
@@ -1046,7 +1148,7 @@
                     </div>
                     <div class="min-w-0 flex-1">
                         <h3 class="text-deep font-bold text-base truncate">Myat Moe Pyae</h3>
-                        <p class="text-deep/50 text-xs mt-0.5">Agent · FA code FA-10428</p>
+                        <p class="text-deep/50 text-xs mt-0.5">Agent · <span id="profileRoleLabel">FA</span> · code FA-10428</p>
                         <p class="text-deep/40 text-[11px] mt-1">myat.moe@kbzlife.demo</p>
                     </div>
                 </div>
@@ -1086,13 +1188,30 @@
 
                 <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">PREFERENCES</p>
                 <div class="soft-card overflow-hidden mb-4">
-                    <div class="px-4 py-3.5 flex items-center justify-between">
+                    <button type="button" onclick="openSheet('previewRoleSheet')" class="w-full px-4 py-3.5 flex items-center justify-between text-left">
+                        <div class="min-w-0 pr-3">
+                            <p class="text-deep text-sm font-semibold">Preview role</p>
+                            <p class="text-deep/45 text-[11px] mt-0.5">Prototype only · now <span id="previewRoleNow">FA</span></p>
+                        </div>
+                        <svg class="w-4 h-4 text-deep/25 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                    <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
                         <p class="text-deep text-sm font-semibold">Language</p>
                         <span class="text-steel text-xs font-semibold">ENG · MM</span>
                     </div>
                     <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
                         <p class="text-deep text-sm font-semibold">Notifications</p>
                         <span class="text-steel text-xs font-semibold">On</span>
+                    </div>
+                </div>
+
+                <div id="profileTeamShortcut" class="mb-4" style="display:none;">
+                    <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">TEAM</p>
+                    <div class="soft-card overflow-hidden">
+                        <button type="button" onclick="showAppTab('team')" class="w-full px-4 py-3.5 flex items-center justify-between text-left">
+                            <p class="text-deep text-sm font-semibold">Team Sales Performance</p>
+                            <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
                     </div>
                 </div>
 
@@ -1213,6 +1332,59 @@
                     </div>
                 </div>
                 <div id="notifDetailBody" class="px-4 pb-8"></div>
+            </div>
+        </div>
+
+        <!-- ========== Team Sales Performance (Leaders · FR-02 §3.2) ========== -->
+        <div class="scroll-content" id="teamView" style="display:none;">
+            <div id="teamHubPane">
+                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-2">
+                    <button type="button" onclick="showAppTab('home')" class="w-9 h-9 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Back">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-deep font-bold text-[15px] leading-tight">Team Sales Performance</h2>
+                        <p class="text-deep/45 text-[11px] mt-0.5"><span id="teamHubRoleTitle">Assistant Manager</span> · Aug 2026</p>
+                    </div>
+                </div>
+                <div class="px-4 mb-3">
+                    <div class="flex items-center gap-3 soft-card p-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="w-11 h-11 rounded-2xl bg-sky/15 flex items-center justify-center flex-shrink-0"><i class="ph-fill ph-user-circle text-steel" style="font-size:22px"></i></div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-deep font-bold text-sm truncate">Myat Moe Pyae</p>
+                            <p class="text-deep/45 text-[11px]"><span id="teamHubIdentity">AM</span> · coaching view</p>
+                        </div>
+                        <button type="button" onclick="openSheet('myPerfSheet')" class="text-[10px] font-bold text-steel px-2 py-1.5 rounded-lg bg-sky/10 flex-shrink-0">My performance</button>
+                    </div>
+                </div>
+                <div class="px-4 mb-3" id="teamSegWrap">
+                    <div class="team-seg" role="tablist">
+                        <button type="button" id="teamSegPersonal" class="on" onclick="setTeamScope('personal')">Personal Team</button>
+                        <button type="button" id="teamSegTotal" onclick="setTeamScope('total')">Total Group</button>
+                    </div>
+                </div>
+                <div id="teamHubBody" class="px-4 pb-8"></div>
+            </div>
+
+            <div id="teamDrillPane" style="display:none;">
+                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-2">
+                    <button type="button" onclick="backTeamHub()" class="w-9 h-9 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Back">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-deep font-bold text-lg leading-none" id="teamDrillTitle">Detail</h2>
+                        <p class="text-deep/45 text-[11px] mt-1" id="teamDrillSub">Performance</p>
+                    </div>
+                </div>
+                <div id="teamDrillBody" class="px-4 pb-8"></div>
             </div>
         </div>
 
@@ -1545,6 +1717,41 @@
             </div>
         </div>
 
+        <!-- Preview role (prototype) -->
+        <div id="previewRoleSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-deep font-bold text-lg">Preview role</h3>
+                    <button type="button" onclick="closeSheet('previewRoleSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[12px] mb-4 leading-snug">For prototype review only. Home shows this role’s modules. Logout returns to FA.</p>
+                <button type="button" onclick="setDemoRole('fa'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">FA · Producer</span><span class="text-deep/40 text-[11px]">Personal only</span></button>
+                <button type="button" onclick="setDemoRole('am'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">AM · Coach</span><span class="text-deep/40 text-[11px]">+ Team pulse</span></button>
+                <button type="button" onclick="setDemoRole('sam'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">SAM</span><span class="text-deep/40 text-[11px]">Personal + Total</span></button>
+                <button type="button" onclick="setDemoRole('dm'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">DM</span><span class="text-deep/40 text-[11px]">Full downline</span></button>
+            </div>
+        </div>
+
+        <!-- My performance (leader self) -->
+        <div id="myPerfSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-deep font-bold text-lg">My performance</h3>
+                    <button type="button" onclick="closeSheet('myPerfSheet')" class="text-deep/40 text-xl">×</button>
+                </div>
+                <p class="text-deep/45 text-[11px] mb-3">Your personal book — not team aggregates</p>
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="rounded-xl bg-cream px-3 py-2.5"><p class="text-deep/45 text-[9px] font-bold">FYP</p><p class="text-deep font-extrabold text-lg">72%</p></div>
+                    <div class="rounded-xl bg-cream px-3 py-2.5"><p class="text-deep/45 text-[9px] font-bold">APE</p><p class="text-deep font-extrabold text-lg">18.2M</p></div>
+                    <div class="rounded-xl bg-cream px-3 py-2.5"><p class="text-deep/45 text-[9px] font-bold">Commission</p><p class="text-deep font-extrabold text-lg">726k</p></div>
+                    <div class="rounded-xl bg-cream px-3 py-2.5"><p class="text-deep/45 text-[9px] font-bold">MDRT</p><p class="text-deep font-extrabold text-lg">65%</p></div>
+                </div>
+                <button type="button" onclick="closeSheet('myPerfSheet'); showAppTab('home')" class="btn-sheet-primary">Back to Home</button>
+            </div>
+        </div>
+
         <!-- Commission report chart stub -->
         <div id="reportSheet" class="sheet-overlay">
             <div class="sheet-panel">
@@ -1862,9 +2069,49 @@
         if (location.hash === '#profile') setTimeout(() => showAppTab('profile'), 0);
         if (location.hash === '#tasks') setTimeout(() => showAppTab('tasks'), 0);
         if (location.hash === '#notifications') setTimeout(() => showAppTab('notifications'), 0);
+        if (location.hash === '#team') setTimeout(() => {
+            if (!canViewTeam()) setDemoRole('dm');
+            showAppTab('team');
+        }, 0);
         
         let demoRole = 'fa';
         let policyTypeFilter = 'all';
+        let teamScope = 'personal';
+        let mdrtFilter = 'all';
+        let teamDrillKind = null;
+
+        const ROLE_META = {
+            fa:  { chip: 'FA',  title: 'Financial Advisor', canViewTeam: false, hasTotal: false, pulseSub: '', overall: 0, actual: '', target: '' },
+            am:  { chip: 'AM',  title: 'Assistant Manager', canViewTeam: true,  hasTotal: false, pulseSub: 'Personal team · 5 FAs', overall: 83, actual: '42.1M', target: '50.0M' },
+            sam: { chip: 'SAM', title: 'Senior AM',         canViewTeam: true,  hasTotal: true,  pulseSub: 'Personal team · 2 AMs', overall: 78, actual: '96.4M', target: '120.0M' },
+            dm:  { chip: 'DM',  title: 'District Manager',  canViewTeam: true,  hasTotal: true,  pulseSub: 'Total group · 24 FAs', overall: 78, actual: '125.4M', target: '160.0M' },
+            leader: null,
+        };
+        ROLE_META.leader = ROLE_META.am;
+
+        const TEAM_FAS = [
+            { id: 'fa1', name: 'Aye Thrain', code: 'FA-2201', pct: 92, a: '18.5M', t: '20M', badge: 'qualified', ape: 88, fyp: 92, sfyp: 80, wfyp: 90 },
+            { id: 'fa2', name: 'Ko Min', code: 'FA-2208', pct: 76, a: '15.1M', t: '20M', badge: 'progress', ape: 70, fyp: 76, sfyp: 65, wfyp: 72 },
+            { id: 'fa3', name: 'Su Su Hlaing', code: 'FA-2215', pct: 61, a: '12.2M', t: '20M', badge: 'track', ape: 58, fyp: 61, sfyp: 55, wfyp: 60 },
+            { id: 'fa4', name: 'Thant Zin', code: 'FA-2230', pct: 48, a: '9.6M', t: '20M', badge: 'below', ape: 45, fyp: 48, sfyp: 40, wfyp: 46 },
+            { id: 'fa5', name: 'May Hnin', code: 'FA-2241', pct: 55, a: '11.0M', t: '20M', badge: 'track', ape: 52, fyp: 55, sfyp: 50, wfyp: 53 },
+        ];
+        const TEAM_LINES = {
+            sam: [
+                { id: 'am1', name: 'AM 01 · Yangon', fas: 6, pct: 83, a: '48M', t: '58M' },
+                { id: 'am2', name: 'AM 02 · Mandalay', fas: 6, pct: 71, a: '40M', t: '56M' },
+            ],
+            dm: [
+                { id: 'sam1', name: 'SAM 01 · Yangon', fas: 12, pct: 82, a: '72M', t: '88M' },
+                { id: 'sam2', name: 'SAM 02 · Upper', fas: 8, pct: 74, a: '38M', t: '52M' },
+                { id: 'am1', name: 'AM 01 · Direct', fas: 4, pct: 83, a: '15M', t: '18M' },
+            ],
+        };
+
+        function canViewTeam() {
+            const m = ROLE_META[demoRole] || ROLE_META.fa;
+            return !!m.canViewTeam;
+        }
 
         function setNavItem(el, on) {
             if (!el) return;
@@ -1872,18 +2119,24 @@
         }
 
         function showAppTab(tab) {
+            if (tab === 'team' && !canViewTeam()) {
+                showSuccessToast('Team view appears when you have a downline');
+                tab = 'home';
+            }
             const home = document.getElementById('homeView');
             const customer = document.getElementById('customerView');
             const policies = document.getElementById('policiesView');
             const profile = document.getElementById('profileView');
             const tasks = document.getElementById('tasksView');
             const notifications = document.getElementById('notificationsView');
+            const team = document.getElementById('teamView');
             home.style.display = tab === 'home' ? 'block' : 'none';
             customer.style.display = tab === 'customer' ? 'block' : 'none';
             policies.style.display = tab === 'policies' ? 'block' : 'none';
             if (profile) profile.style.display = tab === 'profile' ? 'block' : 'none';
             if (tasks) tasks.style.display = tab === 'tasks' ? 'block' : 'none';
             if (notifications) notifications.style.display = tab === 'notifications' ? 'block' : 'none';
+            if (team) team.style.display = tab === 'team' ? 'block' : 'none';
 
             setNavItem(document.getElementById('navHome'), tab === 'home');
             setNavItem(document.getElementById('navCustomer'), tab === 'customer');
@@ -1895,6 +2148,10 @@
             if (tab === 'notifications') {
                 backNotifList();
                 renderNotifs();
+            }
+            if (tab === 'team') {
+                backTeamHub();
+                renderTeamHub();
             }
             if (history.replaceState) {
                 const hash = tab === 'home' ? '' : '#' + tab;
@@ -2044,22 +2301,279 @@
 
         syncNotifBadge();
 
-        function setDemoRole(role) {
-            demoRole = role;
-            const fa = document.getElementById('roleFaBtn');
-            const ld = document.getElementById('roleLeaderBtn');
-            if (role === 'fa') {
-                fa.className = 'text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium';
-                ld.className = 'text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium';
-                document.getElementById('policyScopeChip').textContent = 'My book';
-                document.getElementById('leaderScopeNote').classList.add('hidden');
-            } else {
-                ld.className = 'text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium';
-                fa.className = 'text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium';
+        function badgeClass(b) {
+            return ({ qualified: 'qualified', progress: 'progress', track: 'track', below: 'below' })[b] || 'track';
+        }
+        function badgeLabel(b) {
+            return ({ qualified: 'MDRT Qualified', progress: 'MDRT In Progress', track: 'On Track', below: 'Below target' })[b] || 'On Track';
+        }
+        function kpiRow(label, pct) {
+            return `<div class="mb-2.5"><div class="flex justify-between text-[11px] mb-1"><span class="text-deep font-semibold">${label}</span><span class="text-deep/45 font-bold">${pct}%</span></div><div class="team-kpi-bar"><i style="width:${pct}%"></i></div></div>`;
+        }
+
+        function applyRoleChrome() {
+            if (demoRole === 'leader') demoRole = 'am';
+            const m = ROLE_META[demoRole] || ROLE_META.fa;
+            const ids = ['roleFaBtn', 'roleAmBtn', 'roleSamBtn', 'roleDmBtn'];
+            const map = { fa: 'roleFaBtn', am: 'roleAmBtn', sam: 'roleSamBtn', dm: 'roleDmBtn' };
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.className = id === map[demoRole]
+                    ? 'text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium'
+                    : 'text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium';
+            });
+            const chip = document.getElementById('homeRoleChip');
+            if (chip) chip.textContent = m.chip;
+            const pr = document.getElementById('profileRoleLabel');
+            if (pr) pr.textContent = m.chip;
+            const pn = document.getElementById('previewRoleNow');
+            if (pn) pn.textContent = m.chip;
+            const hubTitle = document.getElementById('teamHubRoleTitle');
+            if (hubTitle) hubTitle.textContent = m.title;
+            const hubId = document.getElementById('teamHubIdentity');
+            if (hubId) hubId.textContent = m.chip;
+
+            const pulse = document.getElementById('teamPulseWrap');
+            const teamShortcut = document.getElementById('profileTeamShortcut');
+            if (m.canViewTeam) {
+                if (pulse) pulse.style.display = 'block';
+                if (teamShortcut) teamShortcut.style.display = 'block';
+                document.getElementById('teamPulseSub').textContent = m.pulseSub;
+                document.getElementById('teamPulsePct').textContent = m.overall + '%';
+                document.getElementById('teamPulseRing').style.setProperty('--p', m.overall + '%');
+                document.getElementById('teamPulseActual').textContent = m.actual;
+                document.getElementById('teamPulseTarget').textContent = m.target;
                 document.getElementById('policyScopeChip').textContent = 'Self + downline';
                 document.getElementById('leaderScopeNote').classList.remove('hidden');
+                document.getElementById('crmLeaderNote').classList.remove('hidden');
+            } else {
+                if (pulse) pulse.style.display = 'none';
+                if (teamShortcut) teamShortcut.style.display = 'none';
+                document.getElementById('policyScopeChip').textContent = 'My book';
+                document.getElementById('leaderScopeNote').classList.add('hidden');
+                document.getElementById('crmLeaderNote').classList.add('hidden');
+                if (document.getElementById('teamView')?.style.display === 'block') showAppTab('home');
             }
+            const segWrap = document.getElementById('teamSegWrap');
+            if (segWrap) segWrap.style.display = m.hasTotal ? 'block' : 'none';
+            if (!m.hasTotal) teamScope = 'personal';
             filterPolicies();
+            filterCrm();
+        }
+
+        function setDemoRole(role) {
+            demoRole = role === 'leader' ? 'am' : role;
+            teamScope = 'personal';
+            applyRoleChrome();
+            showSuccessToast('Preview · ' + (ROLE_META[demoRole]?.chip || 'FA'));
+        }
+
+        function setTeamScope(scope) {
+            teamScope = scope;
+            document.getElementById('teamSegPersonal').classList.toggle('on', scope === 'personal');
+            document.getElementById('teamSegTotal').classList.toggle('on', scope === 'total');
+            renderTeamHub();
+        }
+
+        function backTeamHub() {
+            document.getElementById('teamHubPane').style.display = 'block';
+            document.getElementById('teamDrillPane').style.display = 'none';
+            teamDrillKind = null;
+        }
+
+        function openTeamDrill(kind, id) {
+            teamDrillKind = kind;
+            document.getElementById('teamHubPane').style.display = 'none';
+            document.getElementById('teamDrillPane').style.display = 'block';
+            const body = document.getElementById('teamDrillBody');
+            const title = document.getElementById('teamDrillTitle');
+            const sub = document.getElementById('teamDrillSub');
+
+            if (kind === 'mdrt') {
+                title.textContent = 'MDRT Tracker';
+                sub.textContent = teamScope === 'total' ? 'Total group scope' : 'Personal team scope';
+                renderMdrtDrill(body);
+                return;
+            }
+            if (kind === 'line') {
+                const lines = TEAM_LINES[demoRole] || TEAM_LINES.sam;
+                const line = lines.find(l => l.id === id) || lines[0];
+                title.textContent = line.name;
+                sub.textContent = line.fas + ' FAs · ' + line.pct + '% of target';
+                body.innerHTML = `
+                    <div class="soft-card p-4 mb-3 flex items-center gap-3">
+                        <div class="team-ring" style="--p:${line.pct}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${line.pct}%</span></div></div>
+                        <div><p class="text-deep font-bold text-sm">${line.name}</p><p class="text-deep/45 text-[11px] mt-0.5">${line.a} / ${line.t} Actual vs Target</p></div>
+                    </div>
+                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">DIRECT REPORTS</p>
+                    ${TEAM_FAS.map(f => memberRow(f)).join('')}
+                `;
+                return;
+            }
+            if (kind === 'fa') {
+                const f = TEAM_FAS.find(x => x.id === id) || TEAM_FAS[0];
+                title.textContent = 'FA Performance';
+                sub.textContent = 'Individual · not their login';
+                body.innerHTML = `
+                    <div class="soft-card p-4 mb-3">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-2xl bg-sky/15 text-steel font-bold flex items-center justify-center">${f.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-deep font-bold">${f.name}</p>
+                                <p class="text-deep/45 text-[11px]">${f.code}</p>
+                            </div>
+                            <span class="team-badge ${badgeClass(f.badge)}">${badgeLabel(f.badge)}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="team-ring" style="--p:${f.pct}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${f.pct}%</span></div></div>
+                            <div><p class="text-deep/45 text-[11px]">Achievement</p><p class="text-deep font-bold text-sm">${f.a} / ${f.t}</p></div>
+                        </div>
+                    </div>
+                    <div class="soft-card p-4 mb-3">
+                        <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">BREAKDOWN</p>
+                        ${kpiRow('APE', f.ape)}${kpiRow('FYP', f.fyp)}${kpiRow('Subsequent FYP', f.sfyp)}${kpiRow('Weighted FYP', f.wfyp)}
+                    </div>
+                    <div class="soft-card p-4 mb-3 flex gap-3 items-start">
+                        <i class="ph-fill ph-trophy text-warn" style="font-size:22px"></i>
+                        <div><p class="text-deep font-bold text-sm">MDRT status</p><p class="text-deep/50 text-[12px] mt-1">${badgeLabel(f.badge)} · display only (Core)</p></div>
+                    </div>
+                    <button type="button" onclick="showSuccessToast('Assign task · stub')" class="btn-sheet-primary">Assign task</button>
+                `;
+            }
+        }
+
+        function memberRow(f) {
+            return `<button type="button" onclick="openTeamDrill('fa','${f.id}')" class="w-full text-left soft-card p-3 mb-2 flex items-center gap-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                <div class="w-10 h-10 rounded-full bg-sky/15 text-steel font-bold text-xs flex items-center justify-center flex-shrink-0">${f.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap"><span class="text-deep font-semibold text-sm">${f.name}</span><span class="team-badge ${badgeClass(f.badge)}">${badgeLabel(f.badge)}</span></div>
+                    <p class="text-deep/45 text-[11px] mt-0.5">${f.a} / ${f.t}</p>
+                    <div class="team-kpi-bar mt-1.5"><i style="width:${f.pct}%"></i></div>
+                </div>
+                <span class="text-deep font-extrabold text-sm tabular-nums">${f.pct}%</span>
+            </button>`;
+        }
+
+        function renderMdrtDrill(body) {
+            const filtered = TEAM_FAS.filter(f => {
+                if (mdrtFilter === 'all') return true;
+                if (mdrtFilter === 'qualified') return f.badge === 'qualified';
+                if (mdrtFilter === 'progress') return f.badge === 'progress';
+                if (mdrtFilter === 'notyet') return f.badge === 'track' || f.badge === 'below';
+                return true;
+            });
+            const q = TEAM_FAS.filter(f => f.badge === 'qualified').length;
+            body.innerHTML = `
+                <div class="soft-card p-4 mb-3 flex items-center gap-3">
+                    <div class="team-ring" style="--p:${Math.round(q/TEAM_FAS.length*100)}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${Math.round(q/TEAM_FAS.length*100)}%</span></div></div>
+                    <div><p class="text-deep font-bold text-sm">${q} / ${TEAM_FAS.length} FAs Qualified</p><p class="text-deep/45 text-[11px] mt-0.5">Current scope</p></div>
+                </div>
+                <div class="mdrt-filt mb-3">
+                    <button type="button" class="${mdrtFilter==='all'?'on':''}" onclick="mdrtFilter='all'; openTeamDrill('mdrt')">All</button>
+                    <button type="button" class="${mdrtFilter==='qualified'?'on':''}" onclick="mdrtFilter='qualified'; openTeamDrill('mdrt')">Qualified</button>
+                    <button type="button" class="${mdrtFilter==='progress'?'on':''}" onclick="mdrtFilter='progress'; openTeamDrill('mdrt')">In Progress</button>
+                    <button type="button" class="${mdrtFilter==='notyet'?'on':''}" onclick="mdrtFilter='notyet'; openTeamDrill('mdrt')">Not Yet</button>
+                </div>
+                <div class="soft-card p-3 mb-3 grid grid-cols-3 gap-2 text-center">
+                    <div><p class="text-deep font-extrabold">${q}</p><p class="text-deep/40 text-[9px] font-bold">Qualified</p></div>
+                    <div><p class="text-deep font-extrabold">1</p><p class="text-deep/40 text-[9px] font-bold">In progress</p></div>
+                    <div><p class="text-deep font-extrabold">${TEAM_FAS.length-q-1}</p><p class="text-deep/40 text-[9px] font-bold">Not yet</p></div>
+                </div>
+                ${filtered.map(f => memberRow(f)).join('') || '<p class="text-deep/45 text-sm text-center py-6">No FAs in this filter</p>'}
+                <div class="mt-3 rounded-2xl px-4 py-3" style="background:rgba(245,158,11,0.12);">
+                    <p class="text-deep font-bold text-sm">Drive More MDRT!</p>
+                    <p class="text-deep/50 text-[11px] mt-0.5">Coach FAs still below target this month</p>
+                </div>
+            `;
+        }
+
+        function renderTeamHub() {
+            const m = ROLE_META[demoRole] || ROLE_META.fa;
+            if (!m.canViewTeam) return;
+            const body = document.getElementById('teamHubBody');
+            const overall = teamScope === 'total' && m.hasTotal ? (demoRole === 'dm' ? 78 : 75) : m.overall;
+            const actual = teamScope === 'total' && m.hasTotal ? (demoRole === 'dm' ? '125.4M' : '110.0M') : m.actual;
+            const target = teamScope === 'total' && m.hasTotal ? (demoRole === 'dm' ? '160.0M' : '145.0M') : m.target;
+
+            let countsHtml = '';
+            if (demoRole === 'dm') {
+                countsHtml = `
+                    <div class="grid grid-cols-4 gap-2 mb-3">
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">3</p><p class="text-deep/45 text-[9px] font-bold">SAM</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">8</p><p class="text-deep/45 text-[9px] font-bold">AM</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">24</p><p class="text-deep/45 text-[9px] font-bold">FA</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">8</p><p class="text-deep/45 text-[9px] font-bold">MDRT</p></div>
+                    </div>`;
+            } else if (demoRole === 'sam') {
+                countsHtml = `
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">2</p><p class="text-deep/45 text-[9px] font-bold">AM</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">12</p><p class="text-deep/45 text-[9px] font-bold">FA</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">4</p><p class="text-deep/45 text-[9px] font-bold">MDRT</p></div>
+                    </div>`;
+            } else {
+                countsHtml = `
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">5</p><p class="text-deep/45 text-[9px] font-bold">FA</p></div>
+                        <div class="team-count"><p class="text-deep font-extrabold text-lg">2</p><p class="text-deep/45 text-[9px] font-bold">MDRT</p></div>
+                    </div>`;
+            }
+
+            let listHtml = '';
+            if ((demoRole === 'sam' || demoRole === 'dm') && teamScope === 'total') {
+                const lines = TEAM_LINES[demoRole] || [];
+                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">TOTAL GROUP</p>` +
+                    lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="flex justify-between gap-2"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold text-sm">${l.pct}%</span></div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs · ${l.a} / ${l.t}</p>
+                        <div class="team-kpi-bar mt-1.5"><i style="width:${l.pct}%"></i></div>
+                    </button>`).join('');
+            } else if (demoRole === 'sam' && teamScope === 'personal') {
+                const lines = TEAM_LINES.sam;
+                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · AMS</p>` +
+                    lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="flex justify-between"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold">${l.pct}%</span></div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs</p>
+                    </button>`).join('');
+            } else if (demoRole === 'dm' && teamScope === 'personal') {
+                const lines = TEAM_LINES.dm.slice(0, 2);
+                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · SAMS</p>` +
+                    lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <div class="flex justify-between"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold">${l.pct}%</span></div>
+                        <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs</p>
+                    </button>`).join('');
+            } else {
+                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">TEAM MEMBERS</p>` + TEAM_FAS.map(f => memberRow(f)).join('');
+            }
+
+            body.innerHTML = `
+                <div class="soft-card p-4 mb-3 flex items-center gap-3">
+                    <div class="team-ring" style="--p:${overall}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${overall}%</span><span class="text-deep/40 text-[8px] font-bold">Overall</span></div></div>
+                    <div class="min-w-0">
+                        <p class="text-deep/45 text-[10px] font-bold tracking-wide">ACTUAL VS TARGET</p>
+                        <p class="text-deep font-extrabold text-base mt-0.5">${actual} <span class="text-deep/35 font-semibold text-sm">/ ${target}</span></p>
+                        <p class="text-mint text-[11px] font-bold mt-1">MoM ↑ 6%</p>
+                    </div>
+                </div>
+                ${countsHtml}
+                <div class="soft-card p-4 mb-3">
+                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">KEY PERFORMANCE</p>
+                    ${kpiRow('APE', 72)}${kpiRow('FYP', overall)}${kpiRow('Subsequent FYP', 64)}${kpiRow('Weighted FYP', 70)}
+                    <p class="text-deep/35 text-[10px] mt-1">Weighting applied by Core · display only</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <button type="button" onclick="openTeamDrill('mdrt')" class="soft-card p-3 text-left" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <i class="ph-fill ph-trophy text-warn" style="font-size:18px"></i>
+                        <p class="text-deep font-bold text-[12px] mt-1">MDRT Tracker</p>
+                    </button>
+                    <button type="button" onclick="document.getElementById('teamHubBody').scrollIntoView({behavior:'smooth',block:'end'})" class="soft-card p-3 text-left" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                        <i class="ph-fill ph-users-three text-steel" style="font-size:18px"></i>
+                        <p class="text-deep font-bold text-[12px] mt-1">Members</p>
+                    </button>
+                </div>
+                ${listHtml}
+            `;
         }
 
         function setPolicyType(btn) {
@@ -2074,7 +2588,7 @@
             let visible = 0;
             const statusOkBook = policyStatusFilter === 'active';
             document.querySelectorAll('.policy-row').forEach(row => {
-                const scopeOk = demoRole === 'leader' || row.dataset.scope === 'self';
+                const scopeOk = canViewTeam() || row.dataset.scope === 'self';
                 const typeOk = policyTypeFilter === 'all' || row.dataset.type === policyTypeFilter;
                 const textOk = !q || (row.dataset.q || '').includes(q);
                 const show = statusOkBook && scopeOk && typeOk && textOk;
@@ -2255,7 +2769,9 @@
                 const pr = row.dataset.product || '';
                 const okSt = crmStatusFilter === 'all' || st === crmStatusFilter;
                 const okPr = crmProductFilter === 'all' || pr === crmProductFilter;
-                const ok = okQ && okSt && okPr;
+                const scope = row.dataset.scope || 'self';
+                const okScope = canViewTeam() || scope === 'self';
+                const ok = okQ && okSt && okPr && okScope;
                 row.style.display = ok ? '' : 'none';
                 if (ok) visible++;
             });
@@ -2579,6 +3095,8 @@
             else agenda += '<div class="soft-card p-5 text-center"><p class="text-deep/50 text-xs">No tasks on this day</p></div>';
             return wdLabels + grid + agenda;
         }
+
+        applyRoleChrome();
     </script>
 
 </body>
