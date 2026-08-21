@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · Login · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .screen { display: none; height: 100%; overflow-y: auto; scrollbar-width: none; }
+    .screen.active { display: block; }
+    .screen::-webkit-scrollbar { display: none; }
+    .otp {
+      width: 44px; height: 52px; text-align: center;
+      font-family: var(--mono); font-size: 20px; font-weight: 700;
+      background: var(--panel); border: 1px solid var(--line-strong);
+      border-radius: var(--radius); color: var(--paper); outline: none;
+    }
+    .otp:focus { border-color: var(--teal); }
+    .rule { font-size: 12px; color: var(--muted); margin: 4px 0; }
+    .rule.ok { color: var(--teal); }
+  </style>
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · Auth</h1>
+    <p>FR-01 · Ink Desk · underline fields · push success</p>
+    <p>
+      <a href="before-login.html">Guest</a> ·
+      <a href="after-login.html">After Login</a> ·
+      <a href="../KBZ Mobile ProtoType 1/login.html">Compare P1</a>
+    </p>
+    <div class="qa">
+      <button type="button" class="on" id="chipLogin" onclick="showScreen('login')">Login</button>
+      <button type="button" id="chipReg" onclick="showScreen('register')">Register</button>
+      <button type="button" id="chipForgot" onclick="showScreen('forgot')">Forgot</button>
+      <button type="button" id="chipOtp" onclick="showScreen('otp')">OTP</button>
+      <button type="button" id="chipPw" onclick="showScreen('password')">Password</button>
+    </div>
+  </div>
+
+  <div class="phone-frame">
+    <!-- LOGIN -->
+    <div class="screen active scroll full" id="login">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">AUTH</span></div>
+      <div style="padding:20px 20px 40px;">
+        <a href="before-login.html" style="color:var(--muted);text-decoration:none;font-size:13px;">← Guest</a>
+        <p style="margin:28px 0 0;font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--teal);">KBZ LIFE</p>
+        <h2 style="margin:8px 0 0;font-size:26px;font-weight:600;letter-spacing:-0.03em;">Sign in</h2>
+        <p style="margin:8px 0 0;font-size:13px;color:var(--muted);">Agent desk · secure session</p>
+
+        <div style="margin-top:32px;">
+          <label class="label">Username</label>
+          <input class="field" type="text" placeholder="FA code or phone" value="FA-10428">
+        </div>
+        <div style="margin-top:20px;">
+          <label class="label">Password</label>
+          <input class="field" type="password" placeholder="••••••••" value="••••••••">
+        </div>
+        <div style="margin-top:12px;text-align:right;">
+          <button type="button" onclick="showScreen('forgot')" style="background:none;border:none;color:var(--teal);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);">Forgot password?</button>
+        </div>
+        <a href="after-login.html" class="btn-teal" style="margin-top:28px;">Login</a>
+        <button type="button" class="btn-ghost" style="margin-top:10px;" onclick="toast('Biometric · demo')">Use biometric</button>
+        <p style="margin:24px 0 0;text-align:center;font-size:12px;color:var(--muted);">
+          No account?
+          <button type="button" onclick="showScreen('register')" style="background:none;border:none;color:var(--teal);font-weight:700;cursor:pointer;font-family:var(--font);">Register now</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="screen scroll full" id="register">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">AUTH</span></div>
+      <div style="padding:20px 20px 40px;">
+        <button type="button" onclick="showScreen('login')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-family:var(--font);padding:0;">← Back</button>
+        <h2 style="margin:24px 0 0;font-size:22px;font-weight:600;">Register</h2>
+        <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">True name · NRC · phone · email</p>
+        <div style="margin-top:24px;"><label class="label">Full name</label><input class="field" placeholder="As on NRC"></div>
+        <div style="margin-top:16px;"><label class="label">NRC / Passport</label><input class="field" placeholder="12/XXXXX(N)000000"></div>
+        <div style="margin-top:16px;"><label class="label">Phone</label><input class="field" placeholder="09 xxx xxx xxx"></div>
+        <div style="margin-top:16px;"><label class="label">Email</label><input class="field" type="email" placeholder="you@kbzlife.demo"></div>
+        <button type="button" class="btn-teal" style="margin-top:28px;" onclick="showScreen('otp')">Continue</button>
+      </div>
+    </div>
+
+    <!-- FORGOT -->
+    <div class="screen scroll full" id="forgot">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">AUTH</span></div>
+      <div style="padding:20px 20px 40px;">
+        <button type="button" onclick="showScreen('login')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-family:var(--font);padding:0;">← Back</button>
+        <h2 style="margin:24px 0 0;font-size:22px;font-weight:600;">Forgot password</h2>
+        <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">We’ll send an OTP to your registered phone</p>
+        <div style="margin-top:28px;"><label class="label">Phone</label><input class="field" placeholder="09 xxx xxx xxx" value="09 777 220 119"></div>
+        <button type="button" class="btn-teal" style="margin-top:28px;" onclick="showScreen('otp')">Send OTP</button>
+      </div>
+    </div>
+
+    <!-- OTP -->
+    <div class="screen scroll full" id="otp">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">AUTH</span></div>
+      <div style="padding:20px 20px 40px;">
+        <button type="button" onclick="showScreen('login')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-family:var(--font);padding:0;">← Back</button>
+        <h2 style="margin:24px 0 0;font-size:22px;font-weight:600;">Enter OTP</h2>
+        <p style="margin:6px 0 0;font-size:13px;color:var(--muted);">5-digit code · SMS</p>
+        <div style="display:flex;gap:8px;margin-top:28px;justify-content:space-between;">
+          <input class="otp" maxlength="1" inputmode="numeric"><input class="otp" maxlength="1" inputmode="numeric">
+          <input class="otp" maxlength="1" inputmode="numeric"><input class="otp" maxlength="1" inputmode="numeric">
+          <input class="otp" maxlength="1" inputmode="numeric">
+        </div>
+        <button type="button" class="btn-teal" style="margin-top:28px;" onclick="showScreen('password')">Verify</button>
+        <button type="button" class="btn-ghost" style="margin-top:10px;" onclick="toast('OTP resent')">Resend OTP</button>
+      </div>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="screen scroll full" id="password">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">AUTH</span></div>
+      <div style="padding:20px 20px 40px;">
+        <button type="button" onclick="showScreen('otp')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;font-family:var(--font);padding:0;">← Back</button>
+        <h2 style="margin:24px 0 0;font-size:22px;font-weight:600;">Create password</h2>
+        <div style="margin-top:24px;"><label class="label">New password</label><input class="field" type="password" id="pw1" oninput="checkPw()"></div>
+        <div style="margin-top:16px;"><label class="label">Confirm</label><input class="field" type="password"></div>
+        <div style="margin-top:16px;">
+          <p class="rule" id="r1">• At least 8 characters</p>
+          <p class="rule" id="r2">• One number</p>
+          <p class="rule" id="r3">• One special character</p>
+        </div>
+        <button type="button" class="btn-teal" style="margin-top:28px;" onclick="openSuccess()">Save password</button>
+      </div>
+    </div>
+
+    <div id="success" class="push-layer">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:12px;background:var(--teal-dim);color:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+          <i class="ph-bold ph-check" style="font-size:28px;"></i>
+        </div>
+        <h2 style="margin:20px 0 0;font-size:20px;font-weight:600;">Password updated</h2>
+        <p style="margin:8px 0 0;font-size:13px;color:var(--muted);">You can sign in with the new password.</p>
+        <a href="after-login.html" class="btn-teal" style="margin-top:28px;">Continue to desk</a>
+        <button type="button" class="btn-ghost" style="margin-top:10px;" onclick="document.getElementById('success').classList.remove('open');showScreen('login')">Back to login</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    const chips = { login: 'chipLogin', register: 'chipReg', forgot: 'chipForgot', otp: 'chipOtp', password: 'chipPw' };
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      Object.keys(chips).forEach(k => {
+        const el = document.getElementById(chips[k]);
+        if (el) el.classList.toggle('on', k === id);
+      });
+    }
+    function openSuccess() { document.getElementById('success').classList.add('open'); }
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+    function checkPw() {
+      const v = document.getElementById('pw1').value;
+      document.getElementById('r1').classList.toggle('ok', v.length >= 8);
+      document.getElementById('r2').classList.toggle('ok', /\d/.test(v));
+      document.getElementById('r3').classList.toggle('ok', /[^A-Za-z0-9]/.test(v));
+    }
+  </script>
+</body>
+</html>

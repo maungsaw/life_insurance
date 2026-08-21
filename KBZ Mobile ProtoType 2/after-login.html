@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · After Login · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .view { display: none; height: calc(100% - 72px); overflow-y: auto; scrollbar-width: none; }
+    .view.on { display: block; }
+    .view::-webkit-scrollbar { display: none; }
+    .kpi-mono {
+      font-family: var(--mono); font-weight: 700; font-size: 32px;
+      letter-spacing: -0.04em; line-height: 1; color: var(--paper);
+    }
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .stat-box {
+      background: rgba(14,20,27,0.55); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 10px;
+    }
+    .stat-box .n { font-family: var(--mono); font-weight: 700; font-size: 16px; }
+    .stat-box .l { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); margin-top: 4px; }
+    .ring {
+      width: 48px; height: 48px; border-radius: 999px; flex-shrink: 0;
+      background: conic-gradient(var(--teal) var(--p, 78%), rgba(232,237,242,0.12) 0);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ring i {
+      width: 36px; height: 36px; border-radius: 999px; background: var(--panel);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 11px; font-weight: 700; font-style: normal;
+    }
+    .dot-unread {
+      width: 7px; height: 7px; border-radius: 999px; background: var(--teal); flex-shrink: 0;
+    }
+    .notif-row.unread { border-left: 2px solid var(--teal); padding-left: 10px; }
+  </style>
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · Desk</h1>
+    <p>Ink Desk · Launch Pad keypad · CRM · Tasks · Inbox · Team</p>
+    <p>
+      <a href="before-login.html">Guest</a> ·
+      <a href="products.html">Products</a> ·
+      <a href="get-quote.html">Quote</a> ·
+      <a href="../KBZ Mobile ProtoType 1/after-login.html">Compare P1</a>
+    </p>
+    <div class="qa">
+      <button type="button" class="on" id="roleFa" onclick="setRole('fa')">FA</button>
+      <button type="button" id="roleAm" onclick="setRole('am')">AM</button>
+      <button type="button" onclick="toggleOffline()">OFFLINE</button>
+      <button type="button" onclick="showTab('team')">#team</button>
+      <button type="button" onclick="showTab('notifications')">#inbox</button>
+    </div>
+  </div>
+
+  <div class="phone-frame">
+    <!-- ========== HOME ========== -->
+    <div class="view on" id="homeView">
+      <div class="status">
+        <span>9:30</span>
+        <span id="offlineBadge" class="badge-offline" style="display:none;">OFFLINE</span>
+      </div>
+      <div style="padding:6px 16px 10px;display:flex;align-items:center;gap:10px;">
+        <div style="flex:1;min-width:0;">
+          <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--teal);">KBZ LIFE</p>
+          <p style="margin:4px 0 0;font-size:14px;font-weight:600;display:flex;align-items:center;flex-wrap:wrap;">
+            Myat Moe Pyae <span class="role-chip" id="roleChip">FA</span>
+          </p>
+          <p class="mono" style="margin:2px 0 0;font-size:10px;color:var(--muted);">FA-10428</p>
+        </div>
+        <button type="button" onclick="showTab('notifications')" aria-label="Notifications" style="background:none;border:none;color:var(--paper);cursor:pointer;position:relative;padding:6px;">
+          <i class="ph ph-bell" style="font-size:22px;"></i>
+          <span id="bellDot" style="position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:999px;background:var(--amber);"></span>
+        </button>
+      </div>
+
+      <div style="margin:0 16px 14px;padding:18px 16px;border-radius:var(--radius);border:1px solid var(--line-strong);background:linear-gradient(165deg,#1C2633 0%,#0E141B 70%);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--muted);">COMMISSION · THIS MONTH</p>
+          <button type="button" onclick="toggleBal()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:0;"><i class="ph ph-eye" style="font-size:18px;"></i></button>
+        </div>
+        <p class="kpi-mono" id="balNum" style="margin:10px 0 0;">726,080</p>
+        <p style="margin:4px 0 0;font-size:12px;color:var(--muted);">MMK · own wallet</p>
+        <div class="stat-row">
+          <div class="stat-box"><div class="n">20</div><div class="l">POLICIES</div></div>
+          <div class="stat-box"><div class="n">72%</div><div class="l">FYP</div></div>
+          <div class="stat-box"><div class="n">65%</div><div class="l">MDRT</div></div>
+        </div>
+      </div>
+
+      <div id="teamPulse" style="display:none;margin:0 16px 14px;">
+        <button type="button" onclick="showTab('team')" class="panel" style="width:100%;text-align:left;padding:14px;cursor:pointer;display:flex;gap:12px;align-items:center;font-family:var(--font);color:var(--paper);">
+          <div class="ring" style="--p:83%;"><i>83%</i></div>
+          <div style="flex:1;min-width:0;">
+            <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">TEAM PERFORMANCE</p>
+            <p style="margin:4px 0 0;font-size:13px;font-weight:600;">Personal team · 5 FAs</p>
+            <p class="mono" style="margin:4px 0 0;font-size:11px;color:var(--muted);">42.1M / 50.0M</p>
+          </div>
+          <i class="ph ph-caret-right" style="color:var(--muted);"></i>
+        </button>
+      </div>
+
+      <!-- Launch Pad · ≠ P1 Available/Tools card -->
+      <div style="padding:0 16px 12px;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:4px;">
+          <p class="launch-title" style="margin:0;">LAUNCH</p>
+          <a href="products.html" style="font-family:var(--mono);font-size:10px;font-weight:700;color:var(--amber);text-decoration:none;">DRAFTS · 2</a>
+        </div>
+        <p class="launch-sub">Desk keypad · same jobs as Soft Desk, different chrome</p>
+        <div class="launch-pad">
+          <a class="pad live" href="products.html"><span class="idx">01</span><i class="ph ph-hexagon"></i><span class="pad-label">Product</span></a>
+          <a class="pad live" href="get-quote.html"><span class="idx">02</span><i class="ph ph-calculator"></i><span class="pad-label">Calculator</span></a>
+          <button type="button" class="pad live" onclick="toast('Online · resource library')"><span class="idx">03</span><i class="ph ph-globe"></i><span class="pad-label">Online</span></button>
+          <a class="pad live" href="policyholder-form.html?from=product"><span class="idx">04</span><i class="ph ph-note-pencil"></i><span class="pad-label">Proposal</span></a>
+          <button type="button" class="pad live" onclick="toast('Commission · 726,080 MMK')"><span class="idx">05</span><i class="ph ph-chart-pie-slice"></i><span class="pad-label">Commission</span></button>
+          <a class="pad live" href="policyholder-form.html?view=tracker"><span class="idx">06</span><i class="ph ph-clipboard-text"></i><span class="pad-label">Status</span></a>
+          <button type="button" class="pad live" onclick="toast('Claim · CL-8821 in review')"><span class="idx">07</span><i class="ph ph-shield-check"></i><span class="pad-label">Claim</span></button>
+          <button type="button" class="pad live" onclick="showTab('customer')"><span class="idx">08</span><i class="ph ph-users"></i><span class="pad-label">CRM</span></button>
+        </div>
+        <button type="button" class="pad live" onclick="showTab('tasks')" style="width:100%;aspect-ratio:auto;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;margin-top:8px;">
+          <span class="idx" style="position:static;">09</span>
+          <i class="ph ph-calendar-blank" style="font-size:22px;"></i>
+          <span class="pad-label" style="-webkit-line-clamp:1;">Task Management</span>
+          <i class="ph ph-caret-right" style="margin-left:auto;color:var(--muted);"></i>
+        </button>
+      </div>
+
+      <div style="padding:4px 16px 28px;">
+        <p class="launch-title">PROMO</p>
+        <div style="padding:12px;border-radius:6px;background:var(--panel);border:1px solid var(--line);">
+          <p style="margin:0;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--teal);">01 · INCENTIVE</p>
+          <p style="margin:6px 0 0;font-size:14px;font-weight:600;">Family Health Plus · launch window</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CUSTOMER ========== -->
+    <div class="view" id="customerView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">CRM</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('home')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">Customer</h2></div>
+        <button type="button" class="chip" style="padding:6px 10px;" onclick="toast('New lead saved')">+ Lead</button>
+      </div>
+      <div style="padding:0 16px 8px;"><input class="field" type="search" placeholder="Search name or phone" oninput="filterCrm(this.value)"></div>
+      <div style="padding:0 16px 8px;"><div class="seg"><button type="button" class="on" id="crmLeads" onclick="crmTab('leads')">Leads</button><button type="button" id="crmClients" onclick="crmTab('clients')">Clients</button></div></div>
+      <p id="crmLeaderNote" style="display:none;margin:0 16px 8px;font-size:11px;color:var(--teal);">Leader · own + downline (read)</p>
+      <div id="leadsBox" style="padding:0 16px 24px;">
+        <div class="panel" style="padding:2px 14px;">
+          <button type="button" class="row-link crm-row" data-q="aye chan" onclick="openPush('Aye Chan','Lead · Follow-up · PA')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Aye Chan</span><span style="font-size:11px;color:var(--muted);">Follow-up · PA</span></span><i class="ph ph-caret-right chev"></i></button>
+          <button type="button" class="row-link crm-row" data-q="ko min thu" onclick="openPush('Ko Min Thu','Lead · New')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Ko Min Thu</span><span style="font-size:11px;color:var(--muted);">New · offline</span></span><i class="ph ph-caret-right chev"></i></button>
+          <button type="button" class="row-link crm-row crm-dl" data-q="nwe oo" data-scope="downline" style="display:none;" onclick="openPush('Nwe Oo','Owner FA · Aye Thrain')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Nwe Oo</span><span style="font-size:11px;color:var(--muted);">Owner FA · Aye Thrain</span></span><i class="ph ph-caret-right chev"></i></button>
+        </div>
+      </div>
+      <div id="clientsBox" style="display:none;padding:0 16px 24px;">
+        <div class="panel" style="padding:2px 14px;">
+          <button type="button" class="row-link" onclick="openPush('Thant Zin Win','Client · 2 policies')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Thant Zin Win</span><span style="font-size:11px;color:var(--muted);">2 policies · Active</span></span><i class="ph ph-caret-right chev"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== POLICIES ========== -->
+    <div class="view" id="policiesView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">BOOK</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('home')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">Policies</h2><p class="mono" style="margin:2px 0 0;font-size:10px;color:var(--muted);" id="polScope">My book</p></div>
+      </div>
+      <div style="padding:0 16px 8px;"><input class="field" type="search" placeholder="Search policy / client"></div>
+      <div style="padding:0 16px 8px;" class="chip-rail">
+        <span class="chip" style="background:var(--teal);color:var(--ink);border-color:var(--teal);">Active</span>
+        <span class="chip">All types</span>
+      </div>
+      <div style="padding:0 16px 24px;">
+        <div class="panel" style="padding:2px 14px;">
+          <button type="button" class="row-link" onclick="openPush('POL-PA-2026-0112','Thant Zin Win · PA · Active · due 03 Sep')"><span class="ico"><i class="ph ph-shield"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Thant Zin Win</span><span style="font-size:11px;color:var(--muted);">POL-PA-2026-0112 · PA</span></span><span class="mono" style="font-size:10px;color:var(--teal);">ACTIVE</span></button>
+          <button type="button" class="row-link" onclick="openPush('POL-EN-2025-0881','Endowment · Active')"><span class="ico"><i class="ph ph-bank"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Thant Zin Win</span><span style="font-size:11px;color:var(--muted);">POL-EN-2025-0881 · STE</span></span><span class="mono" style="font-size:10px;color:var(--teal);">ACTIVE</span></button>
+          <button type="button" class="row-link pol-dl" style="display:none;" onclick="openPush('POL-UL-2026-2201','FA · Aye Thrain')"><span class="ico"><i class="ph ph-chart-line"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Aung Kyaw</span><span style="font-size:11px;color:var(--muted);">Downline · Aye Thrain</span></span><span class="mono" style="font-size:10px;color:var(--teal);">ACTIVE</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TASKS ========== -->
+    <div class="view" id="tasksView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">WORK</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('home')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">My work</h2></div>
+        <button type="button" class="chip" style="padding:6px 10px;" onclick="toast('Task created')">Create</button>
+      </div>
+      <div style="padding:0 16px 10px;"><div class="seg"><button type="button" class="on" onclick="pickSeg(this)">Day</button><button type="button" onclick="pickSeg(this)">Week</button><button type="button" onclick="pickSeg(this)">Month</button></div></div>
+      <p style="margin:0 16px 8px;font-size:12px;font-weight:600;">Fri, 21 Aug 2026 · 3 tasks</p>
+      <div style="padding:0 16px 24px;">
+        <div class="panel" style="padding:2px 14px;">
+          <button type="button" class="row-link" onclick="openPush('On-boarding · May Thu','Agent Info · Training')"><span class="ico"><i class="ph ph-user-plus"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">On-boarding · May Thu</span><span style="font-size:11px;color:var(--muted);">09:30 · Pending</span></span><span class="mono" style="font-size:9px;color:var(--amber);">HIGH</span></button>
+          <button type="button" class="row-link" onclick="openPush('Follow-up · Aye Chan','Call · PA quote')"><span class="ico"><i class="ph ph-phone"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Follow-up · Aye Chan</span><span style="font-size:11px;color:var(--muted);">14:00 · In progress</span></span></button>
+          <button type="button" class="row-link" onclick="openPush('Training · Module 2','Product basics')"><span class="ico"><i class="ph ph-graduation-cap"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Training · Module 2</span><span style="font-size:11px;color:var(--muted);">16:00 · Done</span></span><span class="mono" style="font-size:9px;color:var(--teal);">OK</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== NOTIFICATIONS ========== -->
+    <div class="view" id="notificationsView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">INBOX</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('home')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">Notifications</h2><p style="margin:2px 0 0;font-size:11px;color:var(--muted);" id="notifSub">2 unread</p></div>
+        <button type="button" onclick="markRead()" style="background:none;border:none;color:var(--teal);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);">Mark read</button>
+      </div>
+      <div style="padding:0 16px 24px;" id="notifList">
+        <p style="margin:8px 0;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">TODAY</p>
+        <button type="button" class="row-link notif-row unread" onclick="openNotifDetail()"><span class="ico"><i class="ph ph-megaphone"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">New: Family Health Plus</span><span style="font-size:11px;color:var(--muted);">Launch offer · 2 hr</span></span><span class="dot-unread"></span></button>
+        <button type="button" class="row-link notif-row unread" onclick="toast('Renewal → e-App');location.href='policyholder-form.html?renewal=1'"><span class="ico"><i class="ph ph-shield-check"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Renewal due · Thant Zin Win</span><span style="font-size:11px;color:var(--muted);">14 days · 5 hr</span></span><span class="dot-unread"></span></button>
+        <p style="margin:14px 0 8px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">YESTERDAY</p>
+        <button type="button" class="row-link notif-row" onclick="toast('Claim sheet · stub')"><span class="ico"><i class="ph ph-clipboard-text"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Claim update · CL-8821</span><span style="font-size:11px;color:var(--muted);">Under review</span></span></button>
+      </div>
+    </div>
+
+    <!-- ========== TEAM ========== -->
+    <div class="view" id="teamView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">TEAM</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('home')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:15px;font-weight:600;">Team Sales Performance</h2><p style="margin:2px 0 0;font-size:11px;color:var(--muted);">AM · Aug 2026</p></div>
+      </div>
+      <div style="padding:0 16px 12px;">
+        <div class="panel" style="padding:14px;display:flex;gap:12px;align-items:center;">
+          <div class="ring" style="--p:83%;width:64px;height:64px;"><i style="width:48px;height:48px;font-size:13px;">83%</i></div>
+          <div><p style="margin:0;font-size:10px;font-weight:700;color:var(--muted);">ACTUAL / TARGET</p><p class="mono" style="margin:4px 0 0;font-size:16px;font-weight:700;">42.1M <span style="color:var(--muted);font-weight:500;">/ 50.0M</span></p></div>
+        </div>
+      </div>
+      <div style="padding:0 16px 8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="panel" style="padding:12px;text-align:center;"><p class="mono" style="margin:0;font-size:18px;font-weight:700;">5</p><p style="margin:4px 0 0;font-size:9px;font-weight:700;color:var(--muted);">FA</p></div>
+        <div class="panel" style="padding:12px;text-align:center;"><p class="mono" style="margin:0;font-size:18px;font-weight:700;">2</p><p style="margin:4px 0 0;font-size:9px;font-weight:700;color:var(--muted);">MDRT</p></div>
+      </div>
+      <div style="padding:8px 16px 24px;">
+        <p style="margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">MEMBERS</p>
+        <div class="panel" style="padding:2px 14px;">
+          <button type="button" class="row-link" onclick="openPush('Aye Thrain','92% · MDRT Qualified')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Aye Thrain</span><span style="font-size:11px;color:var(--muted);">18.5M / 20M</span></span><span class="mono" style="font-size:12px;color:var(--teal);">92%</span></button>
+          <button type="button" class="row-link" onclick="openPush('Ko Min','76% · In Progress')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Ko Min</span><span style="font-size:11px;color:var(--muted);">15.1M / 20M</span></span><span class="mono" style="font-size:12px;">76%</span></button>
+          <button type="button" class="row-link" onclick="openPush('Thant Zin','48% · Below target')"><span class="ico"><i class="ph ph-user"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Thant Zin</span><span style="font-size:11px;color:var(--muted);">9.6M / 20M</span></span><span class="mono" style="font-size:12px;color:var(--rose);">48%</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PROFILE ========== -->
+    <div class="view" id="profileView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">PROFILE</span></div>
+      <div style="padding:12px 16px 28px;">
+        <h2 style="margin:8px 0 0;font-size:20px;font-weight:600;">Profile</h2>
+        <div class="panel" style="margin-top:14px;padding:14px;">
+          <p style="margin:0;font-size:15px;font-weight:600;">Myat Moe Pyae <span class="role-chip" id="roleChip2">FA</span></p>
+          <p class="mono" style="margin:6px 0 0;font-size:11px;color:var(--muted);">FA-10428</p>
+          <a href="get-quote.html" class="btn-teal" style="margin-top:14px;">Create New Quote</a>
+        </div>
+        <div class="panel" style="margin-top:12px;padding:2px 14px;">
+          <button type="button" class="row-link" onclick="setRole(role==='fa'?'am':'fa')"><span style="flex:1;font-size:13px;font-weight:600;">Preview role</span><span style="font-size:11px;color:var(--muted);" id="previewNow">FA</span></button>
+          <button type="button" class="row-link" id="profileTeam" style="display:none;" onclick="showTab('team')"><span style="flex:1;font-size:13px;font-weight:600;">Team Sales Performance</span><i class="ph ph-caret-right chev"></i></button>
+          <a href="before-login.html" class="row-link"><span style="flex:1;font-size:13px;font-weight:600;color:var(--rose);">Log out</span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail push -->
+    <div id="detailPush" class="push-layer">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">DETAIL</span></div>
+      <div style="padding:16px 20px;flex:1;">
+        <button type="button" onclick="closePush()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:13px;padding:0;">← Back</button>
+        <h2 id="pushTitle" style="margin:20px 0 0;font-size:20px;font-weight:600;">Detail</h2>
+        <p id="pushBody" style="margin:10px 0 0;font-size:13px;color:var(--muted);line-height:1.5;"></p>
+        <button type="button" class="btn-teal" style="margin-top:24px;" onclick="closePush();toast('Action · stub')">Primary action</button>
+      </div>
+    </div>
+
+    <!-- Notif product detail -->
+    <div id="notifDetail" class="push-layer">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">PROMO</span></div>
+      <div style="padding:16px 20px;flex:1;overflow-y:auto;">
+        <button type="button" onclick="document.getElementById('notifDetail').classList.remove('open')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:13px;padding:0;">← Inbox</button>
+        <p style="margin:20px 0 0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);">HEALTH</p>
+        <h2 style="margin:8px 0 0;font-size:22px;font-weight:600;">Family Health Plus</h2>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--muted);line-height:1.45;">Hospital cash + outpatient — priced for young families in your book.</p>
+        <div class="panel" style="margin-top:16px;padding:14px;">
+          <p style="margin:0;font-size:10px;font-weight:700;color:var(--muted);">WHO IT’S FOR</p>
+          <p style="margin:8px 0 0;font-size:13px;">Parents · PA clients adding health · hospital-bill leads</p>
+        </div>
+        <a href="products.html" class="btn-teal" style="margin-top:16px;">View product</a>
+        <a href="get-quote.html" class="btn-ghost" style="margin-top:8px;">Get a quote</a>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <div class="bottom-nav">
+      <button type="button" class="nav-hit on" id="navHome" onclick="showTab('home')"><i class="ph ph-house"></i><span>Home</span></button>
+      <button type="button" class="nav-hit" id="navCustomer" onclick="showTab('customer')"><i class="ph ph-users"></i><span>Customer</span></button>
+      <button type="button" class="nav-fab" aria-label="Quick action" onclick="showTab('tasks')"><i class="ph-bold ph-plus"></i></button>
+      <a href="products.html" class="nav-hit" id="navProduct"><i class="ph ph-hexagon"></i><span>Product</span></a>
+      <button type="button" class="nav-hit" id="navProfile" onclick="showTab('profile')"><i class="ph ph-user-circle"></i><span>Profile</span></button>
+    </div>
+  </div>
+
+  <script>
+    let role = 'fa', offline = false, balHidden = false;
+
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(window.__tt); window.__tt = setTimeout(() => t.classList.remove('show'), 1600);
+    }
+    function pickSeg(btn) {
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+    }
+    function toggleBal() {
+      balHidden = !balHidden;
+      document.getElementById('balNum').textContent = balHidden ? '••••••' : '726,080';
+    }
+    function showTab(tab) {
+      if (tab === 'team' && role === 'fa') { setRole('am'); }
+      const ids = ['home','customer','policies','tasks','notifications','team','profile'];
+      ids.forEach(id => {
+        const el = document.getElementById(id + 'View');
+        if (el) el.classList.toggle('on', id === tab);
+      });
+      document.getElementById('navHome').classList.toggle('on', tab === 'home');
+      document.getElementById('navCustomer').classList.toggle('on', tab === 'customer');
+      document.getElementById('navProfile').classList.toggle('on', tab === 'profile');
+      if (history.replaceState) {
+        const hash = tab === 'home' ? '' : '#' + tab;
+        history.replaceState(null, '', location.pathname + location.search + hash);
+      }
+    }
+    function setRole(r) {
+      role = r;
+      document.getElementById('roleFa').classList.toggle('on', r === 'fa');
+      document.getElementById('roleAm').classList.toggle('on', r === 'am');
+      ['roleChip','roleChip2','previewNow'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = r === 'fa' ? 'FA' : 'AM';
+      });
+      const leader = r === 'am';
+      document.getElementById('teamPulse').style.display = leader ? 'block' : 'none';
+      document.getElementById('profileTeam').style.display = leader ? 'flex' : 'none';
+      document.getElementById('crmLeaderNote').style.display = leader ? 'block' : 'none';
+      document.getElementById('polScope').textContent = leader ? 'Self + downline' : 'My book';
+      document.querySelectorAll('.crm-dl, .pol-dl').forEach(el => { el.style.display = leader ? 'flex' : 'none'; });
+      if (!leader && document.getElementById('teamView').classList.contains('on')) showTab('home');
+      toast('Preview · ' + (r === 'fa' ? 'FA' : 'AM'));
+    }
+    function toggleOffline() {
+      offline = !offline;
+      document.getElementById('offlineBadge').style.display = offline ? 'inline-block' : 'none';
+      toast(offline ? 'OFFLINE · cached' : 'Online');
+    }
+    function crmTab(which) {
+      document.getElementById('crmLeads').classList.toggle('on', which === 'leads');
+      document.getElementById('crmClients').classList.toggle('on', which === 'clients');
+      document.getElementById('leadsBox').style.display = which === 'leads' ? 'block' : 'none';
+      document.getElementById('clientsBox').style.display = which === 'clients' ? 'block' : 'none';
+    }
+    function filterCrm(q) {
+      q = (q || '').toLowerCase();
+      document.querySelectorAll('#leadsBox .crm-row').forEach(row => {
+        const match = !q || (row.dataset.q || '').includes(q);
+        const dl = row.classList.contains('crm-dl');
+        row.style.display = match && (!dl || role === 'am') ? 'flex' : 'none';
+      });
+    }
+    function openPush(title, body) {
+      document.getElementById('pushTitle').textContent = title;
+      document.getElementById('pushBody').textContent = body;
+      document.getElementById('detailPush').classList.add('open');
+    }
+    function closePush() { document.getElementById('detailPush').classList.remove('open'); }
+    function openNotifDetail() {
+      markRead();
+      document.getElementById('notifDetail').classList.add('open');
+    }
+    function markRead() {
+      document.querySelectorAll('.notif-row').forEach(r => r.classList.remove('unread'));
+      document.querySelectorAll('.dot-unread').forEach(d => d.remove());
+      document.getElementById('notifSub').textContent = 'All caught up';
+      document.getElementById('bellDot').style.display = 'none';
+    }
+
+    const h = location.hash.replace('#','');
+    if (h === 'team') setTimeout(() => showTab('team'), 0);
+    else if (h === 'notifications' || h === 'inbox') setTimeout(() => showTab('notifications'), 0);
+    else if (h === 'tasks') setTimeout(() => showTab('tasks'), 0);
+    else if (h === 'customer') setTimeout(() => showTab('customer'), 0);
+    else if (h === 'policies') setTimeout(() => showTab('policies'), 0);
+    else if (h === 'profile') setTimeout(() => showTab('profile'), 0);
+  </script>
+</body>
+</html>

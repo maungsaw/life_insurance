@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · Personal Accident · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="tokens.css">
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · Product detail</h1>
+    <p>PA info · rates teaser · Get quote / e-App</p>
+    <p><a href="products.html">Products</a> · <a href="get-quote.html">Calculator</a></p>
+  </div>
+
+  <div class="phone-frame">
+    <div class="scroll" style="height:calc(100% - 72px);">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">PRODUCT</span></div>
+      <div style="padding:8px 16px;display:flex;align-items:center;gap:10px;">
+        <a href="products.html" style="color:var(--muted);text-decoration:none;">←</a>
+        <h2 style="margin:0;font-size:16px;font-weight:600;flex:1;">Personal Accident</h2>
+        <span class="mono" style="font-size:10px;color:var(--teal);">ON</span>
+      </div>
+
+      <div style="margin:8px 16px;padding:18px 16px;border-radius:var(--radius);border:1px solid var(--line-strong);background:linear-gradient(165deg,#1C2633,#0E141B);">
+        <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);">PROTECTION</p>
+        <h3 style="margin:8px 0 0;font-size:20px;font-weight:600;letter-spacing:-0.02em;">Cover accidents — hospital &amp; death benefits</h3>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--muted);line-height:1.45;">PA-001 · from <span class="mono" style="color:var(--paper);">7,100</span> MMK</p>
+      </div>
+
+      <div style="padding:8px 16px;">
+        <p style="margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">BENEFITS</p>
+        <div class="panel" style="padding:4px 14px;">
+          <div class="row-link" style="cursor:default;"><span class="ico"><i class="ph ph-heartbeat"></i></span><span style="flex:1;font-size:13px;">Accidental death / disablement</span></div>
+          <div class="row-link" style="cursor:default;"><span class="ico"><i class="ph ph-first-aid"></i></span><span style="flex:1;font-size:13px;">Medical expense (optional)</span></div>
+          <div class="row-link" style="cursor:default;"><span class="ico"><i class="ph ph-users"></i></span><span style="flex:1;font-size:13px;">Family rider available</span></div>
+        </div>
+      </div>
+
+      <div style="padding:8px 16px 24px;">
+        <details class="acc panel" style="padding:0 14px;margin-bottom:8px;" open>
+          <summary>Indicative rates <i class="ph ph-caret-down"></i></summary>
+          <div class="acc-body">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Age 18–35 · Class 1</span><span class="mono">7,100</span></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;"><span>Age 36–50 · Class 1</span><span class="mono">8,900</span></div>
+            <p style="margin:8px 0 0;font-size:11px;">Official estimate in Calculator · Core rates.</p>
+          </div>
+        </details>
+        <details class="acc panel" style="padding:0 14px;">
+          <summary>Exclusions <i class="ph ph-caret-down"></i></summary>
+          <div class="acc-body">War · intentional self-injury · undeclared high-risk sports — see full booklet.</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="foot-bar">
+      <a href="policyholder-form.html?product=pa" class="btn-ghost">Start e-App</a>
+      <a href="get-quote.html" class="btn-teal">Get a quote</a>
+    </div>
+  </div>
+</body>
+</html>

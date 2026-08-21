@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · Get a Quote · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .phone-frame .scroll.with-foot { height: calc(100% - 72px); }
+    .cmp-col {
+      flex: 1; min-width: 0; padding: 10px; border-radius: var(--radius);
+      border: 1px solid var(--line); background: var(--panel); cursor: pointer; text-align: center;
+    }
+    .cmp-col.on { border-color: var(--teal); background: var(--teal-dim); }
+  </style>
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · Calculator</h1>
+    <p>3-step quote · compare · premium · Buy / draft</p>
+    <p><a href="personal-accident.html">PA detail</a> · <a href="after-login.html">Desk</a> · <a href="../KBZ Mobile ProtoType 1/get-quote.html">Compare P1</a></p>
+  </div>
+
+  <div class="phone-frame">
+    <div class="scroll with-foot" id="mainScroll">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">QUOTE</span></div>
+      <div style="padding:8px 16px 0;display:flex;align-items:center;gap:10px;">
+        <a href="personal-accident.html" style="color:var(--muted);text-decoration:none;font-size:13px;">←</a>
+        <div style="flex:1;">
+          <h2 style="margin:0;font-size:16px;font-weight:600;">Get a quote</h2>
+          <p style="margin:2px 0 0;"><span class="chip" style="padding:2px 8px;font-size:10px;">Personal Accident</span></p>
+        </div>
+      </div>
+
+      <div style="padding:14px 16px 8px;">
+        <div class="stepper cols-3">
+          <div class="step-pill" id="s1"><span class="n">01</span>Details</div>
+          <div class="step-pill" id="s2"><span class="n">02</span>Compare</div>
+          <div class="step-pill" id="s3"><span class="n">03</span>Premium</div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="step1" style="padding:0 16px 100px;">
+        <div class="panel" style="padding:14px;">
+          <label class="label">Date of birth</label>
+          <input class="field" type="date" value="1992-04-12">
+          <div style="margin-top:16px;"><label class="label">Gender</label>
+            <div class="seg" style="margin-top:8px;">
+              <button type="button" class="on" onclick="pickSeg(this)">Male</button>
+              <button type="button" onclick="pickSeg(this)">Female</button>
+            </div>
+          </div>
+          <div style="margin-top:16px;"><label class="label">Sum assured (MMK)</label>
+            <input class="field mono" type="text" value="1,000,000">
+          </div>
+          <div style="margin-top:16px;"><label class="label">Occupation class</label>
+            <input class="field" value="Class 1 · Office">
+          </div>
+          <div style="margin-top:16px;"><label class="label">High risk?</label>
+            <div class="seg" style="margin-top:8px;">
+              <button type="button" class="on" onclick="pickSeg(this)">No</button>
+              <button type="button" onclick="pickSeg(this)">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 COMPARE -->
+      <div id="step2" style="display:none;padding:0 16px 100px;">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">FEATURE MATRIX</p>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div class="cmp-col on" onclick="selCol(this)" data-p="PA Core"><p class="mono" style="margin:0;font-size:11px;color:var(--teal);">A</p><p style="margin:4px 0 0;font-size:12px;font-weight:600;">PA Core</p><p class="mono" style="margin:6px 0 0;font-size:11px;">7.1k</p></div>
+          <div class="cmp-col" onclick="selCol(this)" data-p="PA Plus"><p class="mono" style="margin:0;font-size:11px;color:var(--muted);">B</p><p style="margin:4px 0 0;font-size:12px;font-weight:600;">PA Plus</p><p class="mono" style="margin:6px 0 0;font-size:11px;">9.4k</p></div>
+          <div class="cmp-col" onclick="selCol(this)" data-p="PA Family"><p class="mono" style="margin:0;font-size:11px;color:var(--muted);">C</p><p style="margin:4px 0 0;font-size:12px;font-weight:600;">PA Family</p><p class="mono" style="margin:6px 0 0;font-size:11px;">12.0k</p></div>
+        </div>
+        <div class="panel" style="padding:12px 14px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;"><span style="color:var(--muted);">Accidental death</span><span class="mono">✓ ✓ ✓</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;"><span style="color:var(--muted);">Medical expense</span><span class="mono">— ✓ ✓</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:12px;"><span style="color:var(--muted);">Family rider</span><span class="mono">— — ✓</span></div>
+        </div>
+        <p style="margin:10px 0 0;font-size:12px;color:var(--muted);">Selected: <strong id="selPlan" style="color:var(--paper);">PA Core</strong></p>
+      </div>
+
+      <!-- STEP 3 PREMIUM -->
+      <div id="step3" style="display:none;padding:0 16px 100px;">
+        <div style="padding:20px 16px;border-radius:var(--radius);border:1px solid var(--line-strong);background:linear-gradient(165deg,#1C2633,#0E141B);text-align:center;margin-bottom:14px;">
+          <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--muted);">ESTIMATED PREMIUM</p>
+          <p class="mono" style="margin:10px 0 0;font-size:36px;font-weight:700;letter-spacing:-0.04em;" id="premNum">7,100</p>
+          <p style="margin:4px 0 0;font-size:12px;color:var(--muted);">MMK · one-time · <span id="premPlan">PA Core</span></p>
+        </div>
+        <div class="panel" style="padding:12px 14px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;"><span style="color:var(--muted);">Sum assured</span><span class="mono">1,000,000</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;"><span style="color:var(--muted);">Term</span><span>1 Year</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:12px;"><span style="color:var(--muted);">Display only</span><span style="color:var(--teal);">Core rates</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-bar" id="foot1">
+      <button type="button" class="btn-ghost" onclick="toast('Draft saved')">Save draft</button>
+      <button type="button" class="btn-teal" onclick="goStep(2)">Compare →</button>
+    </div>
+    <div class="foot-bar" id="foot2" style="display:none;">
+      <button type="button" class="btn-ghost" onclick="goStep(1)">← Edit</button>
+      <button type="button" class="btn-teal" onclick="goStep(3)">Premium →</button>
+    </div>
+    <div class="foot-bar" id="foot3" style="display:none;">
+      <button type="button" class="btn-ghost" onclick="goStep(2)">← Edit</button>
+      <a href="policyholder-form.html?from=quote" class="btn-teal">Buy · e-App</a>
+    </div>
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    let step = 1;
+    function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove('show'),1600);}
+    function pickSeg(btn){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+    function selCol(el){
+      document.querySelectorAll('.cmp-col').forEach(c=>c.classList.remove('on'));
+      el.classList.add('on');
+      document.getElementById('selPlan').textContent=el.dataset.p;
+      document.getElementById('premPlan').textContent=el.dataset.p;
+      const map={ 'PA Core':'7,100','PA Plus':'9,400','PA Family':'12,000'};
+      document.getElementById('premNum').textContent=map[el.dataset.p]||'7,100';
+    }
+    function goStep(n){
+      step=n;
+      [1,2,3].forEach(i=>{
+        document.getElementById('step'+i).style.display=i===n?'block':'none';
+        document.getElementById('foot'+i).style.display=i===n?'flex':'none';
+        const p=document.getElementById('s'+i);
+        p.classList.toggle('on',i===n);
+        p.classList.toggle('done',i<n);
+      });
+      document.getElementById('mainScroll').scrollTop=0;
+    }
+    goStep(1);
+  </script>
+</body>
+</html>

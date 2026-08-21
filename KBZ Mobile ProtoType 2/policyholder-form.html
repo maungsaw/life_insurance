@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · e-Application · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .wiz { display: none; padding: 0 16px 100px; }
+    .wiz.on { display: block; animation: fadeIn 180ms ease; }
+    .sig {
+      width: 100%; height: 100px; border-radius: var(--radius);
+      background: var(--panel-2); border: 1px dashed var(--line-strong);
+      color: var(--muted); display: flex; align-items: center; justify-content: center;
+      font-size: 12px; cursor: crosshair;
+    }
+  </style>
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · e-App</h1>
+    <p>6 steps · scan skip · confirm · success · UW track</p>
+    <p>
+      <a href="get-quote.html">Quote</a> ·
+      <a href="policyholder-form.html?view=tracker">Tracker</a> ·
+      <a href="../KBZ Mobile ProtoType 1/policyholder-form.html">Compare P1</a>
+    </p>
+    <div class="qa">
+      <button type="button" onclick="setMode('quote')">from=quote</button>
+      <button type="button" onclick="setMode('blank')">Manual</button>
+      <button type="button" onclick="showTracker()">Open tracker</button>
+    </div>
+  </div>
+
+  <div class="phone-frame">
+    <div id="wizardShell" class="scroll" style="height:calc(100% - 72px);">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">E-APP</span></div>
+      <div style="padding:8px 16px;display:flex;align-items:center;gap:10px;">
+        <a href="get-quote.html" style="color:var(--muted);text-decoration:none;">←</a>
+        <div style="flex:1;">
+          <h2 style="margin:0;font-size:16px;font-weight:600;">New proposal</h2>
+          <p style="margin:2px 0 0;font-size:11px;color:var(--muted);" id="modeLine">Prefill from quote</p>
+        </div>
+        <span class="chip" style="padding:4px 8px;font-size:10px;" id="stepLabel">1 / 6</span>
+      </div>
+      <div style="padding:0 16px 10px;">
+        <div class="stepper cols-6" id="stepDots">
+          <div class="step-pill on"><span class="n">1</span></div>
+          <div class="step-pill"><span class="n">2</span></div>
+          <div class="step-pill"><span class="n">3</span></div>
+          <div class="step-pill"><span class="n">4</span></div>
+          <div class="step-pill"><span class="n">5</span></div>
+          <div class="step-pill"><span class="n">6</span></div>
+        </div>
+      </div>
+
+      <div class="wiz on" id="w1">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">01 · CUSTOMER</p>
+        <div class="panel" style="padding:14px;">
+          <label class="label">Full name</label><input class="field" id="fName" value="Thant Zin Win">
+          <div style="margin-top:14px;"><label class="label">Phone</label><input class="field" value="09 777 220 119"></div>
+          <div style="margin-top:14px;"><label class="label">NRC</label><input class="field" value="12/PAZATA(N)098745"></div>
+          <div style="margin-top:14px;"><label class="label">Product</label><input class="field" id="fProd" value="Personal Accident · PA-001" readonly style="opacity:0.85;"></div>
+        </div>
+      </div>
+
+      <div class="wiz" id="w2">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">02 · INSURED / BENEFICIARY</p>
+        <div class="panel" style="padding:14px;margin-bottom:10px;">
+          <p style="margin:0 0 8px;font-size:12px;font-weight:600;color:var(--teal);">Insured</p>
+          <label class="label">Same as customer</label>
+          <div class="seg" style="margin-top:6px;"><button type="button" class="on" onclick="pickSeg(this)">Yes</button><button type="button" onclick="pickSeg(this)">No</button></div>
+        </div>
+        <div class="panel" style="padding:14px;">
+          <p style="margin:0 0 8px;font-size:12px;font-weight:600;color:var(--teal);">Beneficiary</p>
+          <label class="label">Name</label><input class="field" value="Zaw Min Thu">
+          <div style="margin-top:14px;"><label class="label">Relationship</label><input class="field" value="Father · 100%"></div>
+        </div>
+      </div>
+
+      <div class="wiz" id="w3">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">03 · HEALTH</p>
+        <div class="panel" style="padding:14px;">
+          <label class="label">Any ongoing treatment?</label>
+          <div class="seg" style="margin-top:8px;"><button type="button" class="on" onclick="pickSeg(this)">No</button><button type="button" onclick="pickSeg(this)">Yes</button></div>
+          <div style="margin-top:16px;"><label class="label">Notes</label><input class="field" placeholder="Optional"></div>
+        </div>
+      </div>
+
+      <div class="wiz" id="w4">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">04 · DOCUMENTS</p>
+        <div class="panel" style="padding:14px;margin-bottom:10px;text-align:center;">
+          <i class="ph ph-scan" style="font-size:32px;color:var(--teal);"></i>
+          <p style="margin:8px 0 0;font-size:13px;font-weight:600;">NRC scan (optional)</p>
+          <p style="margin:4px 0 0;font-size:11px;color:var(--muted);">Skip allowed · upload later</p>
+          <button type="button" class="btn-ghost" style="margin-top:12px;" onclick="toast('Scan · demo')">Scan NRC</button>
+        </div>
+        <div class="panel" style="padding:14px;">
+          <label class="label">Upload NRC / Passport</label>
+          <button type="button" class="btn-ghost" style="margin-top:8px;" onclick="toast('File attached')">Attach file</button>
+        </div>
+      </div>
+
+      <div class="wiz" id="w5">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">05 · SIGNATURES</p>
+        <div class="panel" style="padding:14px;margin-bottom:10px;">
+          <label class="label">Customer</label>
+          <div class="sig" onclick="this.textContent='Signed · demo';this.style.borderColor='var(--teal)';this.style.color='var(--teal)';">Tap to sign</div>
+        </div>
+        <div class="panel" style="padding:14px;">
+          <label class="label">Agent</label>
+          <div class="sig" onclick="this.textContent='Signed · demo';this.style.borderColor='var(--teal)';this.style.color='var(--teal)';">Tap to sign</div>
+        </div>
+      </div>
+
+      <div class="wiz" id="w6">
+        <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">06 · CONFIRM</p>
+        <details class="acc panel" style="padding:0 14px;margin-bottom:8px;" open>
+          <summary>Customer <i class="ph ph-caret-down"></i></summary>
+          <div class="acc-body" id="cCust">Thant Zin Win · 09 777 220 119</div>
+        </details>
+        <details class="acc panel" style="padding:0 14px;margin-bottom:8px;">
+          <summary>Product &amp; premium <i class="ph ph-caret-down"></i></summary>
+          <div class="acc-body">PA-001 · 7,100 MMK · 1 year</div>
+        </details>
+        <details class="acc panel" style="padding:0 14px;">
+          <summary>Beneficiary <i class="ph ph-caret-down"></i></summary>
+          <div class="acc-body">Zaw Min Thu · Father · 100%</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="foot-bar" id="wizFoot">
+      <button type="button" class="btn-ghost" id="btnBack" onclick="nav(-1)">Back</button>
+      <button type="button" class="btn-teal" id="btnNext" onclick="nav(1)">Next</button>
+    </div>
+
+    <!-- Success push -->
+    <div id="success" class="push-layer">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;text-align:center;">
+        <div style="width:56px;height:56px;border-radius:12px;background:var(--teal-dim);color:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+          <i class="ph-bold ph-check" style="font-size:28px;"></i>
+        </div>
+        <h2 style="margin:20px 0 0;font-size:20px;font-weight:600;">Submitted</h2>
+        <p class="mono" style="margin:8px 0 0;font-size:12px;color:var(--muted);">PR-4410 · pipeline to UW</p>
+        <button type="button" class="btn-teal" style="margin-top:28px;" onclick="showTracker()">Track proposal</button>
+        <a href="after-login.html" class="btn-ghost" style="margin-top:10px;">Back to desk</a>
+      </div>
+    </div>
+
+    <!-- Tracker -->
+    <div id="tracker" class="push-layer">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">TRACK</span></div>
+      <div style="padding:12px 16px;flex:1;overflow-y:auto;">
+        <button type="button" onclick="hideTracker()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:13px;padding:0;">← Back</button>
+        <h2 style="margin:16px 0 0;font-size:18px;font-weight:600;">Proposal status</h2>
+        <p class="mono" style="margin:6px 0 0;font-size:11px;color:var(--muted);">PR-4410 · Thant Zin Win</p>
+        <div class="panel" style="margin-top:16px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-size:13px;font-weight:600;">Underwriting</span>
+            <span class="mono" style="font-size:10px;color:var(--amber);border:1px solid rgba(245,165,36,0.35);padding:2px 6px;border-radius:4px;">IN REVIEW</span>
+          </div>
+          <div class="bar"><i style="width:55%"></i></div>
+          <p style="margin:10px 0 0;font-size:11px;color:var(--muted);">Submitted → Docs OK → UW → Decision</p>
+        </div>
+        <div class="panel" style="margin-top:10px;padding:2px 14px;">
+          <div class="row-link" style="cursor:default;"><span style="flex:1;font-size:12px;">Submitted</span><span class="mono" style="font-size:10px;color:var(--teal);">DONE</span></div>
+          <div class="row-link" style="cursor:default;"><span style="flex:1;font-size:12px;">Documents</span><span class="mono" style="font-size:10px;color:var(--teal);">DONE</span></div>
+          <div class="row-link" style="cursor:default;"><span style="flex:1;font-size:12px;">Underwriting</span><span class="mono" style="font-size:10px;color:var(--amber);">NOW</span></div>
+          <div class="row-link" style="cursor:default;"><span style="flex:1;font-size:12px;">Decision</span><span class="mono" style="font-size:10px;color:var(--muted);">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    let step = 1;
+    const titles = ['Customer','Insured/Ben','Health','Docs','Signatures','Confirm'];
+    function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove('show'),1600);}
+    function pickSeg(btn){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+    function render(){
+      for(let i=1;i<=6;i++){
+        document.getElementById('w'+i).classList.toggle('on', i===step);
+        const d=document.querySelectorAll('#stepDots .step-pill')[i-1];
+        d.classList.toggle('on', i===step);
+        d.classList.toggle('done', i<step);
+      }
+      document.getElementById('stepLabel').textContent=step+' / 6';
+      document.getElementById('btnBack').style.visibility=step===1?'hidden':'visible';
+      document.getElementById('btnNext').textContent=step===6?'Submit':'Next';
+    }
+    function nav(d){
+      if(step===6 && d===1){ document.getElementById('success').classList.add('open'); return; }
+      step=Math.max(1,Math.min(6,step+d));
+      render();
+      document.getElementById('wizardShell').scrollTop=0;
+    }
+    function setMode(m){
+      document.getElementById('modeLine').textContent=m==='quote'?'Prefill from quote':'Manual entry';
+      if(m==='blank'){ document.getElementById('fName').value=''; document.getElementById('fProd').readOnly=false; }
+      else { document.getElementById('fName').value='Thant Zin Win'; document.getElementById('fProd').readOnly=true; }
+      toast(m==='quote'?'Prefill on':'Manual on');
+    }
+    function showTracker(){
+      document.getElementById('success').classList.remove('open');
+      document.getElementById('tracker').classList.add('open');
+    }
+    function hideTracker(){ document.getElementById('tracker').classList.remove('open'); }
+
+    const params=new URLSearchParams(location.search);
+    if(params.get('view')==='tracker') setTimeout(showTracker,0);
+    if(params.get('from')==='quote') setMode('quote');
+    if(params.get('product')||params.get('blank')) setMode(params.get('blank')?'blank':'quote');
+    render();
+  </script>
+</body>
+</html>

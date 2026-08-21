@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProtoType 2 · Before Login · Ink Desk</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+  <link rel="stylesheet" href="tokens.css">
+</head>
+<body style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;">
+  <div class="page-meta">
+    <h1>ProtoType 2 · Guest</h1>
+    <p>Ink Desk · Launch Pad (≠ P1 Available/Tools)</p>
+    <p>
+      <a href="login.html">Login</a> ·
+      <a href="after-login.html">After Login</a> ·
+      <a href="../KBZ Mobile ProtoType 1/before-login.html">Compare P1</a>
+    </p>
+  </div>
+
+  <div class="phone-frame">
+    <div class="scroll">
+      <div class="status">
+        <span>9:30</span>
+        <span class="mono" style="font-size:10px;color:var(--muted);">GUEST</span>
+      </div>
+
+      <div style="padding:8px 16px 12px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:0.14em;color:var(--teal);">KBZ LIFE</p>
+          <p style="margin:2px 0 0;font-size:12px;color:var(--muted);">Agency desk</p>
+        </div>
+        <button type="button" onclick="openGate('Notifications need login')" aria-label="Notifications" style="background:none;border:none;color:var(--paper);cursor:pointer;padding:6px;">
+          <i class="ph ph-bell" style="font-size:22px;"></i>
+        </button>
+      </div>
+
+      <div style="margin:4px 16px 16px;padding:20px 16px;border:1px solid var(--line-strong);border-radius:var(--radius);background:linear-gradient(160deg,#1C2633 0%,#0E141B 100%);">
+        <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.14em;color:var(--teal);">PARTNER</p>
+        <h2 style="margin:8px 0 0;font-size:22px;font-weight:600;letter-spacing:-0.03em;line-height:1.25;">Unlock the full agent desk</h2>
+        <p style="margin:8px 0 0;font-size:13px;color:var(--muted);line-height:1.45;">Sell · CRM · commission · team — after you sign in.</p>
+        <a href="login.html" class="btn-teal" style="margin-top:16px;">Login or Register</a>
+      </div>
+
+      <!-- Launch Pad · ≠ P1 Available/Tools card -->
+      <div style="padding:0 16px 12px;">
+        <p class="launch-title">LAUNCH</p>
+        <p class="launch-sub">Tap a pad · locked pads need sign-in</p>
+        <div class="launch-pad">
+          <a class="pad live" href="products.html"><span class="idx">01</span><i class="ph ph-hexagon"></i><span class="pad-label">Product</span></a>
+          <a class="pad live" href="get-quote.html"><span class="idx">02</span><i class="ph ph-calculator"></i><span class="pad-label">Calculator</span></a>
+          <button type="button" class="pad live" onclick="openGate('Online needs login')"><span class="idx">03</span><i class="ph ph-globe"></i><span class="pad-label">Online</span></button>
+          <button type="button" class="pad locked" onclick="openGate('New Proposal needs login')"><span class="idx">04</span><i class="ph ph-lock-simple lock-badge"></i><i class="ph ph-note-pencil"></i><span class="pad-label">Proposal</span></button>
+          <button type="button" class="pad locked" onclick="openGate('Commission needs login')"><span class="idx">05</span><i class="ph ph-lock-simple lock-badge"></i><i class="ph ph-chart-pie-slice"></i><span class="pad-label">Commission</span></button>
+          <button type="button" class="pad locked" onclick="openGate('Proposal Status needs login')"><span class="idx">06</span><i class="ph ph-lock-simple lock-badge"></i><i class="ph ph-clipboard-text"></i><span class="pad-label">Status</span></button>
+          <button type="button" class="pad locked" onclick="openGate('Claim needs login')"><span class="idx">07</span><i class="ph ph-lock-simple lock-badge"></i><i class="ph ph-shield-check"></i><span class="pad-label">Claim</span></button>
+          <button type="button" class="pad locked" onclick="openGate('CRM needs login')"><span class="idx">08</span><i class="ph ph-lock-simple lock-badge"></i><i class="ph ph-users"></i><span class="pad-label">CRM</span></button>
+        </div>
+        <button type="button" class="pad locked" onclick="openGate('Tasks need login')" style="width:100%;aspect-ratio:auto;flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px;margin-top:8px;">
+          <span class="idx" style="position:static;">09</span>
+          <i class="ph ph-calendar-blank" style="font-size:22px;color:var(--muted);"></i>
+          <span class="pad-label" style="-webkit-line-clamp:1;">Task Management</span>
+          <i class="ph ph-lock-simple" style="margin-left:auto;color:var(--muted);"></i>
+        </button>
+      </div>
+
+      <div style="padding:4px 16px 24px;">
+        <p class="launch-title">PROMO</p>
+        <div class="chip-rail">
+          <div style="flex-shrink:0;width:240px;padding:12px;border-radius:6px;background:var(--panel);border:1px solid var(--line);">
+            <p style="margin:0;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--teal);">01 · INCENTIVE</p>
+            <p style="margin:6px 0 0;font-size:13px;font-weight:600;line-height:1.35;">Earn more with every milestone</p>
+          </div>
+          <div style="flex-shrink:0;width:220px;padding:12px;border-radius:6px;background:var(--panel);border:1px solid var(--line);">
+            <p style="margin:0;font-family:var(--mono);font-size:9px;font-weight:700;color:var(--amber);">02 · CAMPAIGN</p>
+            <p style="margin:6px 0 0;font-size:13px;font-weight:600;line-height:1.35;">Unlock special discounts</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <button type="button" class="nav-hit on"><i class="ph ph-house"></i><span>Home</span></button>
+      <button type="button" class="nav-hit" onclick="openGate('Customer needs login')"><i class="ph ph-users"></i><span>Customer</span></button>
+      <button type="button" class="nav-fab" aria-label="Quick action" onclick="openGate('Quick action needs login')"><i class="ph-bold ph-plus"></i></button>
+      <a href="products.html" class="nav-hit"><i class="ph ph-hexagon"></i><span>Product</span></a>
+      <button type="button" class="nav-hit" onclick="openGate('Profile needs login')"><i class="ph ph-user-circle"></i><span>Profile</span></button>
+    </div>
+
+    <div id="gate" class="push-layer">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">GATE</span></div>
+      <div style="padding:24px 20px;flex:1;">
+        <button type="button" onclick="closeGate()" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:0;margin-bottom:20px;font-family:var(--font);font-size:13px;">← Back</button>
+        <p style="margin:0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);">SIGN IN REQUIRED</p>
+        <h2 id="gateReason" style="margin:10px 0 0;font-size:20px;font-weight:600;letter-spacing:-0.02em;">This feature unlocks after you sign in.</h2>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--muted);line-height:1.45;">Same wireframe job as ProtoType 1 — Ink Desk chrome.</p>
+        <a href="login.html" class="btn-teal" style="margin-top:28px;">Go to Login</a>
+        <button type="button" class="btn-ghost" style="margin-top:10px;" onclick="closeGate()">Stay guest</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openGate(reason) {
+      document.getElementById('gateReason').textContent = reason || 'This feature unlocks after you sign in.';
+      document.getElementById('gate').classList.add('open');
+    }
+    function closeGate() {
+      document.getElementById('gate').classList.remove('open');
+    }
+  </script>
+</body>
+</html>
