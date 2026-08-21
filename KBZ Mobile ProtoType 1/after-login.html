@@ -607,13 +607,58 @@
         .step-fade {
             animation: fadeIn 0.32s ease-out;
         }
+        .notif-bell {
+            position: relative; width: 36px; height: 36px; border-radius: 999px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,53,84,0.05); border: none; cursor: pointer; flex-shrink: 0;
+        }
+        .notif-badge {
+            position: absolute; top: 2px; right: 2px;
+            min-width: 16px; height: 16px; padding: 0 4px;
+            border-radius: 999px; background: #F59E0B; color: #fff;
+            font-size: 9px; font-weight: 800; line-height: 16px; text-align: center;
+            box-shadow: 0 0 0 2px #F7F3EC;
+        }
+        .notif-badge.is-empty { display: none; }
+        .notif-group {
+            font-size: 11px; font-weight: 800; color: rgba(0,53,84,0.4);
+            letter-spacing: 0.04em; margin: 14px 0 8px; text-transform: uppercase;
+        }
+        .notif-row {
+            width: 100%; text-align: left; display: flex; gap: 12px; align-items: flex-start;
+            padding: 12px; border-radius: 16px; background: #FFFcf7;
+            box-shadow: 0 8px 24px rgba(0,53,84,0.08); border: none; cursor: pointer;
+            margin-bottom: 8px; position: relative;
+        }
+        .notif-row.unread { box-shadow: 0 8px 24px rgba(0,53,84,0.08), inset 3px 0 0 #0582CA; }
+        .notif-row .dot {
+            position: absolute; top: 14px; right: 12px;
+            width: 8px; height: 8px; border-radius: 999px; background: #0582CA;
+        }
+        .notif-ico {
+            width: 40px; height: 40px; border-radius: 14px; flex-shrink: 0;
+            background: rgba(0,166,251,0.12); color: #0582CA;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .notif-ico .ph-fill { font-size: 20px; }
+        .notif-hero {
+            border-radius: 18px; padding: 18px 16px;
+            background: linear-gradient(145deg, #00A6FB 0%, #0582CA 55%, #003554 100%);
+            color: #fff; margin-bottom: 12px;
+        }
+        .notif-check {
+            width: 22px; height: 22px; border-radius: 999px; flex-shrink: 0;
+            background: rgba(87,199,133,0.2); color: #15803d;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-8">
 
     <div class="text-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-1">After Login</h1>
-        <p class="text-gray-500 text-base">FR-02 Dashboard · FR-03 CRM · FR-06 Policies (Active, read-only)</p>
+        <p class="text-gray-500 text-base">FR-02 Dashboard · FR-03 CRM · FR-06 Policies · Notifications inbox</p>
         <p class="text-gray-400 text-xs mt-1">
             <a href="before-login.html" class="text-steel font-semibold">Before Login</a>
             ·
@@ -625,6 +670,8 @@
             <button type="button" id="roleFaBtn" onclick="setDemoRole('fa')" class="text-[11px] bg-deep text-white px-3 py-1 rounded-full font-medium">Role: FA</button>
             <button type="button" id="roleLeaderBtn" onclick="setDemoRole('leader')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Role: Leader</button>
             <button type="button" onclick="simulateEmptySearch()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Simulate empty</button>
+            <button type="button" onclick="toggleNotifEmpty()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Toggle empty notifs</button>
+            <button type="button" onclick="markAllNotifsRead()" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Mark notifs read</button>
             <button type="button" onclick="showSuccessToast('Saved successfully')" class="text-[11px] bg-white border border-gray-200 px-3 py-1 rounded-full text-gray-600 font-medium">Show success toast</button>
         </div>
     </div>
@@ -653,11 +700,10 @@
                 <button type="button" onclick="showAppTab('profile')" class="flex-1 min-w-0 text-left">
                     <span id="agentDisplayName" class="text-deep font-bold text-sm truncate block leading-tight">Myat Moe Pyae</span>
                 </button>
-                <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-deep/5" aria-label="Notifications">
-                    <svg class="w-5 h-5 text-deep" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
-                    </svg>
-                </div>
+                <button type="button" class="notif-bell" onclick="showAppTab('notifications')" aria-label="Notifications">
+                    <i class="ph-fill ph-bell text-deep" style="font-size:18px" aria-hidden="true"></i>
+                    <span id="notifBadge" class="notif-badge">3</span>
+                </button>
             </div>
 
             <div id="offlineBanner" class="offline-banner">
@@ -1123,6 +1169,51 @@
             </div>
 
             <div id="taskBody" class="px-4 pb-8"></div>
+        </div>
+
+        <!-- ========== Notifications (wireframe flow · our skin) ========== -->
+        <div class="scroll-content" id="notificationsView" style="display:none;">
+            <div id="notifListPane">
+                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                    </div>
+                </div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-2">
+                    <button type="button" onclick="showAppTab('home')" class="w-9 h-9 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Back">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-deep font-bold text-lg leading-none">Notifications</h2>
+                        <p class="text-deep/45 text-[11px] mt-1" id="notifSubtitle">3 unread</p>
+                    </div>
+                    <button type="button" onclick="markAllNotifsRead()" class="text-[10px] font-bold text-steel px-2 py-1.5 rounded-lg bg-sky/10 flex-shrink-0">Mark all read</button>
+                </div>
+                <div id="notifListBody" class="px-4 pb-8"></div>
+                <div id="notifEmpty" class="mx-4 mb-8 empty-state soft-card" style="display:none;">
+                    <div class="empty-icon"><i class="ph-fill ph-bell-slash" style="font-size:28px;color:#0582CA" aria-hidden="true"></i></div>
+                    <p class="text-deep font-bold text-sm">You’re all caught up</p>
+                    <p class="text-deep/45 text-xs mt-1">New alerts from Core will show here</p>
+                </div>
+            </div>
+
+            <div id="notifDetailPane" style="display:none;">
+                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                    <span class="text-xs font-semibold text-deep">9:30</span>
+                    <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
+                </div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-2">
+                    <button type="button" onclick="backNotifList()" class="w-9 h-9 rounded-full bg-deep/5 flex items-center justify-center flex-shrink-0" aria-label="Back">
+                        <svg class="w-5 h-5 text-deep" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-deep font-bold text-lg leading-none">Notification</h2>
+                        <p class="text-deep/45 text-[11px] mt-1" id="notifDetailType">Detail</p>
+                    </div>
+                </div>
+                <div id="notifDetailBody" class="px-4 pb-8"></div>
+            </div>
         </div>
 
         <div id="successToast" class="toast-success" role="status">
@@ -1770,6 +1861,7 @@
         if (location.hash === '#policies') setTimeout(() => showAppTab('policies'), 0);
         if (location.hash === '#profile') setTimeout(() => showAppTab('profile'), 0);
         if (location.hash === '#tasks') setTimeout(() => showAppTab('tasks'), 0);
+        if (location.hash === '#notifications') setTimeout(() => showAppTab('notifications'), 0);
         
         let demoRole = 'fa';
         let policyTypeFilter = 'all';
@@ -1785,11 +1877,13 @@
             const policies = document.getElementById('policiesView');
             const profile = document.getElementById('profileView');
             const tasks = document.getElementById('tasksView');
+            const notifications = document.getElementById('notificationsView');
             home.style.display = tab === 'home' ? 'block' : 'none';
             customer.style.display = tab === 'customer' ? 'block' : 'none';
             policies.style.display = tab === 'policies' ? 'block' : 'none';
             if (profile) profile.style.display = tab === 'profile' ? 'block' : 'none';
             if (tasks) tasks.style.display = tab === 'tasks' ? 'block' : 'none';
+            if (notifications) notifications.style.display = tab === 'notifications' ? 'block' : 'none';
 
             setNavItem(document.getElementById('navHome'), tab === 'home');
             setNavItem(document.getElementById('navCustomer'), tab === 'customer');
@@ -1798,11 +1892,157 @@
             if (tab === 'customer') switchCrmTab('leads');
             if (tab === 'policies') filterPolicies();
             if (tab === 'tasks') renderTasks();
+            if (tab === 'notifications') {
+                backNotifList();
+                renderNotifs();
+            }
             if (history.replaceState) {
                 const hash = tab === 'home' ? '' : '#' + tab;
                 history.replaceState(null, '', location.pathname + location.search + hash);
             }
         }
+
+        /* ——— Notifications (Option A) ——— */
+        let notifEmptySim = false;
+        const NOTIFS = [
+            { id: 'n1', group: 'Today', when: '2 hr', unread: true, type: 'product', icon: 'ph-megaphone', title: 'New: Family Health Plus', body: 'Launch offer for your book — limited window.', action: 'detail' },
+            { id: 'n2', group: 'Today', when: '5 hr', unread: true, type: 'renewal', icon: 'ph-shield-check', title: 'Renewal due — Thant Zin Win', body: 'PA policy ends in 14 days. Start renewal e-App.', action: 'renewal' },
+            { id: 'n3', group: 'Yesterday', when: '1 day', unread: true, type: 'claim', icon: 'ph-clipboard-text', title: 'Claim update · CL-8821', body: 'Documents received — under review.', action: 'claim' },
+            { id: 'n4', group: 'Yesterday', when: '1 day', unread: false, type: 'uw', icon: 'ph-file-text', title: 'Proposal status · PR-4410', body: 'UW requested medical report.', action: 'tracker' },
+            { id: 'n5', group: '12 Aug', when: '3 days', unread: false, type: 'commission', icon: 'ph-chart-pie', title: 'Commission posted', body: 'August cycle · 726,000 MMK available.', action: 'commission' },
+        ];
+
+        function unreadCount() {
+            if (notifEmptySim) return 0;
+            return NOTIFS.filter(n => n.unread).length;
+        }
+
+        function syncNotifBadge() {
+            const badge = document.getElementById('notifBadge');
+            const sub = document.getElementById('notifSubtitle');
+            const n = unreadCount();
+            if (badge) {
+                badge.textContent = String(n);
+                badge.classList.toggle('is-empty', n === 0);
+            }
+            if (sub) sub.textContent = n === 0 ? 'All caught up' : n + ' unread';
+        }
+
+        function renderNotifs() {
+            const body = document.getElementById('notifListBody');
+            const empty = document.getElementById('notifEmpty');
+            if (!body) return;
+            syncNotifBadge();
+            if (notifEmptySim) {
+                body.innerHTML = '';
+                if (empty) empty.style.display = 'block';
+                return;
+            }
+            if (empty) empty.style.display = 'none';
+            const groups = [];
+            NOTIFS.forEach(n => {
+                if (!groups.includes(n.group)) groups.push(n.group);
+            });
+            body.innerHTML = groups.map(g => {
+                const rows = NOTIFS.filter(n => n.group === g).map(n => `
+                    <button type="button" class="notif-row ${n.unread ? 'unread' : ''}" onclick="openNotif('${n.id}')">
+                        <span class="notif-ico"><i class="ph-fill ${n.icon}" aria-hidden="true"></i></span>
+                        <span class="flex-1 min-w-0 pr-4">
+                            <span class="text-deep font-bold text-sm block leading-snug">${n.title}</span>
+                            <span class="text-deep/50 text-[11px] block mt-0.5 leading-snug">${n.body}</span>
+                            <span class="text-deep/35 text-[10px] font-semibold mt-1.5 block">${n.when}</span>
+                        </span>
+                        ${n.unread ? '<span class="dot" aria-hidden="true"></span>' : ''}
+                    </button>
+                `).join('');
+                return `<p class="notif-group">${g}</p>${rows}`;
+            }).join('');
+        }
+
+        function backNotifList() {
+            const list = document.getElementById('notifListPane');
+            const detail = document.getElementById('notifDetailPane');
+            if (list) list.style.display = 'block';
+            if (detail) detail.style.display = 'none';
+        }
+
+        function openNotif(id) {
+            const n = NOTIFS.find(x => x.id === id);
+            if (!n) return;
+            n.unread = false;
+            syncNotifBadge();
+            renderNotifs();
+
+            if (n.action === 'claim') {
+                showAppTab('home');
+                openSheet('claimSheet');
+                return;
+            }
+            if (n.action === 'commission') {
+                showAppTab('home');
+                openSheet('commissionSheet');
+                return;
+            }
+            if (n.action === 'tracker') {
+                location.href = 'policyholder-form.html?view=tracker';
+                return;
+            }
+            if (n.action === 'renewal') {
+                location.href = 'policyholder-form.html?product=pa&renewal=1&from=notif';
+                return;
+            }
+
+            /* product launch rich detail */
+            document.getElementById('notifListPane').style.display = 'none';
+            document.getElementById('notifDetailPane').style.display = 'block';
+            document.getElementById('notifDetailType').textContent = 'Product launch';
+            document.getElementById('notifDetailBody').innerHTML = `
+                <div class="notif-hero step-fade">
+                    <span class="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider bg-white/15 px-2.5 py-1 rounded-full mb-3">Health</span>
+                    <h3 class="text-white font-extrabold text-xl leading-tight">Family Health Plus</h3>
+                    <p class="text-white/85 text-[13px] mt-2 leading-snug">Hospital cash + outpatient — priced for young families in your book.</p>
+                </div>
+                <div class="soft-card p-4 mb-3">
+                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">ABOUT</p>
+                    <p class="text-deep text-sm leading-relaxed">Core is launching Family Health Plus this month. Share with clients aged 25–45 who want affordable inpatient cover without a full medical.</p>
+                </div>
+                <div class="soft-card p-4 mb-3">
+                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">WHO IT’S FOR</p>
+                    <div class="space-y-2.5">
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Parents with school-age kids</p></div>
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">PA clients ready to add health</p></div>
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Leads asking about hospital bills</p></div>
+                    </div>
+                </div>
+                <div class="soft-card p-4 mb-4">
+                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">WHY BUY</p>
+                    <div class="space-y-2.5">
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Fast e-App — no lab for standard risks</p></div>
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Launch commission uplift through month-end</p></div>
+                        <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Pairs cleanly with Personal Accident</p></div>
+                    </div>
+                </div>
+                <a href="products.html" class="btn-sheet-primary mb-2 block text-center no-underline">View product</a>
+                <a href="get-quote.html?product=health" class="btn-sheet-secondary block text-center no-underline">Get a quote</a>
+            `;
+        }
+
+        function markAllNotifsRead() {
+            NOTIFS.forEach(n => { n.unread = false; });
+            notifEmptySim = false;
+            syncNotifBadge();
+            renderNotifs();
+            showSuccessToast('All marked read');
+        }
+
+        function toggleNotifEmpty() {
+            notifEmptySim = !notifEmptySim;
+            syncNotifBadge();
+            if (document.getElementById('notificationsView')?.style.display === 'block') renderNotifs();
+            showSuccessToast(notifEmptySim ? 'Empty inbox on' : 'Inbox restored');
+        }
+
+        syncNotifBadge();
 
         function setDemoRole(role) {
             demoRole = role;
