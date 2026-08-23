@@ -13,6 +13,7 @@
 |---|---|
 | **P0** | `tokens.css` · guest · login · desk shell · products stub |
 | **P1** | `personal-accident.html` · `get-quote.html` (3-step) · `policyholder-form.html` (6-step + tracker) · desk: CRM · Policies · Tasks · Inbox · Team · wired tools |
+| **P1.5** | `after-login.html`: Announcements (FR-09) + Resource Center (FR-10) — reachable from Profile row-links and `#announce` / `#resources` QA chips |
 
 Gallery: ProtoType 2 cards **01–08**. ProtoType 1 untouched.
 

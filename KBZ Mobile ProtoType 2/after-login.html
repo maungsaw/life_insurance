@@ -55,6 +55,8 @@
       <button type="button" onclick="toggleOffline()">OFFLINE</button>
       <button type="button" onclick="showTab('team')">#team</button>
       <button type="button" onclick="showTab('notifications')">#inbox</button>
+      <button type="button" onclick="showTab('announce')">#announce</button>
+      <button type="button" onclick="showTab('resources')">#resources</button>
     </div>
   </div>
 
@@ -261,8 +263,72 @@
         <div class="panel" style="margin-top:12px;padding:2px 14px;">
           <button type="button" class="row-link" onclick="setRole(role==='fa'?'am':'fa')"><span style="flex:1;font-size:13px;font-weight:600;">Preview role</span><span style="font-size:11px;color:var(--muted);" id="previewNow">FA</span></button>
           <button type="button" class="row-link" id="profileTeam" style="display:none;" onclick="showTab('team')"><span style="flex:1;font-size:13px;font-weight:600;">Team Sales Performance</span><i class="ph ph-caret-right chev"></i></button>
+          <button type="button" class="row-link" onclick="showTab('announce')"><span class="ico"><i class="ph ph-megaphone"></i></span><span style="flex:1;font-size:13px;font-weight:600;">Announcements</span><i class="ph ph-caret-right chev"></i></button>
+          <button type="button" class="row-link" onclick="showTab('resources')"><span class="ico"><i class="ph ph-books"></i></span><span style="flex:1;font-size:13px;font-weight:600;">Resource Center</span><i class="ph ph-caret-right chev"></i></button>
           <a href="before-login.html" class="row-link"><span style="flex:1;font-size:13px;font-weight:600;color:var(--rose);">Log out</span></a>
         </div>
+      </div>
+    </div>
+
+    <!-- ========== ANNOUNCEMENTS ========== -->
+    <div class="view" id="announceView">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">ANNOUNCE</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('profile')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">Announcements</h2><p style="margin:2px 0 0;font-size:11px;color:var(--muted);">Company-wide · read-only</p></div>
+      </div>
+      <div style="padding:0 16px 24px;" id="announceList">
+        <button type="button" class="panel" style="width:100%;text-align:left;padding:0;margin-bottom:12px;overflow:hidden;cursor:pointer;border:1px solid var(--line);" onclick="openAnnounceDetail('Family Health Plus launch','PRODUCT','Hospital cash + outpatient — priced for young families in your book. Launch window incentive applies until 30 Sep.','products.html')">
+          <div style="height:96px;background:linear-gradient(135deg,#1C2633 0%,#0E141B 100%);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);"><i class="ph ph-image" style="font-size:26px;color:var(--muted);"></i></div>
+          <div style="padding:12px 14px;">
+            <p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--teal);">PRODUCT · 2 hr</p>
+            <p style="margin:6px 0 0;font-size:14px;font-weight:600;">Family Health Plus launch</p>
+            <p style="margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.4;">Hospital cash + outpatient — priced for young families.</p>
+          </div>
+        </button>
+        <button type="button" class="panel" style="width:100%;text-align:left;padding:0;margin-bottom:12px;overflow:hidden;cursor:pointer;border:1px solid var(--line);" onclick="openAnnounceDetail('Q3 MDRT incentive trip','INCENTIVE','Hit 65% MDRT premium by 30 Sep to qualify for the regional recognition trip. Standings update weekly on Team hub.','#team')">
+          <div style="height:96px;background:linear-gradient(135deg,#1C2633 0%,#0E141B 100%);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);"><i class="ph ph-image" style="font-size:26px;color:var(--muted);"></i></div>
+          <div style="padding:12px 14px;">
+            <p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--amber);">INCENTIVE · 1 day</p>
+            <p style="margin:6px 0 0;font-size:14px;font-weight:600;">Q3 MDRT incentive trip</p>
+            <p style="margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.4;">Hit 65% MDRT premium by 30 Sep to qualify.</p>
+          </div>
+        </button>
+        <button type="button" class="panel" style="width:100%;text-align:left;padding:0;overflow:hidden;cursor:pointer;border:1px solid var(--line);" onclick="openAnnounceDetail('System maintenance · Sat 2:00 AM','SYSTEM','Core system will be unavailable 2:00–4:00 AM for scheduled maintenance. Save drafts before the window.','#')">
+          <div style="height:96px;background:linear-gradient(135deg,#1C2633 0%,#0E141B 100%);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line);"><i class="ph ph-image" style="font-size:26px;color:var(--muted);"></i></div>
+          <div style="padding:12px 14px;">
+            <p style="margin:0;font-size:9px;font-weight:700;letter-spacing:0.1em;color:var(--muted);">SYSTEM · 3 days</p>
+            <p style="margin:6px 0 0;font-size:14px;font-weight:600;">System maintenance · Sat 2:00 AM</p>
+            <p style="margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.4;">Core system unavailable 2:00–4:00 AM.</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== RESOURCE CENTER ========== -->
+    <div class="view" id="resourcesView">
+      <div class="status"><span>9:30</span><span id="resOfflineBadge" class="badge-offline" style="display:none;">OFFLINE</span></div>
+      <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:10px;">
+        <button type="button" onclick="showTab('profile')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;">←</button>
+        <div style="flex:1;"><h2 style="margin:0;font-size:18px;font-weight:600;">Resource Center</h2><p style="margin:2px 0 0;font-size:11px;color:var(--muted);">Brochures · training · forms</p></div>
+      </div>
+      <div style="padding:0 16px 10px;"><input class="field" placeholder="Search resources" oninput="filterResources(this.value)"></div>
+      <div style="padding:10px 16px;"><div class="chip-rail" id="resFilters">
+        <button type="button" class="chip" style="border-color:var(--teal);color:var(--teal);" onclick="resFilter(this,'all')">All</button>
+        <button type="button" class="chip" onclick="resFilter(this,'brochure')">Brochures</button>
+        <button type="button" class="chip" onclick="resFilter(this,'training')">Training</button>
+        <button type="button" class="chip" onclick="resFilter(this,'form')">Forms</button>
+      </div></div>
+      <div style="padding:6px 16px 24px;">
+        <div class="panel" style="padding:2px 14px;" id="resList">
+          <button type="button" class="row-link res-row" data-cat="brochure" data-q="family health plus brochure" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-file-pdf"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Family Health Plus — brochure</span><span style="font-size:11px;color:var(--muted);">PDF · 1.2 MB</span></span><i class="ph ph-check-circle dl-state" style="font-size:18px;color:var(--teal);" title="Downloaded"></i></button>
+          <button type="button" class="row-link res-row" data-cat="brochure" data-q="personal accident brochure" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-file-pdf"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Personal Accident — brochure</span><span style="font-size:11px;color:var(--muted);">PDF · 860 KB</span></span><i class="ph ph-check-circle dl-state" style="font-size:18px;color:var(--teal);" title="Downloaded"></i></button>
+          <button type="button" class="row-link res-row" data-cat="training" data-q="objection handling training video" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-play-circle"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Objection handling · Module 3</span><span style="font-size:11px;color:var(--muted);">Video · 24 MB</span></span><i class="ph ph-cloud-arrow-down dl-state" style="font-size:18px;color:var(--muted);" title="Download for offline"></i></button>
+          <button type="button" class="row-link res-row" data-cat="training" data-q="product basics slides" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-presentation-chart"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Product basics · slides</span><span style="font-size:11px;color:var(--muted);">PDF · 3.4 MB</span></span><i class="ph ph-cloud-arrow-down dl-state" style="font-size:18px;color:var(--muted);" title="Download for offline"></i></button>
+          <button type="button" class="row-link res-row" data-cat="form" data-q="claim form" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-file-text"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Claim submission form</span><span style="font-size:11px;color:var(--muted);">PDF · 210 KB</span></span><i class="ph ph-check-circle dl-state" style="font-size:18px;color:var(--teal);" title="Downloaded"></i></button>
+          <button type="button" class="row-link res-row" data-cat="form" data-q="policyholder change of details form" onclick="toggleDownload(this)"><span class="ico"><i class="ph ph-file-text"></i></span><span style="flex:1;"><span style="display:block;font-size:13px;font-weight:600;">Change of details form</span><span style="font-size:11px;color:var(--muted);">PDF · 190 KB</span></span><i class="ph ph-cloud-arrow-down dl-state" style="font-size:18px;color:var(--muted);" title="Download for offline"></i></button>
+        </div>
+        <p style="margin:10px 2px 0;font-size:11px;color:var(--muted);line-height:1.4;"><i class="ph ph-info" style="vertical-align:-2px;"></i> Downloaded items stay available offline. Everything else needs a connection the first time.</p>
       </div>
     </div>
 
@@ -291,6 +357,19 @@
         </div>
         <a href="products.html" class="btn-teal" style="margin-top:16px;">View product</a>
         <a href="get-quote.html" class="btn-ghost" style="margin-top:8px;">Get a quote</a>
+      </div>
+    </div>
+
+    <!-- Announcement detail -->
+    <div id="announceDetail" class="push-layer">
+      <div class="status"><span>9:30</span><span class="mono" style="font-size:10px;color:var(--muted);">ANNOUNCE</span></div>
+      <div style="padding:16px 20px;flex:1;overflow-y:auto;">
+        <button type="button" onclick="document.getElementById('announceDetail').classList.remove('open')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-family:var(--font);font-size:13px;padding:0;">← Announcements</button>
+        <div style="height:140px;margin-top:16px;border-radius:var(--radius);background:linear-gradient(135deg,#1C2633 0%,#0E141B 100%);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;"><i class="ph ph-image" style="font-size:30px;color:var(--muted);"></i></div>
+        <p id="annTag" style="margin:16px 0 0;font-size:10px;font-weight:700;letter-spacing:0.12em;color:var(--teal);">TAG</p>
+        <h2 id="annTitle" style="margin:8px 0 0;font-size:20px;font-weight:600;">Title</h2>
+        <p id="annBody" style="margin:10px 0 0;font-size:13px;color:var(--muted);line-height:1.5;"></p>
+        <a id="annCta" href="#" class="btn-teal" style="margin-top:20px;">Open link</a>
       </div>
     </div>
 
@@ -323,7 +402,7 @@
     }
     function showTab(tab) {
       if (tab === 'team' && role === 'fa') { setRole('am'); }
-      const ids = ['home','customer','policies','tasks','notifications','team','profile'];
+      const ids = ['home','customer','policies','tasks','notifications','team','profile','announce','resources'];
       ids.forEach(id => {
         const el = document.getElementById(id + 'View');
         if (el) el.classList.toggle('on', id === tab);
@@ -388,11 +467,42 @@
       document.getElementById('notifSub').textContent = 'All caught up';
       document.getElementById('bellDot').style.display = 'none';
     }
+    function openAnnounceDetail(title, tag, body, cta) {
+      document.getElementById('annTag').textContent = tag;
+      document.getElementById('annTitle').textContent = title;
+      document.getElementById('annBody').textContent = body;
+      document.getElementById('annCta').setAttribute('href', cta || '#');
+      document.getElementById('announceDetail').classList.add('open');
+    }
+    function resFilter(btn, cat) {
+      document.querySelectorAll('#resFilters .chip').forEach(c => { c.style.borderColor = 'var(--line)'; c.style.color = 'var(--paper)'; });
+      btn.style.borderColor = 'var(--teal)'; btn.style.color = 'var(--teal)';
+      document.querySelectorAll('.res-row').forEach(row => {
+        row.style.display = (cat === 'all' || row.dataset.cat === cat) ? 'flex' : 'none';
+      });
+    }
+    function filterResources(q) {
+      q = (q || '').toLowerCase();
+      document.querySelectorAll('.res-row').forEach(row => {
+        row.style.display = !q || (row.dataset.q || '').includes(q) ? 'flex' : 'none';
+      });
+    }
+    function toggleDownload(row) {
+      const icon = row.querySelector('.dl-state');
+      const downloaded = icon.classList.contains('ph-check-circle');
+      icon.classList.toggle('ph-check-circle', !downloaded);
+      icon.classList.toggle('ph-cloud-arrow-down', downloaded);
+      icon.style.color = downloaded ? 'var(--muted)' : 'var(--teal)';
+      icon.title = downloaded ? 'Download for offline' : 'Downloaded';
+      toast(downloaded ? 'Removed from offline' : 'Saved for offline');
+    }
 
     const h = location.hash.replace('#','');
     if (h === 'team') setTimeout(() => showTab('team'), 0);
     else if (h === 'notifications' || h === 'inbox') setTimeout(() => showTab('notifications'), 0);
     else if (h === 'tasks') setTimeout(() => showTab('tasks'), 0);
+    else if (h === 'announce') setTimeout(() => showTab('announce'), 0);
+    else if (h === 'resources') setTimeout(() => showTab('resources'), 0);
     else if (h === 'customer') setTimeout(() => showTab('customer'), 0);
     else if (h === 'policies') setTimeout(() => showTab('policies'), 0);
     else if (h === 'profile') setTimeout(() => showTab('profile'), 0);
