@@ -102,15 +102,6 @@
             z-index: 50;
         }
 
-        .avail-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 999px;
-            background: #57C785;
-            margin-top: 6px;
-            box-shadow: 0 0 0 3px rgba(87, 199, 133, 0.16);
-        }
-
         .available-divider {
             border-left: 1px solid rgba(0, 53, 84, 0.09);
             border-right: 1px solid rgba(0, 53, 84, 0.09);
@@ -130,7 +121,7 @@
             flex: 0 0 92%;
             scroll-snap-align: start;
             border-radius: 16px;
-            min-height: 136px;
+            min-height: 92px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 18px rgba(0, 53, 84, 0.12);
@@ -184,8 +175,8 @@
             align-self: flex-start;
             width: auto;
             max-width: max-content;
-            margin-top: 12px;
-            padding: 7px 12px;
+            margin-top: 8px;
+            padding: 5px 10px;
             border-radius: 999px;
             background: rgba(255,255,255,0.95);
             color: #003554;
@@ -271,8 +262,8 @@
         .nav-hit.on .ph-fill,
         .nav-hit.active .ph-fill { color: #0582CA; }
         .nav-fab .ph-fill { font-size: 26px; color: #fff; }
-        .ui-tile .ph-fill { font-size: 24px; color: #0582CA; }
-        .ui-tile-sm .ph-fill { font-size: 18px; color: #0582CA; }
+        .ui-tile .ph-fill { font-size: 20px; color: #0582CA; }
+        .ui-tile-sm .ph-fill { font-size: 15px; color: #0582CA; }
         .product-icon .ph-fill { font-size: 26px; color: #0582CA; }
         .profile-avatar-ico .ph-fill { font-size: 32px; color: #0582CA; }
 
@@ -284,13 +275,13 @@
             width: 26px; height: 26px;
         }
         .ui-tile {
-            width: 48px; height: 48px; border-radius: 16px;
+            width: 40px; height: 40px; border-radius: 14px;
             background: rgba(0,166,251,0.1);
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .ui-tile-sm {
-            width: 32px; height: 32px; border-radius: 10px;
+            width: 28px; height: 28px; border-radius: 9px;
             background: rgba(0,166,251,0.1);
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
@@ -421,45 +412,42 @@
 
             <!-- Partner With Us Hero -->
             <div class="mx-4 mt-1">
-                <div class="partner-hero px-5 pt-5 pb-4">
-                    <div class="flex items-start gap-3 mb-4">
-                        <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <div class="partner-hero px-5 pt-4 pb-3.5">
+                    <div class="flex items-start gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="5" y="11" width="14" height="10" rx="2"/>
                                 <path d="M8 11V7a4 4 0 018 0v4"/>
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-white font-bold text-xl leading-tight">Partner With Us</h2>
-                            <p class="text-white/85 text-[12px] mt-1 leading-snug">Login or Register to unlock more features.</p>
+                            <h2 class="text-white font-bold text-lg leading-tight">Partner With Us</h2>
+                            <p class="text-white/85 text-[11px] mt-1 leading-snug">Login or Register to unlock more features.</p>
                         </div>
                     </div>
-                    <a href="login.html" class="cta-login block w-full bg-white text-steel font-bold py-3 rounded-xl text-sm text-center no-underline shadow-sm">
+                    <a href="login.html" class="cta-login block w-full bg-white text-steel font-bold py-2.5 rounded-xl text-sm text-center no-underline shadow-sm">
                         Login or Register
                     </a>
                 </div>
             </div>
 
             <!-- Our Services card -->
-            <div class="mx-4 mt-4 soft-card overflow-hidden">
+            <div class="mx-4 mt-3 soft-card overflow-hidden">
                 <!-- Available Now -->
-                <div class="px-4 pt-4 pb-3">
-                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">AVAILABLE NOW</h3>
+                <div class="px-4 pt-3 pb-2.5">
+                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-2">AVAILABLE NOW</h3>
                     <div class="grid grid-cols-3 gap-0">
-                        <a href="products.html" class="flex flex-col items-center text-center py-2 px-1.5 no-underline">
+                        <a href="products.html" class="flex flex-col items-center text-center py-1.5 px-1.5 no-underline">
                             <div class="ui-tile"><i class="ph-fill ph-hexagon" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Product</span>
-                            <span class="avail-dot"></span>
                         </a>
-                        <a href="get-quote.html" class="available-divider flex flex-col items-center text-center py-2 px-1.5 no-underline">
+                        <a href="get-quote.html" class="available-divider flex flex-col items-center text-center py-1.5 px-1.5 no-underline">
                             <div class="ui-tile"><i class="ph-fill ph-calculator" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Calculator</span>
-                            <span class="avail-dot"></span>
                         </a>
-                        <button type="button" class="flex flex-col items-center text-center py-2 px-1.5" onclick="alert('Online resources / Resource Library (FR-10)')">
+                        <button type="button" class="flex flex-col items-center text-center py-1.5 px-1.5" onclick="alert('Online resources / Resource Library (FR-10)')">
                             <div class="ui-tile"><i class="ph-fill ph-globe" aria-hidden="true"></i></div>
                             <span class="text-deep text-[11px] font-semibold">Online</span>
-                            <span class="avail-dot"></span>
                         </button>
                     </div>
                 </div>
@@ -467,51 +455,35 @@
                 <div class="border-t border-deep/5"></div>
 
                 <!-- Unlock With Login -->
-                <div class="px-4 pt-3 pb-4">
-                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-3">UNLOCK WITH LOGIN</h3>
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('New Proposal (FR-05 e-Application)')">
-                            <div class="ui-tile-sm"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
-                            <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">New Proposal</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <rect x="5" y="11" width="14" height="10" rx="2"/>
-                                <path d="M8 11V7a4 4 0 018 0v4"/>
-                            </svg>
+                <div class="px-4 pt-2.5 pb-3">
+                    <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em] mb-2">UNLOCK WITH LOGIN</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" class="flex items-center gap-2 rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left" onclick="openLoginSheet('New Proposal (FR-05 e-Application)')">
+                            <div class="ui-tile-sm flex-shrink-0"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div>
+                            <span class="text-deep text-[11px] font-semibold leading-tight">New Proposal</span>
                         </button>
 
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('Commission (FR-02 Dashboard)')">
-                            <div class="ui-tile-sm"><i class="ph-fill ph-chart-pie" aria-hidden="true"></i></div>
-                            <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">Commission</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <rect x="5" y="11" width="14" height="10" rx="2"/>
-                                <path d="M8 11V7a4 4 0 018 0v4"/>
-                            </svg>
+                        <button type="button" class="flex items-center gap-2 rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left" onclick="openLoginSheet('Commission (FR-02 Dashboard)')">
+                            <div class="ui-tile-sm flex-shrink-0"><i class="ph-fill ph-chart-pie" aria-hidden="true"></i></div>
+                            <span class="text-deep text-[11px] font-semibold leading-tight">Commission</span>
                         </button>
 
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('Proposal Status (FR-05)')">
-                            <div class="ui-tile-sm"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i></div>
-                            <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">Proposal Status</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <rect x="5" y="11" width="14" height="10" rx="2"/>
-                                <path d="M8 11V7a4 4 0 018 0v4"/>
-                            </svg>
+                        <button type="button" class="flex items-center gap-2 rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left" onclick="openLoginSheet('Proposal Status (FR-05)')">
+                            <div class="ui-tile-sm flex-shrink-0"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i></div>
+                            <span class="text-deep text-[11px] font-semibold leading-tight">Proposal Status</span>
                         </button>
 
-                        <button type="button" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2.5 pr-2 py-3 text-left" onclick="openLoginSheet('CRM / Clients & Leads (FR-03)')">
-                            <div class="ui-tile-sm"><i class="ph-fill ph-users" aria-hidden="true"></i></div>
-                            <span class="text-deep text-[11px] font-semibold flex-1 min-w-0 leading-tight truncate">CRM</span>
-                            <svg class="w-3 h-3 text-deep/35 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <rect x="5" y="11" width="14" height="10" rx="2"/>
-                                <path d="M8 11V7a4 4 0 018 0v4"/>
-                            </svg>
+                        <button type="button" class="flex items-center gap-2 rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left" onclick="openLoginSheet('CRM / Clients & Leads (FR-03)')">
+                            <div class="ui-tile-sm flex-shrink-0"><i class="ph-fill ph-users" aria-hidden="true"></i></div>
+                            <span class="text-deep text-[11px] font-semibold leading-tight">CRM</span>
                         </button>
                     </div>
                 </div>
             </div>
 
             <!-- Promotion & Campaign — grouped in one soft card -->
-            <div class="mx-4 mt-4 mb-3 soft-card overflow-hidden">
-                <div class="px-4 pt-4 pb-3 flex items-start justify-between gap-3">
+            <div class="mx-4 mt-3 mb-3 soft-card overflow-hidden">
+                <div class="px-4 pt-3 pb-2.5 flex items-start justify-between gap-3">
                     <div class="min-w-0">
                         <h3 class="text-deep/55 font-bold text-[11px] tracking-[0.12em]">PROMOTION &amp; CAMPAIGN</h3>
                         <p class="text-deep/45 text-[10px] mt-1 leading-snug">Latest incentives &amp; announcements</p>
@@ -525,16 +497,16 @@
                         <button type="button" class="promo-card" style="background: linear-gradient(135deg, #00A6FB 0%, #0582CA 100%);" onclick="openPromoSheet('incentive')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
-                            <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
+                            <div class="relative z-10 p-3 h-full flex flex-col justify-between min-h-[92px]">
                                 <div>
                                     <span class="promo-badge">Incentive</span>
-                                    <h4 class="text-white font-bold text-[15px] leading-snug mt-2">Earn more with every milestone</h4>
-                                    <p class="text-white/80 text-[11px] mt-1 leading-snug">Hit your monthly target and unlock bonus rewards.</p>
+                                    <h4 class="text-white font-bold text-[13px] leading-snug mt-1.5">Earn more with every milestone</h4>
+                                    <p class="text-white/80 text-[10px] mt-0.5 leading-snug">Hit your monthly target and unlock bonus rewards.</p>
                                 </div>
                                 <span class="promo-cta">Explore <span aria-hidden="true">→</span></span>
                             </div>
-                            <div class="absolute right-3 bottom-3 opacity-30 pointer-events-none">
-                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <div class="absolute right-2 bottom-2 opacity-30 pointer-events-none">
+                                <svg class="w-9 h-9 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                                 </svg>
                             </div>
@@ -544,16 +516,16 @@
                         <button type="button" class="promo-card" style="background: linear-gradient(135deg, #006494 0%, #003554 100%);" onclick="openPromoSheet('campaign')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
-                            <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
+                            <div class="relative z-10 p-3 h-full flex flex-col justify-between min-h-[92px]">
                                 <div>
                                     <span class="promo-badge">This month</span>
-                                    <h4 class="text-white font-bold text-[15px] leading-snug mt-2">Special incentives for top closers</h4>
-                                    <p class="text-white/80 text-[11px] mt-1 leading-snug">Limited-time campaign for Personal Accident sales.</p>
+                                    <h4 class="text-white font-bold text-[13px] leading-snug mt-1.5">Special incentives for top closers</h4>
+                                    <p class="text-white/80 text-[10px] mt-0.5 leading-snug">Limited-time campaign for Personal Accident sales.</p>
                                 </div>
                                 <span class="promo-cta">Explore <span aria-hidden="true">→</span></span>
                             </div>
-                            <div class="absolute right-2 bottom-2 opacity-25 pointer-events-none">
-                                <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24">
+                            <div class="absolute right-1.5 bottom-1.5 opacity-25 pointer-events-none">
+                                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                 </svg>
                             </div>
@@ -563,16 +535,16 @@
                         <button type="button" class="promo-card" style="background: linear-gradient(135deg, #0582CA 0%, #003554 100%);" onclick="openPromoSheet('training')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
-                            <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
+                            <div class="relative z-10 p-3 h-full flex flex-col justify-between min-h-[92px]">
                                 <div>
                                     <span class="promo-badge">Training</span>
-                                    <h4 class="text-white font-bold text-[15px] leading-snug mt-2">New product training drop</h4>
-                                    <p class="text-white/80 text-[11px] mt-1 leading-snug">Short modules + brochures in Resource Library.</p>
+                                    <h4 class="text-white font-bold text-[13px] leading-snug mt-1.5">New product training drop</h4>
+                                    <p class="text-white/80 text-[10px] mt-0.5 leading-snug">Short modules + brochures in Resource Library.</p>
                                 </div>
                                 <span class="promo-cta">Explore <span aria-hidden="true">→</span></span>
                             </div>
-                            <div class="absolute right-3 bottom-3 opacity-25 pointer-events-none">
-                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24">
+                            <div class="absolute right-2 bottom-2 opacity-25 pointer-events-none">
+                                <svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24">
                                     <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
                                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
                                 </svg>
