@@ -522,7 +522,7 @@
                 <div class="px-3 pb-1">
                     <div class="promo-track" id="promoTrack">
                         <!-- Card 1 · Incentive -->
-                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #00A6FB 0%, #0582CA 100%);" onclick="alert('Open announcement · image + URL (FR-09)')">
+                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #00A6FB 0%, #0582CA 100%);" onclick="openPromoSheet('incentive')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
                             <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
@@ -541,7 +541,7 @@
                         </button>
 
                         <!-- Card 2 · Campaign -->
-                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #006494 0%, #003554 100%);" onclick="alert('Open announcement · image + URL (FR-09)')">
+                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #006494 0%, #003554 100%);" onclick="openPromoSheet('campaign')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
                             <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
@@ -560,7 +560,7 @@
                         </button>
 
                         <!-- Card 3 · Training -->
-                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #0582CA 0%, #003554 100%);" onclick="alert('Open announcement · image + URL (FR-09)')">
+                        <button type="button" class="promo-card" style="background: linear-gradient(135deg, #0582CA 0%, #003554 100%);" onclick="openPromoSheet('training')">
                             <span class="promo-orb promo-orb-a"></span>
                             <span class="promo-orb promo-orb-b"></span>
                             <div class="relative z-10 p-4 h-full flex flex-col justify-between min-h-[136px]">
@@ -603,7 +603,7 @@
                 </button>
                 <div class="relative -mt-7">
                     <button type="button" onclick="openLoginSheet('Quick action needs login')" class="nav-fab" aria-label="Quick action">
-                        <i class="ph-fill ph-shield-check" aria-hidden="true"></i>
+                        <i class="ph-fill ph-plus" aria-hidden="true"></i>
                     </button>
                 </div>
                 <a href="products.html" class="nav-hit">
@@ -614,6 +614,31 @@
                     <i class="ph-fill ph-user-circle" aria-hidden="true"></i>
                     <span class="nav-label">Profile</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- Promo Detail Sheet -->
+        <div id="promoSheet" class="sheet-overlay">
+            <div class="sheet-panel">
+                <div class="sheet-handle"></div>
+                <div id="promoHero" class="rounded-2xl p-4 mb-4 relative overflow-hidden" style="min-height: 120px;">
+                    <span class="promo-orb promo-orb-a"></span>
+                    <span class="promo-orb promo-orb-b"></span>
+                    <div class="relative z-10">
+                        <span id="promoHeroBadge" class="promo-badge"></span>
+                        <h4 id="promoHeroTitle" class="text-white font-bold text-[17px] leading-snug mt-2"></h4>
+                        <p id="promoHeroDesc" class="text-white/80 text-[12px] mt-1 leading-snug"></p>
+                    </div>
+                </div>
+                <div id="promoHeroBody" class="text-deep/75 text-[13px] leading-relaxed mb-5 space-y-2"></div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closePromoSheet()" class="flex-1 bg-cream text-deep font-semibold py-3 rounded-xl text-sm">
+                        Close
+                    </button>
+                    <button type="button" onclick="closePromoSheet(); openLoginSheet('Log in to act on this promotion')" class="flex-1 bg-deep text-white font-semibold py-3 rounded-xl text-sm">
+                        Login to continue
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -658,6 +683,67 @@
         }
         document.getElementById('loginSheet').addEventListener('click', function (e) {
             if (e.target === this) closeLoginSheet();
+        });
+
+        const PROMOS = {
+            incentive: {
+                gradient: 'linear-gradient(135deg, #00A6FB 0%, #0582CA 100%)',
+                badge: 'Incentive',
+                title: 'Earn more with every milestone',
+                desc: 'Hit your monthly target and unlock bonus rewards.',
+                body: [
+                    'Every proposal you close counts toward your monthly milestone tiers.',
+                    'Bonus rewards scale up as you cross each target — from cash top-ups to recognition badges.',
+                    'Log in to see your live milestone progress and current tier.'
+                ]
+            },
+            campaign: {
+                gradient: 'linear-gradient(135deg, #006494 0%, #003554 100%)',
+                badge: 'This month',
+                title: 'Special incentives for top closers',
+                desc: 'Limited-time campaign for Personal Accident sales.',
+                body: [
+                    'This month’s campaign rewards agents who close the most Personal Accident policies.',
+                    'Top closers earn extra incentive payouts on top of standard commission.',
+                    'Log in to check your ranking and campaign eligibility.'
+                ]
+            },
+            training: {
+                gradient: 'linear-gradient(135deg, #0582CA 0%, #003554 100%)',
+                badge: 'Training',
+                title: 'New product training drop',
+                desc: 'Short modules + brochures in Resource Library.',
+                body: [
+                    'Fresh short-form training modules just landed for the newest product line.',
+                    'Includes downloadable brochures and talking points for client conversations.',
+                    'Log in to access the full Resource Library and start a module.'
+                ]
+            }
+        };
+
+        function openPromoSheet(id) {
+            const p = PROMOS[id];
+            if (!p) return;
+            const hero = document.getElementById('promoHero');
+            hero.style.background = p.gradient;
+            document.getElementById('promoHeroBadge').textContent = p.badge;
+            document.getElementById('promoHeroTitle').textContent = p.title;
+            document.getElementById('promoHeroDesc').textContent = p.desc;
+            const bodyEl = document.getElementById('promoHeroBody');
+            bodyEl.innerHTML = '';
+            p.body.forEach(function (line) {
+                const row = document.createElement('div');
+                row.className = 'flex gap-2';
+                row.innerHTML = '<span class="text-sky font-bold">•</span><span>' + line + '</span>';
+                bodyEl.appendChild(row);
+            });
+            document.getElementById('promoSheet').classList.add('open');
+        }
+        function closePromoSheet() {
+            document.getElementById('promoSheet').classList.remove('open');
+        }
+        document.getElementById('promoSheet').addEventListener('click', function (e) {
+            if (e.target === this) closePromoSheet();
         });
 
         (function initPromoCarousel() {

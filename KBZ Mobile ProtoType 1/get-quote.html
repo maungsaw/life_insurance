@@ -239,6 +239,9 @@
             display: flex;
             animation: toastIn 0.32s ease;
         }
+        .toast-success.error {
+            background: #EF4444;
+        }
         @keyframes toastIn {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: none; }
@@ -681,14 +684,14 @@
             const dob = document.getElementById('dob').value;
             const sumInsured = parseInt(document.getElementById('sumInsured').value, 10);
             const policyTerm = parseInt(document.getElementById('policyTerm').value, 10);
-            if (!dob) { alert('Please enter Date of Birth'); return; }
+            if (!dob) { showSuccessToast('Please enter Date of Birth', true); return; }
 
             const birthDate = new Date(dob);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) age--;
-            if (age < 16 || age > 65) { alert('Age must be between 16 and 65 years'); return; }
+            if (age < 16 || age > 65) { showSuccessToast('Age must be between 16 and 65 years', true); return; }
 
             let baseRate = isHighRisk ? 0.00707 : 0.007;
             let termMultiplier = 1;
@@ -770,10 +773,11 @@
             return false;
         }
 
-        function showSuccessToast(msg) {
+        function showSuccessToast(msg, isError) {
             const toast = document.getElementById('successToast');
             if (!toast) return;
             document.getElementById('successToastMsg').textContent = msg || 'Done';
+            toast.classList.toggle('error', !!isError);
             toast.classList.add('show');
             clearTimeout(window.__toastTimer);
             window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);

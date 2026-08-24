@@ -121,6 +121,9 @@
             font-size: 11px; font-weight: 600; line-height: 1.3;
         }
         .status-safe { padding-top: 34px; }
+        button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+            outline: 2px solid #0582CA; outline-offset: 2px;
+        }
         .service-grid-item {
             border: none;
             transition: all 0.2s;
@@ -992,7 +995,7 @@
                     </div>
                     <svg class="w-4 h-4 text-deep/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <p class="text-[10px] text-deep/40 px-1 pt-1">Lead → Client conversion happens automatically after policy submit in Core. No manual convert.</p>
+                <p class="text-[10px] text-deep/55 px-1 pt-1">Lead → Client conversion happens automatically after policy submit in Core. No manual convert.</p>
             </div>
             <div id="crmEmpty" class="mx-4 mb-4 empty-state soft-card" style="display:none;">
                 <div class="empty-icon">
@@ -1061,7 +1064,7 @@
                     <svg class="w-4 h-4 text-deep/50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
                 </button>
             </div>
-            <p class="text-[10px] text-deep/35 mx-4 mb-2">Wildcard / partial match · filter sheet for status</p>
+            <p class="text-[10px] text-deep/55 mx-4 mb-2">Wildcard / partial match · filter sheet for status</p>
 
             <div class="mx-4 mb-3 flex gap-2 overflow-x-auto" style="scrollbar-width:none;">
                 <button type="button" class="pol-type on" data-type="all" onclick="setPolicyType(this)">All</button>
@@ -1124,12 +1127,12 @@
                 <p class="text-deep font-bold text-sm">No active policies found</p>
                 <p class="text-deep/45 text-xs mt-1">Adjust search or product filter</p>
             </div>
-            <p class="mx-4 mb-6 text-[10px] text-deep/40">Lapsed / cancelled policies are hidden. Data from Core real-time API · JWT scoped.</p>
+            <p class="mx-4 mb-6 text-[10px] text-deep/55">Lapsed / cancelled policies are hidden. Data from Core real-time API · JWT scoped.</p>
         </div>
 
         <!-- ========== Profile screen (FR-01 biometric + settings) ========== -->
         <div class="scroll-content" id="profileView" style="display:none;">
-            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+            <div class="flex items-center justify-between px-6 pb-1 status-safe">
                 <span class="text-xs font-semibold text-deep">9:30</span>
                 <div class="flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
@@ -1144,12 +1147,18 @@
 
             <div class="mx-4 mt-3 soft-card p-4">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="w-14 h-14 rounded-2xl bg-sky/15 flex items-center justify-center flex-shrink-0 profile-avatar-ico"><i class="ph-fill ph-user-circle" aria-hidden="true"></i>
+                    <div class="w-14 h-14 rounded-2xl bg-sky/15 flex items-center justify-center flex-shrink-0 profile-avatar-ico" style="position:relative;" id="profileAvatarWrap">
+                        <i class="ph-fill ph-user-circle" id="profileAvatarIcon" aria-hidden="true"></i>
+                        <img id="profileAvatarImg" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:inherit;" alt="Profile photo" />
+                        <button type="button" onclick="document.getElementById('profileAvatarInput').click()" aria-label="Change photo" style="position:absolute;bottom:-4px;right:-4px;width:22px;height:22px;border-radius:999px;background:#0582CA;border:2px solid #F7F3EC;display:flex;align-items:center;justify-content:center;">
+                            <i class="ph ph-camera" style="font-size:11px;color:#fff;" aria-hidden="true"></i>
+                        </button>
+                        <input type="file" id="profileAvatarInput" accept="image/*" style="display:none" onchange="handleProfileAvatarChange(event)">
                     </div>
                     <div class="min-w-0 flex-1">
                         <h3 class="text-deep font-bold text-base truncate">Myat Moe Pyae</h3>
                         <p class="text-deep/50 text-xs mt-0.5">Agent · <span id="profileRoleLabel">FA</span> · code FA-10428</p>
-                        <p class="text-deep/40 text-[11px] mt-1">myat.moe@kbzlife.demo</p>
+                        <p class="text-deep/55 text-[11px] mt-1">myat.moe@kbzlife.demo</p>
                     </div>
                 </div>
                 <a href="get-quote.html?auth=1" class="block w-full text-center bg-deep text-white font-bold py-3 rounded-xl text-sm mb-3">Create New Quote</a>
@@ -1231,7 +1240,7 @@
                     </div>
                     <div class="border-t border-deep/5 px-4 py-3.5 flex items-center justify-between">
                         <p class="text-deep text-sm font-semibold">App version</p>
-                        <span class="text-deep/40 text-xs font-medium">1.0.0-demo</span>
+                        <span class="text-deep/55 text-xs font-medium">1.0.0-demo</span>
                     </div>
                 </div>
 
@@ -1242,7 +1251,7 @@
 
         <!-- ========== My work / Task Management (FR-07) ========== -->
         <div class="scroll-content" id="tasksView" style="display:none;">
-            <div class="flex items-center justify-between px-6 pt-4 pb-1">
+            <div class="flex items-center justify-between px-6 pb-1 status-safe">
                 <span class="text-xs font-semibold text-deep">9:30</span>
                 <div class="flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5 text-deep" fill="currentColor" viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
@@ -1258,7 +1267,8 @@
                     <h2 class="text-deep font-bold text-lg leading-none">My work</h2>
                     <p class="text-deep/45 text-[11px] mt-1">Calendar · Day · Week · Month</p>
                 </div>
-                <button type="button" onclick="openTaskDetail(null)" class="bg-deep text-white text-[11px] font-bold px-3 py-2 rounded-xl flex-shrink-0">Create</button>
+                <button type="button" id="taskCreateBtn" onclick="openTaskDetail(null)" class="bg-deep text-white text-[11px] font-bold px-3 py-2 rounded-xl flex-shrink-0">Create</button>
+                <span id="taskCreateBtnPlaceholder" class="text-deep/55 text-[10px] font-semibold flex-shrink-0 max-w-[110px] text-right" style="display:none;">Assigned by your manager</span>
             </div>
 
             <div class="px-4 mb-3">
@@ -1293,7 +1303,7 @@
         <!-- ========== Notifications (wireframe flow · our skin) ========== -->
         <div class="scroll-content" id="notificationsView" style="display:none;">
             <div id="notifListPane">
-                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <div class="flex items-center justify-between px-6 pb-1 status-safe">
                     <span class="text-xs font-semibold text-deep">9:30</span>
                     <div class="flex items-center gap-1.5">
                         <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
@@ -1318,7 +1328,7 @@
             </div>
 
             <div id="notifDetailPane" style="display:none;">
-                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <div class="flex items-center justify-between px-6 pb-1 status-safe">
                     <span class="text-xs font-semibold text-deep">9:30</span>
                     <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
                 </div>
@@ -1338,7 +1348,7 @@
         <!-- ========== Team Sales Performance (Leaders · FR-02 §3.2) ========== -->
         <div class="scroll-content" id="teamView" style="display:none;">
             <div id="teamHubPane">
-                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <div class="flex items-center justify-between px-6 pb-1 status-safe">
                     <span class="text-xs font-semibold text-deep">9:30</span>
                     <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
                 </div>
@@ -1371,7 +1381,7 @@
             </div>
 
             <div id="teamDrillPane" style="display:none;">
-                <div class="flex items-center justify-between px-6 pt-4 pb-1">
+                <div class="flex items-center justify-between px-6 pb-1 status-safe">
                     <span class="text-xs font-semibold text-deep">9:30</span>
                     <div class="w-5 h-2.5 border border-deep rounded-sm relative"><div class="absolute inset-0.5 bg-deep rounded-xs" style="width:70%"></div></div>
                 </div>
@@ -1406,7 +1416,7 @@
                 </button>
                 <div class="relative -mt-7">
                     <button type="button" class="nav-fab" aria-label="Quick action" onclick="showAppTab('tasks')">
-                        <i class="ph-fill ph-shield-check" aria-hidden="true"></i>
+                        <i class="ph-fill ph-plus" aria-hidden="true"></i>
                     </button>
                 </div>
                 <a href="products.html" class="nav-hit" id="navProduct">
@@ -1437,7 +1447,7 @@
                 <input class="w-full mb-3 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm" placeholder="e.g. Personal Accident">
                 <label class="block text-deep text-xs font-semibold mb-1.5">Note</label>
                 <textarea class="w-full mb-4 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[72px]" placeholder="Optional note"></textarea>
-                <p class="text-[10px] text-deep/40 mb-3">If offline, this lead is stored on device and syncs when you’re back online.</p>
+                <p class="text-[10px] text-deep/55 mb-3">If offline, this lead is stored on device and syncs when you’re back online.</p>
                 <button type="button" onclick="closeSheet('newLeadSheet'); showSuccessToast('Lead saved');" class="btn-sheet-primary">Save Lead</button>
             </div>
         </div>
@@ -1469,6 +1479,36 @@
                     <div class="flex justify-between"><p class="text-deep text-sm font-semibold">Endowment</p><span class="text-[9px] font-bold text-mint bg-mint/15 px-1.5 py-0.5 rounded">Active</span></div>
                     <p class="text-deep/45 text-[11px]">POL-EN-2025-0881</p>
                 </button>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2 mt-1">ASSOCIATED CONTACTS</p>
+                <div class="soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div class="flex justify-between items-center py-1.5" style="border-bottom:1px solid rgba(0,53,84,0.06);">
+                        <p class="text-deep text-sm font-semibold">Daw Hla Hla</p>
+                        <p class="text-deep/55 text-[11px]">Spouse · 09 771 220 118</p>
+                    </div>
+                    <div class="flex justify-between items-center py-1.5" style="border-bottom:1px solid rgba(0,53,84,0.06);">
+                        <p class="text-deep text-sm font-semibold">Ko Min Oo</p>
+                        <p class="text-deep/55 text-[11px]">Son</p>
+                    </div>
+                    <div class="flex justify-between items-center py-1.5">
+                        <p class="text-deep text-sm font-semibold">Ma Su Su Aung</p>
+                        <p class="text-deep/55 text-[11px]">Sister · 09 440 552 018</p>
+                    </div>
+                </div>
+                <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">HISTORY &amp; NOTES</p>
+                <div class="soft-card p-3 mb-3" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
+                    <div class="py-1.5" style="border-bottom:1px solid rgba(0,53,84,0.06);">
+                        <p class="text-deep/55 text-[10px] font-bold">18 AUG 2026</p>
+                        <p class="text-deep text-[12px] mt-0.5">Discussed renewal options, client interested in adding health rider.</p>
+                    </div>
+                    <div class="py-1.5" style="border-bottom:1px solid rgba(0,53,84,0.06);">
+                        <p class="text-deep/55 text-[10px] font-bold">02 JUL 2026</p>
+                        <p class="text-deep text-[12px] mt-0.5">Annual review call · confirmed beneficiary details.</p>
+                    </div>
+                    <div class="py-1.5">
+                        <p class="text-deep/55 text-[10px] font-bold">14 MAR 2026</p>
+                        <p class="text-deep text-[12px] mt-0.5">Policy issued · welcome pack sent.</p>
+                    </div>
+                </div>
                 <a href="policyholder-form.html?from=client" class="btn-sheet-primary">Start e-App</a>
             </div>
         </div>
@@ -1508,12 +1548,13 @@
                     <p class="text-deep text-sm font-semibold">Personal Accident</p>
                 </div>
                 <p class="text-deep/45 font-bold text-[10px] tracking-[0.12em] mb-2">ADD ACTIVITY</p>
-                <textarea id="activityNote" class="w-full mb-2 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[64px]" placeholder="Meeting note / follow-up…"></textarea>
-                <p class="text-[10px] text-deep/40 mb-3">Activity notes are sent to the server right away (not kept permanently on this phone).</p>
+                <textarea id="activityNote" class="w-full mb-1 px-3 py-3 rounded-xl bg-white border border-deep/10 text-sm min-h-[64px]" placeholder="Meeting note / follow-up…"></textarea>
+                <p id="activityNoteError" class="text-[11px] text-red font-semibold mb-2" style="display:none;">Please enter a note</p>
+                <p class="text-[10px] text-deep/55 mb-3">Activity notes are sent to the server right away (not kept permanently on this phone).</p>
                 <button type="button" onclick="saveActivity()" class="btn-sheet-primary mb-2">Save activity</button>
                 <button type="button" class="w-full bg-cream text-deep font-semibold py-3 rounded-xl text-sm mb-2">Edit lead</button>
                 <a href="policyholder-form.html?from=lead" class="btn-sheet-primary">Start e-App</a>
-                <p class="text-[10px] text-deep/40 mt-2 text-center">On Core policy submit, this lead converts to Client.</p>
+                <p class="text-[10px] text-deep/55 mt-2 text-center">On Core policy submit, this lead converts to Client.</p>
             </div>
         </div>
 
@@ -1544,7 +1585,7 @@
                     <summary class="px-3.5 py-3 text-sm font-bold text-deep cursor-pointer flex justify-between list-none">Insured / Policyholder <span class="text-deep/30">▾</span></summary>
                     <div class="px-3.5 pb-3 text-sm text-deep/55" id="polPeople">Same book as policy owner · details from Core</div>
                 </details>
-                <p class="text-[10px] text-deep/40 text-center">No edit on mobile · servicing via Core / ops</p>
+                <p class="text-[10px] text-deep/55 text-center">No edit on mobile · servicing via Core / ops</p>
             </div>
         </div>
 
@@ -1558,7 +1599,7 @@
                 </div>
                 <div class="soft-card p-4 mb-3 text-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
                     <p class="text-deep/45 text-[10px] font-bold tracking-wide">THIS MONTH</p>
-                    <p class="text-deep text-2xl font-extrabold tabular-nums mt-1">726,000 <span class="text-sm font-bold text-deep/40">MMK</span></p>
+                    <p class="text-deep text-2xl font-extrabold tabular-nums mt-1">726,000 <span class="text-sm font-bold text-deep/55">MMK</span></p>
                     <p class="text-mint text-[11px] font-semibold mt-1">↑ 15% vs last month</p>
                 </div>
                 <div class="space-y-2 mb-4">
@@ -1686,10 +1727,10 @@
                     <button type="button" onclick="closeSheet('taskDetailSheet')" class="text-deep/40 text-xl">×</button>
                 </div>
                 <div class="grid grid-cols-2 gap-2 mb-3 text-[11px]">
-                    <div><p class="text-deep/40 font-semibold mb-1">Task ID</p><p class="text-deep font-bold" id="tdId">T-NEW</p></div>
-                    <div><p class="text-deep/40 font-semibold mb-1">Priority</p><p class="text-deep font-bold" id="tdPri">High</p></div>
-                    <div><p class="text-deep/40 font-semibold mb-1">Type</p><p class="text-deep font-bold" id="tdType">On-Boarding</p></div>
-                    <div><p class="text-deep/40 font-semibold mb-1">Status</p><p class="text-deep font-bold" id="tdStatus">Open</p></div>
+                    <div><p class="text-deep/55 font-semibold mb-1">Task ID</p><p class="text-deep font-bold" id="tdId">T-NEW</p></div>
+                    <div><p class="text-deep/55 font-semibold mb-1">Priority</p><p class="text-deep font-bold" id="tdPri">High</p></div>
+                    <div><p class="text-deep/55 font-semibold mb-1">Type</p><p class="text-deep font-bold" id="tdType">On-Boarding</p></div>
+                    <div><p class="text-deep/55 font-semibold mb-1">Status</p><p class="text-deep font-bold" id="tdStatus">Open</p></div>
                 </div>
                 <div class="flex p-1 rounded-xl bg-deep/5 mb-3">
                     <button type="button" id="tdTabAgent" onclick="setTaskDetailTab('agent')" class="flex-1 py-2 rounded-lg text-[11px] font-bold bg-white text-deep shadow-sm">Agent Info</button>
@@ -1726,10 +1767,10 @@
                     <button type="button" onclick="closeSheet('previewRoleSheet')" class="text-deep/40 text-xl">×</button>
                 </div>
                 <p class="text-deep/45 text-[12px] mb-4 leading-snug">For prototype review only. Home shows this role’s modules. Logout returns to FA.</p>
-                <button type="button" onclick="setDemoRole('fa'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">FA · Producer</span><span class="text-deep/40 text-[11px]">Personal only</span></button>
-                <button type="button" onclick="setDemoRole('am'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">AM · Coach</span><span class="text-deep/40 text-[11px]">+ Team pulse</span></button>
-                <button type="button" onclick="setDemoRole('sam'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">SAM</span><span class="text-deep/40 text-[11px]">Personal + Total</span></button>
-                <button type="button" onclick="setDemoRole('dm'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">DM</span><span class="text-deep/40 text-[11px]">Full downline</span></button>
+                <button type="button" onclick="setDemoRole('fa'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">FA · Producer</span><span class="text-deep/55 text-[11px]">Personal only</span></button>
+                <button type="button" onclick="setDemoRole('am'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">AM · Coach</span><span class="text-deep/55 text-[11px]">+ Team pulse</span></button>
+                <button type="button" onclick="setDemoRole('sam'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">SAM</span><span class="text-deep/55 text-[11px]">Personal + Total</span></button>
+                <button type="button" onclick="setDemoRole('dm'); closeSheet('previewRoleSheet')" class="w-full soft-card px-4 py-3 mb-2 text-left flex justify-between items-center" style="box-shadow:none;border:1px solid rgba(0,53,84,0.08);"><span class="text-deep font-semibold text-sm">DM</span><span class="text-deep/55 text-[11px]">Full downline</span></button>
             </div>
         </div>
 
@@ -2196,24 +2237,68 @@
                 return;
             }
             if (empty) empty.style.display = 'none';
+            const visible = NOTIFS.filter(n => !n.snoozed);
             const groups = [];
-            NOTIFS.forEach(n => {
+            visible.forEach(n => {
                 if (!groups.includes(n.group)) groups.push(n.group);
             });
+            if (groups.length === 0) {
+                if (empty) empty.style.display = 'block';
+                body.innerHTML = '';
+                return;
+            }
             body.innerHTML = groups.map(g => {
-                const rows = NOTIFS.filter(n => n.group === g).map(n => `
-                    <button type="button" class="notif-row ${n.unread ? 'unread' : ''}" onclick="openNotif('${n.id}')">
-                        <span class="notif-ico"><i class="ph-fill ${n.icon}" aria-hidden="true"></i></span>
-                        <span class="flex-1 min-w-0 pr-4">
-                            <span class="text-deep font-bold text-sm block leading-snug">${n.title}</span>
-                            <span class="text-deep/50 text-[11px] block mt-0.5 leading-snug">${n.body}</span>
-                            <span class="text-deep/35 text-[10px] font-semibold mt-1.5 block">${n.when}</span>
-                        </span>
-                        ${n.unread ? '<span class="dot" aria-hidden="true"></span>' : ''}
-                    </button>
+                const rows = visible.filter(n => n.group === g).map(n => `
+                    <div class="notif-row ${n.unread ? 'unread' : ''} ${n.done ? 'opacity-50' : ''}" role="button" tabindex="0" onclick="openNotif('${n.id}')" style="flex-direction:column;align-items:stretch;">
+                        <div style="display:flex;gap:12px;align-items:flex-start;">
+                            <span class="notif-ico"><i class="ph-fill ${n.icon}" aria-hidden="true"></i></span>
+                            <span class="flex-1 min-w-0 pr-4">
+                                <span class="text-deep font-bold text-sm block leading-snug">${n.title}${n.done ? ' <i class="ph-fill ph-check-circle" style="color:#57C785;font-size:13px;" aria-hidden="true"></i>' : ''}</span>
+                                <span class="text-deep/55 text-[11px] block mt-0.5 leading-snug">${n.body}</span>
+                                <span class="text-deep/55 text-[10px] font-semibold mt-1.5 block">${n.when}</span>
+                            </span>
+                            ${n.unread ? '<span class="dot" aria-hidden="true"></span>' : ''}
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;margin-top:8px;padding-left:52px;position:relative;">
+                            <button type="button" onclick="event.stopPropagation(); toggleNotifDone('${n.id}')" class="w-7 h-7 rounded-full flex items-center justify-center" style="background:rgba(87,199,133,0.15);color:#15803d;" aria-label="Mark done">
+                                <i class="ph ph-check" aria-hidden="true" style="font-size:14px;"></i>
+                            </button>
+                            <button type="button" onclick="event.stopPropagation(); toggleSnoozeMenu('${n.id}')" class="w-7 h-7 rounded-full flex items-center justify-center" style="background:rgba(5,130,202,0.12);color:#0582CA;" aria-label="Snooze">
+                                <i class="ph ph-clock" aria-hidden="true" style="font-size:14px;"></i>
+                            </button>
+                            <div id="snoozeMenu-${n.id}" style="display:none;position:absolute;left:52px;top:32px;z-index:20;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,53,84,0.18);overflow:hidden;min-width:120px;">
+                                <button type="button" onclick="event.stopPropagation(); snoozeNotif('${n.id}','1 hour')" class="w-full text-left px-3 py-2 text-[11px] font-semibold text-deep">1 hour</button>
+                                <button type="button" onclick="event.stopPropagation(); snoozeNotif('${n.id}','1 day')" class="w-full text-left px-3 py-2 text-[11px] font-semibold text-deep">1 day</button>
+                                <button type="button" onclick="event.stopPropagation(); snoozeNotif('${n.id}','Custom')" class="w-full text-left px-3 py-2 text-[11px] font-semibold text-deep">Custom</button>
+                            </div>
+                        </div>
+                    </div>
                 `).join('');
                 return `<p class="notif-group">${g}</p>${rows}`;
             }).join('');
+        }
+
+        function toggleNotifDone(id) {
+            const n = NOTIFS.find(x => x.id === id);
+            if (!n) return;
+            n.done = !n.done;
+            renderNotifs();
+        }
+
+        function toggleSnoozeMenu(id) {
+            document.querySelectorAll('[id^="snoozeMenu-"]').forEach(m => {
+                if (m.id !== 'snoozeMenu-' + id) m.style.display = 'none';
+            });
+            const menu = document.getElementById('snoozeMenu-' + id);
+            if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function snoozeNotif(id, option) {
+            const n = NOTIFS.find(x => x.id === id);
+            if (!n) return;
+            n.snoozed = true;
+            renderNotifs();
+            showSuccessToast('Snoozed · ' + option);
         }
 
         function backNotifList() {
@@ -2260,11 +2345,11 @@
                     <p class="text-white/85 text-[13px] mt-2 leading-snug">Hospital cash + outpatient — priced for young families in your book.</p>
                 </div>
                 <div class="soft-card p-4 mb-3">
-                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">ABOUT</p>
+                    <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">ABOUT</p>
                     <p class="text-deep text-sm leading-relaxed">Core is launching Family Health Plus this month. Share with clients aged 25–45 who want affordable inpatient cover without a full medical.</p>
                 </div>
                 <div class="soft-card p-4 mb-3">
-                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">WHO IT’S FOR</p>
+                    <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">WHO IT’S FOR</p>
                     <div class="space-y-2.5">
                         <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Parents with school-age kids</p></div>
                         <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">PA clients ready to add health</p></div>
@@ -2272,7 +2357,7 @@
                     </div>
                 </div>
                 <div class="soft-card p-4 mb-4">
-                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">WHY BUY</p>
+                    <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">WHY BUY</p>
                     <div class="space-y-2.5">
                         <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Fast e-App — no lab for standard risks</p></div>
                         <div class="flex gap-2.5 items-start"><span class="notif-check">✓</span><p class="text-deep text-sm leading-snug">Launch commission uplift through month-end</p></div>
@@ -2355,6 +2440,10 @@
                 document.getElementById('crmLeaderNote').classList.add('hidden');
                 if (document.getElementById('teamView')?.style.display === 'block') showAppTab('home');
             }
+            const taskCreateBtn = document.getElementById('taskCreateBtn');
+            const taskCreateBtnPlaceholder = document.getElementById('taskCreateBtnPlaceholder');
+            if (taskCreateBtn) taskCreateBtn.style.display = m.canViewTeam ? 'block' : 'none';
+            if (taskCreateBtnPlaceholder) taskCreateBtnPlaceholder.style.display = m.canViewTeam ? 'none' : 'block';
             const segWrap = document.getElementById('teamSegWrap');
             if (segWrap) segWrap.style.display = m.hasTotal ? 'block' : 'none';
             if (!m.hasTotal) teamScope = 'personal';
@@ -2406,7 +2495,7 @@
                         <div class="team-ring" style="--p:${line.pct}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${line.pct}%</span></div></div>
                         <div><p class="text-deep font-bold text-sm">${line.name}</p><p class="text-deep/45 text-[11px] mt-0.5">${line.a} / ${line.t} Actual vs Target</p></div>
                     </div>
-                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">DIRECT REPORTS</p>
+                    <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">DIRECT REPORTS</p>
                     ${TEAM_FAS.map(f => memberRow(f)).join('')}
                 `;
                 return;
@@ -2431,7 +2520,7 @@
                         </div>
                     </div>
                     <div class="soft-card p-4 mb-3">
-                        <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">BREAKDOWN</p>
+                        <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">BREAKDOWN</p>
                         ${kpiRow('APE', f.ape)}${kpiRow('FYP', f.fyp)}${kpiRow('Subsequent FYP', f.sfyp)}${kpiRow('Weighted FYP', f.wfyp)}
                     </div>
                     <div class="soft-card p-4 mb-3 flex gap-3 items-start">
@@ -2476,9 +2565,9 @@
                     <button type="button" class="${mdrtFilter==='notyet'?'on':''}" onclick="mdrtFilter='notyet'; openTeamDrill('mdrt')">Not Yet</button>
                 </div>
                 <div class="soft-card p-3 mb-3 grid grid-cols-3 gap-2 text-center">
-                    <div><p class="text-deep font-extrabold">${q}</p><p class="text-deep/40 text-[9px] font-bold">Qualified</p></div>
-                    <div><p class="text-deep font-extrabold">1</p><p class="text-deep/40 text-[9px] font-bold">In progress</p></div>
-                    <div><p class="text-deep font-extrabold">${TEAM_FAS.length-q-1}</p><p class="text-deep/40 text-[9px] font-bold">Not yet</p></div>
+                    <div><p class="text-deep font-extrabold">${q}</p><p class="text-deep/55 text-[9px] font-bold">Qualified</p></div>
+                    <div><p class="text-deep font-extrabold">1</p><p class="text-deep/55 text-[9px] font-bold">In progress</p></div>
+                    <div><p class="text-deep font-extrabold">${TEAM_FAS.length-q-1}</p><p class="text-deep/55 text-[9px] font-bold">Not yet</p></div>
                 </div>
                 ${filtered.map(f => memberRow(f)).join('') || '<p class="text-deep/45 text-sm text-center py-6">No FAs in this filter</p>'}
                 <div class="mt-3 rounded-2xl px-4 py-3" style="background:rgba(245,158,11,0.12);">
@@ -2523,7 +2612,7 @@
             let listHtml = '';
             if ((demoRole === 'sam' || demoRole === 'dm') && teamScope === 'total') {
                 const lines = TEAM_LINES[demoRole] || [];
-                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">TOTAL GROUP</p>` +
+                listHtml = `<p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">TOTAL GROUP</p>` +
                     lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
                         <div class="flex justify-between gap-2"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold text-sm">${l.pct}%</span></div>
                         <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs · ${l.a} / ${l.t}</p>
@@ -2531,36 +2620,36 @@
                     </button>`).join('');
             } else if (demoRole === 'sam' && teamScope === 'personal') {
                 const lines = TEAM_LINES.sam;
-                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · AMS</p>` +
+                listHtml = `<p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · AMS</p>` +
                     lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
                         <div class="flex justify-between"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold">${l.pct}%</span></div>
                         <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs</p>
                     </button>`).join('');
             } else if (demoRole === 'dm' && teamScope === 'personal') {
                 const lines = TEAM_LINES.dm.slice(0, 2);
-                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · SAMS</p>` +
+                listHtml = `<p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">PERSONAL TEAM · SAMS</p>` +
                     lines.map(l => `<button type="button" onclick="openTeamDrill('line','${l.id}')" class="w-full text-left soft-card p-3 mb-2" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
                         <div class="flex justify-between"><p class="text-deep font-semibold text-sm">${l.name}</p><span class="text-deep font-extrabold">${l.pct}%</span></div>
                         <p class="text-deep/45 text-[11px] mt-0.5">${l.fas} FAs</p>
                     </button>`).join('');
             } else {
-                listHtml = `<p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">TEAM MEMBERS</p>` + TEAM_FAS.map(f => memberRow(f)).join('');
+                listHtml = `<p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">TEAM MEMBERS</p>` + TEAM_FAS.map(f => memberRow(f)).join('');
             }
 
             body.innerHTML = `
                 <div class="soft-card p-4 mb-3 flex items-center gap-3">
-                    <div class="team-ring" style="--p:${overall}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${overall}%</span><span class="text-deep/40 text-[8px] font-bold">Overall</span></div></div>
+                    <div class="team-ring" style="--p:${overall}%"><div class="team-ring-inner"><span class="text-deep font-extrabold text-sm">${overall}%</span><span class="text-deep/55 text-[8px] font-bold">Overall</span></div></div>
                     <div class="min-w-0">
                         <p class="text-deep/45 text-[10px] font-bold tracking-wide">ACTUAL VS TARGET</p>
-                        <p class="text-deep font-extrabold text-base mt-0.5">${actual} <span class="text-deep/35 font-semibold text-sm">/ ${target}</span></p>
+                        <p class="text-deep font-extrabold text-base mt-0.5">${actual} <span class="text-deep/55 font-semibold text-sm">/ ${target}</span></p>
                         <p class="text-mint text-[11px] font-bold mt-1">MoM ↑ 6%</p>
                     </div>
                 </div>
                 ${countsHtml}
                 <div class="soft-card p-4 mb-3">
-                    <p class="text-deep/40 text-[10px] font-bold tracking-[0.12em] mb-2">KEY PERFORMANCE</p>
+                    <p class="text-deep/55 text-[10px] font-bold tracking-[0.12em] mb-2">KEY PERFORMANCE</p>
                     ${kpiRow('APE', 72)}${kpiRow('FYP', overall)}${kpiRow('Subsequent FYP', 64)}${kpiRow('Weighted FYP', 70)}
-                    <p class="text-deep/35 text-[10px] mt-1">Weighting applied by Core · display only</p>
+                    <p class="text-deep/55 text-[10px] mt-1">Weighting applied by Core · display only</p>
                 </div>
                 <div class="grid grid-cols-2 gap-2 mb-4">
                     <button type="button" onclick="openTeamDrill('mdrt')" class="soft-card p-3 text-left" style="box-shadow:none;border:1px solid rgba(0,53,84,0.06);">
@@ -2657,6 +2746,12 @@
             const el = document.getElementById(id);
             el.classList.add('open');
             el.style.display = 'flex';
+            if (!el.getAttribute('data-backdrop-bound')) {
+                el.setAttribute('data-backdrop-bound', '1');
+                el.addEventListener('click', function(e) {
+                    if (e.target === el) closeSheet(id);
+                });
+            }
         }
         function closeSheet(id) {
             const el = document.getElementById(id);
@@ -2671,7 +2766,17 @@
         }
         function saveActivity() {
             const note = document.getElementById('activityNote');
-            if (!note.value.trim()) { alert('Please enter a note'); return; }
+            const err = document.getElementById('activityNoteError');
+            if (!note.value.trim()) {
+                note.classList.add('border-red', 'border-2');
+                note.classList.remove('border-deep/10');
+                if (err) err.style.display = 'block';
+                note.focus();
+                return;
+            }
+            note.classList.remove('border-red', 'border-2');
+            note.classList.add('border-deep/10');
+            if (err) err.style.display = 'none';
             note.value = '';
             closeSheet('leadSheet');
             showSuccessToast('Activity sent to server');
@@ -2685,6 +2790,20 @@
             if (pol) pol.classList.toggle('show');
         }
 
+
+        function handleProfileAvatarChange(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const icon = document.getElementById('profileAvatarIcon');
+                const img = document.getElementById('profileAvatarImg');
+                if (img) { img.src = ev.target.result; img.style.display = 'block'; }
+                if (icon) icon.style.display = 'none';
+                showSuccessToast('Photo updated');
+            };
+            reader.readAsDataURL(file);
+        }
 
         function showSuccessToast(msg) {
             const toast = document.getElementById('successToast');
@@ -2752,7 +2871,7 @@
             document.getElementById('tdType').textContent = t ? (TASK_TYPE_LABEL[t.type] || t.type) : 'On-Boarding';
             document.getElementById('tdStatus').textContent = t ? (TASK_STATUS_LABEL[t.status] || t.status) : 'Open';
             if (t && t.link) document.getElementById('tdAgentName').value = t.link.replace(/^[^·]+·\s*/, '');
-            setTaskDetailTab(t && t.type === 'onboarding' ? 'agent' : 'agent');
+            setTaskDetailTab(t && t.type === 'onboarding' ? 'train' : 'agent');
             openSheet('taskDetailSheet');
         }
 
@@ -2951,8 +3070,8 @@
             if (overdue) cls.push('overdue');
             if (t.status === 'done') cls.push('done');
             const time = opts.showTime !== false
-                ? '<p class="text-deep/40 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>'
-                : '<p class="text-deep/40 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>';
+                ? '<p class="text-deep/55 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>'
+                : '<p class="text-deep/55 text-[10px] font-bold mt-0.5">' + h12(t.start) + ' – ' + h12(t.end) + '</p>';
             return '<button type="button" class="' + cls.join(' ') + ' w-full text-left" onclick="openTaskDetail(\'' + t.id + '\')">' +
                 '<div class="flex items-start justify-between gap-2">' +
                 '<div class="min-w-0 flex-1">' +
@@ -2962,7 +3081,7 @@
                 '</div>' +
                 '<div class="flex flex-col items-end gap-1 flex-shrink-0">' + statusPillHtml(t) + '</div>' +
                 '</div>' +
-                '<p class="text-deep/35 text-[9px] font-semibold mt-2 uppercase tracking-wide">' + (TASK_TYPE_LABEL[t.type] || t.type) + '</p>' +
+                '<p class="text-deep/55 text-[9px] font-semibold mt-2 uppercase tracking-wide">' + (TASK_TYPE_LABEL[t.type] || t.type) + '</p>' +
                 '</button>';
         }
 
@@ -3022,7 +3141,7 @@
 
             let html = strip;
             if (allDay.length) {
-                html += '<p class="text-deep/40 text-[9px] font-bold uppercase tracking-wide mb-1.5">All day</p>';
+                html += '<p class="text-deep/55 text-[9px] font-bold uppercase tracking-wide mb-1.5">All day</p>';
                 allDay.forEach(t => { html += taskCardHtml(t); });
             }
             if (!timed.length && !allDay.length) {
@@ -3070,7 +3189,7 @@
             const first = new Date(y, m, 1);
             const start = startOfWeek(first);
             const wdLabels = '<div class="task-month-grid mb-1">' +
-                TASK_WDS.map(w => '<div class="text-center text-[9px] font-bold text-deep/35 py-1">' + w.charAt(0) + '</div>').join('') +
+                TASK_WDS.map(w => '<div class="text-center text-[9px] font-bold text-deep/55 py-1">' + w.charAt(0) + '</div>').join('') +
                 '</div>';
             let grid = '<div class="task-month-grid mb-4">';
             for (let i = 0; i < 42; i++) {

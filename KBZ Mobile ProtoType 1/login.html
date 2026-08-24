@@ -333,6 +333,25 @@
                 </div>
             </div>
 
+            <!-- ============ INACTIVE ============ -->
+            <div class="screen" data-screen="inactive">
+                <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
+                <div class="px-4 pt-2 pb-2 flex items-center gap-3">
+                    <button type="button" class="back-btn" onclick="showScreen('login')"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+                    <h2 class="text-deep font-bold text-lg">Login Account</h2>
+                </div>
+                <div class="px-6 pb-10">
+                    <div class="rounded-xl bg-danger/10 border border-danger/20 p-4 mb-5">
+                        <p class="text-danger font-bold text-sm">Account is inactive</p>
+                        <p class="text-danger/80 text-xs mt-1 leading-relaxed">Your agent account has been deactivated in KBZ Life Core. Please contact your Agency Manager or KBZ LIFE support to reactivate your account.</p>
+                    </div>
+                    <input class="field mb-3 opacity-60" disabled value="+95 9 xxx xxx xxx">
+                    <input class="field mb-4 opacity-60" disabled type="password" value="********">
+                    <button class="btn-primary opacity-50 cursor-not-allowed" disabled>LOGIN</button>
+                    <p class="text-center text-xs text-deep/45 mt-6">Contact KBZ LIFE support / agency admin to reactivate.</p>
+                </div>
+            </div>
+
             <!-- ============ BIOMETRIC ============ -->
             <div class="screen" data-screen="biometric">
                 <div class="status-bar"><span class="text-xs font-semibold text-deep">9:30</span></div>
@@ -418,6 +437,7 @@
                     <button type="button" class="flow-chip" onclick="openModal('pathB')">Path B modal</button>
                     <button type="button" class="flow-chip" onclick="openModal('sessionBlock')">Session block</button>
                     <button type="button" class="flow-chip" onclick="showScreen('locked')">Locked</button>
+                    <button type="button" class="flow-chip" onclick="showScreen('inactive')">Inactive</button>
                 </div>
             </div>
             <a href="before-login.html" class="inline-block mt-4 text-steel font-semibold text-sm">← Back to Before Login</a>
@@ -436,6 +456,7 @@
             { id: 'reset-pw', label: 'Reset + Remark', hint: 'Mandatory reason' },
             { id: 'biometric', label: 'Biometric', hint: 'Optional enable' },
             { id: 'locked', label: 'Locked', hint: 'Edge case · QA' },
+            { id: 'inactive', label: 'Inactive', hint: 'Edge case · QA' },
         ];
 
         const nav = document.getElementById('flowNav');

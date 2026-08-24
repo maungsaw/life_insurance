@@ -145,6 +145,9 @@
             display: flex;
             animation: toastIn 0.32s ease;
         }
+        .toast-success.error {
+            background: #EF4444;
+        }
         @keyframes toastIn {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: none; }
@@ -847,13 +850,13 @@
             const phone = document.getElementById('phPhone').value.trim();
             const nrc = document.getElementById('phNrc').value.trim();
             if (!name || !phone || !nrc) {
-                alert('Please fill required policyholder fields (name, phone, NRC).');
+                showSuccessToast('Please fill required policyholder fields (name, phone, NRC).', true);
                 return false;
             }
             if (entryMode === 'manual' || entryMode === 'hybrid') {
                 const prem = document.getElementById('manPrem').value.trim();
                 if (!prem) {
-                    alert('Enter premium (MMK) or open the calculator first.');
+                    showSuccessToast('Enter premium (MMK) or open the calculator first.', true);
                     return false;
                 }
             }
@@ -873,9 +876,10 @@
         let statusFilter = 'all';
         let showingUW = false;
 
-        function showSuccessToast(msg) {
+        function showSuccessToast(msg, isError) {
             const toast = document.getElementById('successToast');
             document.getElementById('successToastMsg').textContent = msg || 'Done';
+            toast.classList.toggle('error', !!isError);
             toast.classList.add('show');
             clearTimeout(window.__toastTimer);
             window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
@@ -945,7 +949,7 @@
         function nextStep() {
             if (currentStep === 1 && !validateStep1()) return;
             if (currentStep === 5 && (!hasInk('sigClient') || !hasInk('sigAgent'))) {
-                alert('Client and Agent signatures are required.');
+                showSuccessToast('Client and Agent signatures are required.', true);
                 return;
             }
             if (currentStep < totalSteps) { currentStep++; updateUI(); }
@@ -963,7 +967,7 @@
         }
         function submitEapp() {
             if (!document.getElementById('declareOk').checked) {
-                alert('Please confirm the declaration.');
+                showSuccessToast('Please confirm the declaration.', true);
                 return;
             }
             const name = document.getElementById('phName').value;
