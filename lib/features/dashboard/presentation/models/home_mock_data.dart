@@ -30,10 +30,12 @@ abstract final class HomeMockData {
       subtitle: 'Track and claim your earnings',
       color: Color(0xFF00A6FB),
     ),
+    // Gold instead of a second cold blue — pairs with the cyan card above
+    // and sits warmer against the milk-tea page background (docs/74).
     AppPromoItem(
       title: 'Unlock special discounts',
       subtitle: 'Campaign offers for your clients',
-      color: Color(0xFF006494),
+      color: Color(0xFFE8960C),
     ),
   ];
 }

@@ -14,9 +14,13 @@ class AppServiceItem {
 }
 
 class AppServiceTile extends StatelessWidget {
-  const AppServiceTile({super.key, required this.item});
+  const AppServiceTile({super.key, required this.item, this.flat = false});
 
   final AppServiceItem item;
+
+  /// When true, renders as a tinted icon with no card/shadow of its own —
+  /// for use inside a shared group panel (docs/74) instead of standing alone.
+  final bool flat;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +35,19 @@ class AppServiceTile extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: AppColors.surface(context),
+              color: flat
+                  ? AppColors.primarySoftTint(context)
+                  : AppColors.surface(context),
               borderRadius: BorderRadius.circular(14),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              boxShadow: flat
+                  ? null
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
             ),
             child: Icon(item.icon, color: AppColors.lightPrimary, size: 26),
           ),
@@ -67,10 +75,12 @@ class AppServiceGrid extends StatelessWidget {
     super.key,
     required this.items,
     this.crossAxisCount = 3,
+    this.flat = false,
   });
 
   final List<AppServiceItem> items;
   final int crossAxisCount;
+  final bool flat;
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +94,7 @@ class AppServiceGrid extends StatelessWidget {
         crossAxisSpacing: 8,
         childAspectRatio: 0.78,
       ),
-      itemBuilder: (context, i) => AppServiceTile(item: items[i]),
+      itemBuilder: (context, i) => AppServiceTile(item: items[i], flat: flat),
     );
   }
 }

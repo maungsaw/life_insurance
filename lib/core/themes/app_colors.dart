@@ -4,11 +4,17 @@ abstract class AppColors {
   // ==================== LIGHT THEME PALETTE ====================
   static const Color lightPrimary = Color(0xFF00adee);
   static const Color lightPrimaryContainer = Color(0xFFFFF0F1);
-  static const Color lightPrimarySoftTint = Color(0xFFFDE8EA);
+  /// Pale cyan tint of [lightPrimary] — was a mismatched pink before
+  /// (docs/74); [darkPrimarySoftTint] is a dark cyan tint, so this now
+  /// actually matches its dark counterpart and the primary icon color it
+  /// sits behind.
+  static const Color lightPrimarySoftTint = Color(0xFFE0F6FD);
 
-  static const Color lightBackground = Color(0xFFFAFAFA);
+  /// Milk-tea / condensed-milk cream tone (docs/74) — lets white cards read as
+  /// distinct grouped panels instead of blending into the page.
+  static const Color lightBackground = Color(0xFFFFF6E9);
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightBorder = Color(0xFFEAEAEA);
+  static const Color lightBorder = Color(0xFFEFE3CE);
 
   static const Color lightTextPrimary = Color(0xFF1A1A1A);
   static const Color lightTextSecondary = Color(0xFF757575);

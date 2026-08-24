@@ -92,11 +92,7 @@ class GuestHomePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  const _PartnerBanner(),
-                  const SizedBox(height: 22),
-                  const AppSectionHeader(title: 'Our Services'),
-                  const SizedBox(height: 12),
-                  AppServiceGrid(items: services, crossAxisCount: 4),
+                  _ServicesPanel(services: services),
                   const SizedBox(height: 22),
                   const AppSectionHeader(title: 'Promotion & Campaign'),
                   const SizedBox(height: 10),
@@ -126,21 +122,71 @@ class GuestHomePage extends StatelessWidget {
   }
 }
 
-class _PartnerBanner extends StatelessWidget {
-  const _PartnerBanner();
+/// One continuous card: the "Partner With Us" pitch as a gradient header
+/// strip, flowing straight into the service icons below — instead of two
+/// separate cards with a gap between them (docs/74).
+class _ServicesPanel extends StatelessWidget {
+  const _ServicesPanel({required this.services});
+
+  final List<AppServiceItem> services;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.surface(context),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _PartnerBannerStrip(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AppSectionHeader(title: 'Our Services'),
+                  const SizedBox(height: 12),
+                  AppServiceGrid(
+                    items: services,
+                    crossAxisCount: 4,
+                    flat: true,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PartnerBannerStrip extends StatelessWidget {
+  const _PartnerBannerStrip();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(18, 18, 14, 18),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [AppColors.lightPrimary, Color(0xFF00A6FB)],
         ),
-        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [

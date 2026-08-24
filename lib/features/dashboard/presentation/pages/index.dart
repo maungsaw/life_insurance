@@ -130,9 +130,7 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const AppSectionHeader(title: 'Our Services'),
-                  const SizedBox(height: 12),
-                  AppServiceGrid(items: services, crossAxisCount: 4),
+                  _ServicesPanel(services: services),
                   const SizedBox(height: 8),
                   AppSectionHeader(
                     title: 'Policy',
@@ -207,6 +205,41 @@ class DashboardPage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Groups the section title + service icons into one card, matching the
+/// guest home's grouped panel instead of loose tiles on the page (docs/74).
+class _ServicesPanel extends StatelessWidget {
+  const _ServicesPanel({required this.services});
+
+  final List<AppServiceItem> services;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      decoration: BoxDecoration(
+        color: AppColors.surface(context),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const AppSectionHeader(title: 'Our Services'),
+          const SizedBox(height: 12),
+          AppServiceGrid(items: services, crossAxisCount: 4, flat: true),
+        ],
       ),
     );
   }
