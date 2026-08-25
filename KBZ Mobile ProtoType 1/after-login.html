@@ -37,7 +37,7 @@
     </script>
     <style>
         body {
-            background: #e8ecf1;
+            background: #10131a;
             font-family: 'DM Sans', sans-serif;
         }
         .phone-frame {
@@ -477,7 +477,7 @@
         }
 
         /* Phase B — shared sheet + nav hit targets */
-        
+
         .nav-ico {
             width: 22px; height: 22px; color: rgba(0,53,84,0.38);
             transition: color 0.15s;
@@ -716,9 +716,9 @@
 <body class="min-h-screen flex flex-col items-center justify-center p-8">
 
     <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-1">After Login</h1>
-        <p class="text-gray-500 text-base">FR-02 Dashboard · FA / Leader · Team · CRM · Policies · Inbox</p>
-        <p class="text-gray-400 text-xs mt-1">
+        <h1 class="text-3xl font-bold text-gray-100 mb-1">After Login</h1>
+        <p class="text-gray-400 text-base">FR-02 Dashboard · FA / Leader · Team · CRM · Policies · Inbox</p>
+        <p class="text-gray-500 text-xs mt-1">
             <a href="before-login.html" class="text-steel font-semibold">Before Login</a>
             ·
             <a href="login.html" class="text-steel font-semibold">Login</a>
@@ -872,7 +872,6 @@
                         <a href="policyholder-form.html?from=product" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left no-underline"><div class="ui-tile-sm"><i class="ph-fill ph-note-pencil" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">New Proposal</span></a>
                         <button type="button" onclick="openSheet('commissionSheet')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-chart-pie" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Commission</span></button>
                         <a href="policyholder-form.html?view=tracker" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left no-underline"><div class="ui-tile-sm"><i class="ph-fill ph-clipboard-text" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Proposal Status</span></a>
-                        <button type="button" onclick="openSheet('claimSheet')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-shield-check" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Claim</span></button>
                         <button type="button" onclick="showAppTab('customer')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-users" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">CRM</span></button>
                         <button type="button" onclick="showAppTab('tasks')" class="flex items-center gap-2 min-w-0 overflow-hidden rounded-xl bg-cream/80 pl-2 pr-2.5 py-2 text-left"><div class="ui-tile-sm"><i class="ph-fill ph-calendar-blank" aria-hidden="true"></i></div><span class="text-deep text-[11px] font-semibold flex-1 truncate">Task Management</span></button>
                     </div>
@@ -2110,7 +2109,7 @@
             if (!canViewTeam()) setDemoRole('dm');
             showAppTab('team');
         }, 0);
-        
+
         let demoRole = 'fa';
         let policyTypeFilter = 'all';
         let teamScope = 'personal';

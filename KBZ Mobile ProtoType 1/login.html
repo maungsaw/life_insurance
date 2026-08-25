@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
     <title>FR-01 · Secure Login &amp; Authentication</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +27,7 @@
         }
     </script>
     <style>
-        body { background: #e8ecf1; font-family: 'DM Sans', sans-serif; }
+        body { background: #10131a; font-family: 'DM Sans', sans-serif; }
         .phone-frame {
             width: 375px; height: 812px; border-radius: 40px; border: 8px solid #1a1a2e;
             overflow: hidden; position: relative; background: #F7F3EC;
@@ -100,12 +101,12 @@
 <body class="min-h-screen p-6 md:p-10">
 
     <div class="max-w-6xl mx-auto mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">FR-01 · Secure Login &amp; Authentication</h1>
-        <p class="text-gray-500 mt-1">End-user flows only inside the phone · team preview chips are for QA (not for agents)</p>
+        <h1 class="text-3xl font-bold text-gray-100">FR-01 · Secure Login &amp; Authentication</h1>
+        <p class="text-gray-400 mt-1">End-user flows only inside the phone · team preview chips are for QA (not for agents)</p>
         <details class="mt-4">
-            <summary class="text-sm font-semibold text-deep cursor-pointer select-none">Team preview · jump to screen</summary>
+            <summary class="text-sm font-semibold text-sky cursor-pointer select-none">Team preview · jump to screen</summary>
             <div class="flex flex-wrap gap-2 mt-3" id="flowNav"></div>
-            <p class="text-xs text-gray-400 mt-2" id="flowHint">Phone content stays end-user copy. Use chips only for QA.</p>
+            <p class="text-xs text-gray-500 mt-2" id="flowHint">Phone content stays end-user copy. Use chips only for QA.</p>
         </details>
     </div>
 
