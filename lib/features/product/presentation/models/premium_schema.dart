@@ -18,6 +18,9 @@ enum PremiumFieldId {
   optionalBundle,
   riderPlan,
   riderFrequency,
+  basePremiumAnnual,
+  basePremiumMonthly,
+  dividendRate,
 }
 
 enum PremiumFieldKind { dropdown, money, text, toggle }
@@ -158,7 +161,20 @@ abstract final class PremiumSchemas {
     required int lockupAmount,
     required bool optionalBundle,
     required String industryRisk,
+    int basePremiumAnnual = 0,
   }) {
+    // Universal Life quotes off a flat annual premium the agent enters,
+    // not a sum-insured lookup — keep its math separate from the rest.
+    if (product.id == 'ul') {
+      final monthly = (basePremiumAnnual / 12).round();
+      final stamp = _stamp(product: product, premium: monthly);
+      return QuoteCalcResult(
+        premium: monthly,
+        stampFee: stamp,
+        riderPremium: 0,
+        total: basePremiumAnnual + stamp,
+      );
+    }
     var premium = ProductMockData.monthlyPremiumFor(product: product, si: si);
     if (product.id == 'pa') {
       final risk = industryRisk.toLowerCase();
@@ -195,52 +211,24 @@ abstract final class PremiumSchemas {
     }
   }
 
-  static ProductPremiumSchema _ul(CatalogProduct p) => ProductPremiumSchema([
+  static ProductPremiumSchema _ul(CatalogProduct p) =>
+      const ProductPremiumSchema([
         PremiumFieldSpec(
-          id: PremiumFieldId.variant,
-          label: 'Product Variant',
-          isRequired: true,
-          options: p.variants,
-        ),
-        PremiumFieldSpec(
-          id: PremiumFieldId.frequency,
-          label: 'Payment Frequency',
-          isRequired: true,
-          options: p.frequencies,
-        ),
-        const PremiumFieldSpec(
-          id: PremiumFieldId.sumInsured,
-          label: 'Sum Insured Amount',
+          id: PremiumFieldId.basePremiumAnnual,
+          label: 'Base Premium (Annual)',
           isRequired: true,
           kind: PremiumFieldKind.money,
         ),
-        const PremiumFieldSpec(
-          id: PremiumFieldId.premium,
-          label: 'Monthly Premium',
+        PremiumFieldSpec(
+          id: PremiumFieldId.basePremiumMonthly,
+          label: 'Base Premium Monthly',
           readOnly: true,
           kind: PremiumFieldKind.money,
         ),
-        const PremiumFieldSpec(
-          id: PremiumFieldId.topup,
-          label: 'Topup Premium',
-          kind: PremiumFieldKind.money,
-        ),
-        const PremiumFieldSpec(
-          id: PremiumFieldId.lockupAmount,
-          label: 'Lock Up Amount',
-          kind: PremiumFieldKind.money,
-        ),
-        const PremiumFieldSpec(
-          id: PremiumFieldId.lockupPeriod,
-          label: 'Lock Up Period',
-          kind: PremiumFieldKind.dropdown,
-          options: ['2 Years', '3 Years', '5 Years'],
-        ),
         PremiumFieldSpec(
-          id: PremiumFieldId.policyTerms,
-          label: 'Policy Terms',
-          isRequired: true,
-          options: p.terms,
+          id: PremiumFieldId.dividendRate,
+          label: 'Dividend Rate (%)',
+          kind: PremiumFieldKind.text,
         ),
       ]);
 

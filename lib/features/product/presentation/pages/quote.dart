@@ -20,7 +20,6 @@ class ProductQuotePage extends StatefulWidget {
 
 class _ProductQuotePageState extends State<ProductQuotePage> {
   late CatalogProduct _product;
-  late ProductLine _type;
   late ProductPremiumSchema _schema;
   late String _variant;
   late String _frequency;
@@ -42,6 +41,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   late final TextEditingController _discountAmountCtrl;
   late final TextEditingController _discountNameCtrl;
   late final TextEditingController _partyCtrl;
+  late final TextEditingController _productNameCtrl;
   late final TextEditingController _variantCtrl;
   late final TextEditingController _freqCtrl;
   late final TextEditingController _termCtrl;
@@ -51,6 +51,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   late final TextEditingController _travelByCtrl;
   late final TextEditingController _riderPlanCtrl;
   late final TextEditingController _riderFreqCtrl;
+  late final TextEditingController _basePremiumAnnualCtrl;
+  late final TextEditingController _basePremiumMonthlyCtrl;
+  late final TextEditingController _dividendRateCtrl;
   bool _optionalBundle = false;
   QuoteParty? _party;
   bool _saving = false;
@@ -68,7 +71,6 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   void initState() {
     super.initState();
     _product = widget.product;
-    _type = widget.product.line;
     ProductSession.rememberProduct(_product);
     _dob = DateTime(1999, 6, 4);
     _dobCtrl = TextEditingController(text: ProductFormat.dob(_dob));
@@ -80,6 +82,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _discountAmountCtrl = TextEditingController(text: ProductFormat.money(0));
     _discountNameCtrl = TextEditingController();
     _partyCtrl = TextEditingController();
+    _productNameCtrl = TextEditingController(text: _product.name);
     _variantCtrl = TextEditingController();
     _freqCtrl = TextEditingController();
     _termCtrl = TextEditingController();
@@ -89,6 +92,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _travelByCtrl = TextEditingController();
     _riderPlanCtrl = TextEditingController();
     _riderFreqCtrl = TextEditingController();
+    _basePremiumAnnualCtrl = TextEditingController();
+    _basePremiumMonthlyCtrl = TextEditingController();
+    _dividendRateCtrl = TextEditingController();
     _discountName = '';
     _resetForProduct(_product, keepParty: false);
     if (widget.initialParty != null) {
@@ -111,6 +117,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _discountAmountCtrl.dispose();
     _discountNameCtrl.dispose();
     _partyCtrl.dispose();
+    _productNameCtrl.dispose();
     _variantCtrl.dispose();
     _freqCtrl.dispose();
     _termCtrl.dispose();
@@ -120,6 +127,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _travelByCtrl.dispose();
     _riderPlanCtrl.dispose();
     _riderFreqCtrl.dispose();
+    _basePremiumAnnualCtrl.dispose();
+    _basePremiumMonthlyCtrl.dispose();
+    _dividendRateCtrl.dispose();
     super.dispose();
   }
 
@@ -147,16 +157,87 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     _lockupCtrl.text = ProductFormat.money(
       _schema.has(PremiumFieldId.lockupAmount) ? 10000000 : 0,
     );
+    if (_schema.has(PremiumFieldId.basePremiumAnnual)) {
+      _basePremiumAnnualCtrl.text = ProductFormat.money(600000);
+      _dividendRateCtrl.text = '6.5';
+    }
     if (!keepParty) {
       _party = null;
       _partyCtrl.clear();
       _partyError = null;
     }
+
+    final existing = ProductSession.latestQuoteFor(product.id);
+    if (existing != null) {
+      _hydrateFromSavedQuote(existing, applyParty: !keepParty);
+      return;
+    }
+
+    _syncDropdownCtrls();
+    _recalc();
+  }
+
+  /// Prefills the form from a previously saved quote for the same product,
+  /// so switching to (or reopening) a product that was already calculated
+  /// doesn't require retyping every field.
+  void _hydrateFromSavedQuote(SavedQuote quote, {required bool applyParty}) {
+    _dob = quote.dob;
+    _dobCtrl.text = ProductFormat.dob(_dob);
+    if (_schema.has(PremiumFieldId.variant)) {
+      _variant = quote.variant;
+    }
+    _frequency = quote.frequency;
+    _term = quote.term;
+    _siCtrl.text = quote.sumInsured;
+    _topupCtrl.text = quote.topup;
+
+    final extras = quote.extras;
+    if (extras.containsKey('Base Premium (Annual)')) {
+      _basePremiumAnnualCtrl.text = extras['Base Premium (Annual)']!;
+    }
+    if (extras.containsKey('Dividend Rate')) {
+      _dividendRateCtrl.text = extras['Dividend Rate']!.replaceAll('%', '');
+    }
+    if (extras.containsKey('Lock-Up Amount')) {
+      _lockupCtrl.text = extras['Lock-Up Amount']!;
+    }
+    if (extras.containsKey('Lock-Up Period')) {
+      _lockupPeriod = extras['Lock-Up Period']!;
+    }
+    if (extras.containsKey('Industry Risk')) {
+      _industryRisk = extras['Industry Risk']!;
+    } else if (!_schema.has(PremiumFieldId.variant)) {
+      _industryRisk = quote.variant;
+    }
+    if (extras.containsKey('Additional Cover')) {
+      _additionalCover = extras['Additional Cover']!;
+    }
+    if (extras.containsKey('Travel By')) {
+      _travelBy = extras['Travel By']!;
+    }
+    if (extras.containsKey('Plate Number')) {
+      _plateCtrl.text = extras['Plate Number']!;
+    }
+    _optionalBundle = extras.containsKey('Rider Plan');
+    if (extras.containsKey('Rider Plan')) {
+      _riderPlan = extras['Rider Plan']!;
+    }
+    if (extras.containsKey('Rider Payment Frequency')) {
+      _riderFrequency = extras['Rider Payment Frequency']!;
+    }
+    _discountName = extras['Discount Name'] ?? '';
+    _discountAmountCtrl.text = extras['Discount Amount'] ?? ProductFormat.money(0);
+
+    if (applyParty) {
+      _applyParty(quote.party);
+    }
+
     _syncDropdownCtrls();
     _recalc();
   }
 
   void _syncDropdownCtrls() {
+    _productNameCtrl.text = _product.name;
     _variantCtrl.text = _variant;
     _freqCtrl.text = _frequency;
     _termCtrl.text = _term;
@@ -172,7 +253,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
   void _recalc() {
     _calc = PremiumSchemas.calculate(
       product: _product,
-      si: ProductFormat.parseMoney(_siCtrl.text),
+      si: _schema.has(PremiumFieldId.sumInsured)
+          ? ProductFormat.parseMoney(_siCtrl.text)
+          : 0,
       topup: _schema.has(PremiumFieldId.topup)
           ? ProductFormat.parseMoney(_topupCtrl.text)
           : 0,
@@ -181,8 +264,15 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
           : 0,
       optionalBundle: _optionalBundle,
       industryRisk: _industryRisk,
+      basePremiumAnnual: _schema.has(PremiumFieldId.basePremiumAnnual)
+          ? ProductFormat.parseMoney(_basePremiumAnnualCtrl.text)
+          : 0,
     );
-    _premiumCtrl.text = ProductFormat.money(_calc.premium);
+    if (_schema.has(PremiumFieldId.basePremiumMonthly)) {
+      _basePremiumMonthlyCtrl.text = ProductFormat.money(_calc.premium);
+    } else {
+      _premiumCtrl.text = ProductFormat.money(_calc.premium);
+    }
     setState(() {});
   }
 
@@ -192,7 +282,6 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     final product = ProductSession.byProductId(d.productId);
     if (product != null && product.id != _product.id) {
       _product = product;
-      _type = product.line;
       _schema = PremiumSchemas.forProduct(product);
     }
     _dob = d.dob;
@@ -257,14 +346,8 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
     ProductSession.rememberProduct(product);
     setState(() {
       _product = product;
-      _type = product.line;
       _resetForProduct(product, keepParty: true);
     });
-  }
-
-  void _selectType(ProductLine line) {
-    final next = ProductMockData.products.firstWhere((p) => p.line == line);
-    _applyProduct(next);
   }
 
   Future<void> _pickDob() async {
@@ -315,7 +398,9 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
                 ? _industryRisk
                 : _product.variants.first),
       frequency: _frequency,
-      si: ProductFormat.parseMoney(_siCtrl.text),
+      si: _schema.has(PremiumFieldId.sumInsured)
+          ? ProductFormat.parseMoney(_siCtrl.text)
+          : 0,
       topup: _schema.has(PremiumFieldId.topup)
           ? ProductFormat.parseMoney(_topupCtrl.text)
           : 0,
@@ -335,10 +420,21 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
       riderFrequency: _optionalBundle ? _riderFrequency : '',
       discountName: _discountName,
       discountAmount: _discountAmountCtrl.text,
+      basePremiumAnnual: _schema.has(PremiumFieldId.basePremiumAnnual)
+          ? ProductFormat.parseMoney(_basePremiumAnnualCtrl.text)
+          : 0,
+      dividendRate: _schema.has(PremiumFieldId.dividendRate)
+          ? _dividendRateCtrl.text.trim()
+          : '',
     );
     setState(() => _saving = false);
     if (!mounted) return;
-    context.push(AppRoute.productQuoteSaved, extra: quote);
+    // Buy saves the quote as a draft and goes straight into the e-App —
+    // no separate "quote saved" stop, since the e-App already reuses
+    // every field from this quote.
+    final draft = ProductSession.startEapp(quote);
+    if (!mounted) return;
+    context.push(AppRoute.productEapp, extra: draft);
   }
 
   bool get _showPlate =>
@@ -385,11 +481,6 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
 
   @override
   Widget build(BuildContext context) {
-    final typeLines = ProductMockData.linesInCatalog;
-    final names = ProductMockData.products
-        .where((p) => p.line == _type)
-        .toList();
-
     return Scaffold(
       backgroundColor: AppColors.background(context),
       appBar: const ProductSubAppBar(title: 'Get A Quote'),
@@ -416,134 +507,111 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             ),
             const SizedBox(height: 14),
           ],
-          const QuoteRequiredLabel('Product Type'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final line in typeLines)
-                QuoteTypeChip(
-                  label: switch (line) {
-                    ProductLine.protection => 'Protection',
-                    ProductLine.saving => 'Saving',
-                    ProductLine.travel => 'Travel',
-                    ProductLine.health => 'Health',
-                    ProductLine.bundled => 'Bundle',
-                  },
-                  selected: _type == line,
-                  onTap: () => _selectType(line),
-                ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const QuoteRequiredLabel('Product Name'),
-          const SizedBox(height: 8),
-          if (names.length <= 3)
-            Row(
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface(context),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.border(context)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var i = 0; i < names.length; i++) ...[
-                  if (i > 0) const SizedBox(width: 8),
-                  Expanded(
-                    child: QuoteNameTile(
-                      label: names[i].name,
-                      selected: _product.id == names[i].id,
-                      onTap: () => _applyProduct(names[i]),
-                    ),
-                  ),
-                ],
-              ],
-            )
-          else
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: names.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 2.4,
-              ),
-              itemBuilder: (context, i) {
-                final p = names[i];
-                return QuoteNameTile(
-                  label: p.name,
-                  selected: _product.id == p.id,
-                  onTap: () => _applyProduct(p),
-                );
-              },
-            ),
-          const SizedBox(height: 18),
-          AppTextField(
-            label: 'Date of Birth (Insured Person)',
-            isRequired: true,
-            controller: _dobCtrl,
-            readOnly: true,
-            onTap: _pickDob,
-            suffix: IconButton(
-              onPressed: _pickDob,
-              icon: const Icon(Icons.calendar_today_outlined, size: 18),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Age $_age',
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.onSurfaceSecondary(context),
-            ),
-          ),
-          const SizedBox(height: 14),
-          ..._schemaFields(),
-          const SizedBox(height: 4),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: AppTextField(
-                  label: 'Discount Name',
-                  controller: _discountNameCtrl,
+                AppTextField(
+                  label: 'Select Product',
+                  isRequired: true,
+                  controller: _productNameCtrl,
                   readOnly: true,
-                  hintText: 'Optional',
                   onTap: () => _dropdown(
-                    title: 'Discount Name',
-                    options: ['(None)', ..._discountNames],
-                    current: _discountName.isEmpty ? '(None)' : _discountName,
+                    title: 'Select Product',
+                    options: [
+                      for (final p in ProductMockData.products) p.name,
+                    ],
+                    current: _product.name,
                     onPick: (v) {
-                      setState(() {
-                        _discountName = v == '(None)' ? '' : v;
-                        _discountNameCtrl.text = _discountName;
-                      });
+                      final picked = ProductMockData.products.firstWhere(
+                        (p) => p.name == v,
+                      );
+                      _applyProduct(picked);
                     },
                   ),
                   suffix: const Icon(Icons.expand_more, size: 18),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: AppTextField(
-                  label: 'Discount Amount',
-                  controller: _discountAmountCtrl,
-                  keyboardType: TextInputType.number,
-                  onChanged: (_) => setState(() {}),
+                const SizedBox(height: 18),
+                AppTextField(
+                  label: 'Date of Birth (Insured Person)',
+                  isRequired: true,
+                  controller: _dobCtrl,
+                  readOnly: true,
+                  onTap: _pickDob,
+                  suffix: IconButton(
+                    onPressed: _pickDob,
+                    icon: const Icon(Icons.calendar_today_outlined, size: 18),
+                  ),
                 ),
-              ),
-            ],
-          ),
-          if (!GuestSession.isGuest) ...[
-            const SizedBox(height: 14),
-            AppTextField(
-              label: 'Link to',
-              isRequired: true,
-              controller: _partyCtrl,
-              readOnly: true,
-              errorText: _partyError,
-              hintText: 'Lead or Client',
-              onTap: _pickParty,
-              suffix: const Icon(Icons.unfold_more, size: 18),
+                const SizedBox(height: 6),
+                Text(
+                  'Age $_age',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.onSurfaceSecondary(context),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                ..._schemaFields(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: AppTextField(
+                        label: 'Discount Name',
+                        controller: _discountNameCtrl,
+                        readOnly: true,
+                        hintText: 'Optional',
+                        onTap: () => _dropdown(
+                          title: 'Discount Name',
+                          options: ['(None)', ..._discountNames],
+                          current: _discountName.isEmpty
+                              ? '(None)'
+                              : _discountName,
+                          onPick: (v) {
+                            setState(() {
+                              _discountName = v == '(None)' ? '' : v;
+                              _discountNameCtrl.text = _discountName;
+                            });
+                          },
+                        ),
+                        suffix: const Icon(Icons.expand_more, size: 18),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: AppTextField(
+                        label: 'Discount Amount',
+                        controller: _discountAmountCtrl,
+                        keyboardType: TextInputType.number,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                    ),
+                  ],
+                ),
+                if (!GuestSession.isGuest) ...[
+                  const SizedBox(height: 14),
+                  AppTextField(
+                    label: 'Link to',
+                    isRequired: true,
+                    controller: _partyCtrl,
+                    readOnly: true,
+                    errorText: _partyError,
+                    hintText: 'Lead or Client',
+                    onTap: _pickParty,
+                    suffix: const Icon(Icons.unfold_more, size: 18),
+                  ),
+                ],
+              ],
             ),
-          ],
+          ),
           const SizedBox(height: 18),
           QuotePremiumSummaryCard(
             productName: _product.name,
@@ -553,12 +621,19 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             variant: _schema.has(PremiumFieldId.variant)
                 ? _variant
                 : (_industryRisk.isNotEmpty ? _industryRisk : null),
-            sumInsured: _siCtrl.text,
+            sumInsured: _schema.has(PremiumFieldId.sumInsured)
+                ? _siCtrl.text
+                : null,
             topup: _schema.has(PremiumFieldId.topup) ? _topupCtrl.text : null,
-            term: _term,
+            term: _schema.has(PremiumFieldId.policyTerms) ? _term : null,
             stampFee: ProductFormat.money(_calc.stampFee),
             total: ProductFormat.money(_calc.total),
             extraRows: {
+              if (_schema.has(PremiumFieldId.basePremiumAnnual))
+                'Base Premium (Annual)': _basePremiumAnnualCtrl.text,
+              if (_schema.has(PremiumFieldId.dividendRate) &&
+                  _dividendRateCtrl.text.isNotEmpty)
+                'Dividend Rate': '${_dividendRateCtrl.text}%',
               if (_schema.has(PremiumFieldId.lockupAmount))
                 'Lock-Up Amount': _lockupCtrl.text,
               if (_lockupPeriod.isNotEmpty &&
@@ -590,9 +665,7 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
             children: [
               Expanded(
                 child: AppButton(
-                  label: GuestSession.isGuest
-                      ? 'Login to save quote'
-                      : 'Save quote',
+                  label: GuestSession.isGuest ? 'Login to buy' : 'Buy',
                   isLoading: _saving,
                   onPressed: GuestSession.isGuest ? _loginToSave : _save,
                 ),
@@ -741,6 +814,27 @@ class _ProductQuotePageState extends State<ProductQuotePage> {
           isRequired: field.isRequired,
           controller: _plateCtrl,
         );
+      case PremiumFieldId.basePremiumAnnual:
+        return AppTextField(
+          label: field.label,
+          isRequired: field.isRequired,
+          controller: _basePremiumAnnualCtrl,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => _recalc(),
+        );
+      case PremiumFieldId.basePremiumMonthly:
+        return AppTextField(
+          label: field.label,
+          controller: _basePremiumMonthlyCtrl,
+          enabled: false,
+        );
+      case PremiumFieldId.dividendRate:
+        return AppTextField(
+          label: field.label,
+          controller: _dividendRateCtrl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          onChanged: (_) => setState(() {}),
+        );
       case PremiumFieldId.optionalBundle:
         return CheckboxListTile(
           contentPadding: EdgeInsets.zero,
@@ -792,11 +886,11 @@ class QuotePremiumSummaryCard extends StatelessWidget {
     required this.frequency,
     required this.premium,
     required this.age,
-    required this.sumInsured,
-    required this.term,
     required this.stampFee,
     required this.total,
     this.variant,
+    this.sumInsured,
+    this.term,
     this.topup,
     this.extraRows = const {},
   });
@@ -805,8 +899,8 @@ class QuotePremiumSummaryCard extends StatelessWidget {
   final String frequency;
   final String premium;
   final int age;
-  final String sumInsured;
-  final String term;
+  final String? sumInsured;
+  final String? term;
   final String stampFee;
   final String total;
   final String? variant;
@@ -817,10 +911,9 @@ class QuotePremiumSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
       decoration: BoxDecoration(
         color: AppColors.surface(context),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.06),
@@ -832,71 +925,115 @@ class QuotePremiumSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  productName,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              Icon(
-                Icons.bookmark_border,
-                color: AppColors.lightPrimary.withValues(alpha: 0.7),
-                size: 22,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
+          // Hero: the number the agent (and client) actually care about.
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
             decoration: BoxDecoration(
-              color: AppColors.lightPrimary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.lightPrimary.withValues(alpha: 0.14),
+                  AppColors.lightPrimary.withValues(alpha: 0.05),
+                ],
+              ),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    'Premium ($frequency)',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        productName,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.onSurfaceSecondary(context),
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.bookmark_border,
+                      color: AppColors.lightPrimary.withValues(alpha: 0.7),
+                      size: 20,
+                    ),
+                  ],
                 ),
-                Text(
-                  premium,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.lightPrimary,
-                  ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      premium,
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      'MMK / $frequency',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.onSurfaceSecondary(context),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          _kv(context, 'Product Name', productName),
-          if (variant != null) _kv(context, 'Variant', variant!),
-          _kv(context, 'Payment Frequency', frequency),
-          _kv(context, 'Your Age', '$age'),
-          _kv(context, 'Sum Insured', sumInsured),
-          if (topup != null && topup != '0.00') _kv(context, 'Top-Up Premium', topup!),
-          _kv(context, 'Policy Terms', term),
-          for (final e in extraRows.entries) _kv(context, e.key, e.value),
-          _kv(context, 'Stamp Fee', stampFee),
-          const Divider(height: 20),
-          Row(
-            children: [
-              const Expanded(
-                child: Text(
-                  'Total Amount',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'DETAILS',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.6,
+                    color: AppColors.onSurfaceSecondary(context),
+                  ),
                 ),
-              ),
-              Text(total, style: TextStyle(fontWeight: FontWeight.w800)),
-            ],
+                const SizedBox(height: 8),
+                if (variant != null) _kv(context, 'Variant', variant!),
+                _kv(context, 'Your Age', '$age'),
+                if (sumInsured != null) _kv(context, 'Sum Insured', sumInsured!),
+                if (topup != null && topup != '0.00')
+                  _kv(context, 'Top-Up Premium', topup!),
+                if (term != null) _kv(context, 'Policy Terms', term!),
+                for (final e in extraRows.entries) _kv(context, e.key, e.value),
+                _kv(context, 'Stamp Fee', stampFee),
+                const Divider(height: 22),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Total Amount',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                    Text(
+                      total,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

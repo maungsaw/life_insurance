@@ -23,7 +23,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.surface(context),
+      backgroundColor: Colors.transparent,
       appBar: ProductSubAppBar(
         title: 'Product Details',
         actions: [
@@ -34,113 +34,154 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.12),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(p.icon, color: AppColors.lightPrimary, size: 28),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        p.name,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        p.tagline,
-                        style: TextStyle(
-                          fontSize: 13,
-                          height: 1.35,
-                          color: AppColors.onSurfaceSecondary(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          // Milk-tea / condensed-milk cream two-tone (matches AppColors.lightBackground)
+          // — kept as fixed light tones on purpose, independent of dark mode.
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFFF6E9),
+              Color(0xFFFDEBCB),
+            ],
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                for (var i = 0; i < 3; i++)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: InkWell(
-                      onTap: () => setState(() => _tab = i),
-                      child: Column(
-                        children: [
-                          Text(
-                            const [
-                              'About',
-                              'Coverage & Benefit',
-                              'Eligible',
-                            ][i],
-                            style: TextStyle(
-                              fontWeight: _tab == i
-                                  ? FontWeight.w800
-                                  : FontWeight.w600,
-                              color: _tab == i
-                                  ? AppColors.lightPrimary
-                                  : AppColors.onSurfaceSecondary(context),
-                            ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppColors.lightSurface,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(p.icon, color: AppColors.lightPrimary, size: 28),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          p.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.lightTextPrimary,
                           ),
-                          const SizedBox(height: 6),
-                          Container(
-                            height: 3,
-                            width: 36,
-                            color: _tab == i
-                                ? AppColors.lightPrimary
-                                : Colors.transparent,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          p.tagline,
+                          style: TextStyle(
+                            fontSize: 13,
+                            height: 1.35,
+                            color: AppColors.lightTextSecondary,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-              children: [
-                if (_tab == 0) ..._about(),
-                if (_tab == 1) ..._coverage(),
-                if (_tab == 2) ..._eligible(),
-              ],
-            ),
-          ),
-          SafeArea(
-            top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: AppButton(
-                label: 'GET A QUOTE',
-                onPressed: () => context.push(AppRoute.productQuote, extra: p),
+                ],
               ),
             ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                children: [
+                  for (var i = 0; i < 3; i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: InkWell(
+                        onTap: () => setState(() => _tab = i),
+                        child: Column(
+                          children: [
+                            Text(
+                              const [
+                                'About',
+                                'Coverage & Benefit',
+                                'Eligible',
+                              ][i],
+                              style: TextStyle(
+                                fontWeight: _tab == i
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: _tab == i
+                                    ? AppColors.lightPrimary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Container(
+                              height: 3,
+                              width: 36,
+                              color: _tab == i
+                                  ? AppColors.lightPrimary
+                                  : Colors.transparent,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Divider(height: 1, color: AppColors.lightBorder),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                children: [
+                  if (_tab == 0) ..._about(),
+                  if (_tab == 1) ..._coverage(),
+                  if (_tab == 2) ..._eligible(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: AppColors.lightSurface,
+          border: Border(top: BorderSide(color: AppColors.lightBorder)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AppButton(
+                    label: 'GET A QUOTE',
+                    variant: AppButtonVariant.secondary,
+                    onPressed: () =>
+                        context.push(AppRoute.productQuote, extra: p),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AppButton(
+                    label: 'START E-APP',
+                    onPressed: () {
+                      final draft = ProductSession.startEappForProduct(p);
+                      context.push(AppRoute.productEapp, extra: draft);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -152,13 +193,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         style: TextStyle(
           fontSize: 14,
           height: 1.45,
-          color: AppColors.onSurface(context),
+          color: AppColors.lightTextPrimary,
         ),
       ),
       const SizedBox(height: 22),
       const Text(
         'Who Should Take This Policy?',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: AppColors.lightTextPrimary,
+        ),
       ),
       const SizedBox(height: 12),
       for (final row in p.whoShould) ...[
@@ -172,7 +217,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 color: AppColors.lightPrimary,
                 shape: BoxShape.circle,
               ),
-              child: Icon(row.icon, color: AppColors.surface(context), size: 18),
+              child: Icon(row.icon, color: AppColors.lightSurface, size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -181,14 +226,17 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 children: [
                   Text(
                     row.title,
-                    style: TextStyle(fontWeight: FontWeight.w800),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.lightTextPrimary,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     row.body,
                     style: TextStyle(
                       fontSize: 13,
-                      color: AppColors.onSurfaceSecondary(context),
+                      color: AppColors.lightTextSecondary,
                       height: 1.35,
                     ),
                   ),
@@ -202,7 +250,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       const SizedBox(height: 8),
       const Text(
         'Why Should You Buy This Policy?',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: AppColors.lightTextPrimary,
+        ),
       ),
       const SizedBox(height: 12),
       for (final why in p.whyBuy)
@@ -217,13 +269,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   color: AppColors.lightPrimary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.check, color: AppColors.surface(context), size: 14),
+                child: Icon(Icons.check, color: AppColors.lightSurface, size: 14),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   why,
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.lightTextPrimary,
+                  ),
                 ),
               ),
             ],
@@ -252,7 +307,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       const SizedBox(height: 8),
       Text(
         'Indicative · final premium from the calculator.',
-        style: TextStyle(fontSize: 12, color: AppColors.hint(context)),
+        style: TextStyle(fontSize: 12, color: AppColors.lightTextHint),
       ),
       const SizedBox(height: 16),
       for (final line in p.coverage)
@@ -261,8 +316,22 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('•  ', style: TextStyle(fontWeight: FontWeight.w800)),
-              Expanded(child: Text(line, style: TextStyle(height: 1.35))),
+              const Text(
+                '•  ',
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  line,
+                  style: const TextStyle(
+                    height: 1.35,
+                    color: AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -283,7 +352,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 color: AppColors.lightPrimary,
               ),
               const SizedBox(width: 8),
-              Expanded(child: Text(line, style: TextStyle(height: 1.35))),
+              Expanded(
+                child: Text(
+                  line,
+                  style: const TextStyle(
+                    height: 1.35,
+                    color: AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

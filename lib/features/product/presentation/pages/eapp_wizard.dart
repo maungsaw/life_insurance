@@ -4,6 +4,7 @@ import 'package:life_insurance/core/core.dart'
     show AppColors, AppRoute, PrototypeConfig;
 import 'package:life_insurance/features/components/components.dart';
 import 'package:life_insurance/features/customer/presentation/models/customer_hub_session.dart';
+import 'package:life_insurance/features/product/presentation/models/premium_schema.dart';
 import 'package:life_insurance/features/product/presentation/models/product_mock_data.dart';
 import 'package:life_insurance/features/product/presentation/widgets/eapp_launch.dart';
 import 'package:life_insurance/features/product/presentation/widgets/product_pickers.dart';
@@ -23,6 +24,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
 
   static const _titles = [
     'Policyholder',
+    'Policyholder Details',
     'Life Assured',
     'Life Assured Scanner',
     'Beneficiary',
@@ -55,12 +57,18 @@ class _ProductEappPageState extends State<ProductEappPage> {
   late final TextEditingController _phState;
   late final TextEditingController _phAddress;
   late final TextEditingController _remark;
+  late final TextEditingController _quoteSiCtrl;
+  late String _quoteFrequency;
+  late String _quoteTerm;
 
   @override
   void initState() {
     super.initState();
     _ph = widget.draft.policyholder;
     _la = widget.draft.lifeAssured;
+    _quoteSiCtrl = TextEditingController(text: widget.draft.quote.sumInsured);
+    _quoteFrequency = widget.draft.quote.frequency;
+    _quoteTerm = widget.draft.quote.term;
     _phName = TextEditingController(text: _ph.name);
     _phMobile = TextEditingController(text: _ph.mobile);
     _phAlt = TextEditingController(text: _ph.altMobile);
@@ -97,6 +105,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
     _phState.dispose();
     _phAddress.dispose();
     _remark.dispose();
+    _quoteSiCtrl.dispose();
     super.dispose();
   }
 
@@ -147,11 +156,11 @@ class _ProductEappPageState extends State<ProductEappPage> {
       setState(() => _error = 'Name is required.');
       return;
     }
-    if (step == 3 && ProductSession.beneficiaryTotal(d) != 100) {
+    if (step == 4 && ProductSession.beneficiaryTotal(d) != 100) {
       setState(() => _error = 'Beneficiary share must total 100%.');
       return;
     }
-    if (step == 6) {
+    if (step == 7) {
       if (!_clientSign || !_agentSign) {
         setState(() => _error = 'Client and agent signatures are required.');
         return;
@@ -170,7 +179,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
     }
 
     var next = step + 1;
-    if (step == 0 && d.sameAsLifeAssured) next = 2;
+    if (step == 1 && d.sameAsLifeAssured) next = 3;
     d.step = next;
     setState(() {});
   }
@@ -182,7 +191,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       return;
     }
     var prev = step - 1;
-    if (step == 2 && d.sameAsLifeAssured) prev = 0;
+    if (step == 3 && d.sameAsLifeAssured) prev = 1;
     d.step = prev;
     setState(() {});
   }
@@ -202,7 +211,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       appBar: ProductSubAppBar(
         title: _titles[step],
         actions: [
-          if (step == 3)
+          if (step == 4)
             TextButton(
               onPressed: _addBeneficiary,
               child: const Text('ADD MORE'),
@@ -254,13 +263,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               children: [
-                if (step == 0) ..._policyholder(),
-                if (step == 1) ..._lifeAssuredNote(),
-                if (step == 2) ..._scanner(),
-                if (step == 3) ..._beneficiaries(),
-                if (step == 4) ..._health(),
-                if (step == 5) ..._premium(),
-                if (step == 6) ..._confirm(),
+                if (step == 0) ..._policyholderPersonal(),
+                if (step == 1) ..._policyholderAdditional(),
+                if (step == 2) ..._lifeAssuredNote(),
+                if (step == 3) ..._scanner(),
+                if (step == 4) ..._beneficiaries(),
+                if (step == 5) ..._health(),
+                if (step == 6) ..._premium(),
+                if (step == 7) ..._confirm(),
               ],
             ),
           ),
@@ -268,7 +278,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: step == 6
+              child: step == 7
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -287,7 +297,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
                     )
                   : Row(
                       children: [
-                        if (step == 2)
+                        if (step == 3)
                           Expanded(
                             child: AppButton(
                               label: 'Skip',
@@ -309,10 +319,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: AppButton(
-                            label: step == 2 ? 'Save' : 'NEXT',
+                            label: step == 3 ? 'Save' : 'NEXT',
                             isLoading: _busy,
                             onPressed: () {
-                              if (step == 2) d.nrcCaptured = true;
+                              if (step == 3) d.nrcCaptured = true;
                               _next();
                             },
                           ),
@@ -326,7 +336,10 @@ class _ProductEappPageState extends State<ProductEappPage> {
     );
   }
 
-  List<Widget> _policyholder() {
+  /// Policyholder step 1 of 2 — identity & contact only. Physical stats
+  /// and address moved to [_policyholderAdditional] so this step doesn't
+  /// read as one long wall of fields.
+  List<Widget> _policyholderPersonal() {
     return [
       AppTextField(label: 'Name', isRequired: true, controller: _phName),
       _fieldGap,
@@ -417,7 +430,14 @@ class _ProductEappPageState extends State<ProductEappPage> {
         controller: _phAge,
         enabled: false,
       ),
-      _fieldGap,
+    ];
+  }
+
+  /// Policyholder step 2 of 2 — physical stats & address, plus the
+  /// Life Assured shortcut that used to sit at the bottom of the single
+  /// long Policyholder step.
+  List<Widget> _policyholderAdditional() {
+    return [
       AppTextField(
         label: 'Height',
         isRequired: true,
@@ -697,8 +717,134 @@ class _ProductEappPageState extends State<ProductEappPage> {
     ];
   }
 
+  /// Recomputes the placeholder quote from the editable Sum Insured /
+  /// Frequency / Term fields — only used when the e-App was started
+  /// straight from a Product with no saved quote yet.
+  void _recalcDraftQuote() {
+    final product = ProductSession.byProductId(d.quote.productId);
+    if (product == null) return;
+    final si = ProductFormat.parseMoney(_quoteSiCtrl.text);
+    final calc = PremiumSchemas.calculate(
+      product: product,
+      si: si,
+      topup: 0,
+      lockupAmount: 0,
+      optionalBundle: false,
+      industryRisk: '',
+    );
+    setState(() {
+      d.quote = SavedQuote(
+        id: d.quote.id,
+        productId: product.id,
+        productName: product.name,
+        productCode: product.code,
+        lineLabel: product.lineLabel,
+        variant: product.variants.first,
+        frequency: _quoteFrequency,
+        sumInsured: ProductFormat.money(si),
+        monthlyPremium: ProductFormat.money(calc.premium),
+        topup: ProductFormat.money(0),
+        term: _quoteTerm,
+        dob: d.quote.dob,
+        age: d.quote.age,
+        party: d.quote.party,
+        savedAt: d.quote.savedAt,
+        stampFee: ProductFormat.money(calc.stampFee),
+        totalAmount: ProductFormat.money(calc.total),
+      );
+    });
+  }
+
   List<Widget> _premium() {
     final q = d.quote;
+    if (q.isDraftPlaceholder) {
+      final product = ProductSession.byProductId(q.productId);
+      return [
+        Text(
+          q.productName,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'No saved quote yet for this product — fill in the details below to calculate the premium.',
+          style: TextStyle(
+            fontSize: 12,
+            height: 1.35,
+            color: AppColors.hint(context),
+          ),
+        ),
+        const SizedBox(height: 14),
+        AppTextField(
+          label: 'Sum Insured Amount',
+          isRequired: true,
+          controller: _quoteSiCtrl,
+          keyboardType: TextInputType.number,
+          onChanged: (_) => _recalcDraftQuote(),
+        ),
+        const SizedBox(height: 14),
+        Text(
+          'Payment Frequency',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final f in product?.frequencies ?? const <String>[])
+              QuoteTypeChip(
+                label: f,
+                selected: _quoteFrequency == f,
+                onTap: () => setState(() {
+                  _quoteFrequency = f;
+                  _recalcDraftQuote();
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Text(
+          'Policy Term',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final t in product?.terms ?? const <String>[])
+              QuoteTypeChip(
+                label: t,
+                selected: _quoteTerm == t,
+                onTap: () => setState(() {
+                  _quoteTerm = t;
+                  _recalcDraftQuote();
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.lightPrimary.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            'Premium (${q.frequency})  ${q.monthlyPremium}',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              color: AppColors.lightPrimary,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        _kv('Stamp Fee', q.stampFee),
+        const Divider(height: 18),
+        _kv('Total Amount', q.totalAmount),
+      ];
+    }
     return [
       Text(
         q.productName,
@@ -766,7 +912,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
         topup: q.topup,
         term: q.term,
         total: q.totalAmount,
-        onEdit: () => _jumpToStep(5),
+        onEdit: () => _jumpToStep(6),
       ),
       const SizedBox(height: 10),
       _ConfirmReviewTile(
@@ -794,7 +940,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       _ConfirmReviewTile(
         title: 'Insured Information',
         subtitle: d.sameAsLifeAssured ? 'Same as policyholder' : insuredName,
-        onEdit: () => _jumpToStep(d.sameAsLifeAssured ? 0 : 1),
+        onEdit: () => _jumpToStep(d.sameAsLifeAssured ? 0 : 2),
         rows: {
           'Same as policyholder': d.sameAsLifeAssured ? 'Yes' : 'No',
           'Name': insuredName,
@@ -805,7 +951,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       _ConfirmReviewTile(
         title: 'Beneficiary Information',
         subtitle: benSummary,
-        onEdit: () => _jumpToStep(3),
+        onEdit: () => _jumpToStep(4),
         rows: {
           for (final b in d.beneficiaries)
             b.name: '${b.relationship} · ${b.percent}%',
@@ -815,7 +961,7 @@ class _ProductEappPageState extends State<ProductEappPage> {
       _ConfirmReviewTile(
         title: 'Health Declaration',
         subtitle: d.highRisk ? 'High risk · Yes' : 'High risk · No',
-        onEdit: () => _jumpToStep(4),
+        onEdit: () => _jumpToStep(5),
         rows: {
           'High risk': d.highRisk ? 'Yes' : 'No',
           'Remark': d.healthRemark.isEmpty ? '—' : d.healthRemark,

@@ -151,6 +151,11 @@ class SavedQuote {
 
   /// Schema extras for e-App snapshot (lock-up, travel, risk, rider, …).
   final Map<String, String> extras;
+
+  /// True for the placeholder quote `startEappForProduct` builds when a
+  /// product has no calculated quote yet — the e-App's Premium step keeps
+  /// this one editable instead of showing it as a locked summary.
+  bool get isDraftPlaceholder => id == 'QT-DRAFT';
 }
 
 class BeneficiaryDraft {
@@ -229,7 +234,7 @@ class EappDraft {
   });
 
   final String id;
-  final SavedQuote quote;
+  SavedQuote quote;
   EappStatus status;
   int step;
   PersonDraft policyholder;
@@ -771,6 +776,16 @@ abstract final class ProductSession {
     lastProductId = product.id;
   }
 
+  /// Most recently saved quote for this product, if any — used to
+  /// auto-fill the quote form when re-opening a product that already
+  /// has a calculated quote, instead of asking the agent to retype it.
+  static SavedQuote? latestQuoteFor(String productId) {
+    for (final q in quotes) {
+      if (q.productId == productId) return q;
+    }
+    return null;
+  }
+
   static SavedQuote saveQuote({
     required CatalogProduct product,
     required String variant,
@@ -791,6 +806,8 @@ abstract final class ProductSession {
     String riderFrequency = '',
     String discountName = '',
     String discountAmount = '0.00',
+    int basePremiumAnnual = 0,
+    String dividendRate = '',
   }) {
     rememberProduct(product);
     _q += 1;
@@ -801,8 +818,12 @@ abstract final class ProductSession {
       lockupAmount: lockupAmount,
       optionalBundle: optionalBundle,
       industryRisk: industryRisk,
+      basePremiumAnnual: basePremiumAnnual,
     );
     final extras = <String, String>{
+      if (basePremiumAnnual > 0)
+        'Base Premium (Annual)': ProductFormat.money(basePremiumAnnual),
+      if (dividendRate.isNotEmpty) 'Dividend Rate': '$dividendRate%',
       if (lockupAmount > 0) 'Lock-Up Amount': ProductFormat.money(lockupAmount),
       if (lockupPeriod.isNotEmpty) 'Lock-Up Period': lockupPeriod,
       if (industryRisk.isNotEmpty) 'Industry Risk': industryRisk,
@@ -885,6 +906,47 @@ abstract final class ProductSession {
 
   static List<SavedQuote> quotesForParty(String partyId) =>
       quotes.where((q) => q.party.id == partyId).toList();
+
+  /// Jumps straight from a Product into the e-App. Reuses the product's
+  /// most recently calculated quote when one exists (docs/86); otherwise
+  /// starts the wizard with a blank policyholder so the agent can fill in
+  /// the Get A Quote details (DOB, sum insured, premium) inside the e-App
+  /// itself, instead of being blocked and sent back to Get A Quote first.
+  static EappDraft startEappForProduct(
+    CatalogProduct product, {
+    EappLaunchIntent intent = EappLaunchIntent.newSale,
+  }) {
+    final existing = latestQuoteFor(product.id);
+    if (existing != null) {
+      return startEapp(existing, intent: intent);
+    }
+    rememberProduct(product);
+    final fallbackDob = DateTime(1999, 6, 4);
+    final blankQuote = SavedQuote(
+      id: 'QT-DRAFT',
+      productId: product.id,
+      productName: product.name,
+      productCode: product.code,
+      lineLabel: product.lineLabel,
+      variant: product.variants.first,
+      frequency: product.frequencies.first,
+      sumInsured: ProductFormat.money(0),
+      monthlyPremium: ProductFormat.money(0),
+      topup: ProductFormat.money(0),
+      term: product.terms.first,
+      dob: fallbackDob,
+      age: ProductFormat.ageOn(fallbackDob),
+      party: QuoteParty(
+        id: 'blank-${DateTime.now().millisecondsSinceEpoch}',
+        name: '',
+        kind: QuotePartyKind.lead,
+      ),
+      savedAt: DateTime(2026, 8, 14),
+    );
+    // Not added to `quotes` — it's a placeholder for the draft only, not
+    // a real calculated quote the agent should see in their saved list.
+    return startEapp(blankQuote, intent: intent);
+  }
 
   static int _parseSi(String raw) {
     final n = int.tryParse(raw.replaceAll(RegExp(r'[^0-9]'), ''));

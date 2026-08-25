@@ -30,7 +30,8 @@ class ProductSelectChip extends StatelessWidget {
   }
 }
 
-/// Get A Quote · Product Type chip — intrinsic width for [Wrap] (docs/63).
+/// Select-chip variant covered by chip visual/theme tests (docs/63) —
+/// kept even though the Get A Quote flow now uses a single dropdown.
 class QuoteTypeChip extends StatelessWidget {
   const QuoteTypeChip({
     super.key,
@@ -50,31 +51,6 @@ class QuoteTypeChip extends StatelessWidget {
       selected: selected,
       onTap: onTap,
       mutedWhenIdle: true,
-    );
-  }
-}
-
-/// Get A Quote · Product Name tile — equal-width cell (docs/63).
-class QuoteNameTile extends StatelessWidget {
-  const QuoteNameTile({
-    super.key,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppSelectChip(
-      label: label,
-      selected: selected,
-      onTap: onTap,
-      expand: true,
-      minHeight: 48,
     );
   }
 }
